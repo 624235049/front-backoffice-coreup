@@ -21533,6 +21533,304 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/leave-requests/{id}/decide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve or reject a pending leave from the leave list (same decision path as the approvals inbox; works with the approvals module off)
+         * @description Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        decision: "approved" | "rejected";
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Decided */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "leave" | "shift_swap" | "discount" | "void" | "refund" | "queue_override" | "other";
+                                /** @enum {string} */
+                                status: "pending" | "approved" | "rejected" | "expired";
+                                refId: string;
+                                branchId: string | null;
+                                requestedBy: string;
+                                requesterName: string;
+                                approverRole: string;
+                                decidedBy: string | null;
+                                decidedByName: string | null;
+                                decidedAt: string | null;
+                                note: string | null;
+                                createdAt: string;
+                                summary: {
+                                    memberName?: string;
+                                    /** @enum {string} */
+                                    leaveType?: "sick" | "personal" | "vacation" | "other";
+                                    startsAt?: string;
+                                    endsAt?: string;
+                                    shiftDate?: string;
+                                    shiftStart?: string;
+                                    shiftEnd?: string;
+                                    targetName?: string;
+                                    affectedCount?: number;
+                                    reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/shift-swap-requests/{id}/decide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve or reject a pending shift swap from the roster (same decision path as the approvals inbox; works with the approvals module off)
+         * @description Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        decision: "approved" | "rejected";
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Decided */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "leave" | "shift_swap" | "discount" | "void" | "refund" | "queue_override" | "other";
+                                /** @enum {string} */
+                                status: "pending" | "approved" | "rejected" | "expired";
+                                refId: string;
+                                branchId: string | null;
+                                requestedBy: string;
+                                requesterName: string;
+                                approverRole: string;
+                                decidedBy: string | null;
+                                decidedByName: string | null;
+                                decidedAt: string | null;
+                                note: string | null;
+                                createdAt: string;
+                                summary: {
+                                    memberName?: string;
+                                    /** @enum {string} */
+                                    leaveType?: "sick" | "personal" | "vacation" | "other";
+                                    startsAt?: string;
+                                    endsAt?: string;
+                                    shiftDate?: string;
+                                    shiftStart?: string;
+                                    shiftEnd?: string;
+                                    targetName?: string;
+                                    affectedCount?: number;
+                                    reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/leave-requests/{id}/reassign": {
         parameters: {
             query?: never;
@@ -28787,6 +29085,7 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 }[];
                             };
@@ -28976,6 +29275,7 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 }[];
                             };
@@ -29178,6 +29478,7 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 }[];
                             };
@@ -29375,6 +29676,7 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "pending" | "approved" | "rejected" | "expired";
                                         note: string | null;
+                                        requestedBy: string;
                                         createdAt: string;
                                     }[];
                                 };
@@ -29385,6 +29687,7 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 } | null;
                             };
@@ -29597,6 +29900,7 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "pending" | "approved" | "rejected" | "expired";
                                         note: string | null;
+                                        requestedBy: string;
                                         createdAt: string;
                                     }[];
                                 };
@@ -29808,6 +30112,7 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "pending" | "approved" | "rejected" | "expired";
                                         note: string | null;
+                                        requestedBy: string;
                                         createdAt: string;
                                     }[];
                                 };
@@ -29818,6 +30123,7 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 } | null;
                             };
@@ -30027,6 +30333,7 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "pending" | "approved" | "rejected" | "expired";
                                         note: string | null;
+                                        requestedBy: string;
                                         createdAt: string;
                                     }[];
                                 };
@@ -30037,6 +30344,362 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "pending" | "approved" | "rejected" | "expired";
                                     note: string | null;
+                                    requestedBy: string;
+                                    createdAt: string;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bills/{id}/approvals/{approvalId}/decide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve or reject a pending discount / void / refund request from the bill page (same decision path as the approvals inbox, works with the approvals module off)
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:void`. Module: `checkout`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    approvalId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        decision: "approved" | "rejected";
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Decided */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "leave" | "shift_swap" | "discount" | "void" | "refund" | "queue_override" | "other";
+                                /** @enum {string} */
+                                status: "pending" | "approved" | "rejected" | "expired";
+                                refId: string;
+                                branchId: string | null;
+                                requestedBy: string;
+                                requesterName: string;
+                                approverRole: string;
+                                decidedBy: string | null;
+                                decidedByName: string | null;
+                                decidedAt: string | null;
+                                note: string | null;
+                                createdAt: string;
+                                summary: {
+                                    memberName?: string;
+                                    /** @enum {string} */
+                                    leaveType?: "sick" | "personal" | "vacation" | "other";
+                                    startsAt?: string;
+                                    endsAt?: string;
+                                    shiftDate?: string;
+                                    shiftStart?: string;
+                                    shiftEnd?: string;
+                                    targetName?: string;
+                                    affectedCount?: number;
+                                    reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bills/{id}/approvals/{approvalId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Withdraw a pending void / refund request (the requester or a bills:void holder); the bill is untouched
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    approvalId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Withdrawn */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                bill: {
+                                    id: string;
+                                    branchId: string;
+                                    number: string;
+                                    customerId: string | null;
+                                    customerName: string | null;
+                                    appointmentIds: string[];
+                                    /** @enum {string} */
+                                    status: "open" | "paid" | "void" | "refunded" | "partially_refunded";
+                                    /** @description integer satang */
+                                    subtotalMinor: number;
+                                    /** @description integer satang */
+                                    discountMinor: number;
+                                    discountReason: string | null;
+                                    discountApprovedBy: string | null;
+                                    /** @description integer satang */
+                                    totalMinor: number;
+                                    /** @description integer satang */
+                                    tipMinor: number;
+                                    /** @description integer satang */
+                                    amountDueMinor: number;
+                                    /** @description integer satang */
+                                    paidMinor: number;
+                                    /** @description integer satang */
+                                    remainingMinor: number;
+                                    /** @description integer satang */
+                                    refundedMinor: number;
+                                    /** @description integer satang */
+                                    refundableMinor: number;
+                                    externalRef: string | null;
+                                    createdBy: string | null;
+                                    paidAt: string | null;
+                                    version: number;
+                                    createdAt: string;
+                                    items: {
+                                        /** @enum {string} */
+                                        kind: "service" | "product" | "package_sale" | "package_use";
+                                        refId: string | null;
+                                        name: string;
+                                        /** @default 1 */
+                                        qty: number;
+                                        /** @description integer satang */
+                                        unitPriceMinor: number;
+                                        performerMembershipId: string | null;
+                                        saleMembershipId: string | null;
+                                        id: string;
+                                        /** @description integer satang */
+                                        discountMinor: number;
+                                    }[];
+                                    payments: {
+                                        id: string;
+                                        /** @enum {string} */
+                                        method: "cash" | "transfer" | "promptpay" | "card_external" | "package" | "other";
+                                        /** @description integer satang */
+                                        amountMinor: number;
+                                        reference: string | null;
+                                        slipFileId: string | null;
+                                        confirmedBy: string | null;
+                                        confirmedAt: string | null;
+                                    }[];
+                                    refunds: {
+                                        id: string;
+                                        /** @description integer satang */
+                                        amountMinor: number;
+                                        reason: string;
+                                        approvedBy: string;
+                                        /** @enum {string} */
+                                        method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                                        createdAt: string;
+                                    }[];
+                                    receipt: {
+                                        id: string;
+                                        number: string;
+                                        issuedAt: string;
+                                        deliveredVia: string | null;
+                                    } | null;
+                                    pendingApprovals: {
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "discount" | "void" | "refund";
+                                        /** @enum {string} */
+                                        status: "pending" | "approved" | "rejected" | "expired";
+                                        note: string | null;
+                                        requestedBy: string;
+                                        createdAt: string;
+                                    }[];
+                                };
+                                approval: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "discount" | "void" | "refund";
+                                    /** @enum {string} */
+                                    status: "pending" | "approved" | "rejected" | "expired";
+                                    note: string | null;
+                                    requestedBy: string;
                                     createdAt: string;
                                 } | null;
                             };

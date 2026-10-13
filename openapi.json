@@ -40140,6 +40140,596 @@
         }
       }
     },
+    "/v1/leave-requests/{id}/decide": {
+      "post": {
+        "tags": [
+          "shifts"
+        ],
+        "summary": "Approve or reject a pending leave from the leave list (same decision path as the approvals inbox; works with the approvals module off)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "decision"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "leave",
+                            "shift_swap",
+                            "discount",
+                            "void",
+                            "refund",
+                            "queue_override",
+                            "other"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "approved",
+                            "rejected",
+                            "expired"
+                          ]
+                        },
+                        "refId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requestedBy": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requesterName": {
+                          "type": "string"
+                        },
+                        "approverRole": {
+                          "type": "string"
+                        },
+                        "decidedBy": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "decidedByName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "decidedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": "object",
+                          "properties": {
+                            "memberName": {
+                              "type": "string"
+                            },
+                            "leaveType": {
+                              "type": "string",
+                              "enum": [
+                                "sick",
+                                "personal",
+                                "vacation",
+                                "other"
+                              ]
+                            },
+                            "startsAt": {
+                              "type": "string"
+                            },
+                            "endsAt": {
+                              "type": "string"
+                            },
+                            "shiftDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "shiftStart": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "shiftEnd": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "targetName": {
+                              "type": "string"
+                            },
+                            "affectedCount": {
+                              "type": "integer"
+                            },
+                            "reason": {
+                              "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "status",
+                        "refId",
+                        "branchId",
+                        "requestedBy",
+                        "requesterName",
+                        "approverRole",
+                        "decidedBy",
+                        "decidedByName",
+                        "decidedAt",
+                        "note",
+                        "createdAt",
+                        "summary"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/shift-swap-requests/{id}/decide": {
+      "post": {
+        "tags": [
+          "shifts"
+        ],
+        "summary": "Approve or reject a pending shift swap from the roster (same decision path as the approvals inbox; works with the approvals module off)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "decision"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "leave",
+                            "shift_swap",
+                            "discount",
+                            "void",
+                            "refund",
+                            "queue_override",
+                            "other"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "approved",
+                            "rejected",
+                            "expired"
+                          ]
+                        },
+                        "refId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requestedBy": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requesterName": {
+                          "type": "string"
+                        },
+                        "approverRole": {
+                          "type": "string"
+                        },
+                        "decidedBy": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "decidedByName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "decidedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": "object",
+                          "properties": {
+                            "memberName": {
+                              "type": "string"
+                            },
+                            "leaveType": {
+                              "type": "string",
+                              "enum": [
+                                "sick",
+                                "personal",
+                                "vacation",
+                                "other"
+                              ]
+                            },
+                            "startsAt": {
+                              "type": "string"
+                            },
+                            "endsAt": {
+                              "type": "string"
+                            },
+                            "shiftDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "shiftStart": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "shiftEnd": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "targetName": {
+                              "type": "string"
+                            },
+                            "affectedCount": {
+                              "type": "integer"
+                            },
+                            "reason": {
+                              "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "status",
+                        "refId",
+                        "branchId",
+                        "requestedBy",
+                        "requesterName",
+                        "approverRole",
+                        "decidedBy",
+                        "decidedByName",
+                        "decidedAt",
+                        "note",
+                        "createdAt",
+                        "summary"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/leave-requests/{id}/reassign": {
       "post": {
         "tags": [
@@ -55119,6 +55709,10 @@
                                   "null"
                                 ]
                               },
+                              "requestedBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
                               "createdAt": {
                                 "type": "string"
                               }
@@ -55128,6 +55722,7 @@
                               "kind",
                               "status",
                               "note",
+                              "requestedBy",
                               "createdAt"
                             ]
                           }
@@ -55646,6 +56241,10 @@
                                   "null"
                                 ]
                               },
+                              "requestedBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
                               "createdAt": {
                                 "type": "string"
                               }
@@ -55655,6 +56254,7 @@
                               "kind",
                               "status",
                               "note",
+                              "requestedBy",
                               "createdAt"
                             ]
                           }
@@ -56262,6 +56862,10 @@
                                   "null"
                                 ]
                               },
+                              "requestedBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
                               "createdAt": {
                                 "type": "string"
                               }
@@ -56271,6 +56875,7 @@
                               "kind",
                               "status",
                               "note",
+                              "requestedBy",
                               "createdAt"
                             ]
                           }
@@ -56818,6 +57423,10 @@
                                       "null"
                                     ]
                                   },
+                                  "requestedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
                                   "createdAt": {
                                     "type": "string"
                                   }
@@ -56827,6 +57436,7 @@
                                   "kind",
                                   "status",
                                   "note",
+                                  "requestedBy",
                                   "createdAt"
                                 ]
                               }
@@ -56896,6 +57506,10 @@
                                 "null"
                               ]
                             },
+                            "requestedBy": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
                             "createdAt": {
                               "type": "string"
                             }
@@ -56905,6 +57519,7 @@
                             "kind",
                             "status",
                             "note",
+                            "requestedBy",
                             "createdAt"
                           ]
                         }
@@ -57479,6 +58094,10 @@
                                       "null"
                                     ]
                                   },
+                                  "requestedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
                                   "createdAt": {
                                     "type": "string"
                                   }
@@ -57488,6 +58107,7 @@
                                   "kind",
                                   "status",
                                   "note",
+                                  "requestedBy",
                                   "createdAt"
                                 ]
                               }
@@ -58062,6 +58682,10 @@
                                       "null"
                                     ]
                                   },
+                                  "requestedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
                                   "createdAt": {
                                     "type": "string"
                                   }
@@ -58071,6 +58695,7 @@
                                   "kind",
                                   "status",
                                   "note",
+                                  "requestedBy",
                                   "createdAt"
                                 ]
                               }
@@ -58140,6 +58765,10 @@
                                 "null"
                               ]
                             },
+                            "requestedBy": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
                             "createdAt": {
                               "type": "string"
                             }
@@ -58149,6 +58778,7 @@
                             "kind",
                             "status",
                             "note",
+                            "requestedBy",
                             "createdAt"
                           ]
                         }
@@ -58689,6 +59319,10 @@
                                       "null"
                                     ]
                                   },
+                                  "requestedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
                                   "createdAt": {
                                     "type": "string"
                                   }
@@ -58698,6 +59332,7 @@
                                   "kind",
                                   "status",
                                   "note",
+                                  "requestedBy",
                                   "createdAt"
                                 ]
                               }
@@ -58767,6 +59402,10 @@
                                 "null"
                               ]
                             },
+                            "requestedBy": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
                             "createdAt": {
                               "type": "string"
                             }
@@ -58776,6 +59415,911 @@
                             "kind",
                             "status",
                             "note",
+                            "requestedBy",
+                            "createdAt"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "bill",
+                        "approval"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/bills/{id}/approvals/{approvalId}/decide": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Approve or reject a pending discount / void / refund request from the bill page (same decision path as the approvals inbox, works with the approvals module off)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:void`. Module: `checkout`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "approvalId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "decision"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "leave",
+                            "shift_swap",
+                            "discount",
+                            "void",
+                            "refund",
+                            "queue_override",
+                            "other"
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "approved",
+                            "rejected",
+                            "expired"
+                          ]
+                        },
+                        "refId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requestedBy": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "requesterName": {
+                          "type": "string"
+                        },
+                        "approverRole": {
+                          "type": "string"
+                        },
+                        "decidedBy": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "decidedByName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "decidedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "summary": {
+                          "type": "object",
+                          "properties": {
+                            "memberName": {
+                              "type": "string"
+                            },
+                            "leaveType": {
+                              "type": "string",
+                              "enum": [
+                                "sick",
+                                "personal",
+                                "vacation",
+                                "other"
+                              ]
+                            },
+                            "startsAt": {
+                              "type": "string"
+                            },
+                            "endsAt": {
+                              "type": "string"
+                            },
+                            "shiftDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "shiftStart": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "shiftEnd": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "targetName": {
+                              "type": "string"
+                            },
+                            "affectedCount": {
+                              "type": "integer"
+                            },
+                            "reason": {
+                              "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "status",
+                        "refId",
+                        "branchId",
+                        "requestedBy",
+                        "requesterName",
+                        "approverRole",
+                        "decidedBy",
+                        "decidedByName",
+                        "decidedAt",
+                        "note",
+                        "createdAt",
+                        "summary"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/bills/{id}/approvals/{approvalId}/cancel": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Withdraw a pending void / refund request (the requester or a bills:void holder); the bill is untouched",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "approvalId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Withdrawn",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "bill": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "branchId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "number": {
+                              "type": "string"
+                            },
+                            "customerId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "customerName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "appointmentIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              }
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "open",
+                                "paid",
+                                "void",
+                                "refunded",
+                                "partially_refunded"
+                              ]
+                            },
+                            "subtotalMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "discountMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "discountReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "discountApprovedBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "totalMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "tipMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "amountDueMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "paidMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "remainingMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "refundedMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "refundableMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "externalRef": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "createdBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "paidAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "service",
+                                      "product",
+                                      "package_sale",
+                                      "package_use"
+                                    ]
+                                  },
+                                  "refId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 200
+                                  },
+                                  "qty": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 999,
+                                    "default": 1
+                                  },
+                                  "unitPriceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "performerMembershipId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "saleMembershipId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "discountMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "refId",
+                                  "name",
+                                  "unitPriceMinor",
+                                  "performerMembershipId",
+                                  "saleMembershipId",
+                                  "id",
+                                  "discountMinor"
+                                ]
+                              }
+                            },
+                            "payments": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "method": {
+                                    "type": "string",
+                                    "enum": [
+                                      "cash",
+                                      "transfer",
+                                      "promptpay",
+                                      "card_external",
+                                      "package",
+                                      "other"
+                                    ]
+                                  },
+                                  "amountMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "reference": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "slipFileId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "confirmedBy": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "confirmedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "method",
+                                  "amountMinor",
+                                  "reference",
+                                  "slipFileId",
+                                  "confirmedBy",
+                                  "confirmedAt"
+                                ]
+                              }
+                            },
+                            "refunds": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "amountMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "reason": {
+                                    "type": "string"
+                                  },
+                                  "approvedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "method": {
+                                    "type": "string",
+                                    "enum": [
+                                      "cash",
+                                      "transfer",
+                                      "promptpay",
+                                      "card_external",
+                                      "other"
+                                    ]
+                                  },
+                                  "createdAt": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "amountMinor",
+                                  "reason",
+                                  "approvedBy",
+                                  "method",
+                                  "createdAt"
+                                ]
+                              }
+                            },
+                            "receipt": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "number": {
+                                  "type": "string"
+                                },
+                                "issuedAt": {
+                                  "type": "string"
+                                },
+                                "deliveredVia": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "number",
+                                "issuedAt",
+                                "deliveredVia"
+                              ]
+                            },
+                            "pendingApprovals": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "discount",
+                                      "void",
+                                      "refund"
+                                    ]
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pending",
+                                      "approved",
+                                      "rejected",
+                                      "expired"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "requestedBy": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "createdAt": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "kind",
+                                  "status",
+                                  "note",
+                                  "requestedBy",
+                                  "createdAt"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "branchId",
+                            "number",
+                            "customerId",
+                            "customerName",
+                            "appointmentIds",
+                            "status",
+                            "subtotalMinor",
+                            "discountMinor",
+                            "discountReason",
+                            "discountApprovedBy",
+                            "totalMinor",
+                            "tipMinor",
+                            "amountDueMinor",
+                            "paidMinor",
+                            "remainingMinor",
+                            "refundedMinor",
+                            "refundableMinor",
+                            "externalRef",
+                            "createdBy",
+                            "paidAt",
+                            "version",
+                            "createdAt",
+                            "items",
+                            "payments",
+                            "refunds",
+                            "receipt",
+                            "pendingApprovals"
+                          ]
+                        },
+                        "approval": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "discount",
+                                "void",
+                                "refund"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "pending",
+                                "approved",
+                                "rejected",
+                                "expired"
+                              ]
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "requestedBy": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "status",
+                            "note",
+                            "requestedBy",
                             "createdAt"
                           ]
                         }
