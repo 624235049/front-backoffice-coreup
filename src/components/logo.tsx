@@ -1,12 +1,12 @@
 const SOURCES = {
   /** square app icon (the teal "UP" arrow on a white tile) for tight spaces */
-  mark: '/pwa-192.png',
+  mark: '/pwa-192-v2.png',
   /** COREUP wordmark (navy CORE + teal UP), for light backgrounds */
-  wordmark: '/logo-wordmark.png',
+  wordmark: '/logo-wordmark-v2.png',
   /** wordmark with light letters, for the navy sidebar */
-  'wordmark-light': '/logo-wordmark-light.png',
+  'wordmark-light': '/logo-wordmark-light-v2.png',
   /** wordmark + "Business systems & consulting" tagline */
-  full: '/logo-full.png',
+  full: '/logo-full-v2.png',
 } as const;
 
 const DEFAULT_SIZE: Record<keyof typeof SOURCES, string> = {

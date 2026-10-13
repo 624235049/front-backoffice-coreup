@@ -37,11 +37,11 @@ export default defineConfig(() => ({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.ico',
-        'favicon-32.png',
-        'apple-touch-icon.png',
-        'logo-wordmark.png',
-        'logo-wordmark-light.png',
-        'logo-full.png',
+        'favicon-32-v2.png',
+        'apple-touch-icon-v2.png',
+        'logo-wordmark-v2.png',
+        'logo-wordmark-light-v2.png',
+        'logo-full-v2.png',
       ],
       manifest: {
         name: 'CoreUp Team',
@@ -55,9 +55,9 @@ export default defineConfig(() => ({
         theme_color: '#0B2D4F',
         background_color: '#F8F5ED',
         icons: [
-          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'pwa-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'pwa-192-v2.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512-v2.png', sizes: '512x512', type: 'image/png' },
+          { src: 'pwa-512-maskable-v2.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
