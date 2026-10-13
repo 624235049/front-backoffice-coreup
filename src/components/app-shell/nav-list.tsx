@@ -34,14 +34,14 @@ export function NavLink({
       aria-current={active ? 'page' : undefined}
       className={cn(
         variant === 'sidebar'
-          ? 'flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors'
-          : 'flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium',
+          ? 'relative flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors'
+          : 'relative flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium',
         variant === 'sidebar'
           ? active
-            ? 'bg-sidebar-accent text-white'
-            : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-white'
+            ? 'bg-white/10 text-white before:absolute before:inset-y-2 before:left-0 before:w-1 before:rounded-full before:bg-sidebar-primary [&>svg]:text-sidebar-primary'
+            : 'text-sidebar-foreground/75 hover:bg-white/5 hover:text-white'
           : active
-            ? 'text-primary'
+            ? 'text-primary before:absolute before:inset-x-5 before:top-0 before:h-0.5 before:rounded-full before:bg-mint-500 [&>svg]:text-mint-600'
             : 'text-muted-foreground',
       )}
     >

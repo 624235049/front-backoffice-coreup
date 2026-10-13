@@ -4,11 +4,10 @@
  *   @import "tailwindcss";
  *   @import "@coreup/ui/theme.css";
  *
- * Fonts: the app is responsible for loading the font files (Google Fonts <link> in index.html,
- * or @nuxt/fonts in apps/web). This file only declares the stacks so Thai glyphs always have a
- * Thai-capable face: IBM Plex Sans Thai -> Noto Sans Thai -> system Thai fonts.
+ * Fonts: the app loads them (Google Fonts <link> in index.html). Body: IBM Plex Sans Thai -> Noto Sans Thai
+ * -> system Thai; headings: Anuphan (same as coreup.pro).
  *
- * Brand (docs/01-landing.md): Navy #0B2D4F, Gold #D4B483, Ivory #F8F5ED, Taupe #C9B8A5.
+ * Brand (matches coreup.pro): Navy #0B2D4F, Aqua #5CCBC4 (mint scale), Cream canvas #F8F4EE, Gold for tiny accents.
  */
 
 @theme {
@@ -25,19 +24,22 @@
   --color-navy-900: #0b2d4f;
   --color-navy-950: #071d34;
 
-  --color-gold-50: #fbf7ef;
-  --color-gold-100: #f4ebd9;
-  --color-gold-200: #ead9b9;
-  --color-gold-300: #d4b483;
-  --color-gold-400: #c59f68;
-  --color-gold-500: #b3874b;
-  --color-gold-600: #946b3a;
-  --color-gold-700: #75532f;
+  /* Mint/aqua: active states, highlights, focus */
+  --color-mint-50: #eefaf9;
+  --color-mint-100: #d4f2ef;
+  --color-mint-200: #ace6e1;
+  --color-mint-300: #82d8d2;
+  --color-mint-400: #5ccbc4;
+  --color-mint-500: #38b2aa;
+  --color-mint-600: #24918a;
+  --color-mint-700: #1d746f;
 
-  --color-ivory: #f8f5ed;
-  --color-ivory-dark: #efe9da;
-  --color-taupe: #c9b8a5;
-  --color-taupe-dark: #a8957f;
+  /* Gold: tiny accents only */
+  --color-gold-300: #dcc08f;
+  --color-gold-400: #c9a36a;
+
+  --color-canvas: #f8f4ee;
+  --color-canvas-dark: #efe8dc;
 
   /* ---- Appointment / state colours (docs/04 §5.1). Always pair with text, never colour alone. ---- */
   --color-status-booked: #64748b;
@@ -51,31 +53,31 @@
   --font-sans:
     "IBM Plex Sans Thai", "Noto Sans Thai", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     "Sukhumvit Set", "Thonburi", sans-serif;
-  --font-display: "Jost", "IBM Plex Sans Thai", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Anuphan", "IBM Plex Sans Thai", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
 
   /* ---- Shape ---- */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
 }
 
 /* ---- Semantic tokens (shadcn/ui contract) ---- */
 :root {
-  --background: #ffffff;
+  --background: #f8f6f2;
   --foreground: #0b2d4f;
   --card: #ffffff;
   --card-foreground: #0b2d4f;
   --popover: #ffffff;
   --popover-foreground: #0b2d4f;
   --primary: #0b2d4f;
-  --primary-foreground: #f8f5ed;
-  --secondary: #f8f5ed;
+  --primary-foreground: #ffffff;
+  --secondary: #f1ede6;
   --secondary-foreground: #0b2d4f;
-  --muted: #f3f0e8;
+  --muted: #f3f0ea;
   --muted-foreground: #5b6b7c;
-  --accent: #efe9da;
+  --accent: #eaf7f6;
   --accent-foreground: #0b2d4f;
   --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
@@ -83,15 +85,15 @@
   --success-foreground: #ffffff;
   --warning: #b45309;
   --warning-foreground: #ffffff;
-  --border: #e2dccf;
-  --input: #d6cebe;
-  --ring: #2c5a88;
-  --sidebar: #0b2d4f;
-  --sidebar-foreground: #e8edf3;
-  --sidebar-muted: #9db3c9;
-  --sidebar-accent: #12385c;
-  --sidebar-border: #1c446c;
-  --sidebar-primary: #d4b483;
+  --border: #e6e2da;
+  --input: #d9d4ca;
+  --ring: #38b2aa;
+  --sidebar: #0a2540;
+  --sidebar-foreground: #e8eef4;
+  --sidebar-muted: #8ea6bd;
+  --sidebar-accent: #12365a;
+  --sidebar-border: #173f63;
+  --sidebar-primary: #5ccbc4;
 }
 
 @theme inline {
@@ -143,6 +145,12 @@
   /* Thai text needs a little more line-height so tone marks do not collide. */
   body {
     line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
   }
   :focus-visible {
     outline: 2px solid var(--ring);

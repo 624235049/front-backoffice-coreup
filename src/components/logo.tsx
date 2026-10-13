@@ -3,7 +3,7 @@ const SOURCES = {
   mark: '/pwa-192.png',
   /** COREUP wordmark in brand navy + gold, for light backgrounds */
   wordmark: '/logo-wordmark.png',
-  /** wordmark with ivory letters, for the navy sidebar */
+  /** wordmark with light letters, for the navy sidebar */
   'wordmark-light': '/logo-wordmark-light.png',
   /** wordmark + "Business systems & consulting" tagline */
   full: '/logo-full.png',
