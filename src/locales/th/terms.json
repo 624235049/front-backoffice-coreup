@@ -1,0 +1,11 @@
+{
+  "customer": "ลูกค้า",
+  "customers": "ลูกค้า",
+  "service": "บริการ",
+  "appointment": "นัดหมาย",
+  "practitioner": "ผู้ให้บริการ",
+  "branch": "สาขา",
+  "package": "แพ็กเกจ",
+  "followup": "งานติดตาม",
+  "resource": "ทรัพยากร"
+}

@@ -1,0 +1,35 @@
+{
+  "primary": "Main menu",
+  "settings": "Settings",
+  "switchTenant": "Switch shop",
+  "allTenants": "All shops",
+  "switchBranch": "Choose {{branch}}",
+  "allBranches": "All {{branch}}",
+  "userMenu": "User menu",
+  "fullMenu": "Show full menu",
+  "signOut": "Sign out",
+  "signOutFailed": "Could not sign out",
+  "openMenu": "Open menu",
+  "closeMenu": "Close menu",
+  "more": "More",
+  "section": {
+    "main": "Main",
+    "me": "Mine",
+    "manage": "Manage",
+    "settings": "Settings"
+  },
+  "impersonation": {
+    "banner": "Viewing as the CoreUp team",
+    "reason": "Reason: {{reason}}",
+    "exit": "Stop viewing"
+  },
+  "dashboard": "Overview",
+  "tenants": "Shops",
+  "leads": "Leads",
+  "engagements": "Engagements",
+  "audits": "Audits",
+  "invoices": "Invoices",
+  "revenue": "Revenue",
+  "team": "Team",
+  "security": "Account security"
+}

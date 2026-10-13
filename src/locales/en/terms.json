@@ -1,0 +1,11 @@
+{
+  "customer": "customer",
+  "customers": "customers",
+  "service": "service",
+  "appointment": "appointment",
+  "practitioner": "practitioner",
+  "branch": "branch",
+  "package": "package",
+  "followup": "follow-up",
+  "resource": "resource"
+}

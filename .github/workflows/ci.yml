@@ -1,0 +1,65 @@
+# CI for the CoreUp-team back office (standalone pnpm project, repo root = this directory).
+# Runs on PRs and on the pushes Railway deploys from; enable "Wait for CI" on the Railway service so
+# a red run blocks the deployment (main -> staging, tag v* / branch production -> production).
+# This workflow does not deploy anything and holds no Railway credentials.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, production]
+    tags: ["v*"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Optional repo variable: URL of the API's /v1/openapi.json. Unset -> committed openapi.json is used.
+      API_OPENAPI_URL: ${{ vars.API_OPENAPI_URL }}
+      VITE_API_URL: http://localhost:18787
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --global pnpm@9.14.2 # must precede setup-node for the pnpm cache
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generate API types
+        run: if [ -n "$API_OPENAPI_URL" ] || [ -f openapi.json ]; then pnpm run gen:api; fi
+      - name: Lint
+        run: pnpm run --if-present lint
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Unit tests
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+
+  docker:
+    name: Docker image
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: false
+          build-args: |
+            API_OPENAPI_URL=${{ vars.API_OPENAPI_URL }}
+            VITE_API_URL=http://localhost:18787
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

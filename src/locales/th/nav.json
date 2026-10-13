@@ -1,0 +1,35 @@
+{
+  "primary": "เมนูหลัก",
+  "settings": "ตั้งค่า",
+  "switchTenant": "เปลี่ยนร้าน",
+  "allTenants": "ดูร้านทั้งหมด",
+  "switchBranch": "เลือก{{branch}}",
+  "allBranches": "ทุก{{branch}}",
+  "userMenu": "เมนูผู้ใช้",
+  "fullMenu": "แสดงเมนูแบบเต็ม",
+  "signOut": "ออกจากระบบ",
+  "signOutFailed": "ออกจากระบบไม่สำเร็จ",
+  "openMenu": "เปิดเมนู",
+  "closeMenu": "ปิดเมนู",
+  "more": "เพิ่มเติม",
+  "section": {
+    "main": "หลัก",
+    "me": "ของฉัน",
+    "manage": "จัดการ",
+    "settings": "ตั้งค่า"
+  },
+  "impersonation": {
+    "banner": "กำลังดูในฐานะทีม CoreUp",
+    "reason": "เหตุผล: {{reason}}",
+    "exit": "ออกจากการเข้าดู"
+  },
+  "dashboard": "ภาพรวม",
+  "tenants": "ร้านลูกค้า",
+  "leads": "Lead",
+  "engagements": "งานที่ปรึกษา",
+  "audits": "ออดิท",
+  "invoices": "ใบแจ้งหนี้",
+  "revenue": "รายได้",
+  "team": "ทีม CoreUp",
+  "security": "ความปลอดภัยของบัญชี"
+}

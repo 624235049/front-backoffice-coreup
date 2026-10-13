@@ -1,0 +1,43 @@
+# Static SPA server for the CoreUp-team back office (see Dockerfile).
+# TLS is terminated by Railway's edge, so Caddy only speaks plain HTTP on $PORT.
+# Optional env: API_ORIGIN (e.g. https://api.coreup.example) is appended to CSP connect-src.
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+
+:{$PORT:8080} {
+	root * /srv
+	encode zstd gzip
+
+	# Liveness endpoint for Railway / uptime monitors.
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:} https://*.sentry.io; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		-Server
+	}
+
+	# Hashed build output: cache forever; a missing asset must 404, not fall back to index.html.
+	handle /assets/* {
+		@hit file
+		header @hit Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
+	# Everything else: real file if it exists, otherwise the SPA shell (client-side routing).
+	# Always revalidate (ETag) so index.html / sw.js / manifest never go stale after a deploy.
+	handle {
+		header Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}

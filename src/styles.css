@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "./styles/theme.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* iOS safe areas for the bottom nav / PWA standalone mode. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}

@@ -1,0 +1,151 @@
+/*
+ * CoreUp design tokens for Tailwind v4.
+ * Usage (in an app stylesheet):
+ *   @import "tailwindcss";
+ *   @import "@coreup/ui/theme.css";
+ *
+ * Fonts: the app is responsible for loading the font files (Google Fonts <link> in index.html,
+ * or @nuxt/fonts in apps/web). This file only declares the stacks so Thai glyphs always have a
+ * Thai-capable face: IBM Plex Sans Thai -> Noto Sans Thai -> system Thai fonts.
+ *
+ * Brand (docs/01-landing.md): Navy #0B2D4F, Gold #D4B483, Ivory #F8F5ED, Taupe #C9B8A5.
+ */
+
+@theme {
+  /* ---- Brand palette ---- */
+  --color-navy-50: #eef3f9;
+  --color-navy-100: #d6e1ee;
+  --color-navy-200: #aec3dc;
+  --color-navy-300: #7f9fc2;
+  --color-navy-400: #4f78a3;
+  --color-navy-500: #2c5a88;
+  --color-navy-600: #1c446c;
+  --color-navy-700: #12385c;
+  --color-navy-800: #0f3254;
+  --color-navy-900: #0b2d4f;
+  --color-navy-950: #071d34;
+
+  --color-gold-50: #fbf7ef;
+  --color-gold-100: #f4ebd9;
+  --color-gold-200: #ead9b9;
+  --color-gold-300: #d4b483;
+  --color-gold-400: #c59f68;
+  --color-gold-500: #b3874b;
+  --color-gold-600: #946b3a;
+  --color-gold-700: #75532f;
+
+  --color-ivory: #f8f5ed;
+  --color-ivory-dark: #efe9da;
+  --color-taupe: #c9b8a5;
+  --color-taupe-dark: #a8957f;
+
+  /* ---- Appointment / state colours (docs/04 §5.1). Always pair with text, never colour alone. ---- */
+  --color-status-booked: #64748b;
+  --color-status-confirmed: #15803d;
+  --color-status-reschedule: #c2410c;
+  --color-status-checked-in: #1d4ed8;
+  --color-status-no-show: #b91c1c;
+  --color-status-done: #0f766e;
+
+  /* ---- Typography ---- */
+  --font-sans:
+    "IBM Plex Sans Thai", "Noto Sans Thai", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Sukhumvit Set", "Thonburi", sans-serif;
+  --font-display: "Jost", "IBM Plex Sans Thai", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+
+  /* ---- Shape ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ---- Semantic tokens (shadcn/ui contract) ---- */
+:root {
+  --background: #ffffff;
+  --foreground: #0b2d4f;
+  --card: #ffffff;
+  --card-foreground: #0b2d4f;
+  --popover: #ffffff;
+  --popover-foreground: #0b2d4f;
+  --primary: #0b2d4f;
+  --primary-foreground: #f8f5ed;
+  --secondary: #f8f5ed;
+  --secondary-foreground: #0b2d4f;
+  --muted: #f3f0e8;
+  --muted-foreground: #5b6b7c;
+  --accent: #efe9da;
+  --accent-foreground: #0b2d4f;
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --warning: #b45309;
+  --warning-foreground: #ffffff;
+  --border: #e2dccf;
+  --input: #d6cebe;
+  --ring: #2c5a88;
+  --sidebar: #0b2d4f;
+  --sidebar-foreground: #e8edf3;
+  --sidebar-muted: #9db3c9;
+  --sidebar-accent: #12385c;
+  --sidebar-border: #1c446c;
+  --sidebar-primary: #d4b483;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-primary: var(--sidebar-primary);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Thai text needs a little more line-height so tone marks do not collide. */
+  body {
+    line-height: 1.6;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

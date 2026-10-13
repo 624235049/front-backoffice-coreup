@@ -1,0 +1,45 @@
+{
+  "page": {
+    "title": "Account security",
+    "description": "Add two-factor authentication with an authenticator app (TOTP).",
+    "cardTitle": "Two-factor authentication",
+    "cardHint": "You enter a 6-digit code from the app every time you sign in.",
+    "enabled": "On",
+    "disabled": "Off",
+    "enable": "Turn on",
+    "disable": "Turn off two-factor",
+    "disableHint": "Confirm with your password to turn it off.",
+    "newCodes": "New backup codes",
+    "newCodesHint": "The old backup codes stop working.",
+    "required": "Your account holds a role that requires two-factor authentication. Turn it on before using the rest of the system.",
+    "cannotDisable": "Cannot turn off — your role requires two-factor, or the password is wrong."
+  },
+  "setup": {
+    "password": "Your password",
+    "passwordHint": "Confirm your password to start the setup.",
+    "step1": "Open your authenticator app (Google Authenticator, Authy …) and scan this QR code.",
+    "step2": "Keep the backup codes somewhere safe, then enter the 6-digit code from the app to confirm.",
+    "qr": "QR code for the authenticator app",
+    "manual": "Or type this key into the app",
+    "backupTitle": "Backup codes",
+    "backupHint": "Each works once if you lose the app. Shown only now.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download",
+    "codeLabel": "6-digit code from the app",
+    "confirm": "Confirm",
+    "done": "Two-factor authentication is on"
+  },
+  "challenge": {
+    "hint": "Enter the 6-digit code from your authenticator app.",
+    "backupHint": "Enter a backup code you have not used yet.",
+    "label": "Verification code",
+    "backupLabel": "Backup code",
+    "trust": "Trust this device for 30 days",
+    "submit": "Verify",
+    "invalid": "The code is wrong or expired",
+    "useBackup": "Use a backup code",
+    "useApp": "Use the app code",
+    "cancel": "Back"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "loading": "Loading…",
+  "retry": "Try again",
+  "requestId": "Request ID",
+  "close": "Close",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "notFound": "Page not found",
+  "goHome": "Back to home",
+  "offline": "Offline — some things won't work until you reconnect",
+  "home": {
+    "welcome": "Hello {{name}}",
+    "emptyTitle": "Your summary will appear here",
+    "emptyDescription": "Once the shop's features are switched on, today's numbers and tasks show up on this page. For now, start from the “Settings” menu."
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid": "Invalid value",
+    "email": "Invalid email address",
+    "tooSmall": "Value is too small",
+    "tooBig": "Value is too large",
+    "time": "Invalid time (HH:mm)",
+    "code": "Lowercase letters, digits, _ or - only",
+    "pickOne": "Pick at least one",
+    "passwordMin": "At least 8 characters",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "delete": "Delete"
+}
