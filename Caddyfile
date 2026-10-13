@@ -1,6 +1,7 @@
 # Static SPA server for the CoreUp-team back office (see Dockerfile).
 # TLS is terminated by Railway's edge, so Caddy only speaks plain HTTP on $PORT.
-# Optional env: API_ORIGIN (e.g. https://api.coreup.example) is appended to CSP connect-src.
+# Optional env: API_ORIGIN (e.g. https://api.coreup.example) is appended to CSP connect-src;
+# API_UPSTREAM (default api.railway.internal:8787) is where /v1/* is proxied.
 {
 	admin off
 	auto_https off
@@ -25,6 +26,13 @@
 		Cross-Origin-Opener-Policy "same-origin"
 		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:} https://*.sentry.io; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 		-Server
+	}
+
+	# Same-origin API: /v1/* goes to the api service over Railway's private network, so the session cookie is
+	# first-party for this site (works on *.up.railway.app without a shared parent domain). Build with VITE_API_URL
+	# empty so the SPA calls relative /v1/... URLs. API_UPSTREAM = <api private host>:<api PORT>.
+	handle /v1/* {
+		reverse_proxy {$API_UPSTREAM:api.railway.internal:8787}
 	}
 
 	# Hashed build output: cache forever; a missing asset must 404, not fall back to index.html.

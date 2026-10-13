@@ -99,7 +99,8 @@ Add → Database → Redis · ตัวแปร `REDIS_URL` (private) ใช้
 | `TWO_FACTOR_ENFORCE` | `true`/`false`; ไม่ตั้ง = บังคับ 2FA เฉพาะ production (owner + platform_*) | api |
 | `WORKER_CONCURRENCY` / `CHROMIUM_EXECUTABLE_PATH` | optional | worker |
 | `SENTRY_DSN` | | api, worker |
-| `VITE_API_URL` (+ `VITE_SENTRY_DSN`, `VITE_VAPID_PUBLIC_KEY`) | ฝังตอน build (Dockerfile `ARG`) | app, platform |
+| `VITE_API_URL` (+ `VITE_SENTRY_DSN`, `VITE_VAPID_PUBLIC_KEY`) | ฝังตอน build (Dockerfile `ARG`) — **เว้นว่าง** = เรียก `/v1/*` ที่ origin เดียวกัน แล้ว Caddy proxy ไป api ผ่าน private network (ใช้ได้บน `*.up.railway.app` โดยไม่ต้องมีโดเมน, cookie เป็น first-party; ฝั่ง api ตั้ง `COOKIE_DOMAIN=` ว่าง) | app, platform |
+| `API_UPSTREAM` | `api.railway.internal:8787` (host:port ภายในของ service api; api ต้องตั้ง `PORT=8787`) — ปลายทาง proxy `/v1/*` ของ Caddy | app, platform (runtime) |
 | `NUXT_PUBLIC_API_URL` / `NUXT_PUBLIC_SITE_URL` / `NUXT_PUBLIC_TURNSTILE_SITE_KEY` / `NUXT_PUBLIC_GA4` / `NUXT_PUBLIC_META_PIXEL` / `NUXT_PUBLIC_LINE_URL` | อ่านตอน start | web |
 
 > Token LINE OA ของแต่ละร้าน **ไม่ใช่ env** เก็บเข้ารหัสใน `channel_accounts`
