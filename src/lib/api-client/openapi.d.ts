@@ -3129,11 +3129,8 @@ export interface paths {
                     "application/json": {
                         code?: string;
                         name?: string;
-                        /** @default 1 */
                         level?: number;
-                        /** @default false */
                         isCustomerFacing?: boolean;
-                        /** @default 0 */
                         sort?: number;
                     };
                 };
@@ -3343,7 +3340,7 @@ export interface paths {
         };
         /**
          * List roles (system + custom) with their permissions
-         * @description Requires header `X-Tenant-Id`. Permission: `roles:read`. Module: `core`.
+         * @description Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -3884,7 +3881,131 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        /**
+         * Add a staff member by name (no login); bookable and queueable straight away
+         * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        displayName: string;
+                        positionId?: string | null;
+                        /**
+                         * @default full
+                         * @enum {string}
+                         */
+                        employmentType?: "full" | "part" | "freelance" | "owner";
+                        /** @default [] */
+                        roleIds?: string[];
+                        /** @default [] */
+                        branchIds?: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                userId: string | null;
+                                displayName: string;
+                                positionId: string | null;
+                                /** @enum {string} */
+                                employmentType: "full" | "part" | "freelance" | "owner";
+                                startedOn: string | null;
+                                endedOn: string | null;
+                                /** @enum {string} */
+                                status: "invited" | "active" | "inactive";
+                                reportsToMembershipId: string | null;
+                                roleIds: string[];
+                                roles: string[];
+                                branchIds: string[];
+                                customFields: {
+                                    [key: string]: unknown;
+                                };
+                                createdAt: string;
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -4426,6 +4547,7 @@ export interface paths {
                                     slug: string;
                                     logoUrl: string | null;
                                 };
+                                displayName: string | null;
                                 positionName: string | null;
                                 roleNames: string[];
                                 expiresAt: string;
@@ -8755,19 +8877,12 @@ export interface paths {
                     "application/json": {
                         /** @enum {string} */
                         type?: "free_check" | "workshop" | "small_shop_setup" | "audit" | "reset_90" | "retainer";
-                        /**
-                         * @default proposed
-                         * @enum {string}
-                         */
+                        /** @enum {string} */
                         status?: "proposed" | "active" | "completed" | "cancelled";
                         startsOn?: string | null;
                         endsOn?: string | null;
-                        /** @default 0 */
                         feeMinor?: number;
-                        /**
-                         * @default one_time
-                         * @enum {string}
-                         */
+                        /** @enum {string} */
                         billing?: "one_time" | "monthly";
                         leadConsultantUserId?: string | null;
                         soldByUserId?: string;
@@ -15731,7 +15846,7 @@ export interface paths {
         };
         /**
          * Close-day draft: what is open, expected takings, variance and the owner summary preview
-         * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         * @description Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.
          */
         get: {
             parameters: {
@@ -15956,7 +16071,7 @@ export interface paths {
         };
         /**
          * Past closes
-         * @description Requires header `X-Tenant-Id`. Permission: `shifts:read`. Module: `shifts`.
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.
          */
         get: {
             parameters: {
@@ -16085,7 +16200,7 @@ export interface paths {
         put?: never;
         /**
          * Close the day for a branch (emits daily_close.completed → owner LINE summary)
-         * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         * @description Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
          */
@@ -16236,7 +16351,7 @@ export interface paths {
         };
         /**
          * One close
-         * @description Requires header `X-Tenant-Id`. Permission: `shifts:read`. Module: `shifts`.
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.
          */
         get: {
             parameters: {
@@ -19413,7 +19528,6 @@ export interface paths {
                         branchId?: string | null;
                         startTime?: string;
                         endTime?: string;
-                        /** @default [] */
                         duties?: {
                             key?: string;
                             title: string | {
@@ -21606,6 +21720,12 @@ export interface paths {
                                     targetName?: string;
                                     affectedCount?: number;
                                     reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
                                 };
                             }[];
                             page: {
@@ -21748,6 +21868,12 @@ export interface paths {
                                     targetName?: string;
                                     affectedCount?: number;
                                     reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
                                 };
                                 leave: {
                                     request: {
@@ -21959,6 +22085,12 @@ export interface paths {
                                     targetName?: string;
                                     affectedCount?: number;
                                     reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
                                 };
                             };
                         };
@@ -22093,6 +22225,12 @@ export interface paths {
                                         targetName?: string;
                                         affectedCount?: number;
                                         reason?: string;
+                                        billNumber?: string;
+                                        customerName?: string;
+                                        subtotalMinor?: number;
+                                        discountMinor?: number;
+                                        totalMinor?: number;
+                                        amountMinor?: number;
                                     };
                                 };
                                 affectedCount: number | null;
@@ -22240,6 +22378,12 @@ export interface paths {
                                     targetName?: string;
                                     affectedCount?: number;
                                     reason?: string;
+                                    billNumber?: string;
+                                    customerName?: string;
+                                    subtotalMinor?: number;
+                                    discountMinor?: number;
+                                    totalMinor?: number;
+                                    amountMinor?: number;
                                 };
                             };
                         };
@@ -28406,6 +28550,7 @@ export interface paths {
                                 number: string;
                                 customerId: string | null;
                                 customerName: string | null;
+                                appointmentIds: string[];
                                 /** @enum {string} */
                                 status: "open" | "paid" | "void" | "refunded" | "partially_refunded";
                                 /** @description integer satang */
@@ -48661,7 +48806,6 @@ export interface paths {
                 content: {
                     "application/json": {
                         name?: string;
-                        /** @default 0 */
                         sort?: number;
                     };
                 };
@@ -49270,12 +49414,9 @@ export interface paths {
                         categoryId?: string | null;
                         description?: string | null;
                         durationMin?: number;
-                        /** @default 0 */
                         bufferMin?: number;
-                        /** @default 0 */
                         priceMinor?: number;
                         rebookAfterDays?: number | null;
-                        /** @default [] */
                         followupPlan?: {
                             afterDays: number;
                             /** @enum {string} */
@@ -49283,13 +49424,9 @@ export interface paths {
                             templateKey?: string;
                         }[];
                         resourceType?: string | null;
-                        /** @default false */
                         requiredSkill?: boolean;
-                        /** @default true */
                         active?: boolean;
-                        /** @default 0 */
                         sort?: number;
-                        /** @default {} */
                         customFields?: {
                             [key: string]: unknown;
                         };
@@ -49851,7 +49988,6 @@ export interface paths {
                         sessions?: number;
                         validDays?: number;
                         priceMinor?: number;
-                        /** @default true */
                         active?: boolean;
                     };
                 };

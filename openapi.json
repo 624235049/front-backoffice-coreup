@@ -4790,16 +4790,13 @@
                   "level": {
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 99,
-                    "default": 1
+                    "maximum": 99
                   },
                   "isCustomerFacing": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                   },
                   "sort": {
-                    "type": "integer",
-                    "default": 0
+                    "type": "integer"
                   }
                 }
               }
@@ -5177,7 +5174,7 @@
           "roles"
         ],
         "summary": "List roles (system + custom) with their permissions",
-        "description": "Requires header `X-Tenant-Id`. Permission: `roles:read`. Module: `core`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.",
         "security": [
           {
             "cookieAuth": []
@@ -5986,6 +5983,271 @@
                   "required": [
                     "data",
                     "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Add a staff member by name (no login); bookable and queueable straight away",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "displayName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "positionId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "employmentType": {
+                    "type": "string",
+                    "enum": [
+                      "full",
+                      "part",
+                      "freelance",
+                      "owner"
+                    ],
+                    "default": "full"
+                  },
+                  "roleIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 20,
+                    "default": []
+                  },
+                  "branchIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 200,
+                    "default": []
+                  }
+                },
+                "required": [
+                  "displayName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "userId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "positionId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "employmentType": {
+                          "type": "string",
+                          "enum": [
+                            "full",
+                            "part",
+                            "freelance",
+                            "owner"
+                          ]
+                        },
+                        "startedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "endedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "invited",
+                            "active",
+                            "inactive"
+                          ]
+                        },
+                        "reportsToMembershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "roleIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
+                        },
+                        "roles": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "branchIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
+                        },
+                        "customFields": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "userId",
+                        "displayName",
+                        "positionId",
+                        "employmentType",
+                        "startedOn",
+                        "endedOn",
+                        "status",
+                        "reportsToMembershipId",
+                        "roleIds",
+                        "roles",
+                        "branchIds",
+                        "customFields",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
                   ]
                 }
               }
@@ -7034,6 +7296,12 @@
                             "logoUrl"
                           ]
                         },
+                        "displayName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "positionName": {
                           "type": [
                             "string",
@@ -7055,6 +7323,7 @@
                       },
                       "required": [
                         "tenant",
+                        "displayName",
                         "positionName",
                         "roleNames",
                         "expiresAt",
@@ -15494,8 +15763,7 @@
                       "active",
                       "completed",
                       "cancelled"
-                    ],
-                    "default": "proposed"
+                    ]
                   },
                   "startsOn": {
                     "type": [
@@ -15513,16 +15781,14 @@
                   },
                   "feeMinor": {
                     "type": "integer",
-                    "minimum": 0,
-                    "default": 0
+                    "minimum": 0
                   },
                   "billing": {
                     "type": "string",
                     "enum": [
                       "one_time",
                       "monthly"
-                    ],
-                    "default": "one_time"
+                    ]
                   },
                   "leadConsultantUserId": {
                     "type": [
@@ -28364,7 +28630,7 @@
           "close"
         ],
         "summary": "Close-day draft: what is open, expected takings, variance and the owner summary preview",
-        "description": "Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.",
         "security": [
           {
             "cookieAuth": []
@@ -29048,7 +29314,7 @@
           "close"
         ],
         "summary": "Close the day for a branch (emits daily_close.completed → owner LINE summary)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "description": "Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
         "security": [
           {
             "cookieAuth": []
@@ -29369,7 +29635,7 @@
           "close"
         ],
         "summary": "Past closes",
-        "description": "Requires header `X-Tenant-Id`. Permission: `shifts:read`. Module: `shifts`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.",
         "security": [
           {
             "cookieAuth": []
@@ -29684,7 +29950,7 @@
           "close"
         ],
         "summary": "One close",
-        "description": "Requires header `X-Tenant-Id`. Permission: `shifts:read`. Module: `shifts`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.",
         "security": [
           {
             "cookieAuth": []
@@ -36024,8 +36290,7 @@
                         "title"
                       ]
                     },
-                    "maxItems": 50,
-                    "default": []
+                    "maxItems": 50
                   }
                 }
               }
@@ -40293,6 +40558,24 @@
                               },
                               "reason": {
                                 "type": "string"
+                              },
+                              "billNumber": {
+                                "type": "string"
+                              },
+                              "customerName": {
+                                "type": "string"
+                              },
+                              "subtotalMinor": {
+                                "type": "integer"
+                              },
+                              "discountMinor": {
+                                "type": "integer"
+                              },
+                              "totalMinor": {
+                                "type": "integer"
+                              },
+                              "amountMinor": {
+                                "type": "integer"
                               }
                             }
                           }
@@ -40575,6 +40858,24 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
                             }
                           }
                         },
@@ -41203,6 +41504,24 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
                             }
                           }
                         }
@@ -41454,6 +41773,24 @@
                                 },
                                 "reason": {
                                   "type": "string"
+                                },
+                                "billNumber": {
+                                  "type": "string"
+                                },
+                                "customerName": {
+                                  "type": "string"
+                                },
+                                "subtotalMinor": {
+                                  "type": "integer"
+                                },
+                                "discountMinor": {
+                                  "type": "integer"
+                                },
+                                "totalMinor": {
+                                  "type": "integer"
+                                },
+                                "amountMinor": {
+                                  "type": "integer"
                                 }
                               }
                             }
@@ -41740,6 +42077,24 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "billNumber": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "subtotalMinor": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer"
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "amountMinor": {
+                              "type": "integer"
                             }
                           }
                         }
@@ -54022,6 +54377,13 @@
                               "null"
                             ]
                           },
+                          "appointmentIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            }
+                          },
                           "status": {
                             "type": "string",
                             "enum": [
@@ -54073,6 +54435,7 @@
                           "number",
                           "customerId",
                           "customerName",
+                          "appointmentIds",
                           "status",
                           "totalMinor",
                           "discountMinor",
@@ -92535,8 +92898,7 @@
                   "sort": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10000,
-                    "default": 0
+                    "maximum": 10000
                   }
                 }
               }
@@ -93697,14 +94059,12 @@
                   "bufferMin": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 240,
-                    "default": 0
+                    "maximum": 240
                   },
                   "priceMinor": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 100000000,
-                    "default": 0
+                    "maximum": 100000000
                   },
                   "rebookAfterDays": {
                     "type": [
@@ -93741,8 +94101,7 @@
                         "type"
                       ]
                     },
-                    "maxItems": 10,
-                    "default": []
+                    "maxItems": 10
                   },
                   "resourceType": {
                     "type": [
@@ -93752,23 +94111,19 @@
                     "maxLength": 40
                   },
                   "requiredSkill": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                   },
                   "active": {
-                    "type": "boolean",
-                    "default": true
+                    "type": "boolean"
                   },
                   "sort": {
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 10000,
-                    "default": 0
+                    "maximum": 10000
                   },
                   "customFields": {
                     "type": "object",
-                    "additionalProperties": {},
-                    "default": {}
+                    "additionalProperties": {}
                   }
                 }
               }
@@ -94719,8 +95074,7 @@
                     "maximum": 100000000
                   },
                   "active": {
-                    "type": "boolean",
-                    "default": true
+                    "type": "boolean"
                   }
                 }
               }
