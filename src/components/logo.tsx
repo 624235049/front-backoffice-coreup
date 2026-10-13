@@ -1,22 +1,34 @@
-export function Logo({ className = 'size-8' }: { className?: string }) {
+const SOURCES = {
+  /** square mark (the bar-chart "O") for tight spaces */
+  mark: '/pwa-192.png',
+  /** COREUP wordmark in brand navy + gold, for light backgrounds */
+  wordmark: '/logo-wordmark.png',
+  /** wordmark with ivory letters, for the navy sidebar */
+  'wordmark-light': '/logo-wordmark-light.png',
+  /** wordmark + "Business systems & consulting" tagline */
+  full: '/logo-full.png',
+} as const;
+
+const DEFAULT_SIZE: Record<keyof typeof SOURCES, string> = {
+  mark: 'size-8 rounded-lg',
+  wordmark: 'h-10 w-auto',
+  'wordmark-light': 'h-10 w-auto',
+  full: 'h-28 w-auto',
+};
+
+export function Logo({
+  variant = 'mark',
+  className,
+}: {
+  variant?: keyof typeof SOURCES;
+  className?: string;
+}) {
   return (
-    <svg viewBox="0 0 64 64" className={className} role="img" aria-label="CoreUp">
-      <rect width="64" height="64" rx="14" fill="#0B2D4F" />
-      <path
-        d="M18 14v22a14 14 0 0 0 28 0V14"
-        fill="none"
-        stroke="#F8F5ED"
-        strokeWidth="7"
-        strokeLinecap="round"
-      />
-      <path
-        d="M26 30l6-8 6 8M32 22v14"
-        fill="none"
-        stroke="#D4B483"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <img
+      src={SOURCES[variant]}
+      alt="CoreUp"
+      className={className ?? DEFAULT_SIZE[variant]}
+      decoding="async"
+    />
   );
 }

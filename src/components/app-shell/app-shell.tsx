@@ -25,8 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex flex-1">
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-4 overflow-y-auto bg-sidebar p-3 text-sidebar-foreground lg:flex">
           <Link to="/" className="flex items-center gap-2 px-2 pt-1 text-white">
-            <Logo />
-            <span className="font-display text-lg font-semibold tracking-tight">CoreUp</span>
+            <Logo variant="wordmark-light" />
             <span className="rounded bg-white/15 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
               Team
             </span>
@@ -78,8 +77,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         >
           <SheetHeader className="p-0">
             <SheetTitle className="flex items-center gap-2 text-white">
-              <Logo />
-              CoreUp
+              <Logo variant="wordmark-light" />
             </SheetTitle>
             <SheetDescription className="sr-only">{t('primary')}</SheetDescription>
           </SheetHeader>

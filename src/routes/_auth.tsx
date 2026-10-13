@@ -9,10 +9,9 @@ export const Route = createFileRoute('/_auth')({
 function AuthLayout() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-ivory px-4 py-10">
-      <div className="flex items-center gap-3">
-        <Logo className="size-10" />
-        <span className="font-display text-2xl font-semibold tracking-tight text-navy-900">CoreUp</span>
-      </div>
+      <h1>
+        <Logo variant="full" />
+      </h1>
       <div className="w-full max-w-md">
         <Outlet />
       </div>

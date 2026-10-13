@@ -13,7 +13,7 @@ export function NoAccessPage() {
   const navigate = useNavigate();
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-ivory px-4 text-center">
-      <Logo className="size-10" />
+      <Logo variant="wordmark" className="h-14 w-auto" />
       <ShieldOff className="size-8 text-muted-foreground" aria-hidden />
       <h1 className="font-display text-xl font-semibold">{t('noAccess.title')}</h1>
       <p className="max-w-md text-sm text-muted-foreground">{t('noAccess.body')}</p>
