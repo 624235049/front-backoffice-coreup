@@ -26675,6 +26675,7 @@ export interface paths {
                                 bill: {
                                     id: string;
                                     number: string | null;
+                                    approvalPending: boolean;
                                 } | null;
                                 followupsCreated: {
                                     id: string;
@@ -26830,6 +26831,11 @@ export interface paths {
                                     endAt: string;
                                     memberIds: string[];
                                 }[];
+                                /** @enum {string|null} */
+                                emptyReason: "branch_closed" | "no_staff" | "no_shifts" | "no_resource" | "all_booked" | null;
+                                /** @enum {string|null} */
+                                closedKind: "closure" | "weekday" | null;
+                                closureReason: string | null;
                             };
                         };
                     };
@@ -27023,6 +27029,9 @@ export interface paths {
                                     loadPct: number;
                                     closed: boolean;
                                 }[];
+                                shiftsEnabled: boolean;
+                                /** @enum {string|null} */
+                                closedKind: "closure" | "weekday" | null;
                             };
                         };
                     };
@@ -33752,8 +33761,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Finish a served walk-in: creates the service record (commission is calculated from it)
-         * @description Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `payouts`.
+         * Finish a served walk-in: opens the bill at รับเงิน (checkout) and writes the service record (payouts); a discount over the ceiling waits for approval or is rejected
+         * @description Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `queue`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
          */
@@ -33815,7 +33824,12 @@ export interface paths {
                                     assignedMemberName: string | null;
                                     assignmentReason: string | null;
                                 };
-                                serviceRecordId: string;
+                                serviceRecordId: string | null;
+                                bill: {
+                                    id: string;
+                                    number: string;
+                                    approvalPending: boolean;
+                                } | null;
                             };
                         };
                     };

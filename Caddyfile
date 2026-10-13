@@ -1,6 +1,7 @@
 # Static SPA server for the CoreUp-team back office (see Dockerfile).
 # TLS is terminated by Railway's edge, so Caddy only speaks plain HTTP on $PORT.
-# Optional env: API_ORIGIN (e.g. https://api.coreup.example) is appended to CSP connect-src;
+# Optional env: API_ORIGIN (e.g. https://api.coreup.example) and FILES_ORIGIN (the S3 endpoint the API presigns
+# uploads for, e.g. https://t3.storageapi.dev) are appended to CSP connect-src;
 # API_UPSTREAM (default api.railway.internal:8787) is where /v1/* is proxied.
 {
 	admin off
@@ -24,7 +25,7 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
 		Cross-Origin-Opener-Policy "same-origin"
-		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:} https://*.sentry.io; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' {$API_ORIGIN:} {$FILES_ORIGIN:} https://*.sentry.io; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 		-Server
 	}
 

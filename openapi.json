@@ -50874,11 +50874,15 @@
                                 "string",
                                 "null"
                               ]
+                            },
+                            "approvalPending": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "id",
-                            "number"
+                            "number",
+                            "approvalPending"
                           ]
                         },
                         "followupsCreated": {
@@ -51290,13 +51294,47 @@
                               "memberIds"
                             ]
                           }
+                        },
+                        "emptyReason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "branch_closed",
+                            "no_staff",
+                            "no_shifts",
+                            "no_resource",
+                            "all_booked",
+                            null
+                          ]
+                        },
+                        "closedKind": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "closure",
+                            "weekday",
+                            null
+                          ]
+                        },
+                        "closureReason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
                         "date",
                         "timezone",
                         "slots",
-                        "starts"
+                        "starts",
+                        "emptyReason",
+                        "closedKind",
+                        "closureReason"
                       ]
                     }
                   },
@@ -51863,6 +51901,20 @@
                               "closed"
                             ]
                           }
+                        },
+                        "shiftsEnabled": {
+                          "type": "boolean"
+                        },
+                        "closedKind": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "closure",
+                            "weekday",
+                            null
+                          ]
                         }
                       },
                       "required": [
@@ -51880,7 +51932,9 @@
                         "breaks",
                         "closures",
                         "capacity",
-                        "days"
+                        "days",
+                        "shiftsEnabled",
+                        "closedKind"
                       ]
                     }
                   },
@@ -65345,8 +65399,8 @@
         "tags": [
           "queue"
         ],
-        "summary": "Finish a served walk-in: creates the service record (commission is calculated from it)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `payouts`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "summary": "Finish a served walk-in: opens the bill at รับเงิน (checkout) and writes the service record (payouts); a discount over the ceiling waits for approval or is rejected",
+        "description": "Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `queue`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
         "security": [
           {
             "cookieAuth": []
@@ -65570,13 +65624,40 @@
                           ]
                         },
                         "serviceRecordId": {
-                          "type": "string",
+                          "type": [
+                            "string",
+                            "null"
+                          ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "bill": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "number": {
+                              "type": "string"
+                            },
+                            "approvalPending": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "number",
+                            "approvalPending"
+                          ]
                         }
                       },
                       "required": [
                         "entry",
-                        "serviceRecordId"
+                        "serviceRecordId",
+                        "bill"
                       ]
                     }
                   },
