@@ -28912,6 +28912,12 @@
                             },
                             "expectedCardMinor": {
                               "type": "integer"
+                            },
+                            "cashPayInMinor": {
+                              "type": "integer"
+                            },
+                            "cashPayOutMinor": {
+                              "type": "integer"
                             }
                           },
                           "required": [
@@ -28950,6 +28956,12 @@
                             "openingFloatMinor": {
                               "type": "integer"
                             },
+                            "payInMinor": {
+                              "type": "integer"
+                            },
+                            "payOutMinor": {
+                              "type": "integer"
+                            },
                             "basis": {
                               "type": "string",
                               "enum": [
@@ -28965,8 +28977,125 @@
                             "packageMinor",
                             "receivedMinor",
                             "openingFloatMinor",
+                            "payInMinor",
+                            "payOutMinor",
                             "basis"
                           ]
+                        },
+                        "drawer": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "sessionId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "openedAt": {
+                              "type": "string"
+                            },
+                            "openingFloatMinor": {
+                              "type": "integer"
+                            },
+                            "cashInMinor": {
+                              "type": "integer"
+                            },
+                            "cashRefundedMinor": {
+                              "type": "integer"
+                            },
+                            "payInMinor": {
+                              "type": "integer"
+                            },
+                            "payOutMinor": {
+                              "type": "integer"
+                            },
+                            "expectedMinor": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "sessionId",
+                            "openedAt",
+                            "openingFloatMinor",
+                            "cashInMinor",
+                            "cashRefundedMinor",
+                            "payInMinor",
+                            "payOutMinor",
+                            "expectedMinor"
+                          ]
+                        },
+                        "cashMovements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "sessionId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "amountMinor": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "supplies",
+                                  "labor",
+                                  "owner_deposit",
+                                  "change_topup",
+                                  "other"
+                                ]
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "createdByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "sessionId",
+                              "branchId",
+                              "kind",
+                              "amountMinor",
+                              "reason",
+                              "note",
+                              "createdBy",
+                              "createdByName",
+                              "createdAt"
+                            ]
+                          }
                         },
                         "variance": {
                           "type": [
@@ -29111,6 +29240,12 @@
                                 },
                                 "expectedCardMinor": {
                                   "type": "integer"
+                                },
+                                "cashPayInMinor": {
+                                  "type": "integer"
+                                },
+                                "cashPayOutMinor": {
+                                  "type": "integer"
                                 }
                               },
                               "required": [
@@ -29219,6 +29354,8 @@
                         "discounts",
                         "totals",
                         "expected",
+                        "drawer",
+                        "cashMovements",
                         "variance",
                         "summaryLines",
                         "urgentFollowups",
@@ -29313,7 +29450,7 @@
         "tags": [
           "close"
         ],
-        "summary": "Close the day for a branch (emits daily_close.completed → owner LINE summary)",
+        "summary": "Close the day for a branch (emits daily_close.completed → owner LINE summary); an open drawer is closed with the same cash count",
         "description": "Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
         "security": [
           {
@@ -29454,6 +29591,12 @@
                             },
                             "expectedCardMinor": {
                               "type": "integer"
+                            },
+                            "cashPayInMinor": {
+                              "type": "integer"
+                            },
+                            "cashPayOutMinor": {
+                              "type": "integer"
                             }
                           },
                           "required": [
@@ -29532,6 +29675,98 @@
                               "message"
                             ]
                           }
+                        },
+                        "drawerClosed": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "branchId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "openedBy": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "openedAt": {
+                              "type": "string"
+                            },
+                            "openingFloatMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "closedBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "closedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "countedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "expectedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "varianceMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "payInMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            },
+                            "payOutMinor": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "description": "integer satang"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "branchId",
+                            "openedBy",
+                            "openedAt",
+                            "openingFloatMinor",
+                            "closedBy",
+                            "closedAt",
+                            "countedMinor",
+                            "expectedMinor",
+                            "varianceMinor",
+                            "note",
+                            "payInMinor",
+                            "payOutMinor"
+                          ]
                         }
                       },
                       "required": [
@@ -29547,7 +29782,8 @@
                         "declaredTransferMinor",
                         "varianceMinor",
                         "handoverNote",
-                        "issues"
+                        "issues",
+                        "drawerClosed"
                       ]
                     }
                   },
@@ -29765,6 +30001,12 @@
                                 "type": "integer"
                               },
                               "expectedCardMinor": {
+                                "type": "integer"
+                              },
+                              "cashPayInMinor": {
+                                "type": "integer"
+                              },
+                              "cashPayOutMinor": {
                                 "type": "integer"
                               }
                             },
@@ -30049,6 +30291,12 @@
                               "type": "integer"
                             },
                             "expectedCardMinor": {
+                              "type": "integer"
+                            },
+                            "cashPayInMinor": {
+                              "type": "integer"
+                            },
+                            "cashPayOutMinor": {
                               "type": "integer"
                             }
                           },
@@ -61481,6 +61729,16 @@
                             "null"
                           ]
                         },
+                        "payInMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "payOutMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
                         "cashInMinor": {
                           "type": "integer"
                         },
@@ -61494,6 +61752,78 @@
                         },
                         "billsPaid": {
                           "type": "integer"
+                        },
+                        "movements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "sessionId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "amountMinor": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "supplies",
+                                  "labor",
+                                  "owner_deposit",
+                                  "change_topup",
+                                  "other"
+                                ]
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "createdByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "sessionId",
+                              "branchId",
+                              "kind",
+                              "amountMinor",
+                              "reason",
+                              "note",
+                              "createdBy",
+                              "createdByName",
+                              "createdAt"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -61508,10 +61838,13 @@
                         "expectedMinor",
                         "varianceMinor",
                         "note",
+                        "payInMinor",
+                        "payOutMinor",
                         "cashInMinor",
                         "cashRefundedMinor",
                         "expectedNowMinor",
-                        "billsPaid"
+                        "billsPaid",
+                        "movements"
                       ]
                     }
                   },
@@ -61712,6 +62045,16 @@
                             "null"
                           ]
                         },
+                        "payInMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "payOutMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
                         "cashInMinor": {
                           "type": "integer"
                         },
@@ -61725,6 +62068,78 @@
                         },
                         "billsPaid": {
                           "type": "integer"
+                        },
+                        "movements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "sessionId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "amountMinor": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "supplies",
+                                  "labor",
+                                  "owner_deposit",
+                                  "change_topup",
+                                  "other"
+                                ]
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "createdByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "sessionId",
+                              "branchId",
+                              "kind",
+                              "amountMinor",
+                              "reason",
+                              "note",
+                              "createdBy",
+                              "createdByName",
+                              "createdAt"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -61739,10 +62154,13 @@
                         "expectedMinor",
                         "varianceMinor",
                         "note",
+                        "payInMinor",
+                        "payOutMinor",
                         "cashInMinor",
                         "cashRefundedMinor",
                         "expectedNowMinor",
-                        "billsPaid"
+                        "billsPaid",
+                        "movements"
                       ]
                     }
                   },
@@ -61948,6 +62366,16 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "payInMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "payOutMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
                         }
                       },
                       "required": [
@@ -61961,7 +62389,350 @@
                         "countedMinor",
                         "expectedMinor",
                         "varianceMinor",
-                        "note"
+                        "note",
+                        "payInMinor",
+                        "payOutMinor"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cash-sessions/movements": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "Take cash out of / put cash into the open drawer with a reason (counts toward the expected cash)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Required; unique per logical operation"
+            },
+            "required": false,
+            "description": "Required; unique per logical operation",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "branchId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "in",
+                      "out"
+                    ]
+                  },
+                  "amountMinor": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000000
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "supplies",
+                      "labor",
+                      "owner_deposit",
+                      "change_topup",
+                      "other"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "kind",
+                  "amountMinor",
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "openedBy": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "openedAt": {
+                          "type": "string"
+                        },
+                        "openingFloatMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "closedBy": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "closedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "countedMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "expectedMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "varianceMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payInMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "payOutMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "cashInMinor": {
+                          "type": "integer"
+                        },
+                        "cashRefundedMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "expectedNowMinor": {
+                          "type": "integer"
+                        },
+                        "billsPaid": {
+                          "type": "integer"
+                        },
+                        "movements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "sessionId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "amountMinor": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "supplies",
+                                  "labor",
+                                  "owner_deposit",
+                                  "change_topup",
+                                  "other"
+                                ]
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "createdByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "sessionId",
+                              "branchId",
+                              "kind",
+                              "amountMinor",
+                              "reason",
+                              "note",
+                              "createdBy",
+                              "createdByName",
+                              "createdAt"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "branchId",
+                        "openedBy",
+                        "openedAt",
+                        "openingFloatMinor",
+                        "closedBy",
+                        "closedAt",
+                        "countedMinor",
+                        "expectedMinor",
+                        "varianceMinor",
+                        "note",
+                        "payInMinor",
+                        "payOutMinor",
+                        "cashInMinor",
+                        "cashRefundedMinor",
+                        "expectedNowMinor",
+                        "billsPaid",
+                        "movements"
                       ]
                     }
                   },
@@ -62158,6 +62929,16 @@
                               "string",
                               "null"
                             ]
+                          },
+                          "payInMinor": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "integer satang"
+                          },
+                          "payOutMinor": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "integer satang"
                           }
                         },
                         "required": [
@@ -62171,7 +62952,9 @@
                           "countedMinor",
                           "expectedMinor",
                           "varianceMinor",
-                          "note"
+                          "note",
+                          "payInMinor",
+                          "payOutMinor"
                         ]
                       }
                     },
@@ -62379,6 +63162,16 @@
                             "null"
                           ]
                         },
+                        "payInMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "payOutMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
                         "cashInMinor": {
                           "type": "integer"
                         },
@@ -62392,6 +63185,78 @@
                         },
                         "billsPaid": {
                           "type": "integer"
+                        },
+                        "movements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "sessionId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "amountMinor": {
+                                "type": "integer",
+                                "minimum": 1
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "supplies",
+                                  "labor",
+                                  "owner_deposit",
+                                  "change_topup",
+                                  "other"
+                                ]
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "createdByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "sessionId",
+                              "branchId",
+                              "kind",
+                              "amountMinor",
+                              "reason",
+                              "note",
+                              "createdBy",
+                              "createdByName",
+                              "createdAt"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -62406,10 +63271,13 @@
                         "expectedMinor",
                         "varianceMinor",
                         "note",
+                        "payInMinor",
+                        "payOutMinor",
                         "cashInMinor",
                         "cashRefundedMinor",
                         "expectedNowMinor",
-                        "billsPaid"
+                        "billsPaid",
+                        "movements"
                       ]
                     }
                   },

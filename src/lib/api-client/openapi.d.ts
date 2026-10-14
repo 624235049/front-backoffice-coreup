@@ -15924,6 +15924,8 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    cashPayInMinor?: number;
+                                    cashPayOutMinor?: number;
                                 };
                                 expected: {
                                     cashMinor: number;
@@ -15932,9 +15934,35 @@ export interface paths {
                                     packageMinor: number;
                                     receivedMinor: number;
                                     openingFloatMinor: number;
+                                    payInMinor: number;
+                                    payOutMinor: number;
                                     /** @enum {string} */
                                     basis: "payments" | "service_records";
                                 };
+                                drawer: {
+                                    sessionId: string;
+                                    openedAt: string;
+                                    openingFloatMinor: number;
+                                    cashInMinor: number;
+                                    cashRefundedMinor: number;
+                                    payInMinor: number;
+                                    payOutMinor: number;
+                                    expectedMinor: number;
+                                } | null;
+                                cashMovements: {
+                                    id: string;
+                                    sessionId: string;
+                                    branchId: string;
+                                    /** @enum {string} */
+                                    kind: "in" | "out";
+                                    amountMinor: number;
+                                    /** @enum {string} */
+                                    reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                                    note: string | null;
+                                    createdBy: string;
+                                    createdByName: string | null;
+                                    createdAt: string;
+                                }[];
                                 variance: {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
@@ -15971,6 +15999,8 @@ export interface paths {
                                         expectedCashMinor: number;
                                         expectedTransferMinor: number;
                                         expectedCardMinor: number;
+                                        cashPayInMinor?: number;
+                                        cashPayOutMinor?: number;
                                     };
                                     declaredCashMinor: number | null;
                                     declaredTransferMinor: number | null;
@@ -16115,6 +16145,8 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    cashPayInMinor?: number;
+                                    cashPayOutMinor?: number;
                                 };
                                 declaredCashMinor: number | null;
                                 declaredTransferMinor: number | null;
@@ -16199,7 +16231,7 @@ export interface paths {
         };
         put?: never;
         /**
-         * Close the day for a branch (emits daily_close.completed → owner LINE summary)
+         * Close the day for a branch (emits daily_close.completed → owner LINE summary); an open drawer is closed with the same cash count
          * @description Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
@@ -16254,6 +16286,8 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    cashPayInMinor?: number;
+                                    cashPayOutMinor?: number;
                                 };
                                 declaredCashMinor: number | null;
                                 declaredTransferMinor: number | null;
@@ -16267,6 +16301,25 @@ export interface paths {
                                     count: number;
                                     message: string;
                                 }[];
+                                drawerClosed: {
+                                    id: string;
+                                    branchId: string;
+                                    openedBy: string;
+                                    openedAt: string;
+                                    /** @description integer satang */
+                                    openingFloatMinor: number;
+                                    closedBy: string | null;
+                                    closedAt: string | null;
+                                    /** @description integer satang */
+                                    countedMinor: number | null;
+                                    expectedMinor: number | null;
+                                    varianceMinor: number | null;
+                                    note: string | null;
+                                    /** @description integer satang */
+                                    payInMinor: number;
+                                    /** @description integer satang */
+                                    payOutMinor: number;
+                                } | null;
                             };
                         };
                     };
@@ -16392,6 +16445,8 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    cashPayInMinor?: number;
+                                    cashPayOutMinor?: number;
                                 };
                                 declaredCashMinor: number | null;
                                 declaredTransferMinor: number | null;
@@ -31516,11 +31571,29 @@ export interface paths {
                                 expectedMinor: number | null;
                                 varianceMinor: number | null;
                                 note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
                                 cashInMinor: number;
                                 /** @description integer satang */
                                 cashRefundedMinor: number;
                                 expectedNowMinor: number;
                                 billsPaid: number;
+                                movements: {
+                                    id: string;
+                                    sessionId: string;
+                                    branchId: string;
+                                    /** @enum {string} */
+                                    kind: "in" | "out";
+                                    amountMinor: number;
+                                    /** @enum {string} */
+                                    reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                                    note: string | null;
+                                    createdBy: string;
+                                    createdByName: string | null;
+                                    createdAt: string;
+                                }[];
                             } | null;
                         };
                     };
@@ -31657,11 +31730,29 @@ export interface paths {
                                 expectedMinor: number | null;
                                 varianceMinor: number | null;
                                 note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
                                 cashInMinor: number;
                                 /** @description integer satang */
                                 cashRefundedMinor: number;
                                 expectedNowMinor: number;
                                 billsPaid: number;
+                                movements: {
+                                    id: string;
+                                    sessionId: string;
+                                    branchId: string;
+                                    /** @enum {string} */
+                                    kind: "in" | "out";
+                                    amountMinor: number;
+                                    /** @enum {string} */
+                                    reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                                    note: string | null;
+                                    createdBy: string;
+                                    createdByName: string | null;
+                                    createdAt: string;
+                                }[];
                             };
                         };
                     };
@@ -31794,6 +31885,168 @@ export interface paths {
                                 expectedMinor: number | null;
                                 varianceMinor: number | null;
                                 note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cash-sessions/movements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Take cash out of / put cash into the open drawer with a reason (counts toward the expected cash)
+         * @description Requires header `X-Tenant-Id`. Permission: `cash:manage`. Module: `checkout`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        branchId?: string;
+                        /** @enum {string} */
+                        kind: "in" | "out";
+                        amountMinor: number;
+                        /** @enum {string} */
+                        reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Recorded */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                openedBy: string;
+                                openedAt: string;
+                                /** @description integer satang */
+                                openingFloatMinor: number;
+                                closedBy: string | null;
+                                closedAt: string | null;
+                                /** @description integer satang */
+                                countedMinor: number | null;
+                                expectedMinor: number | null;
+                                varianceMinor: number | null;
+                                note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
+                                cashInMinor: number;
+                                /** @description integer satang */
+                                cashRefundedMinor: number;
+                                expectedNowMinor: number;
+                                billsPaid: number;
+                                movements: {
+                                    id: string;
+                                    sessionId: string;
+                                    branchId: string;
+                                    /** @enum {string} */
+                                    kind: "in" | "out";
+                                    amountMinor: number;
+                                    /** @enum {string} */
+                                    reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                                    note: string | null;
+                                    createdBy: string;
+                                    createdByName: string | null;
+                                    createdAt: string;
+                                }[];
                             };
                         };
                     };
@@ -31914,6 +32167,10 @@ export interface paths {
                                 expectedMinor: number | null;
                                 varianceMinor: number | null;
                                 note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -32041,11 +32298,29 @@ export interface paths {
                                 expectedMinor: number | null;
                                 varianceMinor: number | null;
                                 note: string | null;
+                                /** @description integer satang */
+                                payInMinor: number;
+                                /** @description integer satang */
+                                payOutMinor: number;
                                 cashInMinor: number;
                                 /** @description integer satang */
                                 cashRefundedMinor: number;
                                 expectedNowMinor: number;
                                 billsPaid: number;
+                                movements: {
+                                    id: string;
+                                    sessionId: string;
+                                    branchId: string;
+                                    /** @enum {string} */
+                                    kind: "in" | "out";
+                                    amountMinor: number;
+                                    /** @enum {string} */
+                                    reason: "supplies" | "labor" | "owner_deposit" | "change_topup" | "other";
+                                    note: string | null;
+                                    createdBy: string;
+                                    createdByName: string | null;
+                                    createdAt: string;
+                                }[];
                             };
                         };
                     };
