@@ -5,7 +5,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const source = process.env.API_OPENAPI_URL ?? path.join(root, 'openapi.json');
+const source = process.env.API_OPENAPI_URL || path.join(root, 'openapi.json');
 const text = /^https?:\/\//.test(source)
   ? await (await fetch(source)).text()
   : await readFile(source, 'utf8');
