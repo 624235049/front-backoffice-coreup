@@ -973,11 +973,16 @@ export interface paths {
         /**
          * Update tenant (name, logo, colour, timezone, quiet hours, uiMode, settings merge)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -1215,11 +1220,16 @@ export interface paths {
         /**
          * Replace terminology overrides
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -1562,11 +1572,16 @@ export interface paths {
         /**
          * Create branch
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -1810,11 +1825,16 @@ export interface paths {
         /**
          * Delete (soft) branch
          * @description Requires header `X-Tenant-Id`. Permission: `branches:delete`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -1899,11 +1919,16 @@ export interface paths {
         /**
          * Update branch (hours, address, location, status)
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -2136,11 +2161,16 @@ export interface paths {
         /**
          * Add a room / bed / chair
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -2263,11 +2293,16 @@ export interface paths {
         /**
          * Remove a branch resource
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     childId: string;
@@ -2353,11 +2388,16 @@ export interface paths {
         /**
          * Update a branch resource
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     childId: string;
@@ -2571,11 +2611,16 @@ export interface paths {
         /**
          * Add a closure date
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -2690,11 +2735,16 @@ export interface paths {
         /**
          * Remove a closure date
          * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     childId: string;
@@ -2900,11 +2950,16 @@ export interface paths {
         /**
          * Create position
          * @description Requires header `X-Tenant-Id`. Permission: `positions:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -3025,11 +3080,16 @@ export interface paths {
         /**
          * Delete position (409 when members still use it)
          * @description Requires header `X-Tenant-Id`. Permission: `positions:delete`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -3114,11 +3174,16 @@ export interface paths {
         /**
          * Update position
          * @description Requires header `X-Tenant-Id`. Permission: `positions:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -3437,11 +3502,16 @@ export interface paths {
         /**
          * Create custom role
          * @description Requires header `X-Tenant-Id`. Permission: `roles:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -3556,11 +3626,16 @@ export interface paths {
         /**
          * Delete custom role (409 when still assigned)
          * @description Requires header `X-Tenant-Id`. Permission: `roles:delete`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -3645,11 +3720,16 @@ export interface paths {
         /**
          * Update custom role name / permissions
          * @description Requires header `X-Tenant-Id`. Permission: `roles:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -3884,11 +3964,16 @@ export interface paths {
         /**
          * Add a staff member by name (no login); bookable and queueable straight away
          * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -4138,11 +4223,16 @@ export interface paths {
         /**
          * Update member: position, roles, branches, reports-to, details
          * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -4277,11 +4367,16 @@ export interface paths {
         /**
          * Deactivate member (history kept, access revoked)
          * @description Requires header `X-Tenant-Id`. Permission: `members:delete`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -4403,11 +4498,16 @@ export interface paths {
         /**
          * Create an invite link for a new member
          * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -4862,11 +4962,16 @@ export interface paths {
         /**
          * Create a custom field (no health/treatment data keys)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -5010,11 +5115,16 @@ export interface paths {
         /**
          * Update / archive a custom field
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -6047,11 +6157,16 @@ export interface paths {
         /**
          * Onboard a shop from an industry template (tenant, branches, owner, services, checklists …)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -6345,11 +6460,16 @@ export interface paths {
         /**
          * Change shop status, plan, name or team notes
          * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -6528,11 +6648,16 @@ export interface paths {
         /**
          * Set the shop's enabled modules (`core` is always on)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -6722,11 +6847,16 @@ export interface paths {
         /**
          * View a shop as CoreUp staff: 60-minute session, reason required, audited
          * @description Requires header `X-Tenant-Id`. Permission: `platform:impersonate`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -7308,11 +7438,16 @@ export interface paths {
         /**
          * Assign a CoreUp consultant or salesperson to a shop
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -7430,11 +7565,16 @@ export interface paths {
         /**
          * Remove an assignment
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     tenantId: string;
                     userId: string;
@@ -7662,11 +7802,16 @@ export interface paths {
         /**
          * Add a lead by hand (website leads arrive through /public/leads)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -7941,11 +8086,16 @@ export interface paths {
         /**
          * Move a lead between stages, set owner / next action
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -8088,11 +8238,16 @@ export interface paths {
         /**
          * Log a call / chat / visit / meeting / note
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -8213,11 +8368,16 @@ export interface paths {
         /**
          * Convert a lead into a shop (+ optional first engagement)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -8598,11 +8758,16 @@ export interface paths {
         /**
          * Create an engagement (an `active` one with a playbook gets its weekly tasks)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -8862,11 +9027,16 @@ export interface paths {
         /**
          * Update an engagement
          * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -9129,11 +9299,16 @@ export interface paths {
         /**
          * Generate the playbook's weekly tasks for this engagement (idempotent)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -9266,11 +9441,16 @@ export interface paths {
         /**
          * Update an engagement task (status, note, due date)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -9635,11 +9815,16 @@ export interface paths {
         /**
          * Start an audit for a shop
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -9960,11 +10145,16 @@ export interface paths {
         /**
          * Update audit status / consultant
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -10131,11 +10321,16 @@ export interface paths {
         /**
          * Save rubric scores (1–5 per criterion; re-sending a criterion replaces it)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -10306,11 +10501,16 @@ export interface paths {
         /**
          * Add a finding
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -10436,11 +10636,16 @@ export interface paths {
         /**
          * Delete a finding
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     findingId: string;
@@ -10533,11 +10738,16 @@ export interface paths {
         /**
          * Update a finding
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     findingId: string;
@@ -10658,11 +10868,16 @@ export interface paths {
         /**
          * Save the 90-day action plan
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -10842,11 +11057,16 @@ export interface paths {
         /**
          * Generate the audit report PDF (worker job; poll the audit for report.status/url)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:audits`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -11069,11 +11289,16 @@ export interface paths {
         /**
          * Issue an invoice (number INV-YYYYMM-####, VAT 7% unless given)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -11207,11 +11432,16 @@ export interface paths {
         /**
          * Monthly billing run: one subscription invoice per active shop + engagement invoices (idempotent)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -11325,11 +11555,16 @@ export interface paths {
         /**
          * Mark paid / void / change due date
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -11687,11 +11922,16 @@ export interface paths {
         /**
          * Create a plan
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -11830,11 +12070,16 @@ export interface paths {
         /**
          * Update a plan (price, modules, limits)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -12064,11 +12309,16 @@ export interface paths {
         /**
          * Add a CoreUp team member (emails a set-password link to the CoreUp back office)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -12193,11 +12443,16 @@ export interface paths {
         /**
          * Change a team member's role or deactivate them
          * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -12531,11 +12786,16 @@ export interface paths {
         /**
          * Add a shop question (or override a shared key for this shop)
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -12675,11 +12935,16 @@ export interface paths {
         /**
          * Edit / deactivate a shop question (shared rows are read-only)
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -12912,11 +13177,16 @@ export interface paths {
         /**
          * Create a survey round (draft)
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -13164,11 +13434,16 @@ export interface paths {
         /**
          * Delete a draft survey
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -13253,11 +13528,16 @@ export interface paths {
         /**
          * Edit a draft survey
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -13388,11 +13668,16 @@ export interface paths {
         /**
          * Open a draft survey for answers
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -13511,11 +13796,16 @@ export interface paths {
         /**
          * Close an open survey (emits survey.closed → health score)
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -13634,11 +13924,16 @@ export interface paths {
         /**
          * Issue one single-use anonymous link per audience member and deliver it via LINE/email
          * @description Requires header `X-Tenant-Id`. Permission: `surveys:write`. Module: `surveys`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -14972,11 +15267,16 @@ export interface paths {
         /**
          * Assign (or unassign) a handler
          * @description Requires header `X-Tenant-Id`. Permission: `anon_reports:handle`. Module: `reports`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -15102,11 +15402,16 @@ export interface paths {
         /**
          * Reply to the reporter (appears in their thread; carries no handler identity)
          * @description Requires header `X-Tenant-Id`. Permission: `anon_reports:handle`. Module: `reports`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -15232,11 +15537,16 @@ export interface paths {
         /**
          * Change status (new → in_progress → resolved → closed)
          * @description Requires header `X-Tenant-Id`. Permission: `anon_reports:handle`. Module: `reports`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -15480,11 +15790,16 @@ export interface paths {
         /**
          * Receive a complaint (opens a follow-up when a customer is linked)
          * @description Requires header `X-Tenant-Id`. Permission: `complaints:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -15722,11 +16037,16 @@ export interface paths {
         /**
          * Assign an owner, move to in_progress, or close with a resolution
          * @description Requires header `X-Tenant-Id`. Permission: `complaints:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -17353,11 +17673,16 @@ export interface paths {
         /**
          * Turn report channels on/off for myself (or another member with members:write)
          * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -18644,11 +18969,16 @@ export interface paths {
         /**
          * Change the last day or tick tasks
          * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -19338,11 +19668,16 @@ export interface paths {
         /**
          * Create shift template
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -19477,11 +19812,16 @@ export interface paths {
         /**
          * Delete shift template
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:delete`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -19566,11 +19906,16 @@ export interface paths {
         /**
          * Update shift template (existing shifts keep their own copy)
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -19820,11 +20165,16 @@ export interface paths {
         /**
          * Create a shift (409 on overlap with the same person, approved leave or an existing shift)
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -20107,11 +20457,16 @@ export interface paths {
         /**
          * Save a whole week for a branch: planned shifts are replaced by the assignments (leave/absent/swapped rows are kept)
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -20245,11 +20600,16 @@ export interface paths {
         /**
          * Generate a week from templates: "this person works this template on these weekdays". Conflicting days are skipped and reported
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -20370,11 +20730,16 @@ export interface paths {
         /**
          * Delete a shift (pending swap requests for it are closed)
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:delete`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -20459,11 +20824,16 @@ export interface paths {
         /**
          * Edit a shift. Requires If-Match: <version> (409 VERSION_MISMATCH otherwise)
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -20980,11 +21350,16 @@ export interface paths {
         /**
          * Withdraw a pending swap request
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:read:own`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -21480,11 +21855,16 @@ export interface paths {
         /**
          * Cancel a pending (or still-future approved) leave; shifts flagged leave return to planned
          * @description Requires header `X-Tenant-Id`. Permission: `shifts:read:own`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -21600,11 +21980,16 @@ export interface paths {
         /**
          * Approve or reject a pending leave from the leave list (same decision path as the approvals inbox; works with the approvals module off)
          * @description Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -21749,11 +22134,16 @@ export interface paths {
         /**
          * Approve or reject a pending shift swap from the roster (same decision path as the approvals inbox; works with the approvals module off)
          * @description Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -21898,11 +22288,16 @@ export interface paths {
         /**
          * Move leave-affected appointments to suggested substitutes. Per-appointment result; one conflict does not stop the rest
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `shifts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -22383,11 +22778,16 @@ export interface paths {
         /**
          * Approve or reject. Applies the effect (leave → shifts flagged, swap → shift handed over, bill changes) in one transaction
          * @description Requires header `X-Tenant-Id`. Permission: `approvals:decide`. Module: `approvals`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -22940,11 +23340,16 @@ export interface paths {
         /**
          * Create checklist (schedule: shift_start | shift_end | daily | weekly)
          * @description Requires header `X-Tenant-Id`. Permission: `checklists:manage`. Module: `checklists`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -23351,11 +23756,16 @@ export interface paths {
         /**
          * Delete a checklist; lists that already have runs are archived (active=false) instead
          * @description Requires header `X-Tenant-Id`. Permission: `checklists:manage`. Module: `checklists`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -23446,11 +23856,16 @@ export interface paths {
         /**
          * Edit checklist; `items` replaces the item set (send ids to keep existing items)
          * @description Requires header `X-Tenant-Id`. Permission: `checklists:manage`. Module: `checklists`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -23603,11 +24018,16 @@ export interface paths {
         /**
          * Start (or continue) the run of a checklist for a branch + day. 201 when created, 200 when it already existed
          * @description Requires header `X-Tenant-Id`. Permission: `checklists:run`. Module: `checklists`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -24064,11 +24484,16 @@ export interface paths {
         /**
          * Tick an item: { done, countValue?, note?, photoFileId? } (upload the photo with /files/upload-url?purpose=checklist_photo). The run completes with its last item
          * @description Requires header `X-Tenant-Id`. Permission: `checklists:run`. Module: `checklists`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     itemId: string;
@@ -24312,11 +24737,16 @@ export interface paths {
         /**
          * Create a SOP (draft unless publish=true)
          * @description Requires header `X-Tenant-Id`. Permission: `sops:write`. Module: `sop`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -24656,11 +25086,16 @@ export interface paths {
         /**
          * Archive a SOP (kept for history, hidden from staff)
          * @description Requires header `X-Tenant-Id`. Permission: `sops:delete`. Module: `sop`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -24745,11 +25180,16 @@ export interface paths {
         /**
          * Edit a SOP. Requires If-Match: <version>. Changing a published SOP creates a new version everyone must acknowledge again
          * @description Requires header `X-Tenant-Id`. Permission: `sops:write`. Module: `sop`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -24869,11 +25309,16 @@ export interface paths {
         /**
          * I have read the latest version
          * @description Requires header `X-Tenant-Id`. Permission: `sops:read`. Module: `sop`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -25297,11 +25742,16 @@ export interface paths {
         /**
          * Register this browser/device for web push (idempotent per endpoint)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -25404,13 +25854,18 @@ export interface paths {
         /**
          * Unsubscribe this device (by endpoint)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query: {
                     endpoint: string;
                 };
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -25505,11 +25960,16 @@ export interface paths {
         /**
          * Send myself a test notification (through the push worker)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -25612,11 +26072,16 @@ export interface paths {
         /**
          * Apply the industry template's shift templates, checklists and SOPs to this shop (existing names are kept)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -26425,6 +26890,8 @@ export interface paths {
         /**
          * Edit / reschedule (If-Match required)
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
@@ -26432,6 +26899,8 @@ export interface paths {
                 header?: {
                     /** @description Appointment version (required) */
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path: {
                     id: string;
@@ -26569,6 +27038,8 @@ export interface paths {
          * @description `completed` is not accepted here — use `POST /appointments/{id}/complete`.
          *
          *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
@@ -26576,6 +27047,8 @@ export interface paths {
                 header?: {
                     /** @description Appointment version (required) */
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path: {
                     id: string;
@@ -27590,11 +28063,16 @@ export interface paths {
         /**
          * Create a manual follow-up
          * @description Requires header `X-Tenant-Id`. Permission: `followups:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -27730,11 +28208,16 @@ export interface paths {
         /**
          * Close a follow-up with an outcome (concern → urgent task + notification)
          * @description Requires header `X-Tenant-Id`. Permission: `followups:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -27864,11 +28347,16 @@ export interface paths {
         /**
          * Snooze a follow-up until a later time
          * @description Requires header `X-Tenant-Id`. Permission: `followups:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -28461,11 +28949,16 @@ export interface paths {
          * @description Returns an `X-Acting-As` token (≤ 15 min, bound to this session + tenant, renewed through the `X-Acting-As-Token` response header). The Better Auth session is unchanged; permissions become exactly the chosen member's.
          *
          *     Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -28581,11 +29074,16 @@ export interface paths {
         /**
          * Set a member's PIN (shared iPad)
          * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -28675,11 +29173,16 @@ export interface paths {
         /**
          * Remove a member's PIN
          * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -28775,11 +29278,16 @@ export interface paths {
         /**
          * Set my own PIN (the acting member when switched)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -29410,11 +29918,16 @@ export interface paths {
         /**
          * Edit an unpaid bill (items replaced as a whole; editing items clears the discount). Optional If-Match: version
          * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -29607,6 +30120,210 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/bills/{id}/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Set who performed a service line of an unpaid bill (totals and discount are untouched). Paying needs a performer on every service line when payouts is on
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                    itemId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        performerMembershipId: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                number: string;
+                                customerId: string | null;
+                                customerName: string | null;
+                                appointmentIds: string[];
+                                /** @enum {string} */
+                                status: "open" | "paid" | "void" | "refunded" | "partially_refunded";
+                                /** @description integer satang */
+                                subtotalMinor: number;
+                                /** @description integer satang */
+                                discountMinor: number;
+                                discountReason: string | null;
+                                discountApprovedBy: string | null;
+                                /** @description integer satang */
+                                totalMinor: number;
+                                /** @description integer satang */
+                                tipMinor: number;
+                                /** @description integer satang */
+                                amountDueMinor: number;
+                                /** @description integer satang */
+                                paidMinor: number;
+                                /** @description integer satang */
+                                remainingMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                /** @description integer satang */
+                                refundableMinor: number;
+                                externalRef: string | null;
+                                createdBy: string | null;
+                                paidAt: string | null;
+                                version: number;
+                                createdAt: string;
+                                items: {
+                                    /** @enum {string} */
+                                    kind: "service" | "product" | "package_sale" | "package_use";
+                                    refId: string | null;
+                                    name: string;
+                                    /** @default 1 */
+                                    qty: number;
+                                    /** @description integer satang */
+                                    unitPriceMinor: number;
+                                    performerMembershipId: string | null;
+                                    saleMembershipId: string | null;
+                                    id: string;
+                                    /** @description integer satang */
+                                    discountMinor: number;
+                                }[];
+                                payments: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "package" | "other";
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reference: string | null;
+                                    slipFileId: string | null;
+                                    confirmedBy: string | null;
+                                    confirmedAt: string | null;
+                                }[];
+                                refunds: {
+                                    id: string;
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reason: string;
+                                    approvedBy: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                                    createdAt: string;
+                                }[];
+                                receipt: {
+                                    id: string;
+                                    number: string;
+                                    issuedAt: string;
+                                    deliveredVia: string | null;
+                                } | null;
+                                pendingApprovals: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "discount" | "void" | "refund";
+                                    /** @enum {string} */
+                                    status: "pending" | "approved" | "rejected" | "expired";
+                                    note: string | null;
+                                    requestedBy: string;
+                                    createdAt: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
     "/v1/bills/{id}/discount": {
         parameters: {
             query?: never;
@@ -29619,11 +30336,16 @@ export interface paths {
         /**
          * Set the bill discount (reason required; above the ceiling it needs approval and blocks payment)
          * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -30489,11 +31211,16 @@ export interface paths {
         /**
          * Approve or reject a pending discount / void / refund request from the bill page (same decision path as the approvals inbox, works with the approvals module off)
          * @description Requires header `X-Tenant-Id`. Permission: `bills:void`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     approvalId: string;
@@ -30639,11 +31366,16 @@ export interface paths {
         /**
          * Withdraw a pending void / refund request (the requester or a bills:void holder); the bill is untouched
          * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     approvalId: string;
@@ -30987,11 +31719,16 @@ export interface paths {
         /**
          * Send the receipt to the customer on LINE (queued through the message worker) or mark it printed
          * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -31212,11 +31949,16 @@ export interface paths {
         /**
          * EMVCo / Thai QR payload for an amount, from the shop PromptPay id
          * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -31422,11 +32164,16 @@ export interface paths {
         /**
          * Set the PromptPay id (tenant default, or per branch with branchId)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -32654,11 +33401,16 @@ export interface paths {
         /**
          * Parse a POS CSV with a column mapping and match each line to a service and a staff member (nothing is saved)
          * @description Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `payouts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -34441,11 +35193,16 @@ export interface paths {
         /**
          * Call a waiting walk-in (board shows it; the customer is notified by the worker when linked to LINE)
          * @description Requires header `X-Tenant-Id`. Permission: `queue:assign`. Module: `queue`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -34571,11 +35328,16 @@ export interface paths {
         /**
          * The walk-in left before being served
          * @description Requires header `X-Tenant-Id`. Permission: `queue:assign`. Module: `queue`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -35329,12 +36091,16 @@ export interface paths {
         /**
          * Save a new version of the queue rule (never overwrites; send If-Match = latestVersion)
          * @description Requires header `X-Tenant-Id`. Permission: `rules:write`. Module: `queue`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
                 header?: {
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path?: never;
                 cookie?: never;
@@ -35588,12 +36354,16 @@ export interface paths {
         /**
          * Save a new version of the compensation rule (never overwrites; send If-Match = latestVersion)
          * @description Requires header `X-Tenant-Id`. Permission: `rules:write`. Module: `payouts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
                 header?: {
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path?: never;
                 cookie?: never;
@@ -35847,12 +36617,16 @@ export interface paths {
         /**
          * Save a new version of the booking rule (never overwrites; send If-Match = latestVersion)
          * @description Requires header `X-Tenant-Id`. Permission: `rules:write`. Module: `booking`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
                 header?: {
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path?: never;
                 cookie?: never;
@@ -36106,12 +36880,16 @@ export interface paths {
         /**
          * Save a new version of the discount rule (never overwrites; send If-Match = latestVersion)
          * @description Requires header `X-Tenant-Id`. Permission: `rules:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
                 header?: {
                     "if-match"?: string;
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
                 };
                 path?: never;
                 cookie?: never;
@@ -36237,11 +37015,16 @@ export interface paths {
         /**
          * Validate a rule body and explain it in plain language (nothing is saved)
          * @description Requires header `X-Tenant-Id`. Permission: `rules:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -36355,11 +37138,16 @@ export interface paths {
         /**
          * Replay the last 30 days (or sample customers) under a candidate queue rule
          * @description Requires header `X-Tenant-Id`. Permission: `rules:read`. Module: `queue`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -36494,11 +37282,16 @@ export interface paths {
         /**
          * Try a compensation rule on sample services or the real records of a range, before saving it
          * @description Requires header `X-Tenant-Id`. Permission: `rules:read`. Module: `payouts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -37090,11 +37883,16 @@ export interface paths {
         /**
          * Correct a record before its period closes (a reason is required). Already-calculated commission is reversed by new ledger rows and recalculated; locked records answer 409 RECORD_LOCKED
          * @description Requires header `X-Tenant-Id`. Permission: `service_records:write`. Module: `payouts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -37353,11 +38151,16 @@ export interface paths {
         /**
          * Open a payout period (periods of the same scope may not overlap)
          * @description Requires header `X-Tenant-Id`. Permission: `payouts:close`. Module: `payouts`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -38426,11 +39229,16 @@ export interface paths {
         /**
          * Connect a LINE OA (secret + token are stored encrypted)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -38672,11 +39480,16 @@ export interface paths {
         /**
          * Disconnect a channel account (its scheduled messages are cancelled)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -38761,11 +39574,16 @@ export interface paths {
         /**
          * Update a channel account (send secret/token only to replace them)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -38893,11 +39711,16 @@ export interface paths {
         /**
          * Test the connection (reads the OA monthly quota with the stored token)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -39007,11 +39830,16 @@ export interface paths {
         /**
          * Queue a test message to one linked customer (goes through the worker like any message)
          * @description Requires header `X-Tenant-Id`. Permission: `messages:send`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -39264,11 +40092,16 @@ export interface paths {
         /**
          * Create a message template
          * @description Requires header `X-Tenant-Id`. Permission: `messages:templates`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -39439,11 +40272,16 @@ export interface paths {
         /**
          * Render unsaved template content with real or sample data
          * @description Requires header `X-Tenant-Id`. Permission: `messages:read`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -39731,11 +40569,16 @@ export interface paths {
         /**
          * Edit a template (shared rows are read-only: copy them first)
          * @description Requires header `X-Tenant-Id`. Permission: `messages:templates`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -39898,11 +40741,16 @@ export interface paths {
         /**
          * Render a template with a customer/appointment (or sample data)
          * @description Requires header `X-Tenant-Id`. Permission: `messages:read`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -40159,11 +41007,16 @@ export interface paths {
         /**
          * Replace the plan set (removed/disabled/changed plans cancel their scheduled messages)
          * @description Requires header `X-Tenant-Id`. Permission: `messages:templates`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -40553,11 +41406,16 @@ export interface paths {
         /**
          * Cancel a scheduled message
          * @description Requires header `X-Tenant-Id`. Permission: `messages:send`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -40677,11 +41535,16 @@ export interface paths {
         /**
          * Send a scheduled message now (consent, plan limit and quota are still checked by the worker)
          * @description Requires header `X-Tenant-Id`. Permission: `messages:send`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -43485,11 +44348,16 @@ export interface paths {
         /**
          * Render the KPI report PDF (worker); poll GET /kpi/exports/{id}
          * @description Requires header `X-Tenant-Id`. Permission: `kpi:export`. Module: `kpi`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -43724,11 +44592,16 @@ export interface paths {
         /**
          * Recompute this shop’s KPI snapshots now (same job as the nightly run)
          * @description Requires header `X-Tenant-Id`. Permission: `kpi:export`. Module: `kpi`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -44148,11 +45021,16 @@ export interface paths {
         /**
          * Plan a vacation test (the caller is the owner who goes away)
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -44419,11 +45297,16 @@ export interface paths {
         /**
          * Change dates or start the test
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -44690,11 +45573,16 @@ export interface paths {
         /**
          * Manager logs that the owner was contacted during the test
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -44837,11 +45725,16 @@ export interface paths {
         /**
          * Record something that went wrong during the test
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -44984,11 +45877,16 @@ export interface paths {
         /**
          * Finish the test and freeze its result
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -45229,11 +46127,16 @@ export interface paths {
         /**
          * Render the certificate PDF (finished tests only); poll GET …/certificate?job=
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -45564,11 +46467,16 @@ export interface paths {
         /**
          * Render the manual PDF (worker); poll GET /manual/exports/{id}
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -46216,11 +47124,16 @@ export interface paths {
         /**
          * Re-check the charge with Omise now and settle the invoice if it was paid
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -46444,11 +47357,16 @@ export interface paths {
         /**
          * Render the receipt PDF of a paid invoice; poll GET …/receipt?job=
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -46797,11 +47715,16 @@ export interface paths {
         /**
          * PDPA erase: anonymize a customer (aggregates and ledgers are kept)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:erase`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -47390,11 +48313,16 @@ export interface paths {
         /**
          * Mark onboarding finished
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -47651,11 +48579,16 @@ export interface paths {
         /**
          * Create customer (409 duplicate_phone unless allowDuplicatePhone)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -47953,11 +48886,16 @@ export interface paths {
         /**
          * Soft-delete customer
          * @description Requires header `X-Tenant-Id`. Permission: `customers:delete`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -48042,11 +48980,16 @@ export interface paths {
         /**
          * Update customer (incl. primary / backup carer, custom fields)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -48209,11 +49152,16 @@ export interface paths {
         /**
          * Grant / revoke messaging consent (revoke emits customer.consent_revoked)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -48482,11 +49430,16 @@ export interface paths {
         /**
          * Merge this (duplicate) customer into `intoId`: appointments, packages, notes, follow-ups, messages move over; this customer is removed
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -48731,11 +49684,16 @@ export interface paths {
         /**
          * Add a note (≤ 500 chars; pinned notes raise the caution flag)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -48854,11 +49812,16 @@ export interface paths {
         /**
          * Delete a note
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     noteId: string;
@@ -48944,11 +49907,16 @@ export interface paths {
         /**
          * Edit / pin a note
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                     noteId: string;
@@ -49537,11 +50505,16 @@ export interface paths {
         /**
          * Create category
          * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -49655,11 +50628,16 @@ export interface paths {
         /**
          * Delete category (409 while services use it)
          * @description Requires header `X-Tenant-Id`. Permission: `services:delete`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -49744,11 +50722,16 @@ export interface paths {
         /**
          * Rename / reorder category
          * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -49985,11 +50968,16 @@ export interface paths {
         /**
          * Create service
          * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -50260,11 +51248,16 @@ export interface paths {
         /**
          * Archive service (active=false); appointments and packages keep their reference
          * @description Requires header `X-Tenant-Id`. Permission: `services:delete`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -50349,11 +51342,16 @@ export interface paths {
         /**
          * Update service
          * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -50610,11 +51608,16 @@ export interface paths {
         /**
          * Create package product
          * @description Requires header `X-Tenant-Id`. Permission: `packages:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -50833,11 +51836,16 @@ export interface paths {
         /**
          * Archive package product (active=false)
          * @description Requires header `X-Tenant-Id`. Permission: `packages:delete`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         delete: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -50922,11 +51930,16 @@ export interface paths {
         /**
          * Update package product (sold packages keep their own totals / expiry)
          * @description Requires header `X-Tenant-Id`. Permission: `packages:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         patch: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -51258,11 +52271,16 @@ export interface paths {
         /**
          * Replace a member's skills (level: learning | can_do | can_teach)
          * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         put: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path: {
                     id: string;
                 };
@@ -51384,11 +52402,16 @@ export interface paths {
         /**
          * Dry-run a CSV import: headers, suggested/validated column mapping, row errors, duplicates. Upload the file first via /files/upload-url?purpose=import_csv
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -51650,11 +52673,16 @@ export interface paths {
         /**
          * Start a CSV import (customers | services). Runs in the worker `imports` queue; poll GET /imports/{id}
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -51917,7 +52945,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "QUEUE_OVERRIDE_REASON_REQUIRED" | "NO_ELIGIBLE_MEMBER" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "QUEUE_OVERRIDE_REASON_REQUIRED" | "NO_ELIGIBLE_MEMBER" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PERFORMER_REQUIRED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

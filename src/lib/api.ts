@@ -1,5 +1,6 @@
 import { useSession } from '@/stores/session';
 import { createApiClient, type paths } from './api-client';
+import { createResilientFetch } from './resilient-fetch';
 
 export const API_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:18787').replace(/\/$/, '');
 
@@ -102,7 +103,12 @@ export function idempotent(key: string = newIdempotencyKey()) {
   return { headers: { 'Idempotency-Key': key } };
 }
 
-export const api = createApiClient({ baseUrl: API_URL, credentials: 'include' });
+// Retries transient 502/503/504 + network errors for replay-safe requests (GET/HEAD, or POST with an Idempotency-Key).
+export const api = createApiClient({
+  baseUrl: API_URL,
+  credentials: 'include',
+  fetch: createResilientFetch(),
+});
 
 api.use({
   onRequest({ request }) {

@@ -11,7 +11,7 @@
     "test": "vitest run --passWithNoTests",
     "e2e": "playwright test",
     "gen:routes": "node scripts/gen-routes.mjs",
-    "gen:api": "openapi-typescript ${API_OPENAPI_URL:-openapi.json} -o src/lib/api-client/openapi.d.ts",
+    "gen:api": "openapi-typescript ${API_OPENAPI_URL:-openapi.json} -o src/lib/api-client/openapi.d.ts && node scripts/gen-replay-safe.mjs",
     "lint": "biome check .",
     "format": "biome check --write ."
   },

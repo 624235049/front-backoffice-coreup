@@ -30,9 +30,15 @@ export function createQueryClient(onUnauthenticated: () => void): QueryClient {
       queries: {
         staleTime: 30_000,
         refetchOnWindowFocus: false,
-        // Do not retry client errors (401/403/404/409/422...); retry flaky network / 5xx twice.
-        retry: (count, error) =>
-          isApiError(error) && error.status >= 400 && error.status < 500 ? false : count < 2,
+        // `createResilientFetch` already retries network errors and 502/503/504 (up to 3 attempts in total), so
+        // retrying them here again would multiply attempts 3 x 3. Client errors (401/403/404/409/422...) are
+        // final. Everything else (e.g. a 500) gets two more tries.
+        retry: (count, error) => {
+          if (!isApiError(error)) return false; // network failure: fetch layer retried it already
+          if (error.status >= 400 && error.status < 500) return false;
+          if (error.status === 502 || error.status === 503 || error.status === 504) return false;
+          return count < 2;
+        },
       },
       mutations: { retry: false },
     },

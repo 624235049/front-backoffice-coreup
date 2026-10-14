@@ -33,7 +33,22 @@
 	# first-party for this site (works on *.up.railway.app without a shared parent domain). Build with VITE_API_URL
 	# empty so the SPA calls relative /v1/... URLs. API_UPSTREAM = <api private host>:<api PORT>.
 	handle /v1/* {
-		reverse_proxy {$API_UPSTREAM:api.railway.internal:8787}
+		reverse_proxy {$API_UPSTREAM:api.railway.internal:8787} {
+			# While the api restarts (deploy/crash) dials fail. Keep retrying for up to 20s instead of answering 502.
+			# Caddy only retries a request that never reached an upstream (dial/connect failure), so this is safe
+			# for every method, POST included.
+			lb_try_duration 20s
+			lb_try_interval 250ms
+
+			transport http {
+				# Drop idle upstream connections after 30s, well before the api's keep-alive timeout (75s,
+				# apps/api/src/index.ts): the proxy must always be the side that closes an idle connection, otherwise
+				# it can reuse a socket the api just closed and fail with `EOF` (502 to the browser).
+				keepalive 30s
+				# Fail a dial fast (3s) so lb_try_interval retries land on the new instance quickly.
+				dial_timeout 3s
+			}
+		}
 	}
 
 	# Hashed build output: cache forever; a missing asset must 404, not fall back to index.html.
