@@ -15,6 +15,17 @@ import './styles.css';
 initSentry();
 configureZod();
 
+// After a deploy, a tab opened earlier still asks for the old hashed chunks, which no longer exist: the page
+// shows an error. Reload once to pick up the new build (the session flag stops a reload loop).
+const RELOAD_FLAG = 'coreup:reloaded-for-new-build';
+window.addEventListener('vite:preloadError', (event) => {
+  if (sessionStorage.getItem(RELOAD_FLAG)) return;
+  sessionStorage.setItem(RELOAD_FLAG, '1');
+  event.preventDefault();
+  window.location.reload();
+});
+window.addEventListener('load', () => setTimeout(() => sessionStorage.removeItem(RELOAD_FLAG), 10_000));
+
 // The query client needs the router (401 -> sign-in) and the router needs the query client: tie the knot lazily.
 let router: ReturnType<typeof createAppRouter>;
 const queryClient = createQueryClient(() => {
