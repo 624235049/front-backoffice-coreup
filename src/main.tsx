@@ -1,3 +1,4 @@
+import { registerSW } from 'virtual:pwa-register';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
@@ -25,6 +26,18 @@ window.addEventListener('vite:preloadError', (event) => {
   window.location.reload();
 });
 window.addEventListener('load', () => setTimeout(() => sessionStorage.removeItem(RELOAD_FLAG), 10_000));
+
+// New deploys must reach tabs that stay open all day at the front desk: check for a new service worker every
+// 5 minutes and when the tab becomes visible; with registerType 'autoUpdate' the page reloads once it takes over.
+registerSW({
+  immediate: true,
+  onRegisteredSW(_url, registration) {
+    if (!registration) return;
+    const check = () => void registration.update();
+    setInterval(check, 5 * 60_000);
+    document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && check());
+  },
+});
 
 // The query client needs the router (401 -> sign-in) and the router needs the query client: tie the knot lazily.
 let router: ReturnType<typeof createAppRouter>;

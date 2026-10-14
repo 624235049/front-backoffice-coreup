@@ -35,6 +35,8 @@ export default defineConfig(() => ({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // registered from main.tsx (virtual:pwa-register) so an open tab reloads itself onto a new deploy
+      injectRegister: false,
       includeAssets: [
         'favicon.ico',
         'favicon-32-v2.png',
