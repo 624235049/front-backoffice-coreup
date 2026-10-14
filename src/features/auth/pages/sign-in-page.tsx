@@ -14,7 +14,7 @@ import { isApiError } from '@/lib/api';
 import { useErrorMessage } from '@/lib/query';
 
 const schema = z.object({
-  email: z.email('validation.email'),
+  email: z.string().trim().toLowerCase().pipe(z.email('validation.email')),
   password: z.string().min(1, 'validation.required'),
 });
 type Values = z.infer<typeof schema>;

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useForgotPassword } from '@/features/auth/api';
 import { AuthCard } from '@/features/auth/components/auth-card';
 
-const schema = z.object({ email: z.email('validation.email') });
+const schema = z.object({ email: z.string().trim().toLowerCase().pipe(z.email('validation.email')) });
 type Values = z.infer<typeof schema>;
 
 export function ForgotPasswordPage() {

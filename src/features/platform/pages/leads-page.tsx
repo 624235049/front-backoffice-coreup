@@ -504,7 +504,7 @@ function LeadSheet({
 }
 
 const convertSchema = z.object({
-  ownerEmail: z.email('validation.email'),
+  ownerEmail: z.string().trim().toLowerCase().pipe(z.email('validation.email')),
   ownerName: z.string().trim().optional(),
   planCode: z.string().min(1, 'validation.required'),
   engagementType: z.string().optional(),
