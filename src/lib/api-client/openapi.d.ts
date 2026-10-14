@@ -5493,7 +5493,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "deposit_slip" | "booking_cover" | "service_image" | "staff_photo" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -34126,6 +34126,15 @@ export interface paths {
                                 note: string | null;
                                 version: number;
                                 allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                onlineDeposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                } | null;
                                 createdAt: string;
                                 updatedAt: string;
                             }[];
@@ -34286,6 +34295,15 @@ export interface paths {
                                 note: string | null;
                                 version: number;
                                 allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                onlineDeposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                } | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -34431,6 +34449,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 }[];
@@ -34470,6 +34497,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 }[];
@@ -34509,6 +34545,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                     waitingMin: number;
@@ -34549,6 +34594,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 }[];
@@ -34588,6 +34642,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 } | null;
@@ -34781,6 +34844,15 @@ export interface paths {
                                 note: string | null;
                                 version: number;
                                 allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                onlineDeposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                } | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -34933,6 +35005,15 @@ export interface paths {
                                 note: string | null;
                                 version: number;
                                 allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                onlineDeposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                } | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -35090,6 +35171,15 @@ export interface paths {
                                 note: string | null;
                                 version: number;
                                 allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                onlineDeposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                } | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -35500,6 +35590,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 };
@@ -35836,6 +35935,15 @@ export interface paths {
                                     note: string | null;
                                     version: number;
                                     allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                    } | null;
                                     createdAt: string;
                                     updatedAt: string;
                                 }[];
@@ -50952,6 +51060,8 @@ export interface paths {
                             data: {
                                 upcoming: {
                                     id: string;
+                                    branchId: string;
+                                    serviceId: string;
                                     startAt: string;
                                     endAt: string;
                                     /** @enum {string} */
@@ -50961,12 +51071,28 @@ export interface paths {
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
                                     canConfirm: boolean;
+                                    canReschedule: boolean;
+                                    memberId: string | null;
+                                    deposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        promptpay: {
+                                            payload: string;
+                                            accountHint: string;
+                                            accountName: string | null;
+                                        } | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                    } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
                                 }[];
                                 past: {
                                     id: string;
+                                    branchId: string;
+                                    serviceId: string;
                                     startAt: string;
                                     endAt: string;
                                     /** @enum {string} */
@@ -50976,6 +51102,20 @@ export interface paths {
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
                                     canConfirm: boolean;
+                                    canReschedule: boolean;
+                                    memberId: string | null;
+                                    deposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        promptpay: {
+                                            payload: string;
+                                            accountHint: string;
+                                            accountName: string | null;
+                                        } | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                    } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
@@ -51208,6 +51348,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                branchId: string;
+                                serviceId: string;
                                 startAt: string;
                                 endAt: string;
                                 /** @enum {string} */
@@ -51217,6 +51359,20 @@ export interface paths {
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
                                 canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
@@ -51336,6 +51492,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                branchId: string;
+                                serviceId: string;
                                 startAt: string;
                                 endAt: string;
                                 /** @enum {string} */
@@ -51345,6 +51503,20 @@ export interface paths {
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
                                 canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
@@ -51463,6 +51635,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                branchId: string;
+                                serviceId: string;
                                 startAt: string;
                                 endAt: string;
                                 /** @enum {string} */
@@ -51472,6 +51646,20 @@ export interface paths {
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
                                 canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
@@ -51810,6 +51998,2996 @@ export interface paths {
                             data: {
                                 reviewUrl: string | null;
                                 followupCreated: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shop, branches, booking rules and policy for the booking page (no login)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Config */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                tenant: {
+                                    name: string;
+                                    slug: string;
+                                    logoUrl: string | null;
+                                    brandColor: string | null;
+                                    /** @enum {string} */
+                                    locale: "th" | "en";
+                                    timezone: string;
+                                };
+                                terminology: {
+                                    [key: string]: string;
+                                };
+                                enabled: boolean;
+                                introText: string | null;
+                                policyText: string | null;
+                                coverUrl: string | null;
+                                autoConfirm: boolean;
+                                deposit: {
+                                    /** @enum {string} */
+                                    mode: "fixed" | "percent";
+                                    amountMinor: number | null;
+                                    percent: number | null;
+                                } | null;
+                                promptpayConfigured: boolean;
+                                branches: {
+                                    id: string;
+                                    name: string;
+                                    address: string | null;
+                                    phone: string | null;
+                                    mapUrl: string | null;
+                                    openingHours: {
+                                        [key: string]: [
+                                            string,
+                                            string
+                                        ][];
+                                    };
+                                    rules: {
+                                        leadTimeMin: number;
+                                        maxAdvanceDays: number;
+                                        slotStepMin: number;
+                                        allowChooseStaff: boolean;
+                                        cancellationWindowMin: number;
+                                        requireDeposit: boolean;
+                                    };
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Services customers can book online, grouped by category
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Services */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                categories: {
+                                    id: string | null;
+                                    name: string;
+                                    services: {
+                                        id: string;
+                                        name: string;
+                                        description: string | null;
+                                        durationMin: number;
+                                        priceMinor: number;
+                                        imageUrl: string | null;
+                                        depositMinor: number | null;
+                                    }[];
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Staff a customer may pick for this service (online-bookable people only)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                    serviceId: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Staff */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                allowChoose: boolean;
+                                staff: {
+                                    id: string;
+                                    name: string;
+                                    nickname: string | null;
+                                    photoUrl: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Bookable start times of one day (lead time, max days and online flags applied)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                    serviceId: string;
+                    memberId?: string;
+                    date: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Slots */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                date: string;
+                                timezone: string;
+                                slots: {
+                                    startAt: string;
+                                    endAt: string;
+                                    time: string;
+                                }[];
+                                /** @enum {string|null} */
+                                emptyReason: "closed" | "full" | "too_soon" | "too_far" | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/days": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Which days of a month still have a free time (for the calendar)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                    serviceId: string;
+                    memberId?: string;
+                    month: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Days */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                month: string;
+                                timezone: string;
+                                days: {
+                                    date: string;
+                                    available: boolean;
+                                    slots: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/images/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Booking-page picture (cover, service, staff): redirects to a short-lived storage URL
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Redirect to the image */
+                302: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Book an appointment from LINE (liffToken). Creates / links the customer on the first booking; honours Idempotency-Key
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        branchId: string;
+                        serviceId: string;
+                        memberId: string | null;
+                        startAt: string;
+                        note?: string;
+                        name?: string;
+                        phone?: string;
+                        consent: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Booked */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointment: {
+                                    id: string;
+                                    branchId: string;
+                                    serviceId: string;
+                                    startAt: string;
+                                    endAt: string;
+                                    /** @enum {string} */
+                                    status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                    serviceName: string;
+                                    branchName: string;
+                                    branchMapUrl: string | null;
+                                    practitionerName: string | null;
+                                    canConfirm: boolean;
+                                    canReschedule: boolean;
+                                    memberId: string | null;
+                                    deposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        promptpay: {
+                                            payload: string;
+                                            accountHint: string;
+                                            accountName: string | null;
+                                        } | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                    } | null;
+                                    canRequestReschedule: boolean;
+                                    canCancel: boolean;
+                                    cancellationWindowMin: number | null;
+                                };
+                                customer: {
+                                    id: string;
+                                    displayName: string;
+                                    consentMessaging: boolean;
+                                    consentAt: string | null;
+                                };
+                                customerCreated: boolean;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments/{id}/reschedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move my appointment to another offered time (within the cancellation window)
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        startAt: string;
+                        memberId?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Moved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments/{id}/deposit-slip/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Presigned PUT for the transfer slip image (then call POST …/deposit-slip with the fileId)
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments/{id}/deposit-slip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Hand in the uploaded slip; the shop is asked to check it
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Appointment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    promptpay: {
+                                        payload: string;
+                                        accountHint: string;
+                                        accountName: string | null;
+                                    } | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Online booking settings (switch, texts, cover, rules, deposit)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                introText: string | null;
+                                policyText: string | null;
+                                coverFileId: string | null;
+                                coverUrl: string | null;
+                                autoConfirm: boolean;
+                                rules: {
+                                    leadTimeMin: number;
+                                    maxAdvanceDays: number;
+                                    slotStepMin: number;
+                                    allowChooseStaff: boolean;
+                                    cancellationWindowMin: number;
+                                };
+                                deposit: {
+                                    enabled: boolean;
+                                    /** @enum {string} */
+                                    mode: "fixed" | "percent";
+                                    amountMinor: number | null;
+                                    percent: number | null;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Save online booking settings (the numbers become a new shop-wide `booking` rule version)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        enabled: boolean;
+                        introText: string | null;
+                        policyText: string | null;
+                        coverFileId: string | null;
+                        autoConfirm: boolean;
+                        rules: {
+                            leadTimeMin: number;
+                            maxAdvanceDays: number;
+                            slotStepMin: number;
+                            allowChooseStaff: boolean;
+                            cancellationWindowMin: number;
+                        };
+                        deposit: {
+                            enabled: boolean;
+                            /** @enum {string} */
+                            mode: "fixed" | "percent";
+                            amountMinor: number | null;
+                            percent: number | null;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                introText: string | null;
+                                policyText: string | null;
+                                coverFileId: string | null;
+                                coverUrl: string | null;
+                                autoConfirm: boolean;
+                                rules: {
+                                    leadTimeMin: number;
+                                    maxAdvanceDays: number;
+                                    slotStepMin: number;
+                                    allowChooseStaff: boolean;
+                                    cancellationWindowMin: number;
+                                };
+                                deposit: {
+                                    enabled: boolean;
+                                    /** @enum {string} */
+                                    mode: "fixed" | "percent";
+                                    amountMinor: number | null;
+                                    percent: number | null;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Checklist: what is still missing before customers can book
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                ready: boolean;
+                                items: {
+                                    /** @enum {string} */
+                                    id: "services_online" | "staff_online" | "hours_set" | "line_oa_connected" | "rich_menu_installed" | "deposit_promptpay";
+                                    ok: boolean;
+                                    required: boolean;
+                                    count: number | null;
+                                    fixPath: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Services with their online flag and picture
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Services */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                categoryName: string | null;
+                                durationMin: number;
+                                priceMinor: number;
+                                active: boolean;
+                                onlineBookable: boolean;
+                                imageFileId: string | null;
+                                imageUrl: string | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/services/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Switch a service on / off for online booking, set its picture
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        onlineBookable?: boolean;
+                        imageFileId?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Service */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                categoryName: string | null;
+                                durationMin: number;
+                                priceMinor: number;
+                                active: boolean;
+                                onlineBookable: boolean;
+                                imageFileId: string | null;
+                                imageUrl: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Team members with their online flag, nickname and photo
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Staff */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                positionName: string | null;
+                                bookable: boolean;
+                                onlineBookable: boolean;
+                                nickname: string | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/staff/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Let customers pick this person online, set nickname and photo
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        onlineBookable?: boolean;
+                        nickname?: string | null;
+                        photoFileId?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Staff */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                positionName: string | null;
+                                bookable: boolean;
+                                onlineBookable: boolean;
+                                nickname: string | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/rich-menu": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Is the booking rich menu installed on the shop’s LINE OA?
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rich menu */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                channelConnected: boolean;
+                                installed: boolean;
+                                richMenuId: string | null;
+                                installedAt: string | null;
+                                previewUrl: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Install the booking rich menu on the shop’s LINE OA (replaces the previous one)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rich menu */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                channelConnected: boolean;
+                                installed: boolean;
+                                richMenuId: string | null;
+                                installedAt: string | null;
+                                previewUrl: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Remove the booking rich menu from the shop’s LINE OA
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rich menu */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                channelConnected: boolean;
+                                installed: boolean;
+                                richMenuId: string | null;
+                                installedAt: string | null;
+                                previewUrl: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Booking link and QR code to share with customers
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Share */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                bookingUrl: string;
+                                qrDataUrl: string;
+                                webUrl: string;
+                                liffId: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/deposits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Deposits asked by LINE bookings, newest first (filter by status to get the slips to check)
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    status?: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deposits */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointmentId: string;
+                                branchId: string;
+                                customerId: string;
+                                customerName: string;
+                                serviceName: string;
+                                startAt: string;
+                                appointmentStatus: string;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                };
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/deposits/{appointmentId}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * The money arrived: record the deposit and confirm the booking
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    appointmentId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /**
+                         * @default promptpay
+                         * @enum {string}
+                         */
+                        method?: "promptpay" | "transfer";
+                        reference?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Deposit */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointmentId: string;
+                                branchId: string;
+                                customerId: string;
+                                customerName: string;
+                                serviceName: string;
+                                startAt: string;
+                                appointmentStatus: string;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/online-booking/deposits/{appointmentId}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * The slip is not right: tell the customer why; they can upload another one
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    appointmentId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Deposit */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointmentId: string;
+                                branchId: string;
+                                customerId: string;
+                                customerName: string;
+                                serviceName: string;
+                                startAt: string;
+                                appointmentStatus: string;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    slipFileId: string | null;
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    depositId: string | null;
+                                };
                             };
                         };
                     };
@@ -63915,7 +67093,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PERFORMER_REQUIRED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PERFORMER_REQUIRED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "CONSENT_REQUIRED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;
