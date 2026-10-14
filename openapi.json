@@ -95742,6 +95742,7 @@
               "enum": [
                 "appointment",
                 "package",
+                "package_use",
                 "followup",
                 "message",
                 "note"
@@ -95773,6 +95774,7 @@
                             "enum": [
                               "appointment",
                               "package",
+                              "package_use",
                               "followup",
                               "message",
                               "note"
@@ -97034,6 +97036,99 @@
                           },
                           "priceMinor": {
                             "type": "integer"
+                          },
+                          "uses": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "usedAt": {
+                                  "type": "string"
+                                },
+                                "serviceId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "serviceName": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "performerMembershipId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "performerName": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "manual",
+                                    "appointment",
+                                    "bill",
+                                    "backfill"
+                                  ]
+                                },
+                                "billId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "billNumber": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "appointmentId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "note": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "reversed": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "usedAt",
+                                "serviceId",
+                                "serviceName",
+                                "performerMembershipId",
+                                "performerName",
+                                "source",
+                                "billId",
+                                "billNumber",
+                                "appointmentId",
+                                "note",
+                                "reversed"
+                              ]
+                            }
                           }
                         },
                         "required": [
@@ -97052,7 +97147,8 @@
                           "status",
                           "soldByMembershipId",
                           "branchId",
-                          "priceMinor"
+                          "priceMinor",
+                          "uses"
                         ]
                       }
                     }
@@ -97277,6 +97373,99 @@
                         },
                         "priceMinor": {
                           "type": "integer"
+                        },
+                        "uses": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "usedAt": {
+                                "type": "string"
+                              },
+                              "serviceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "serviceName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "performerMembershipId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "performerName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "manual",
+                                  "appointment",
+                                  "bill",
+                                  "backfill"
+                                ]
+                              },
+                              "billId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "billNumber": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "appointmentId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "reversed": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "usedAt",
+                              "serviceId",
+                              "serviceName",
+                              "performerMembershipId",
+                              "performerName",
+                              "source",
+                              "billId",
+                              "billNumber",
+                              "appointmentId",
+                              "note",
+                              "reversed"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -97295,7 +97484,8 @@
                         "status",
                         "soldByMembershipId",
                         "branchId",
-                        "priceMinor"
+                        "priceMinor",
+                        "uses"
                       ]
                     }
                   },
@@ -97384,7 +97574,7 @@
         "tags": [
           "customers"
         ],
-        "summary": "Use one session of a package (422 PACKAGE_NOT_USABLE: expired / exhausted / service not covered)",
+        "summary": "Use one session of a package, with who did it and when (422 PACKAGE_NOT_USABLE: expired / exhausted / service not covered; 422 PERFORMER_REQUIRED while payouts is on)",
         "description": "Requires header `X-Tenant-Id`. Permission: `packages:write`. Module: `crm`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
         "security": [
           {
@@ -97440,6 +97630,30 @@
                       "null"
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "performerMembershipId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "branchId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "usedAt": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300
                   }
                 },
                 "required": [
@@ -97527,6 +97741,99 @@
                         },
                         "priceMinor": {
                           "type": "integer"
+                        },
+                        "uses": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "usedAt": {
+                                "type": "string"
+                              },
+                              "serviceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "serviceName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "performerMembershipId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "performerName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "manual",
+                                  "appointment",
+                                  "bill",
+                                  "backfill"
+                                ]
+                              },
+                              "billId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "billNumber": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "appointmentId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "reversed": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "usedAt",
+                              "serviceId",
+                              "serviceName",
+                              "performerMembershipId",
+                              "performerName",
+                              "source",
+                              "billId",
+                              "billNumber",
+                              "appointmentId",
+                              "note",
+                              "reversed"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -97545,7 +97852,8 @@
                         "status",
                         "soldByMembershipId",
                         "branchId",
-                        "priceMinor"
+                        "priceMinor",
+                        "uses"
                       ]
                     }
                   },

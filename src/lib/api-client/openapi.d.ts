@@ -49309,7 +49309,7 @@ export interface paths {
                 query?: {
                     limit?: number;
                     before?: string;
-                    kind?: "appointment" | "package" | "followup" | "message" | "note";
+                    kind?: "appointment" | "package" | "package_use" | "followup" | "message" | "note";
                 };
                 header?: never;
                 path: {
@@ -49329,7 +49329,7 @@ export interface paths {
                             data: {
                                 key: string;
                                 /** @enum {string} */
-                                kind: "appointment" | "package" | "followup" | "message" | "note";
+                                kind: "appointment" | "package" | "package_use" | "followup" | "message" | "note";
                                 at: string;
                                 refId: string;
                                 title: string | null;
@@ -50065,6 +50065,21 @@ export interface paths {
                                 soldByMembershipId: string | null;
                                 branchId: string | null;
                                 priceMinor: number;
+                                uses: {
+                                    id: string;
+                                    usedAt: string;
+                                    serviceId: string | null;
+                                    serviceName: string | null;
+                                    performerMembershipId: string | null;
+                                    performerName: string | null;
+                                    /** @enum {string} */
+                                    source: "manual" | "appointment" | "bill" | "backfill";
+                                    billId: string | null;
+                                    billNumber: string | null;
+                                    appointmentId: string | null;
+                                    note: string | null;
+                                    reversed: boolean;
+                                }[];
                             }[];
                         };
                     };
@@ -50188,6 +50203,21 @@ export interface paths {
                                 soldByMembershipId: string | null;
                                 branchId: string | null;
                                 priceMinor: number;
+                                uses: {
+                                    id: string;
+                                    usedAt: string;
+                                    serviceId: string | null;
+                                    serviceName: string | null;
+                                    performerMembershipId: string | null;
+                                    performerName: string | null;
+                                    /** @enum {string} */
+                                    source: "manual" | "appointment" | "bill" | "backfill";
+                                    billId: string | null;
+                                    billNumber: string | null;
+                                    appointmentId: string | null;
+                                    note: string | null;
+                                    reversed: boolean;
+                                }[];
                             };
                         };
                     };
@@ -50273,7 +50303,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Use one session of a package (422 PACKAGE_NOT_USABLE: expired / exhausted / service not covered)
+         * Use one session of a package, with who did it and when (422 PACKAGE_NOT_USABLE: expired / exhausted / service not covered; 422 PERFORMER_REQUIRED while payouts is on)
          * @description Requires header `X-Tenant-Id`. Permission: `packages:write`. Module: `crm`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
@@ -50296,6 +50326,10 @@ export interface paths {
                     "application/json": {
                         serviceId: string;
                         appointmentId?: string | null;
+                        performerMembershipId?: string | null;
+                        branchId?: string | null;
+                        usedAt?: string;
+                        note?: string | null;
                     };
                 };
             };
@@ -50325,6 +50359,21 @@ export interface paths {
                                 soldByMembershipId: string | null;
                                 branchId: string | null;
                                 priceMinor: number;
+                                uses: {
+                                    id: string;
+                                    usedAt: string;
+                                    serviceId: string | null;
+                                    serviceName: string | null;
+                                    performerMembershipId: string | null;
+                                    performerName: string | null;
+                                    /** @enum {string} */
+                                    source: "manual" | "appointment" | "bill" | "backfill";
+                                    billId: string | null;
+                                    billNumber: string | null;
+                                    appointmentId: string | null;
+                                    note: string | null;
+                                    reversed: boolean;
+                                }[];
                             };
                         };
                     };
