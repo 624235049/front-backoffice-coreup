@@ -43,7 +43,6 @@ const MODULE_KEYS = [
   'surveys',
   'reports',
   'approvals',
-  'queue',
   'payouts',
   'checkout',
   'kpi',

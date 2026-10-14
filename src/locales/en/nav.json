@@ -16,7 +16,8 @@
     "main": "Main",
     "me": "Mine",
     "manage": "Manage",
-    "settings": "Settings"
+    "settings": "Settings",
+    "accounting": "Accounting"
   },
   "impersonation": {
     "banner": "Viewing as the CoreUp team",
@@ -31,5 +32,15 @@
   "invoices": "Invoices",
   "revenue": "Revenue",
   "team": "Team",
-  "security": "Account security"
+  "security": "Account security",
+  "accOverview": "Accounting overview",
+  "accQuotations": "Quotations",
+  "accInvoices": "Invoices / billing",
+  "accReceipts": "Receipts / tax invoices",
+  "accCreditNotes": "Credit notes",
+  "accExpenses": "Expenses",
+  "accContacts": "Contacts",
+  "accProducts": "Products / services",
+  "accReports": "Reports",
+  "accSettings": "Company settings"
 }

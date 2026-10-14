@@ -17,11 +17,31 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-pa
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as AppAccountSecurityRouteImport } from './routes/_app/account.security'
+import { Route as AppAccountingIndexRouteImport } from './routes/_app/accounting.index'
+import { Route as AppAccountingContactsRouteImport } from './routes/_app/accounting.contacts'
+import { Route as AppAccountingProductsRouteImport } from './routes/_app/accounting.products'
+import { Route as AppAccountingReportsRouteImport } from './routes/_app/accounting.reports'
+import { Route as AppAccountingSettingsRouteImport } from './routes/_app/accounting.settings'
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
 import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.invoices'
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformRevenueRouteImport } from './routes/_app/platform.revenue'
 import { Route as AppPlatformTeamRouteImport } from './routes/_app/platform.team'
+import { Route as AppAccountingCreditNotesIndexRouteImport } from './routes/_app/accounting.credit-notes.index'
+import { Route as AppAccountingCreditNotesIdRouteImport } from './routes/_app/accounting.credit-notes.$id'
+import { Route as AppAccountingCreditNotesNewRouteImport } from './routes/_app/accounting.credit-notes.new'
+import { Route as AppAccountingExpensesIndexRouteImport } from './routes/_app/accounting.expenses.index'
+import { Route as AppAccountingExpensesIdRouteImport } from './routes/_app/accounting.expenses.$id'
+import { Route as AppAccountingExpensesNewRouteImport } from './routes/_app/accounting.expenses.new'
+import { Route as AppAccountingInvoicesIndexRouteImport } from './routes/_app/accounting.invoices.index'
+import { Route as AppAccountingInvoicesIdRouteImport } from './routes/_app/accounting.invoices.$id'
+import { Route as AppAccountingInvoicesNewRouteImport } from './routes/_app/accounting.invoices.new'
+import { Route as AppAccountingQuotationsIndexRouteImport } from './routes/_app/accounting.quotations.index'
+import { Route as AppAccountingQuotationsIdRouteImport } from './routes/_app/accounting.quotations.$id'
+import { Route as AppAccountingQuotationsNewRouteImport } from './routes/_app/accounting.quotations.new'
+import { Route as AppAccountingReceiptsIndexRouteImport } from './routes/_app/accounting.receipts.index'
+import { Route as AppAccountingReceiptsIdRouteImport } from './routes/_app/accounting.receipts.$id'
+import { Route as AppAccountingReceiptsNewRouteImport } from './routes/_app/accounting.receipts.new'
 import { Route as AppPlatformAuditsIndexRouteImport } from './routes/_app/platform.audits.index'
 import { Route as AppPlatformAuditsIdRouteImport } from './routes/_app/platform.audits.$id'
 import { Route as AppPlatformEngagementsIndexRouteImport } from './routes/_app/platform.engagements.index'
@@ -67,6 +87,31 @@ const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
   path: '/account/security',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountingIndexRoute = AppAccountingIndexRouteImport.update({
+  id: '/accounting/',
+  path: '/accounting/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingContactsRoute = AppAccountingContactsRouteImport.update({
+  id: '/accounting/contacts',
+  path: '/accounting/contacts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingProductsRoute = AppAccountingProductsRouteImport.update({
+  id: '/accounting/products',
+  path: '/accounting/products',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingReportsRoute = AppAccountingReportsRouteImport.update({
+  id: '/accounting/reports',
+  path: '/accounting/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingSettingsRoute = AppAccountingSettingsRouteImport.update({
+  id: '/accounting/settings',
+  path: '/accounting/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
   id: '/platform/',
   path: '/platform/',
@@ -92,6 +137,93 @@ const AppPlatformTeamRoute = AppPlatformTeamRouteImport.update({
   path: '/platform/team',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountingCreditNotesIndexRoute =
+  AppAccountingCreditNotesIndexRouteImport.update({
+    id: '/accounting/credit-notes/',
+    path: '/accounting/credit-notes/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingCreditNotesIdRoute =
+  AppAccountingCreditNotesIdRouteImport.update({
+    id: '/accounting/credit-notes/$id',
+    path: '/accounting/credit-notes/$id',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingCreditNotesNewRoute =
+  AppAccountingCreditNotesNewRouteImport.update({
+    id: '/accounting/credit-notes/new',
+    path: '/accounting/credit-notes/new',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingExpensesIndexRoute =
+  AppAccountingExpensesIndexRouteImport.update({
+    id: '/accounting/expenses/',
+    path: '/accounting/expenses/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingExpensesIdRoute = AppAccountingExpensesIdRouteImport.update({
+  id: '/accounting/expenses/$id',
+  path: '/accounting/expenses/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingExpensesNewRoute =
+  AppAccountingExpensesNewRouteImport.update({
+    id: '/accounting/expenses/new',
+    path: '/accounting/expenses/new',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingInvoicesIndexRoute =
+  AppAccountingInvoicesIndexRouteImport.update({
+    id: '/accounting/invoices/',
+    path: '/accounting/invoices/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingInvoicesIdRoute = AppAccountingInvoicesIdRouteImport.update({
+  id: '/accounting/invoices/$id',
+  path: '/accounting/invoices/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingInvoicesNewRoute =
+  AppAccountingInvoicesNewRouteImport.update({
+    id: '/accounting/invoices/new',
+    path: '/accounting/invoices/new',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingQuotationsIndexRoute =
+  AppAccountingQuotationsIndexRouteImport.update({
+    id: '/accounting/quotations/',
+    path: '/accounting/quotations/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingQuotationsIdRoute =
+  AppAccountingQuotationsIdRouteImport.update({
+    id: '/accounting/quotations/$id',
+    path: '/accounting/quotations/$id',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingQuotationsNewRoute =
+  AppAccountingQuotationsNewRouteImport.update({
+    id: '/accounting/quotations/new',
+    path: '/accounting/quotations/new',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingReceiptsIndexRoute =
+  AppAccountingReceiptsIndexRouteImport.update({
+    id: '/accounting/receipts/',
+    path: '/accounting/receipts/',
+    getParentRoute: () => AppRoute,
+  } as any)
+const AppAccountingReceiptsIdRoute = AppAccountingReceiptsIdRouteImport.update({
+  id: '/accounting/receipts/$id',
+  path: '/accounting/receipts/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingReceiptsNewRoute =
+  AppAccountingReceiptsNewRouteImport.update({
+    id: '/accounting/receipts/new',
+    path: '/accounting/receipts/new',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppPlatformAuditsIndexRoute = AppPlatformAuditsIndexRouteImport.update({
   id: '/platform/audits/',
   path: '/platform/audits/',
@@ -132,14 +264,34 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/account/security': typeof AppAccountSecurityRoute
+  '/accounting/contacts': typeof AppAccountingContactsRoute
+  '/accounting/products': typeof AppAccountingProductsRoute
+  '/accounting/reports': typeof AppAccountingReportsRoute
+  '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
+  '/accounting/': typeof AppAccountingIndexRoute
   '/platform/': typeof AppPlatformIndexRoute
+  '/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
+  '/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
+  '/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
+  '/accounting/expenses/new': typeof AppAccountingExpensesNewRoute
+  '/accounting/invoices/$id': typeof AppAccountingInvoicesIdRoute
+  '/accounting/invoices/new': typeof AppAccountingInvoicesNewRoute
+  '/accounting/quotations/$id': typeof AppAccountingQuotationsIdRoute
+  '/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
+  '/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
+  '/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
   '/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
+  '/accounting/credit-notes/': typeof AppAccountingCreditNotesIndexRoute
+  '/accounting/expenses/': typeof AppAccountingExpensesIndexRoute
+  '/accounting/invoices/': typeof AppAccountingInvoicesIndexRoute
+  '/accounting/quotations/': typeof AppAccountingQuotationsIndexRoute
+  '/accounting/receipts/': typeof AppAccountingReceiptsIndexRoute
   '/platform/audits/': typeof AppPlatformAuditsIndexRoute
   '/platform/engagements/': typeof AppPlatformEngagementsIndexRoute
   '/platform/tenants/': typeof AppPlatformTenantsIndexRoute
@@ -151,14 +303,34 @@ export interface FileRoutesByTo {
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
   '/account/security': typeof AppAccountSecurityRoute
+  '/accounting/contacts': typeof AppAccountingContactsRoute
+  '/accounting/products': typeof AppAccountingProductsRoute
+  '/accounting/reports': typeof AppAccountingReportsRoute
+  '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
+  '/accounting': typeof AppAccountingIndexRoute
   '/platform': typeof AppPlatformIndexRoute
+  '/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
+  '/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
+  '/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
+  '/accounting/expenses/new': typeof AppAccountingExpensesNewRoute
+  '/accounting/invoices/$id': typeof AppAccountingInvoicesIdRoute
+  '/accounting/invoices/new': typeof AppAccountingInvoicesNewRoute
+  '/accounting/quotations/$id': typeof AppAccountingQuotationsIdRoute
+  '/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
+  '/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
+  '/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
   '/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
+  '/accounting/credit-notes': typeof AppAccountingCreditNotesIndexRoute
+  '/accounting/expenses': typeof AppAccountingExpensesIndexRoute
+  '/accounting/invoices': typeof AppAccountingInvoicesIndexRoute
+  '/accounting/quotations': typeof AppAccountingQuotationsIndexRoute
+  '/accounting/receipts': typeof AppAccountingReceiptsIndexRoute
   '/platform/audits': typeof AppPlatformAuditsIndexRoute
   '/platform/engagements': typeof AppPlatformEngagementsIndexRoute
   '/platform/tenants': typeof AppPlatformTenantsIndexRoute
@@ -173,14 +345,34 @@ export interface FileRoutesById {
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_app/': typeof AppIndexRoute
   '/_app/account/security': typeof AppAccountSecurityRoute
+  '/_app/accounting/contacts': typeof AppAccountingContactsRoute
+  '/_app/accounting/products': typeof AppAccountingProductsRoute
+  '/_app/accounting/reports': typeof AppAccountingReportsRoute
+  '/_app/accounting/settings': typeof AppAccountingSettingsRoute
   '/_app/platform/invoices': typeof AppPlatformInvoicesRoute
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
   '/_app/platform/revenue': typeof AppPlatformRevenueRoute
   '/_app/platform/team': typeof AppPlatformTeamRoute
+  '/_app/accounting/': typeof AppAccountingIndexRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
+  '/_app/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
+  '/_app/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
+  '/_app/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
+  '/_app/accounting/expenses/new': typeof AppAccountingExpensesNewRoute
+  '/_app/accounting/invoices/$id': typeof AppAccountingInvoicesIdRoute
+  '/_app/accounting/invoices/new': typeof AppAccountingInvoicesNewRoute
+  '/_app/accounting/quotations/$id': typeof AppAccountingQuotationsIdRoute
+  '/_app/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
+  '/_app/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
+  '/_app/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
   '/_app/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/_app/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/_app/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
+  '/_app/accounting/credit-notes/': typeof AppAccountingCreditNotesIndexRoute
+  '/_app/accounting/expenses/': typeof AppAccountingExpensesIndexRoute
+  '/_app/accounting/invoices/': typeof AppAccountingInvoicesIndexRoute
+  '/_app/accounting/quotations/': typeof AppAccountingQuotationsIndexRoute
+  '/_app/accounting/receipts/': typeof AppAccountingReceiptsIndexRoute
   '/_app/platform/audits/': typeof AppPlatformAuditsIndexRoute
   '/_app/platform/engagements/': typeof AppPlatformEngagementsIndexRoute
   '/_app/platform/tenants/': typeof AppPlatformTenantsIndexRoute
@@ -194,14 +386,34 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/account/security'
+    | '/accounting/contacts'
+    | '/accounting/products'
+    | '/accounting/reports'
+    | '/accounting/settings'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/revenue'
     | '/platform/team'
+    | '/accounting/'
     | '/platform/'
+    | '/accounting/credit-notes/$id'
+    | '/accounting/credit-notes/new'
+    | '/accounting/expenses/$id'
+    | '/accounting/expenses/new'
+    | '/accounting/invoices/$id'
+    | '/accounting/invoices/new'
+    | '/accounting/quotations/$id'
+    | '/accounting/quotations/new'
+    | '/accounting/receipts/$id'
+    | '/accounting/receipts/new'
     | '/platform/audits/$id'
     | '/platform/engagements/$id'
     | '/platform/tenants/$id'
+    | '/accounting/credit-notes/'
+    | '/accounting/expenses/'
+    | '/accounting/invoices/'
+    | '/accounting/quotations/'
+    | '/accounting/receipts/'
     | '/platform/audits/'
     | '/platform/engagements/'
     | '/platform/tenants/'
@@ -213,14 +425,34 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/account/security'
+    | '/accounting/contacts'
+    | '/accounting/products'
+    | '/accounting/reports'
+    | '/accounting/settings'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/revenue'
     | '/platform/team'
+    | '/accounting'
     | '/platform'
+    | '/accounting/credit-notes/$id'
+    | '/accounting/credit-notes/new'
+    | '/accounting/expenses/$id'
+    | '/accounting/expenses/new'
+    | '/accounting/invoices/$id'
+    | '/accounting/invoices/new'
+    | '/accounting/quotations/$id'
+    | '/accounting/quotations/new'
+    | '/accounting/receipts/$id'
+    | '/accounting/receipts/new'
     | '/platform/audits/$id'
     | '/platform/engagements/$id'
     | '/platform/tenants/$id'
+    | '/accounting/credit-notes'
+    | '/accounting/expenses'
+    | '/accounting/invoices'
+    | '/accounting/quotations'
+    | '/accounting/receipts'
     | '/platform/audits'
     | '/platform/engagements'
     | '/platform/tenants'
@@ -234,14 +466,34 @@ export interface FileRouteTypes {
     | '/_auth/sign-in'
     | '/_app/'
     | '/_app/account/security'
+    | '/_app/accounting/contacts'
+    | '/_app/accounting/products'
+    | '/_app/accounting/reports'
+    | '/_app/accounting/settings'
     | '/_app/platform/invoices'
     | '/_app/platform/leads'
     | '/_app/platform/revenue'
     | '/_app/platform/team'
+    | '/_app/accounting/'
     | '/_app/platform/'
+    | '/_app/accounting/credit-notes/$id'
+    | '/_app/accounting/credit-notes/new'
+    | '/_app/accounting/expenses/$id'
+    | '/_app/accounting/expenses/new'
+    | '/_app/accounting/invoices/$id'
+    | '/_app/accounting/invoices/new'
+    | '/_app/accounting/quotations/$id'
+    | '/_app/accounting/quotations/new'
+    | '/_app/accounting/receipts/$id'
+    | '/_app/accounting/receipts/new'
     | '/_app/platform/audits/$id'
     | '/_app/platform/engagements/$id'
     | '/_app/platform/tenants/$id'
+    | '/_app/accounting/credit-notes/'
+    | '/_app/accounting/expenses/'
+    | '/_app/accounting/invoices/'
+    | '/_app/accounting/quotations/'
+    | '/_app/accounting/receipts/'
     | '/_app/platform/audits/'
     | '/_app/platform/engagements/'
     | '/_app/platform/tenants/'
@@ -311,6 +563,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountSecurityRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/accounting/': {
+      id: '/_app/accounting/'
+      path: '/accounting'
+      fullPath: '/accounting/'
+      preLoaderRoute: typeof AppAccountingIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/contacts': {
+      id: '/_app/accounting/contacts'
+      path: '/accounting/contacts'
+      fullPath: '/accounting/contacts'
+      preLoaderRoute: typeof AppAccountingContactsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/products': {
+      id: '/_app/accounting/products'
+      path: '/accounting/products'
+      fullPath: '/accounting/products'
+      preLoaderRoute: typeof AppAccountingProductsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/reports': {
+      id: '/_app/accounting/reports'
+      path: '/accounting/reports'
+      fullPath: '/accounting/reports'
+      preLoaderRoute: typeof AppAccountingReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/settings': {
+      id: '/_app/accounting/settings'
+      path: '/accounting/settings'
+      fullPath: '/accounting/settings'
+      preLoaderRoute: typeof AppAccountingSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/platform/': {
       id: '/_app/platform/'
       path: '/platform'
@@ -344,6 +631,111 @@ declare module '@tanstack/react-router' {
       path: '/platform/team'
       fullPath: '/platform/team'
       preLoaderRoute: typeof AppPlatformTeamRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/credit-notes/': {
+      id: '/_app/accounting/credit-notes/'
+      path: '/accounting/credit-notes'
+      fullPath: '/accounting/credit-notes/'
+      preLoaderRoute: typeof AppAccountingCreditNotesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/credit-notes/$id': {
+      id: '/_app/accounting/credit-notes/$id'
+      path: '/accounting/credit-notes/$id'
+      fullPath: '/accounting/credit-notes/$id'
+      preLoaderRoute: typeof AppAccountingCreditNotesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/credit-notes/new': {
+      id: '/_app/accounting/credit-notes/new'
+      path: '/accounting/credit-notes/new'
+      fullPath: '/accounting/credit-notes/new'
+      preLoaderRoute: typeof AppAccountingCreditNotesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/expenses/': {
+      id: '/_app/accounting/expenses/'
+      path: '/accounting/expenses'
+      fullPath: '/accounting/expenses/'
+      preLoaderRoute: typeof AppAccountingExpensesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/expenses/$id': {
+      id: '/_app/accounting/expenses/$id'
+      path: '/accounting/expenses/$id'
+      fullPath: '/accounting/expenses/$id'
+      preLoaderRoute: typeof AppAccountingExpensesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/expenses/new': {
+      id: '/_app/accounting/expenses/new'
+      path: '/accounting/expenses/new'
+      fullPath: '/accounting/expenses/new'
+      preLoaderRoute: typeof AppAccountingExpensesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/invoices/': {
+      id: '/_app/accounting/invoices/'
+      path: '/accounting/invoices'
+      fullPath: '/accounting/invoices/'
+      preLoaderRoute: typeof AppAccountingInvoicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/invoices/$id': {
+      id: '/_app/accounting/invoices/$id'
+      path: '/accounting/invoices/$id'
+      fullPath: '/accounting/invoices/$id'
+      preLoaderRoute: typeof AppAccountingInvoicesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/invoices/new': {
+      id: '/_app/accounting/invoices/new'
+      path: '/accounting/invoices/new'
+      fullPath: '/accounting/invoices/new'
+      preLoaderRoute: typeof AppAccountingInvoicesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/quotations/': {
+      id: '/_app/accounting/quotations/'
+      path: '/accounting/quotations'
+      fullPath: '/accounting/quotations/'
+      preLoaderRoute: typeof AppAccountingQuotationsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/quotations/$id': {
+      id: '/_app/accounting/quotations/$id'
+      path: '/accounting/quotations/$id'
+      fullPath: '/accounting/quotations/$id'
+      preLoaderRoute: typeof AppAccountingQuotationsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/quotations/new': {
+      id: '/_app/accounting/quotations/new'
+      path: '/accounting/quotations/new'
+      fullPath: '/accounting/quotations/new'
+      preLoaderRoute: typeof AppAccountingQuotationsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/receipts/': {
+      id: '/_app/accounting/receipts/'
+      path: '/accounting/receipts'
+      fullPath: '/accounting/receipts/'
+      preLoaderRoute: typeof AppAccountingReceiptsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/receipts/$id': {
+      id: '/_app/accounting/receipts/$id'
+      path: '/accounting/receipts/$id'
+      fullPath: '/accounting/receipts/$id'
+      preLoaderRoute: typeof AppAccountingReceiptsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/receipts/new': {
+      id: '/_app/accounting/receipts/new'
+      path: '/accounting/receipts/new'
+      fullPath: '/accounting/receipts/new'
+      preLoaderRoute: typeof AppAccountingReceiptsNewRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/audits/': {
@@ -394,14 +786,34 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
+  AppAccountingContactsRoute: typeof AppAccountingContactsRoute
+  AppAccountingProductsRoute: typeof AppAccountingProductsRoute
+  AppAccountingReportsRoute: typeof AppAccountingReportsRoute
+  AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
   AppPlatformInvoicesRoute: typeof AppPlatformInvoicesRoute
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
   AppPlatformRevenueRoute: typeof AppPlatformRevenueRoute
   AppPlatformTeamRoute: typeof AppPlatformTeamRoute
+  AppAccountingIndexRoute: typeof AppAccountingIndexRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
+  AppAccountingCreditNotesIdRoute: typeof AppAccountingCreditNotesIdRoute
+  AppAccountingCreditNotesNewRoute: typeof AppAccountingCreditNotesNewRoute
+  AppAccountingExpensesIdRoute: typeof AppAccountingExpensesIdRoute
+  AppAccountingExpensesNewRoute: typeof AppAccountingExpensesNewRoute
+  AppAccountingInvoicesIdRoute: typeof AppAccountingInvoicesIdRoute
+  AppAccountingInvoicesNewRoute: typeof AppAccountingInvoicesNewRoute
+  AppAccountingQuotationsIdRoute: typeof AppAccountingQuotationsIdRoute
+  AppAccountingQuotationsNewRoute: typeof AppAccountingQuotationsNewRoute
+  AppAccountingReceiptsIdRoute: typeof AppAccountingReceiptsIdRoute
+  AppAccountingReceiptsNewRoute: typeof AppAccountingReceiptsNewRoute
   AppPlatformAuditsIdRoute: typeof AppPlatformAuditsIdRoute
   AppPlatformEngagementsIdRoute: typeof AppPlatformEngagementsIdRoute
   AppPlatformTenantsIdRoute: typeof AppPlatformTenantsIdRoute
+  AppAccountingCreditNotesIndexRoute: typeof AppAccountingCreditNotesIndexRoute
+  AppAccountingExpensesIndexRoute: typeof AppAccountingExpensesIndexRoute
+  AppAccountingInvoicesIndexRoute: typeof AppAccountingInvoicesIndexRoute
+  AppAccountingQuotationsIndexRoute: typeof AppAccountingQuotationsIndexRoute
+  AppAccountingReceiptsIndexRoute: typeof AppAccountingReceiptsIndexRoute
   AppPlatformAuditsIndexRoute: typeof AppPlatformAuditsIndexRoute
   AppPlatformEngagementsIndexRoute: typeof AppPlatformEngagementsIndexRoute
   AppPlatformTenantsIndexRoute: typeof AppPlatformTenantsIndexRoute
@@ -410,14 +822,34 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
+  AppAccountingContactsRoute: AppAccountingContactsRoute,
+  AppAccountingProductsRoute: AppAccountingProductsRoute,
+  AppAccountingReportsRoute: AppAccountingReportsRoute,
+  AppAccountingSettingsRoute: AppAccountingSettingsRoute,
   AppPlatformInvoicesRoute: AppPlatformInvoicesRoute,
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
   AppPlatformRevenueRoute: AppPlatformRevenueRoute,
   AppPlatformTeamRoute: AppPlatformTeamRoute,
+  AppAccountingIndexRoute: AppAccountingIndexRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
+  AppAccountingCreditNotesIdRoute: AppAccountingCreditNotesIdRoute,
+  AppAccountingCreditNotesNewRoute: AppAccountingCreditNotesNewRoute,
+  AppAccountingExpensesIdRoute: AppAccountingExpensesIdRoute,
+  AppAccountingExpensesNewRoute: AppAccountingExpensesNewRoute,
+  AppAccountingInvoicesIdRoute: AppAccountingInvoicesIdRoute,
+  AppAccountingInvoicesNewRoute: AppAccountingInvoicesNewRoute,
+  AppAccountingQuotationsIdRoute: AppAccountingQuotationsIdRoute,
+  AppAccountingQuotationsNewRoute: AppAccountingQuotationsNewRoute,
+  AppAccountingReceiptsIdRoute: AppAccountingReceiptsIdRoute,
+  AppAccountingReceiptsNewRoute: AppAccountingReceiptsNewRoute,
   AppPlatformAuditsIdRoute: AppPlatformAuditsIdRoute,
   AppPlatformEngagementsIdRoute: AppPlatformEngagementsIdRoute,
   AppPlatformTenantsIdRoute: AppPlatformTenantsIdRoute,
+  AppAccountingCreditNotesIndexRoute: AppAccountingCreditNotesIndexRoute,
+  AppAccountingExpensesIndexRoute: AppAccountingExpensesIndexRoute,
+  AppAccountingInvoicesIndexRoute: AppAccountingInvoicesIndexRoute,
+  AppAccountingQuotationsIndexRoute: AppAccountingQuotationsIndexRoute,
+  AppAccountingReceiptsIndexRoute: AppAccountingReceiptsIndexRoute,
   AppPlatformAuditsIndexRoute: AppPlatformAuditsIndexRoute,
   AppPlatformEngagementsIndexRoute: AppPlatformEngagementsIndexRoute,
   AppPlatformTenantsIndexRoute: AppPlatformTenantsIndexRoute,

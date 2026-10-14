@@ -4,7 +4,7 @@
 
 ## ขอบเขต repo
 
-หลังบ้านทีม CoreUp (React 19 + Vite + TanStack Router/Query + shadcn/ui) ที่ `team.coreup.xxx` สำหรับ role `platform_owner | platform_admin | platform_consultant | platform_sales` เท่านั้น: `/platform` (dashboard), `/platform/tenants`, `/platform/leads`, `/platform/engagements`, `/platform/audits`, `/platform/invoices`, `/platform/revenue`, `/platform/team` เป็น repo อิสระ **ไม่ import โค้ด backend** — type ของ API มาจาก `openapi.json` → `pnpm gen:api` → `src/lib/api-client/openapi.d.ts` (ห้ามประกาศ type ของ API ซ้ำเอง) ไม่ทำหน้าของร้าน (อยู่ใน `front-backoffice-shop`) — "เข้าดูแทนร้าน" เปิด `APP_URL` ของหลังบ้านร้านพร้อม token 60 นาที (`POST /v1/platform/tenants/:id/impersonate`)
+หลังบ้านทีม CoreUp (React 19 + Vite + TanStack Router/Query + shadcn/ui) ที่ `team.coreup.xxx` สำหรับ role `platform_owner | platform_admin | platform_consultant | platform_sales` เท่านั้น: `/platform` (dashboard), `/platform/tenants`, `/platform/leads`, `/platform/engagements`, `/platform/audits`, `/platform/invoices`, `/platform/revenue`, `/platform/team` และบัญชีบริษัท CoreUp เอง `/accounting/*` (สิทธิ์ `platform:accounting`) เป็น repo อิสระ **ไม่ import โค้ด backend** — type ของ API มาจาก `openapi.json` → `pnpm gen:api` → `src/lib/api-client/openapi.d.ts` (ห้ามประกาศ type ของ API ซ้ำเอง) ไม่ทำหน้าของร้าน (อยู่ใน `front-backoffice-shop`) — "เข้าดูแทนร้าน" เปิด `APP_URL` ของหลังบ้านร้านพร้อม token 60 นาที (`POST /v1/platform/tenants/:id/impersonate`)
 
 ทุกหน้าส่ง `X-Tenant-Id` = tenant `coreup` (membership ของทีม CoreUp); สิทธิ์ใช้ `platform:*` และ role (ดู `docs/09-roles-and-platform.md`): revenue/ทีม เฉพาะ `platform_owner`, ที่ปรึกษาเห็นเฉพาะร้านที่ได้รับมอบหมาย
 

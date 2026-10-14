@@ -121,6 +121,12 @@ Layout: `/_auth/*` (ไม่ต้องล็อกอิน), `/_app/*` (ต�
 | `/platform/leads` | CRM การขาย (kanban 6 stage) | platform_sales | |
 | `/platform/audits` · `/:id` | ออดิท: rubric, findings, แผน 90 วัน, สร้างรายงาน | platform_consultant | |
 | `/platform/templates` · `/question-bank` · `/plans` | ตั้งค่ากลาง | platform_admin | |
+| `/accounting` | บัญชีบริษัท CoreUp: ภาพรวม (รายรับ/รายจ่าย/กำไร, ลูกหนี้, กราฟ 12 เดือน) | platform:accounting | คอม/มือถือ |
+| `/accounting/quotations` · `/invoices` · `/receipts` · `/credit-notes` (+ `/new` · `/:id`) | ใบเสนอราคา / ใบแจ้งหนี้ / ใบเสร็จ-ใบกำกับภาษี / ใบลดหนี้ — ตัวแก้ไขเอกสารร่วมกัน, รับชำระ (หัก ณ ที่จ่าย), ยกเลิกพร้อมเหตุผล, PDF | platform:accounting | คอม/มือถือ |
+| `/accounting/expenses` (+ `/new` · `/:id`) | ค่าใช้จ่าย + แนบใบเสร็จ | platform:accounting | |
+| `/accounting/contacts` · `/products` | ผู้ติดต่อ / สินค้า-บริการ | platform:accounting | |
+| `/accounting/reports` | กำไรขาดทุน, ลูกหนี้คงค้าง, ภาษีขาย/ซื้อ, หัก ณ ที่จ่าย, ค่าใช้จ่ายตามหมวด (ส่งออก .xlsx) | platform:accounting | คอม |
+| `/accounting/settings` | ตั้งค่าบริษัท (ข้อมูลหัวเอกสาร, VAT, เลขที่เอกสาร, บัญชีรับเงิน, หมวดค่าใช้จ่าย) | platform:accounting | คอม |
 
 เมนูด้านข้างสร้างจาก config เดียว (`navigation.ts`) กรองด้วย `can()` + `hasModule()` → ร้านที่ไม่ได้ซื้อโมดูลจะไม่เห็นเมนู (หรือเห็นแบบล็อกพร้อมปุ่ม "ติดต่อ CoreUp" — ตั้งค่าได้)
 
@@ -183,6 +189,19 @@ Layout: `/_auth/*` (ไม่ต้องล็อกอิน), `/_app/*` (ต�
 ### 5.8 Platform: ออดิท
 
 ขั้นตอนแบบ wizard: โปรไฟล์องค์กร → ส่งแบบสอบถาม → ให้คะแนน rubric ต่อด้าน (เกณฑ์แสดงข้างช่อง) → findings → แผน 90 วัน → ตัวอย่างรายงาน → สร้าง PDF
+
+---
+
+### 5.9 บัญชีบริษัท CoreUp (`/accounting/*`)
+
+โค้ดอยู่ที่ `src/features/accounting/` (nav section "บัญชี", locale `accounting.json`) ข้อมูลมาจาก `/v1/platform/accounting/*` ทั้งหมด (ดู `coreup-api/docs/02-api.md`)
+
+- **รายการ (list)**: ตัวกรองทั้งหมด (ค้นหา สถานะ ช่วงวันที่ ที่มา) เก็บใน URL (`?q=&status=&from=&to=`) · หัวตารางตรึง · ตัวเลขชิดขวา · แถว "รวมทั้งหมด" ตรึงล่าง (ยอดรวมคิดจากทุกแถวที่ตรงตัวกรอง ไม่ใช่แค่หน้าที่โหลด) · มือถือเปลี่ยนเป็นการ์ด
+- **ใบแจ้งหนี้** แสดงใบแจ้งหนี้ค่าแพ็กเกจ/ค่าที่ปรึกษาของร้าน (`source` ≠ `accounting`) เป็นแถวอ่านอย่างเดียวพร้อมลิงก์ไป `/platform/invoices` นับรายได้ครั้งเดียว (ไม่มีแถวซ้ำ)
+- **ตัวแก้ไขเอกสาร** (`pages/document-editor.tsx`): ค้นหาลูกค้า/สินค้าพิมพ์แล้วเลือก, ยอดรวม/VAT/หัก ณ ที่จ่ายคำนวณสดด้วย `lib/calc.ts` ซึ่ง **ต้องตรงกับ `calcTotals` ใน `coreup-api/packages/domain/src/accounting`** (เซิร์ฟเวอร์เป็นตัวจริง) · เลขที่เอกสารออกตอน "ออกเอกสาร" เท่านั้น · เอกสารที่ออกแล้วแก้ไม่ได้ (มุมมองอ่านอย่างเดียว + ปุ่มรับชำระ/แปลง/ลดหนี้/ยกเลิก)
+- **PDF**: `POST …/documents/:id/pdf` แล้ว poll `GET …/pdf?job=` จนพร้อม (worker `pdf.render`) · เลือกต้นฉบับ/สำเนา/ทั้งสอง
+- **รายงาน**: ทุกแท็บส่งออก `.xlsx` ฝั่งเบราว์เซอร์ด้วย `exceljs` (โหลดแบบ lazy chunk) จาก JSON เดียวกับที่แสดงบนจอ — ตัวสร้างแถวอยู่ใน `lib/xlsx.ts` / `lib/reports.ts` (มี unit test ใน `tests/accounting.test.ts`)
+- เงินเป็นสตางค์ (integer) ตลอด แปลงเป็นบาทตอนแสดง/ส่งออกเท่านั้น
 
 ---
 

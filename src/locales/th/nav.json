@@ -16,7 +16,8 @@
     "main": "หลัก",
     "me": "ของฉัน",
     "manage": "จัดการ",
-    "settings": "ตั้งค่า"
+    "settings": "ตั้งค่า",
+    "accounting": "บัญชี"
   },
   "impersonation": {
     "banner": "กำลังดูในฐานะทีม CoreUp",
@@ -31,5 +32,15 @@
   "invoices": "ใบแจ้งหนี้",
   "revenue": "รายได้",
   "team": "ทีม CoreUp",
-  "security": "ความปลอดภัยของบัญชี"
+  "security": "ความปลอดภัยของบัญชี",
+  "accOverview": "ภาพรวมบัญชี",
+  "accQuotations": "ใบเสนอราคา",
+  "accInvoices": "ใบแจ้งหนี้ / วางบิล",
+  "accReceipts": "ใบเสร็จ / ใบกำกับภาษี",
+  "accCreditNotes": "ใบลดหนี้",
+  "accExpenses": "ค่าใช้จ่าย",
+  "accContacts": "ผู้ติดต่อ",
+  "accProducts": "สินค้า / บริการ",
+  "accReports": "รายงานบัญชี",
+  "accSettings": "ตั้งค่าบริษัท"
 }

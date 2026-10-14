@@ -3,7 +3,7 @@ import { hasModule } from '@/lib/modules';
 import { can } from '@/lib/permissions';
 import type { MeMembership } from '@/lib/types';
 
-export type NavSection = 'main' | 'me' | 'manage' | 'settings';
+export type NavSection = 'main' | 'accounting' | 'me' | 'manage' | 'settings';
 
 /**
  * A sidebar entry. Each feature exports `navItems: NavItem[]` from `src/features/<area>/nav.ts`;
@@ -54,7 +54,7 @@ export function isNavItemVisible(item: NavItem, m: MeMembership, uiMode: 'simple
   return can(m.permissions, item.permission);
 }
 
-const SECTION_ORDER: NavSection[] = ['main', 'me', 'manage', 'settings'];
+const SECTION_ORDER: NavSection[] = ['main', 'accounting', 'me', 'manage', 'settings'];
 
 /** Visible items grouped by section, sections and items in stable order. */
 export function buildNav(
