@@ -105,7 +105,6 @@ export function ContactDialog({
     branchCode: f.branchCode === '' || /^\d{5}$/.test(f.branchCode) ? undefined : t('validation.branchCode'),
     email: isOptionalEmailOk(f.email) ? undefined : t('validation.email'),
   };
-  const invalid = Object.values(errors).some(Boolean);
   const pending = create.isPending || patch.isPending;
 
   const pickShop = async (id: string, name: string) => {
@@ -129,7 +128,8 @@ export function ContactDialog({
 
   const submit = async () => {
     setTouched(true);
-    if (invalid) return;
+    const firstError = Object.values(errors).find(Boolean);
+    if (firstError) return void toast.error(firstError, { id: 'contact-invalid' });
     const body = {
       kind: f.kind,
       name: f.name.trim(),
@@ -209,7 +209,12 @@ export function ContactDialog({
           </FormField>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label={t('contacts.taxId')} htmlFor="ct-tax" error={show(errors.taxId)}>
+            <FormField
+              label={t('contacts.taxId')}
+              htmlFor="ct-tax"
+              error={show(errors.taxId)}
+              hint={f.taxId ? t('contacts.taxIdCount', { count: f.taxId.length }) : undefined}
+            >
               <Input
                 id="ct-tax"
                 inputMode="numeric"

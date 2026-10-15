@@ -1,6 +1,7 @@
 import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
@@ -76,15 +77,14 @@ export function TeamPage() {
                         <div className="text-xs text-muted-foreground">{m.email}</div>
                       </TableCell>
                       <TableCell>
-                        {isOwner ? (
+                        {isOwner && !self ? (
                           <Select
                             value={m.role ?? undefined}
-                            disabled={self}
                             onValueChange={(role) =>
-                              patch.mutate({
-                                id: m.membershipId,
-                                body: { role: role as (typeof ROLES)[number] },
-                              })
+                              patch.mutate(
+                                { id: m.membershipId, body: { role: role as (typeof ROLES)[number] } },
+                                { onSuccess: () => toast.success(t('team.roleSaved', { name: m.name })) },
+                              )
                             }
                           >
                             <SelectTrigger className="w-52" aria-label={t('team.col.role')}>
@@ -99,7 +99,12 @@ export function TeamPage() {
                             </SelectContent>
                           </Select>
                         ) : (
-                          (m.role && t(`platformRole.${m.role}`)) || '–'
+                          <>
+                            {(m.role && t(`platformRole.${m.role}`)) || '–'}
+                            {self ? (
+                              <div className="text-xs text-muted-foreground">{t('team.selfRole')}</div>
+                            ) : null}
+                          </>
                         )}
                       </TableCell>
                       <TableCell>
@@ -114,11 +119,22 @@ export function TeamPage() {
                           <Button
                             size="sm"
                             variant="ghost"
+                            disabled={patch.isPending}
                             onClick={() =>
-                              patch.mutate({
-                                id: m.membershipId,
-                                body: { status: m.status === 'active' ? 'inactive' : 'active' },
-                              })
+                              patch.mutate(
+                                {
+                                  id: m.membershipId,
+                                  body: { status: m.status === 'active' ? 'inactive' : 'active' },
+                                },
+                                {
+                                  onSuccess: () =>
+                                    toast.success(
+                                      t(m.status === 'active' ? 'team.deactivated' : 'team.activated', {
+                                        name: m.name,
+                                      }),
+                                    ),
+                                },
+                              )
                             }
                           >
                             {m.status === 'active' ? t('team.deactivate') : t('team.activate')}
@@ -144,7 +160,6 @@ function AddMemberDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<(typeof ROLES)[number]>('platform_consultant');
-  const valid = /^\S+@\S+\.\S+$/.test(email) && name.trim().length > 0;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={t('common.close')}>
@@ -182,12 +197,18 @@ function AddMemberDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
             {t('common.cancel')}
           </Button>
           <Button
-            disabled={!valid || add.isPending}
+            disabled={add.isPending}
+            blockedReason={
+              name.trim().length === 0
+                ? t('team.nameNeeded')
+                : !/^\S+@\S+\.\S+$/.test(email) && t('team.emailNeeded')
+            }
             onClick={() =>
               add.mutate(
                 { email, name: name.trim(), role },
                 {
                   onSuccess: () => {
+                    toast.success(t('team.added', { name: name.trim() }));
                     onOpenChange(false);
                     setEmail('');
                     setName('');

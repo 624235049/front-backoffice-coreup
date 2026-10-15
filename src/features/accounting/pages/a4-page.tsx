@@ -102,7 +102,11 @@ export function A4Page({ source }: { source: A4Source }) {
                 ))}
               </SelectContent>
             </Select>
-            <Button onClick={print} disabled={!preview.data} title={t('a4.printHint')}>
+            <Button
+              onClick={print}
+              blockedReason={!preview.data && t('a4.previewNotReady')}
+              title={t('a4.printHint')}
+            >
               <Printer /> {t('a4.print')}
             </Button>
             <PdfDownloadButton source={source} />

@@ -64,7 +64,11 @@ function CreditNoteStart() {
             />
           </div>
           <div>
-            <Button onClick={() => void start()} disabled={!picked || convert.isPending}>
+            <Button
+              onClick={() => void start()}
+              disabled={convert.isPending}
+              blockedReason={!picked && t('creditStart.pickFirst')}
+            >
               {t('creditStart.create')}
             </Button>
           </div>

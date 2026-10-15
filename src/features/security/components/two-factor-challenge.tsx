@@ -60,7 +60,12 @@ export function TwoFactorChallenge({ onSuccess, onCancel }: { onSuccess: () => v
             : errorMessage(challenge.error)}
         </p>
       ) : null}
-      <Button type="submit" size="lg" disabled={challenge.isPending || code.trim().length < 6}>
+      <Button
+        type="submit"
+        size="lg"
+        disabled={challenge.isPending}
+        blockedReason={code.trim().length < 6 && t('challenge.codeNeeded')}
+      >
         {t('challenge.submit')}
       </Button>
       <div className="flex items-center justify-between text-sm">

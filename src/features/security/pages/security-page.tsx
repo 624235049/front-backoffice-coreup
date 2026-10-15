@@ -190,7 +190,11 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                 />
-                <Button type="submit" disabled={verify.isPending || code.trim().length < 6}>
+                <Button
+                  type="submit"
+                  disabled={verify.isPending}
+                  blockedReason={code.trim().length < 6 && t('setup.codeNeeded')}
+                >
                   {t('setup.confirm')}
                 </Button>
               </div>
@@ -223,7 +227,11 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
             />
             <p className="text-xs text-muted-foreground">{t('setup.passwordHint')}</p>
             <div>
-              <Button type="submit" disabled={!password || setup.isPending}>
+              <Button
+                type="submit"
+                disabled={setup.isPending}
+                blockedReason={!password && t('setup.passwordNeeded')}
+              >
                 <ShieldCheck className="size-4" aria-hidden />
                 {t('page.enable')}
               </Button>
@@ -260,9 +268,11 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
                 onChange={(e) => setPassword(e.target.value)}
                 autoFocus
               />
-              {disable.isError && isApiError(disable.error) && disable.error.status === 403 ? (
+              {disable.isError ? (
                 <p role="alert" className="text-sm text-destructive">
-                  {t('page.cannotDisable')}
+                  {isApiError(disable.error) && disable.error.status === 403
+                    ? t('page.cannotDisable')
+                    : errorMessage(disable.error)}
                 </p>
               ) : null}
             </div>
@@ -271,7 +281,8 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
             <DialogFooter>
               <Button
                 variant={dialog === 'disable' ? 'destructive' : 'default'}
-                disabled={!password || disable.isPending || regenerate.isPending}
+                disabled={disable.isPending || regenerate.isPending}
+                blockedReason={!password && t('setup.passwordNeeded')}
                 onClick={async () => {
                   if (dialog === 'disable') {
                     const ok = await disable

@@ -143,7 +143,11 @@ export function ImpersonateDialog({
             {session ? tc('close') : tc('cancel')}
           </Button>
           {session ? null : (
-            <Button onClick={() => void start()} disabled={!valid || impersonate.isPending}>
+            <Button
+              onClick={() => void start()}
+              disabled={impersonate.isPending}
+              blockedReason={!valid && t('impersonate.reasonNeeded', { min: MIN_REASON })}
+            >
               {impersonate.isPending ? t('impersonate.starting') : t('impersonate.start')}
             </Button>
           )}

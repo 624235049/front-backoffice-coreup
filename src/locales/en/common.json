@@ -25,5 +25,14 @@
     "passwordMin": "At least 8 characters",
     "passwordMismatch": "Passwords do not match"
   },
-  "delete": "Delete"
+  "delete": "Delete",
+  "form": {
+    "invalid_one": "Can't save yet: 1 field needs fixing (see the red field)",
+    "invalid_other": "Can't save yet: {{count}} fields need fixing (see the red fields)"
+  },
+  "errorHint": {
+    "moduleDisabled": "This part is not turned on for this shop. The owner can contact CoreUp or change plan to use it.",
+    "forbidden": "This account can't view this. Ask the owner or a manager to add the permission.",
+    "notFound": "This may have been deleted or moved. Go back and open it again."
+  }
 }

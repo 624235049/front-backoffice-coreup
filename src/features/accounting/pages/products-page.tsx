@@ -86,7 +86,8 @@ function ItemDialog({
 
   const submit = async () => {
     setTouched(true);
-    if (nameError || priceError) return;
+    if (nameError) return void toast.error(t('products.reason.name'), { id: 'item-invalid' });
+    if (priceError) return void toast.error(t('products.reason.price'), { id: 'item-invalid' });
     const body = {
       code: f.code.trim() || null,
       name: f.name.trim(),

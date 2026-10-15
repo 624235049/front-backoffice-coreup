@@ -1,5 +1,8 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { i18n } from '@/i18n';
 import { isApiError } from '@/lib/api';
+import { errorMessageOf } from '@/lib/query';
 
 const PUBLIC_PREFIXES = ['/sign-in', '/forgot-password', '/reset-password', '/invite'];
 
@@ -25,7 +28,16 @@ export function createQueryClient(onUnauthenticated: () => void): QueryClient {
   };
   return new QueryClient({
     queryCache: new QueryCache({ onError: (error, query) => handle(error, query.queryKey[0] === 'me') }),
-    mutationCache: new MutationCache({ onError: (error) => handle(error) }),
+    mutationCache: new MutationCache({
+      onError: (error, _vars, _ctx, mutation) => {
+        handle(error);
+        // Safety net: no failed action may stay silent. Mutations with their own `onError` (useApiMutation toasts by
+        // default) or `meta.inlineError` (the form shows the error itself) are left alone; redirects need no toast.
+        if (mutation.options.onError || mutation.meta?.inlineError) return;
+        if (isApiError(error) && (error.status === 401 || error.code === 'TWO_FACTOR_REQUIRED')) return;
+        toast.error(errorMessageOf(error, i18n.getFixedT(null, 'errors')));
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: 30_000,

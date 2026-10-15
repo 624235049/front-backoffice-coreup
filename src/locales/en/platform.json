@@ -209,7 +209,8 @@
     "submit": "Create shop",
     "creating": "Creating…",
     "created": "Shop created",
-    "createdWithMail": "Shop created and a set-password link was sent to the owner"
+    "createdWithMail": "Shop created and a set-password link was sent to the owner",
+    "needOneBranch": "A shop needs at least 1 branch"
   },
   "tenantTabs": {
     "overview": "Overview",
@@ -257,7 +258,15 @@
     "unassign": "Remove",
     "assignUser": "Choose a team member",
     "assignRole": "Role",
-    "assign": "Assign"
+    "assign": "Assign",
+    "planSaved": "Package changed",
+    "notesSaved": "Notes saved",
+    "notesUnchanged": "Notes are unchanged",
+    "statusSaved": "Shop status changed",
+    "readOnlyHint": "You can only view. Ask a CoreUp owner to change modules",
+    "assignPick": "Pick a team member first",
+    "assigned": "Assigned",
+    "unassigned": "Removed"
   },
   "usage": {
     "date": "Date",
@@ -311,7 +320,8 @@
     "branch": "Open at branch",
     "allBranches": "All branches (whole shop)",
     "startedBranch": "Opened the shop at {{branch}} in a new tab. Expires {{until}}",
-    "popupBlocked": "The browser blocked the new tab. Press “Open again” to view the shop."
+    "popupBlocked": "The browser blocked the new tab. Press “Open again” to view the shop.",
+    "reasonNeeded": "Type a reason of at least {{min}} characters first (the shop owner sees it)"
   },
   "leads": {
     "title": "Leads (sales CRM)",
@@ -377,7 +387,17 @@
     "unassigned": "Unassigned",
     "assignedToast": "Assigned",
     "noPhone": "No phone number given",
-    "note": "Note / contact log"
+    "note": "Note / contact log",
+    "stagePicker": "Pick a stage",
+    "lostReasonNeeded": "Type why the lead was lost first",
+    "lostToast": "Lead marked as lost",
+    "addedToast": "Lead added",
+    "activityToast": "Activity saved",
+    "activityEmpty": "Type a note or a follow-up date first",
+    "copyFailed": "Could not copy. Phone: {{phone}}",
+    "feeInvalid": "Enter the fee as a number",
+    "openShop": "Open shop",
+    "openEngagement": "Open engagement"
   },
   "engagements": {
     "title": "Engagements",
@@ -415,7 +435,11 @@
     "generate": "Generate from playbook",
     "week": "Week {{n}}",
     "enables": "Enables {{module}}",
-    "taskStatus": "Task status"
+    "taskStatus": "Task status",
+    "created": "Engagement created",
+    "activated": "Engagement started",
+    "completed": "Engagement completed",
+    "generated": "Tasks generated"
   },
   "audits": {
     "title": "Audits",
@@ -461,7 +485,17 @@
     "generate": "Generate PDF report",
     "generating": "Generating…",
     "openPdf": "Open PDF",
-    "reportReadyHint": "The report is ready"
+    "reportReadyHint": "The report is ready",
+    "pickShopFirst": "Pick a shop first",
+    "pickScoreFirst": "Pick a 1-5 score for the criteria where you typed evidence",
+    "nothingToSave": "No score changed yet. Pick at least one score",
+    "scoresSaved": "Scores saved",
+    "findingAdded": "Finding added",
+    "findingDeleted": "Finding deleted",
+    "findingTitleNeeded": "Type a finding title first",
+    "planTitleNeeded": "Some plan rows have no title",
+    "planSaved": "Plan saved",
+    "reportQueued": "Report is being generated"
   },
   "auditTabs": {
     "rubric": "Rubric",
@@ -494,14 +528,20 @@
       "total": "Total",
       "status": "Status"
     },
-    "markPaid": "Mark paid",
+    "markPaid": "Mark as paid",
     "paidToast": "{{number}} marked as paid",
-    "void": "Void",
+    "void": "Void invoice",
     "voidTitle": "Void invoice {{number}}?",
     "voidHint": "A voided invoice cannot be edited; issue a new one instead",
     "amountExVat": "Amount excl. VAT (THB)",
     "vatHint": "7% VAT is added automatically",
-    "preview": "VAT {{vat}} · total {{total}}"
+    "preview": "VAT {{vat}} · total {{total}}",
+    "nothingToExport": "No invoices to export",
+    "voidedToast": "Invoice {{number}} voided",
+    "createdToast": "Invoice issued",
+    "pickShopFirst": "Pick a shop first",
+    "amountNeeded": "Enter an amount greater than 0",
+    "monthNeeded": "Pick a month first"
   },
   "revenue": {
     "title": "CoreUp revenue",
@@ -539,7 +579,14 @@
       "lastLogin": "Last login"
     },
     "deactivate": "Deactivate",
-    "activate": "Activate"
+    "activate": "Activate",
+    "selfRole": "This is you. You cannot change your own role",
+    "roleSaved": "Role of {{name}} changed",
+    "deactivated": "{{name}} deactivated",
+    "activated": "{{name}} activated",
+    "added": "{{name}} added",
+    "nameNeeded": "Type the name first",
+    "emailNeeded": "Type a valid email first"
   },
   "demo": {
     "title": "Demo shop / sample data",
@@ -564,6 +611,7 @@
     "filled": "Sample data filled ({{count}} appointments)",
     "cleared": "Sample data cleared",
     "lastRun": "Last filled {{at}} · {{customers}} customers · {{appointments}} appointments · {{bills}} bills · sales {{paid}}",
-    "never": "Sample data has never been filled"
+    "never": "No demo data yet (the shop needs a branch, services, staff who serve customers and a payment method first)",
+    "nothingToClear": "No demo data was generated yet, nothing to delete"
   }
 }

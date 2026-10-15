@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+import { useReasonMessage } from '@/features/reason-errors';
 import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } from '@/lib/api';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
 
@@ -171,7 +173,13 @@ export const useRevenue = (query: { from?: string; to?: string }, enabled = true
 /* ---------------- mutations ---------------- */
 function useMut<TData, TVars>(fn: (v: TVars) => Promise<TData>) {
   const invalidate = useInvalidate();
-  return useApiMutation<TData, TVars>({ mutationFn: fn, onSuccess: () => invalidate(part) });
+  const message = useReasonMessage();
+  return useApiMutation<TData, TVars>({
+    mutationFn: fn,
+    onSuccess: () => invalidate(part),
+    // the API's real cause (`details.reason`) in plain Thai instead of the generic "invalid data"
+    onError: (e) => toast.error(message(e)),
+  });
 }
 
 export const useCreateTenant = () =>

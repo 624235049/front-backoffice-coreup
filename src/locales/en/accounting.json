@@ -99,7 +99,7 @@
   "validation": {
     "required": "Required",
     "invalid": "Invalid value",
-    "taxId": "Tax id must be a valid 13-digit number",
+    "taxId": "Tax ID must be 13 digits with a valid check digit, or leave it empty",
     "email": "Invalid email",
     "branchCode": "Branch code is 5 digits (head office = 00000)"
   },
@@ -138,7 +138,8 @@
     "pick": "Invoice to credit",
     "placeholder": "Type a number or customer name",
     "none": "No creditable documents found",
-    "create": "Create draft credit note"
+    "create": "Create draft credit note",
+    "pickFirst": "Pick the invoice to credit first"
   },
   "doc": {
     "draftTag": "(draft)",
@@ -208,8 +209,21 @@
       "vatType": "VAT",
       "amount": "Amount",
       "add": "Add line",
-      "remove": "Remove line"
-    }
+      "remove": "Remove line",
+      "lastEmpty": "This is the only empty row. Fill it in"
+    },
+    "reason": {
+      "customer": "No customer yet. Pick one above or add a new customer",
+      "lines": "Add at least 1 line first",
+      "description": "A line has no description",
+      "qty": "A line has an invalid quantity",
+      "price": "A line has no price",
+      "discount": "A discount is more than the line amount",
+      "zeroTotal": "The total is 0. Enter the prices first"
+    },
+    "voidHasPayments": "Void the payments first",
+    "voidHasCredits": "Void the credit notes first",
+    "quotationMarked": "Quotation marked: {{status}}"
   },
   "payment": {
     "paidOn": "Date received",
@@ -240,6 +254,11 @@
     "status": {
       "active": "Active",
       "void": "Void"
+    },
+    "mustSettle": "A cash receipt must settle the whole {{total}}",
+    "reason": {
+      "date": "Pick the payment date",
+      "amount": "Enter the amount received as a number above 0, e.g. 2500 or 2,500.50"
     }
   },
   "void": {
@@ -316,7 +335,8 @@
     "vendor": "Vendor",
     "pickCustomer": "Type to search customers",
     "pickVendor": "Type to search vendors",
-    "noMatch": "No match. Try adding a new contact."
+    "noMatch": "No match. Try adding a new contact.",
+    "taxIdCount": "{{count}} of 13 digits"
   },
   "products": {
     "title": "Products / services",
@@ -335,7 +355,11 @@
     "unitPrice": "Unit price (THB)",
     "vatType": "VAT type",
     "active": "Available in documents",
-    "saved": "Product / service saved"
+    "saved": "Product / service saved",
+    "reason": {
+      "name": "Type the product name first",
+      "price": "Enter the unit price first (0 is allowed)"
+    }
   },
   "expense": {
     "title": "Expenses",
@@ -385,7 +409,12 @@
     "delete": "Delete expense",
     "deleteTitle": "Delete this expense?",
     "deleteBody": "This cannot be undone and reports will no longer include it",
-    "deleted": "Expense deleted"
+    "deleted": "Expense deleted",
+    "reason": {
+      "category": "Pick an expense category first",
+      "paidOn": "Pick the payment date first",
+      "zeroTotal": "The total is 0. Enter the amount"
+    }
   },
   "overview": {
     "title": "Accounting overview",
@@ -477,7 +506,8 @@
       "chartTitle": "Expenses by category",
       "empty": "No expenses in this period",
       "emptyHint": "Try a wider date range, or add an expense"
-    }
+    },
+    "nothingToExport": "Nothing to export on this tab yet"
   },
   "settings": {
     "title": "Company settings",
@@ -531,7 +561,11 @@
     "categoryUsed": "Used {{count}} times",
     "categoryInUse": "In use; switch it off instead",
     "newCategory": "New category name",
-    "addCategory": "Add category"
+    "addCategory": "Add category",
+    "bankLimit": "Up to 10 accounts",
+    "categoryDeleted": "Category deleted",
+    "categoryAdded": "Category added",
+    "categoryNameNeeded": "Type the category name first"
   },
   "datePicker": {
     "pick": "Pick a date",
@@ -587,6 +621,10 @@
         "wht": "Withholding tax",
         "net": "Net payable"
       }
-    }
-  }
+    },
+    "companyNotReady": "Company details are not loaded yet",
+    "previewNotReady": "The A4 preview is not ready yet"
+  },
+  "nothingToExport": "Nothing to export. Try other filters or dates",
+  "fileSaved": "File downloaded"
 }

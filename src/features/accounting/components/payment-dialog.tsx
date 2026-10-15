@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -39,6 +40,7 @@ export function PaymentDialog({
   whtBaseMinor,
   defaultWhtBp = 0,
   withIssueReceiptSwitch,
+  mustSettleFull,
   submitLabel,
   pending,
   onSubmit,
@@ -54,6 +56,8 @@ export function PaymentDialog({
   defaultWhtBp?: number;
   /** Invoices: let the person skip issuing the receipt now. */
   withIssueReceiptSwitch?: boolean;
+  /** Cash sale: the cash + WHT must equal the whole total. */
+  mustSettleFull?: boolean;
   submitLabel: string;
   pending?: boolean;
   onSubmit: (body: PaymentBody) => void;
@@ -105,16 +109,24 @@ export function PaymentDialog({
       amount + wht > balanceMinor
         ? t('payment.over', { max: formatAmount(balanceMinor, locale) })
         : undefined,
+    short:
+      mustSettleFull && amount + wht < balanceMinor
+        ? t('payment.mustSettle', { total: formatAmount(balanceMinor, locale) })
+        : undefined,
     date: paidOn === '' ? t('validation.required') : undefined,
   };
-  const invalid = Boolean(errors.amount || errors.over || errors.date);
+  const firstError = errors.date
+    ? t('payment.reason.date')
+    : errors.amount
+      ? t('payment.reason.amount')
+      : (errors.over ?? errors.short);
   const accounts = (company.data?.bankAccounts ?? []).map((a) =>
     [a.bankName ?? (a.kind === 'promptpay' ? 'PromptPay' : ''), a.accountNo].filter(Boolean).join(' '),
   );
 
   const submit = () => {
     setTouched(true);
-    if (invalid) return;
+    if (firstError) return void toast.error(firstError, { id: 'payment-invalid' });
     onSubmit({
       paidOn,
       method,
@@ -225,7 +237,7 @@ export function PaymentDialog({
               label={t('payment.amount')}
               htmlFor="pay-amount"
               required
-              error={touched ? (errors.amount ?? errors.over) : undefined}
+              error={touched ? (errors.amount ?? errors.over ?? errors.short) : undefined}
               hint={t('payment.balance', { amount: formatAmount(balanceMinor, locale) })}
             >
               <MoneyInput id="pay-amount" value={amountMinor} onChange={setAmountMinor} />

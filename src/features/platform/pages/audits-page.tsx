@@ -131,7 +131,8 @@ function CreateAuditDialog({ open, onOpenChange }: { open: boolean; onOpenChange
             {tc('cancel')}
           </Button>
           <Button
-            disabled={!tenantId || create.isPending}
+            disabled={create.isPending}
+            blockedReason={!tenantId && t('audits.pickShopFirst')}
             onClick={async () => {
               const res = await create.mutateAsync({ tenantId });
               onOpenChange(false);

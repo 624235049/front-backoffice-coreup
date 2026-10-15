@@ -2,6 +2,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { Eye, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
@@ -221,7 +222,9 @@ function OverviewTab({ d }: { d: TenantDetail }) {
             {canWrite ? (
               <Select
                 value={d.planCode ?? undefined}
-                onValueChange={(code) => patch.mutate({ planCode: code })}
+                onValueChange={(code) =>
+                  patch.mutate({ planCode: code }, { onSuccess: () => toast.success(t('detail.planSaved')) })
+                }
               >
                 <SelectTrigger className="w-48" aria-label={t('detail.plan')}>
                   <SelectValue placeholder="–" />
@@ -246,6 +249,11 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           <CardTitle className="text-base">{t('detail.modules')}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {canWrite ? null : (
+            <p className="text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">
+              {t('detail.readOnlyHint')}
+            </p>
+          )}
           {MODULE_KEYS.map((k) => (
             <label key={k} htmlFor={`module-${k}`} className="flex min-h-11 items-center gap-2 text-sm">
               <Checkbox
@@ -282,8 +290,11 @@ function OverviewTab({ d }: { d: TenantDetail }) {
             <Button
               className="justify-self-start"
               variant="outline"
-              disabled={notes === d.notes || patch.isPending}
-              onClick={() => patch.mutate({ notes })}
+              disabled={patch.isPending}
+              blockedReason={notes === d.notes && t('detail.notesUnchanged')}
+              onClick={() =>
+                patch.mutate({ notes }, { onSuccess: () => toast.success(t('detail.notesSaved')) })
+              }
             >
               {t('detail.saveNotes')}
             </Button>
@@ -299,7 +310,15 @@ function OverviewTab({ d }: { d: TenantDetail }) {
         pending={patch.isPending}
         onConfirm={() => {
           if (pendingStatus)
-            patch.mutate({ status: pendingStatus }, { onSuccess: () => setPendingStatus(null) });
+            patch.mutate(
+              { status: pendingStatus },
+              {
+                onSuccess: () => {
+                  setPendingStatus(null);
+                  toast.success(t('detail.statusSaved'));
+                },
+              },
+            );
         }}
       />
     </div>
@@ -527,7 +546,12 @@ function TeamTab({ d }: { d: TenantDetail }) {
                 variant="ghost"
                 size="sm"
                 disabled={remove.isPending}
-                onClick={() => remove.mutate({ tenantId: d.id, userId: a.userId, role: a.role })}
+                onClick={() =>
+                  remove.mutate(
+                    { tenantId: d.id, userId: a.userId, role: a.role },
+                    { onSuccess: () => toast.success(t('detail.unassigned')) },
+                  )
+                }
               >
                 {t('detail.unassign')}
               </Button>
@@ -561,8 +585,19 @@ function TeamTab({ d }: { d: TenantDetail }) {
             </SelectContent>
           </Select>
           <Button
-            disabled={!userId || add.isPending}
-            onClick={() => add.mutate({ userId, tenantId: d.id, role }, { onSuccess: () => setUserId('') })}
+            disabled={add.isPending}
+            blockedReason={!userId && t('detail.assignPick')}
+            onClick={() =>
+              add.mutate(
+                { userId, tenantId: d.id, role },
+                {
+                  onSuccess: () => {
+                    setUserId('');
+                    toast.success(t('detail.assigned'));
+                  },
+                },
+              )
+            }
           >
             {t('detail.assign')}
           </Button>

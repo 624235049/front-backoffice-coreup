@@ -2,6 +2,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { FileDown, Loader2, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
@@ -105,6 +106,7 @@ function RubricTab({ audit }: { audit: AuditDetail }) {
     const s = saved.get(k);
     return v.score >= 1 && (!s || s.score !== v.score || (s.evidence ?? '') !== v.evidence);
   });
+  const needScore = Object.values(draft).some((v) => v.score === 0 && v.evidence.trim() !== '');
 
   return (
     <QueryState query={rubric}>
@@ -192,15 +194,21 @@ function RubricTab({ audit }: { audit: AuditDetail }) {
           ))}
           <div className="sticky bottom-20 flex justify-end lg:bottom-4">
             <Button
-              disabled={dirty.length === 0 || save.isPending}
+              disabled={save.isPending}
+              blockedReason={
+                dirty.length === 0 && (needScore ? t('audits.pickScoreFirst') : t('audits.nothingToSave'))
+              }
               onClick={() =>
-                save.mutate({
-                  scores: dirty.map(([criterionKey, v]) => ({
-                    criterionKey,
-                    score: v.score,
-                    evidence: v.evidence || undefined,
-                  })),
-                })
+                save.mutate(
+                  {
+                    scores: dirty.map(([criterionKey, v]) => ({
+                      criterionKey,
+                      score: v.score,
+                      evidence: v.evidence || undefined,
+                    })),
+                  },
+                  { onSuccess: () => toast.success(t('audits.scoresSaved')) },
+                )
               }
             >
               {t('audits.saveScores', { count: dirty.length })}
@@ -241,13 +249,14 @@ function FindingsTab({ audit }: { audit: AuditDetail }) {
                 setTitle('');
                 setBody('');
                 setRootCause('');
+                toast.success(t('audits.findingAdded'));
               },
             },
           );
         }}
       >
         <h3 className="font-medium">{t('audits.addFinding')}</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <Label>{t('audits.dimension')}</Label>
             <Select value={dimension} onValueChange={(v) => setDimension(v as typeof dimension)}>
@@ -294,7 +303,8 @@ function FindingsTab({ audit }: { audit: AuditDetail }) {
         <Button
           type="submit"
           className="justify-self-start"
-          disabled={title.trim().length === 0 || add.isPending}
+          disabled={add.isPending}
+          blockedReason={title.trim().length === 0 && t('audits.findingTitleNeeded')}
         >
           <Plus /> {t('audits.addFinding')}
         </Button>
@@ -323,8 +333,10 @@ function FindingsTab({ audit }: { audit: AuditDetail }) {
                 </div>
                 <Button
                   variant="ghost"
-                  size="icon-sm"
-                  onClick={() => del.mutate(f.id)}
+                  size="icon"
+                  onClick={() =>
+                    del.mutate(f.id, { onSuccess: () => toast.success(t('audits.findingDeleted')) })
+                  }
                   disabled={del.isPending}
                   aria-label={t('audits.deleteFinding')}
                 >
@@ -416,8 +428,14 @@ function PlanTab({ audit }: { audit: AuditDetail }) {
           <Plus /> {t('audits.addItem')}
         </Button>
         <Button
-          disabled={!valid || save.isPending}
-          onClick={() => save.mutate({ items: items.map((i) => ({ ...i, title: i.title.trim() })) })}
+          disabled={save.isPending}
+          blockedReason={!valid && t('audits.planTitleNeeded')}
+          onClick={() =>
+            save.mutate(
+              { items: items.map((i) => ({ ...i, title: i.title.trim() })) },
+              { onSuccess: () => toast.success(t('audits.planSaved')) },
+            )
+          }
         >
           {t('audits.savePlan')}
         </Button>
@@ -453,7 +471,9 @@ function ReportTab({ audit }: { audit: AuditDetail }) {
           </ul>
           <div className="flex flex-wrap items-center gap-3">
             <Button
-              onClick={() => request.mutate(undefined)}
+              onClick={() =>
+                request.mutate(undefined, { onSuccess: () => toast.success(t('audits.reportQueued')) })
+              }
               disabled={request.isPending || status === 'queued'}
             >
               {status === 'queued' ? <Loader2 className="animate-spin" /> : <FileDown />}

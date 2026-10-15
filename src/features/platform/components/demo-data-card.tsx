@@ -99,7 +99,8 @@ export function DemoDataCard({ d }: { d: TenantDetail }) {
               <Button
                 variant="outline"
                 onClick={() => setConfirm('clear')}
-                disabled={!last || fill.isPending || clear.isPending}
+                disabled={fill.isPending || clear.isPending}
+                blockedReason={!last && t('demo.nothingToClear')}
               >
                 {t('demo.clear')}
               </Button>

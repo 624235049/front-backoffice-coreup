@@ -69,6 +69,15 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
   const canCredit = (isInvoice || doc.type === 'tax_invoice') && !isVoid && doc.status !== 'draft';
   const canConvertQuotation = isQuotation && (doc.status === 'sent' || doc.status === 'accepted');
   const canMarkQuotation = isQuotation && (doc.status === 'sent' || doc.status === 'accepted');
+  const hasActivePayments = isInvoice && doc.payments.some((p) => p.status === 'active');
+  const voidBlocked = hasActivePayments
+    ? t('doc.voidHasPayments')
+    : doc.creditedMinor > 0 && t('doc.voidHasCredits');
+  const answerQuotation = (status: 'accepted' | 'rejected' | 'expired') =>
+    quotationStatus.mutate(
+      { id: doc.id, status },
+      { onSuccess: () => toast.success(t('doc.quotationMarked', { status: t(`status.${status}`) })) },
+    );
 
   const totals = {
     linesTotalMinor: doc.linesTotalMinor,
@@ -131,7 +140,12 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
               </Button>
             ) : null}
             {canVoid ? (
-              <Button variant="outline" className="text-destructive" onClick={() => setVoiding(true)}>
+              <Button
+                variant="outline"
+                className="text-destructive"
+                blockedReason={voidBlocked}
+                onClick={() => setVoiding(true)}
+              >
                 <Ban /> {t('doc.void')}
               </Button>
             ) : null}
@@ -155,24 +169,24 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
           <span className="mr-2 text-sm font-medium text-navy-900">{t('doc.quotationAnswer')}</span>
           {doc.status === 'sent' ? (
             <Button
-              size="sm"
               variant="outline"
-              onClick={() => void quotationStatus.mutateAsync({ id: doc.id, status: 'accepted' })}
+              disabled={quotationStatus.isPending}
+              onClick={() => answerQuotation('accepted')}
             >
               <CircleCheck /> {t('status.accepted')}
             </Button>
           ) : null}
           <Button
-            size="sm"
             variant="outline"
-            onClick={() => void quotationStatus.mutateAsync({ id: doc.id, status: 'rejected' })}
+            disabled={quotationStatus.isPending}
+            onClick={() => answerQuotation('rejected')}
           >
             <CircleX /> {t('status.rejected')}
           </Button>
           <Button
-            size="sm"
             variant="outline"
-            onClick={() => void quotationStatus.mutateAsync({ id: doc.id, status: 'expired' })}
+            disabled={quotationStatus.isPending}
+            onClick={() => answerQuotation('expired')}
           >
             <ClockAlert /> {t('status.expired')}
           </Button>
@@ -339,7 +353,6 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
                         <DtCell>
                           {p.status === 'active' && !isVoid ? (
                             <Button
-                              size="sm"
                               variant="ghost"
                               className="text-destructive"
                               onClick={() => setVoidingPayment(p)}

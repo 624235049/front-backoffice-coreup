@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { api, unwrap } from '@/lib/api';
+import { initialsOf } from '@/lib/initials';
 import { useMe } from '@/lib/me';
 import { useSession } from '@/stores/session';
 
@@ -42,7 +43,7 @@ export function UserMenu() {
         aria-label={t('userMenu')}
       >
         <Avatar className="size-10">
-          <AvatarFallback>{name.trim().slice(0, 1).toUpperCase()}</AvatarFallback>
+          <AvatarFallback>{initialsOf(name, '?')}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">

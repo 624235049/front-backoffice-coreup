@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useResetPassword } from '@/features/auth/api';
 import { AuthCard } from '@/features/auth/components/auth-card';
+import { useInvalidToast } from '@/lib/form-errors';
 
 const schema = z
   .object({
@@ -23,6 +24,7 @@ export function ResetPasswordPage() {
   const { token } = useSearch({ from: '/_auth/reset-password' });
   const navigate = useNavigate();
   const reset = useResetPassword();
+  const invalid = useInvalidToast<Values>();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { newPassword: '', confirm: '' },
@@ -54,9 +56,9 @@ export function ResetPasswordPage() {
                 toast.success(t('reset.done'));
                 void navigate({ to: '/sign-in', search: {} });
               },
-              () => undefined,
+              () => undefined, // the failure is shown inline below (`reset.isError`)
             );
-          })}
+          }, invalid)}
           className="grid gap-4"
           noValidate
         >

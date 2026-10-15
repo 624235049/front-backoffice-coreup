@@ -28,7 +28,9 @@
     "download": "Download",
     "codeLabel": "6-digit code from the app",
     "confirm": "Confirm",
-    "done": "Two-factor authentication is on"
+    "done": "Two-factor authentication is on",
+    "codeNeeded": "Type the 6-digit code from your app first",
+    "passwordNeeded": "Type your current password first"
   },
   "challenge": {
     "hint": "Enter the 6-digit code from your authenticator app.",
@@ -40,6 +42,7 @@
     "invalid": "The code is wrong or expired",
     "useBackup": "Use a backup code",
     "useApp": "Use the app code",
-    "cancel": "Back"
+    "cancel": "Back",
+    "codeNeeded": "Type the full code first"
   }
 }

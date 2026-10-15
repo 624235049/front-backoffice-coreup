@@ -2,6 +2,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { ListChecks } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
@@ -53,7 +54,12 @@ export function EngagementDetailPage() {
             actions={
               canWrite && e.status === 'proposed' ? (
                 <Button
-                  onClick={() => patchEngagement.mutate({ id: e.id, body: { status: 'active' } })}
+                  onClick={() =>
+                    patchEngagement.mutate(
+                      { id: e.id, body: { status: 'active' } },
+                      { onSuccess: () => toast.success(t('engagements.activated')) },
+                    )
+                  }
                   disabled={patchEngagement.isPending}
                 >
                   {t('engagements.activate')}
@@ -61,7 +67,12 @@ export function EngagementDetailPage() {
               ) : canWrite && e.status === 'active' ? (
                 <Button
                   variant="outline"
-                  onClick={() => patchEngagement.mutate({ id: e.id, body: { status: 'completed' } })}
+                  onClick={() =>
+                    patchEngagement.mutate(
+                      { id: e.id, body: { status: 'completed' } },
+                      { onSuccess: () => toast.success(t('engagements.completed')) },
+                    )
+                  }
                   disabled={patchEngagement.isPending}
                 >
                   {t('engagements.complete')}
@@ -104,7 +115,12 @@ export function EngagementDetailPage() {
                 description={t('engagements.noTasksHint')}
                 action={
                   canWrite ? (
-                    <Button onClick={() => generate.mutate(e.id)} disabled={generate.isPending}>
+                    <Button
+                      onClick={() =>
+                        generate.mutate(e.id, { onSuccess: () => toast.success(t('engagements.generated')) })
+                      }
+                      disabled={generate.isPending}
+                    >
                       {t('engagements.generate')}
                     </Button>
                   ) : undefined
@@ -199,7 +215,7 @@ function TaskBoard({ rows, canWrite }: { rows: EngagementTask[]; canWrite: boole
                         patch.mutate({ id: r.id, body: { status: v as EngagementTask['status'] } })
                       }
                     >
-                      <SelectTrigger className="mt-2 h-8 text-xs" aria-label={t('engagements.taskStatus')}>
+                      <SelectTrigger className="mt-2 text-xs" aria-label={t('engagements.taskStatus')}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

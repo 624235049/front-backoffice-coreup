@@ -59,6 +59,32 @@ export function InvoicesPage() {
   const patch = usePatchInvoice();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
 
+  const rowActions = (i: Invoice) => (
+    <>
+      <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
+      {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
+        <>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={patch.isPending}
+            onClick={() =>
+              patch.mutate(
+                { id: i.id, body: { status: 'paid' } },
+                { onSuccess: () => toast.success(t('invoices.paidToast', { number: i.number })) },
+              )
+            }
+          >
+            {t('invoices.markPaid')}
+          </Button>{' '}
+          <Button size="sm" variant="ghost" onClick={() => setVoiding(i)}>
+            {t('invoices.void')}
+          </Button>
+        </>
+      ) : null}
+    </>
+  );
+
   return (
     <>
       <PageHeader
@@ -68,7 +94,7 @@ export function InvoicesPage() {
           <>
             <Button
               variant="outline"
-              disabled={!invoices.data || invoices.data.length === 0}
+              blockedReason={(!invoices.data || invoices.data.length === 0) && t('invoices.nothingToExport')}
               onClick={() =>
                 void downloadXlsx(t('invoices.title'), [
                   {
@@ -163,69 +189,66 @@ export function InvoicesPage() {
         }
       >
         {(rows) => (
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('invoices.col.number')}</TableHead>
-                  <TableHead>{t('invoices.col.shop')}</TableHead>
-                  <TableHead>{t('invoices.col.source')}</TableHead>
-                  <TableHead>{t('invoices.col.issued')}</TableHead>
-                  <TableHead>{t('invoices.col.due')}</TableHead>
-                  <TableHead className="text-right">{t('invoices.col.amount')}</TableHead>
-                  <TableHead className="text-right">{t('invoices.col.vat')}</TableHead>
-                  <TableHead className="text-right">{t('invoices.col.total')}</TableHead>
-                  <TableHead>{t('invoices.col.status')}</TableHead>
-                  <TableHead />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((i) => (
-                  <TableRow key={i.id}>
-                    <TableCell className="font-mono text-xs">{i.number}</TableCell>
-                    <TableCell>{i.tenantName}</TableCell>
-                    <TableCell>{t(`invoiceSource.${i.source}`)}</TableCell>
-                    <TableCell>{formatDate(i.issuedOn, locale)}</TableCell>
-                    <TableCell>{formatDate(i.dueOn, locale)}</TableCell>
-                    <TableCell className="text-right">{formatMoney(i.amountMinor, locale)}</TableCell>
-                    <TableCell className="text-right">{formatMoney(i.vatMinor, locale)}</TableCell>
-                    <TableCell className="text-right font-medium">
-                      {formatMoney(i.totalMinor, locale)}
-                    </TableCell>
-                    <TableCell>
-                      <InvoiceStatusBadge status={i.status} />
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap text-right">
-                      <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
-                      {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={patch.isPending}
-                            onClick={() =>
-                              patch.mutate(
-                                { id: i.id, body: { status: 'paid' } },
-                                {
-                                  onSuccess: () =>
-                                    toast.success(t('invoices.paidToast', { number: i.number })),
-                                },
-                              )
-                            }
-                          >
-                            {t('invoices.markPaid')}
-                          </Button>{' '}
-                          <Button size="sm" variant="ghost" onClick={() => setVoiding(i)}>
-                            {t('invoices.void')}
-                          </Button>
-                        </>
-                      ) : null}
-                    </TableCell>
+          <>
+            <ul className="grid gap-2 lg:hidden">
+              {rows.map((i) => (
+                <li key={i.id} className="rounded-lg border bg-card p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="font-semibold">{i.tenantName}</div>
+                      <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
+                    </div>
+                    <InvoiceStatusBadge status={i.status} />
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2 text-sm">
+                    <span className="text-lg font-semibold">{formatMoney(i.totalMinor, locale)}</span>
+                    <span className="text-muted-foreground">
+                      {t('invoices.col.due')} {formatDate(i.dueOn, locale)}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">{rowActions(i)}</div>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden overflow-x-auto rounded-lg border lg:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('invoices.col.number')}</TableHead>
+                    <TableHead>{t('invoices.col.shop')}</TableHead>
+                    <TableHead>{t('invoices.col.source')}</TableHead>
+                    <TableHead>{t('invoices.col.issued')}</TableHead>
+                    <TableHead>{t('invoices.col.due')}</TableHead>
+                    <TableHead className="text-right">{t('invoices.col.amount')}</TableHead>
+                    <TableHead className="text-right">{t('invoices.col.vat')}</TableHead>
+                    <TableHead className="text-right">{t('invoices.col.total')}</TableHead>
+                    <TableHead>{t('invoices.col.status')}</TableHead>
+                    <TableHead />
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((i) => (
+                    <TableRow key={i.id}>
+                      <TableCell className="font-mono text-xs">{i.number}</TableCell>
+                      <TableCell>{i.tenantName}</TableCell>
+                      <TableCell>{t(`invoiceSource.${i.source}`)}</TableCell>
+                      <TableCell>{formatDate(i.issuedOn, locale)}</TableCell>
+                      <TableCell>{formatDate(i.dueOn, locale)}</TableCell>
+                      <TableCell className="text-right">{formatMoney(i.amountMinor, locale)}</TableCell>
+                      <TableCell className="text-right">{formatMoney(i.vatMinor, locale)}</TableCell>
+                      <TableCell className="text-right font-medium">
+                        {formatMoney(i.totalMinor, locale)}
+                      </TableCell>
+                      <TableCell>
+                        <InvoiceStatusBadge status={i.status} />
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap text-right">{rowActions(i)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </QueryState>
       <CreateInvoiceDialog open={creating} onOpenChange={setCreating} />
@@ -247,7 +270,12 @@ export function InvoicesPage() {
                 voiding &&
                 patch.mutate(
                   { id: voiding.id, body: { status: 'void' } },
-                  { onSuccess: () => setVoiding(null) },
+                  {
+                    onSuccess: () => {
+                      toast.success(t('invoices.voidedToast', { number: voiding.number }));
+                      setVoiding(null);
+                    },
+                  },
                 )
               }
             >
@@ -293,7 +321,7 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label>{t('invoices.col.source')}</Label>
               <Select value={source} onValueChange={(v) => setSource(v as typeof source)}>
@@ -330,13 +358,19 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
             {t('common.cancel')}
           </Button>
           <Button
-            disabled={!tenantId || minor === null || minor <= 0 || create.isPending}
+            disabled={create.isPending}
+            blockedReason={
+              !tenantId
+                ? t('invoices.pickShopFirst')
+                : (minor === null || minor <= 0) && t('invoices.amountNeeded')
+            }
             onClick={() => {
               if (minor === null) return;
               create.mutate(
                 { tenantId, source, amountMinor: minor, status: 'issued' },
                 {
                   onSuccess: () => {
+                    toast.success(t('invoices.createdToast'));
                     onOpenChange(false);
                     setAmount('');
                     setTenantId('');
@@ -373,7 +407,8 @@ function RunDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: bo
             {t('common.cancel')}
           </Button>
           <Button
-            disabled={!/^\d{4}-\d{2}$/.test(month) || run.isPending}
+            disabled={run.isPending}
+            blockedReason={!/^\d{4}-\d{2}$/.test(month) && t('invoices.monthNeeded')}
             onClick={() =>
               run.mutate(month, {
                 onSuccess: (r) => {

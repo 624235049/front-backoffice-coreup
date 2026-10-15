@@ -1,6 +1,7 @@
 import { Ellipsis, KeyRound, Link2, LogOut, UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -54,13 +55,19 @@ export function UsersPanel({
           {canChange ? (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem disabled={self} onSelect={() => start('reset', u)}>
+              <DropdownMenuItem
+                className={self ? 'opacity-50' : undefined}
+                onSelect={() => (self ? toast.warning(t('error.self')) : start('reset', u))}
+              >
                 <KeyRound /> {t('action.reset')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => start('link', u)}>
                 <Link2 /> {t('action.link')}
               </DropdownMenuItem>
-              <DropdownMenuItem disabled={self} onSelect={() => start('revoke', u)}>
+              <DropdownMenuItem
+                className={self ? 'opacity-50' : undefined}
+                onSelect={() => (self ? toast.warning(t('error.self')) : start('revoke', u))}
+              >
                 <LogOut /> {t('action.revoke')}
               </DropdownMenuItem>
             </>

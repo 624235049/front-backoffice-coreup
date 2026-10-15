@@ -1841,7 +1841,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -4363,7 +4363,7 @@ export interface paths {
                             data: {
                                 key: string;
                                 /** @enum {string} */
-                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform";
+                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
                                 resource: string;
                                 action: string;
                             }[];
@@ -6305,7 +6305,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "staff_photo" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "staff_photo" | "clinical_attachment" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -7754,7 +7754,7 @@ export interface paths {
                     "application/json": {
                         modules: {
                             /** @enum {string} */
-                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform";
+                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
                             /**
                              * @default consultant
                              * @enum {string}
@@ -10244,7 +10244,7 @@ export interface paths {
                                         /** @enum {string} */
                                         owner: "consultant" | "tenant";
                                         /** @enum {string} */
-                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform";
+                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
                                     }[];
                                 }[];
                             }[];
@@ -14170,7 +14170,7 @@ export interface paths {
                          *       "core"
                          *     ]
                          */
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform")[];
                         /** @default {} */
                         limits?: {
                             [key: string]: number;
@@ -14312,7 +14312,7 @@ export interface paths {
                         /** @enum {string} */
                         interval?: "month" | "year";
                         active?: boolean;
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "kpi" | "audit" | "ai" | "platform")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform")[];
                         limits?: {
                             [key: string]: number;
                         };
@@ -29583,6 +29583,11 @@ export interface paths {
                                 appointments: number;
                                 /** @description integer satang */
                                 avgTicketMinor: number;
+                                /** @description integer satang */
+                                receivedMinor: number | null;
+                                newCustomers: number;
+                                noShows: number;
+                                utilizationBp: number | null;
                             }[];
                             methods: {
                                 /** @enum {string} */
@@ -29602,11 +29607,26 @@ export interface paths {
                                 /** @description integer satang */
                                 lastYearMinor: number;
                             }[];
+                            comparisonSeries: {
+                                previous: number[];
+                                lastYear: number[] | null;
+                            };
+                            /** @description integer satang */
+                            goalMinor: number | null;
+                            openBills: {
+                                bills: number;
+                                /** @description integer satang */
+                                owedMinor: number;
+                            };
                             topServices: {
                                 name: string;
                                 count: number;
                                 /** @description integer satang */
                                 salesMinor: number;
+                                /** @description integer satang */
+                                previousMinor: number;
+                                /** @description integer satang */
+                                lastYearMinor: number;
                             }[];
                             topStaff: {
                                 staffId: string | null;
@@ -29614,6 +29634,10 @@ export interface paths {
                                 jobs: number;
                                 /** @description integer satang */
                                 salesMinor: number;
+                                /** @description integer satang */
+                                previousMinor: number;
+                                /** @description integer satang */
+                                lastYearMinor: number;
                             }[];
                         };
                     };
@@ -48521,6 +48545,4663 @@ export interface paths {
                                 skippedUnmatched: number;
                                 invalid: number;
                                 amountMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Record style of the shop (tooth chart / areas / text) and the prompt after completing a visit
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                mode: "dental" | "aesthetic" | "general";
+                                promptAfterComplete: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Change the record style / the prompt after completing a visit
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mode?: "dental" | "aesthetic" | "general";
+                        promptAfterComplete?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                mode: "dental" | "aesthetic" | "general";
+                                promptAfterComplete: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/clinical/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Quick-text templates (shop-wide and per service) for the record fields
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    field?: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                    serviceId?: string;
+                    includeInactive?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Templates */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                serviceId: string | null;
+                                /** @enum {string} */
+                                field: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                                title: string;
+                                body: string;
+                                sort: number;
+                                active: boolean;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Add a quick-text template
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        serviceId?: string | null;
+                        /** @enum {string} */
+                        field: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                        title: string;
+                        body: string;
+                        sort?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                serviceId: string | null;
+                                /** @enum {string} */
+                                field: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                                title: string;
+                                body: string;
+                                sort: number;
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a quick-text template
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Done */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Edit / hide a quick-text template
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        serviceId?: string | null;
+                        /** @enum {string} */
+                        field?: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                        title?: string;
+                        body?: string;
+                        sort?: number;
+                        active?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Template */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                serviceId: string | null;
+                                /** @enum {string} */
+                                field: "chiefComplaint" | "findings" | "procedureNote" | "medications" | "advice";
+                                title: string;
+                                body: string;
+                                sort: number;
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/clinical/codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The shop's own diagnosis code list
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    includeInactive?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Codes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                code: string;
+                                name: string;
+                                sort: number;
+                                active: boolean;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Add a diagnosis code. Same code twice → 409
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        code: string;
+                        name: string;
+                        sort?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                code: string;
+                                name: string;
+                                sort: number;
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/codes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a diagnosis code (records keep the code they already hold)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Done */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Edit / hide a diagnosis code
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        code?: string;
+                        name?: string;
+                        sort?: number;
+                        active?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Code */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                code: string;
+                                name: string;
+                                sort: number;
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/clinical/cases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Visits (in service / completed) with no signed record yet; default today. A practitioner without appointments:read only gets their own
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                    practitionerId?: string;
+                    branchId?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Cases */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                total: number;
+                                missing: number;
+                                draft: number;
+                                items: {
+                                    appointmentId: string;
+                                    /** @description ISO timestamp */
+                                    startAt: string;
+                                    status: string;
+                                    customer: {
+                                        id: string;
+                                        name: string;
+                                        code: string | null;
+                                    };
+                                    serviceName: string;
+                                    practitioner: {
+                                        id: string;
+                                        name: string;
+                                    } | null;
+                                    /** @enum {string} */
+                                    state: "missing" | "draft";
+                                    recordId: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/form-context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Everything the record form prefills from (visit, services, doctor, courses, open plan items, consent)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    appointmentId?: string;
+                    customerId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Context */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                    birthDate: string | null;
+                                    gender: string | null;
+                                };
+                                branchId: string;
+                                appointment: {
+                                    id: string;
+                                    /** @description ISO timestamp */
+                                    startAt: string;
+                                    /** @description ISO timestamp */
+                                    endAt: string;
+                                    status: string;
+                                    serviceIds: string[];
+                                } | null;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                services: {
+                                    id: string;
+                                    name: string;
+                                    priceMinor: number;
+                                }[];
+                                record: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    status: "draft" | "signed";
+                                } | null;
+                                consent: boolean;
+                                hasAllergy: boolean;
+                                hasChronic: boolean;
+                                packages: {
+                                    id: string;
+                                    name: string;
+                                    sessionsLeft: number;
+                                    serviceIds: string[];
+                                }[];
+                                planItems: {
+                                    id: string;
+                                    planId: string;
+                                    planTitle: string;
+                                    name: string;
+                                    tooth: string | null;
+                                    area: string | null;
+                                    qty: number;
+                                    doneQty: number;
+                                    serviceId: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/patients/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Header of the patient treatment page (name, code, allergy flags, record count)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Patient */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                code: string | null;
+                                birthDate: string | null;
+                                gender: string | null;
+                                hasAllergy: boolean;
+                                hasChronic: boolean;
+                                consent: boolean;
+                                recordCount: number;
+                                /** @description ISO timestamp */
+                                lastRecordAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/patients/{id}/tooth-chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Planned / in progress / done per tooth (FDI) from the plans and signed records (audited)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Chart */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                teeth: {
+                                    tooth: string;
+                                    /** @enum {string} */
+                                    state: "none" | "planned" | "in_progress" | "done";
+                                    planned: {
+                                        itemId: string;
+                                        planId: string;
+                                        name: string;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                    }[];
+                                    done: {
+                                        recordId: string;
+                                        /** @description ISO timestamp */
+                                        visitAt: string;
+                                        name: string;
+                                    }[];
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Treatment records, newest visit first (audited). Filters: patient, doctor, status, service, tooth, dates
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    customerId?: string;
+                    practitionerId?: string;
+                    branchId?: string;
+                    status?: "draft" | "signed";
+                    serviceId?: string;
+                    tooth?: "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85";
+                    from?: string;
+                    to?: string;
+                    limit?: number;
+                    cursor?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Records */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                appointmentId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                summary: string;
+                                procedureNames: string[];
+                                teeth: string[];
+                                attachmentCount: number;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Start a record (draft) for a visit or a patient. 409 CLINICAL_CONSENT_REQUIRED without health-data consent (send consentGiven: true when the patient agrees); 409 CONFLICT when the visit already has one
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        appointmentId?: string | null;
+                        customerId?: string | null;
+                        branchId?: string;
+                        practitionerId?: string;
+                        /** @description ISO timestamp */
+                        visitAt?: string;
+                        billId?: string | null;
+                        consentGiven?: boolean;
+                        content?: {
+                            /** @default  */
+                            chiefComplaint?: string;
+                            /** @default  */
+                            findings?: string;
+                            /** @default [] */
+                            diagnosisCodes?: {
+                                code: string;
+                                /** @default  */
+                                name?: string;
+                            }[];
+                            /** @default [] */
+                            procedures?: {
+                                serviceId?: string | null;
+                                name: string;
+                                /** @default [] */
+                                teeth?: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                /** @default [] */
+                                areas?: string[];
+                                /** @default 1 */
+                                qty?: number;
+                                units?: number | null;
+                                unit?: string | null;
+                                product?: string | null;
+                                lot?: string | null;
+                                note?: string | null;
+                                planItemId?: string | null;
+                                customerPackageId?: string | null;
+                            }[];
+                            /** @default  */
+                            medications?: string;
+                            /** @default  */
+                            advice?: string;
+                            /** @default [] */
+                            attachments?: string[];
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                appointmentId: string | null;
+                                billId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                version: number;
+                                /** @description ISO timestamp */
+                                signedAt: string | null;
+                                signedName: string | null;
+                                signedById: string | null;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                                attachments: {
+                                    id: string;
+                                    mime: string;
+                                    size: number;
+                                }[];
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/records/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One record (audited)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Record */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                appointmentId: string | null;
+                                billId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                version: number;
+                                /** @description ISO timestamp */
+                                signedAt: string | null;
+                                signedName: string | null;
+                                signedById: string | null;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                                attachments: {
+                                    id: string;
+                                    mime: string;
+                                    size: number;
+                                }[];
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Delete a DRAFT record (a signed record is never deleted)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Done */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Edit a DRAFT record. A signed one → 409 CLINICAL_RECORD_LOCKED (use /amend)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        practitionerId?: string;
+                        /** @description ISO timestamp */
+                        visitAt?: string;
+                        billId?: string | null;
+                        consentGiven?: boolean;
+                        content?: {
+                            /** @default  */
+                            chiefComplaint?: string;
+                            /** @default  */
+                            findings?: string;
+                            /** @default [] */
+                            diagnosisCodes?: {
+                                code: string;
+                                /** @default  */
+                                name?: string;
+                            }[];
+                            /** @default [] */
+                            procedures?: {
+                                serviceId?: string | null;
+                                name: string;
+                                /** @default [] */
+                                teeth?: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                /** @default [] */
+                                areas?: string[];
+                                /** @default 1 */
+                                qty?: number;
+                                units?: number | null;
+                                unit?: string | null;
+                                product?: string | null;
+                                lot?: string | null;
+                                note?: string | null;
+                                planItemId?: string | null;
+                                customerPackageId?: string | null;
+                            }[];
+                            /** @default  */
+                            medications?: string;
+                            /** @default  */
+                            advice?: string;
+                            /** @default [] */
+                            attachments?: string[];
+                        };
+                        version?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Record */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                appointmentId: string | null;
+                                billId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                version: number;
+                                /** @description ISO timestamp */
+                                signedAt: string | null;
+                                signedName: string | null;
+                                signedById: string | null;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                                attachments: {
+                                    id: string;
+                                    mime: string;
+                                    size: number;
+                                }[];
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/clinical/records/{id}/sign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign a draft (optionally saving the content first). Deducts the course sessions picked on procedures and moves the plan items they point at
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:sign`. Module: `clinical`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        content?: {
+                            /** @default  */
+                            chiefComplaint?: string;
+                            /** @default  */
+                            findings?: string;
+                            /** @default [] */
+                            diagnosisCodes?: {
+                                code: string;
+                                /** @default  */
+                                name?: string;
+                            }[];
+                            /** @default [] */
+                            procedures?: {
+                                serviceId?: string | null;
+                                name: string;
+                                /** @default [] */
+                                teeth?: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                /** @default [] */
+                                areas?: string[];
+                                /** @default 1 */
+                                qty?: number;
+                                units?: number | null;
+                                unit?: string | null;
+                                product?: string | null;
+                                lot?: string | null;
+                                note?: string | null;
+                                planItemId?: string | null;
+                                customerPackageId?: string | null;
+                            }[];
+                            /** @default  */
+                            medications?: string;
+                            /** @default  */
+                            advice?: string;
+                            /** @default [] */
+                            attachments?: string[];
+                        };
+                        signedName?: string;
+                        consentGiven?: boolean;
+                        version?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Signed record */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                appointmentId: string | null;
+                                billId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                version: number;
+                                /** @description ISO timestamp */
+                                signedAt: string | null;
+                                signedName: string | null;
+                                signedById: string | null;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                                attachments: {
+                                    id: string;
+                                    mime: string;
+                                    size: number;
+                                }[];
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/records/{id}/amend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Amend a signed record: appends a revision (who / when / why + the full new content); history is kept
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:sign`. Module: `clinical`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                        content: {
+                            /** @default  */
+                            chiefComplaint?: string;
+                            /** @default  */
+                            findings?: string;
+                            /** @default [] */
+                            diagnosisCodes?: {
+                                code: string;
+                                /** @default  */
+                                name?: string;
+                            }[];
+                            /** @default [] */
+                            procedures?: {
+                                serviceId?: string | null;
+                                name: string;
+                                /** @default [] */
+                                teeth?: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                /** @default [] */
+                                areas?: string[];
+                                /** @default 1 */
+                                qty?: number;
+                                units?: number | null;
+                                unit?: string | null;
+                                product?: string | null;
+                                lot?: string | null;
+                                note?: string | null;
+                                planItemId?: string | null;
+                                customerPackageId?: string | null;
+                            }[];
+                            /** @default  */
+                            medications?: string;
+                            /** @default  */
+                            advice?: string;
+                            /** @default [] */
+                            attachments?: string[];
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Amended record */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                appointmentId: string | null;
+                                billId: string | null;
+                                /** @description ISO timestamp */
+                                visitAt: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                };
+                                /** @enum {string} */
+                                status: "draft" | "signed";
+                                rev: number;
+                                version: number;
+                                /** @description ISO timestamp */
+                                signedAt: string | null;
+                                signedName: string | null;
+                                signedById: string | null;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                                attachments: {
+                                    id: string;
+                                    mime: string;
+                                    size: number;
+                                }[];
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/records/{id}/revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Signed version and every amendment, oldest first (audited)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Revisions */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                rev: number;
+                                /** @enum {string} */
+                                kind: "signed" | "amendment";
+                                reason: string | null;
+                                authorName: string;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                content: {
+                                    /** @default  */
+                                    chiefComplaint: string;
+                                    /** @default  */
+                                    findings: string;
+                                    /** @default [] */
+                                    diagnosisCodes: {
+                                        code: string;
+                                        /** @default  */
+                                        name: string;
+                                    }[];
+                                    procedures: {
+                                        serviceId: string | null;
+                                        name: string;
+                                        /** @default [] */
+                                        teeth: ("11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85")[];
+                                        /** @default [] */
+                                        areas: string[];
+                                        /** @default 1 */
+                                        qty: number;
+                                        units: number | null;
+                                        unit: string | null;
+                                        product: string | null;
+                                        lot: string | null;
+                                        note: string | null;
+                                        planItemId: string | null;
+                                        customerPackageId: string | null;
+                                        packageUsed: boolean;
+                                    }[];
+                                    /** @default  */
+                                    medications: string;
+                                    /** @default  */
+                                    advice: string;
+                                    /** @default [] */
+                                    attachments: string[];
+                                };
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Treatment plans with totals and progress
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    customerId?: string;
+                    status?: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                    limit?: number;
+                    cursor?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plans */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                title: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a plan (draft) with phases and priced items
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        customerId: string;
+                        branchId?: string;
+                        title: string;
+                        /** @default  */
+                        diagnosis?: string;
+                        practitionerId?: string | null;
+                        validUntil?: string | null;
+                        /** @default [] */
+                        phases?: {
+                            id?: string;
+                            title: string;
+                            items: {
+                                id?: string;
+                                serviceId?: string | null;
+                                name: string;
+                                /** @enum {string|null} */
+                                tooth?: "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85" | null;
+                                area?: string | null;
+                                /** @default 1 */
+                                qty?: number;
+                                /**
+                                 * @description integer satang
+                                 * @default 0
+                                 */
+                                unitPriceMinor?: number;
+                                /**
+                                 * @description integer satang
+                                 * @default 0
+                                 */
+                                discountMinor?: number;
+                                cancelled?: boolean;
+                            }[];
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One plan with phases, items, progress and balance (audited)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plan */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Replace the plan content (send the whole plan; items keep their id). Editing an accepted plan reopens it for acceptance
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        title: string;
+                        /** @default  */
+                        diagnosis?: string;
+                        practitionerId?: string | null;
+                        validUntil?: string | null;
+                        /** @default [] */
+                        phases?: {
+                            id?: string;
+                            title: string;
+                            items: {
+                                id?: string;
+                                serviceId?: string | null;
+                                name: string;
+                                /** @enum {string|null} */
+                                tooth?: "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "51" | "52" | "53" | "54" | "55" | "61" | "62" | "63" | "64" | "65" | "71" | "72" | "73" | "74" | "75" | "81" | "82" | "83" | "84" | "85" | null;
+                                area?: string | null;
+                                /** @default 1 */
+                                qty?: number;
+                                /**
+                                 * @description integer satang
+                                 * @default 0
+                                 */
+                                unitPriceMinor?: number;
+                                /**
+                                 * @description integer satang
+                                 * @default 0
+                                 */
+                                discountMinor?: number;
+                                cancelled?: boolean;
+                            }[];
+                        }[];
+                        version?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Plan */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}/propose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a draft plan as proposed to the patient
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plan */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record the patient acceptance (confirmed + name + date)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {boolean} */
+                        confirmed: true;
+                        acceptedName: string;
+                        /** @description ISO timestamp */
+                        acceptedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Plan */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel the plan (done items stay done)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Plan */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                };
+                                branchId: string;
+                                practitioner: {
+                                    id: string;
+                                    name: string;
+                                } | null;
+                                title: string;
+                                diagnosis: string;
+                                /** @enum {string} */
+                                status: "draft" | "proposed" | "accepted" | "in_progress" | "done" | "cancelled";
+                                /** @enum {string} */
+                                storedStatus: "draft" | "proposed" | "accepted" | "cancelled";
+                                validUntil: string | null;
+                                /** @description ISO timestamp */
+                                proposedAt: string | null;
+                                /** @description ISO timestamp */
+                                acceptedAt: string | null;
+                                acceptedName: string | null;
+                                /** @description ISO timestamp */
+                                cancelledAt: string | null;
+                                version: number;
+                                phases: {
+                                    id: string;
+                                    title: string;
+                                    sort: number;
+                                    items: {
+                                        id: string;
+                                        serviceId: string | null;
+                                        name: string;
+                                        tooth: string | null;
+                                        area: string | null;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        discountMinor: number;
+                                        totalMinor: number;
+                                        /** @enum {string} */
+                                        status: "planned" | "accepted" | "in_progress" | "done" | "cancelled";
+                                        doneQty: number;
+                                        billedMinor: number;
+                                        paidMinor: number;
+                                        recordIds: string[];
+                                    }[];
+                                }[];
+                                totals: {
+                                    plannedMinor: number;
+                                    doneMinor: number;
+                                    billedMinor: number;
+                                    paidMinor: number;
+                                    balanceMinor: number;
+                                    itemCount: number;
+                                    doneCount: number;
+                                    progressPct: number;
+                                };
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}/bill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Put plan items on a new open bill (prefilled lines). Items already fully billed → 409
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:write`. Module: `clinical`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        items: {
+                            itemId: string;
+                            qty?: number;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Bill */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                billNumber: string;
+                                totalMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clinical/plans/{id}/pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Plan PDF render status / download link (?job= from the POST)
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    job?: string;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Document job */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                status: "processing" | "ready" | "failed" | "missing";
+                                url: string | null;
+                                filename: string | null;
+                                expiresAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Render the A4 "ใบเสนอแผนการรักษา" PDF (shop logo); poll GET …/pdf?job=
+         * @description Requires header `X-Tenant-Id`. Permission: `clinical:read`. Module: `clinical`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        locale?: "th" | "en";
+                    };
+                };
+            };
+            responses: {
+                /** @description Accepted */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                status: "processing" | "ready" | "failed" | "missing";
+                                url: string | null;
+                                filename: string | null;
+                                expiresAt: string | null;
                             };
                         };
                     };
@@ -67854,6 +72535,9 @@ export interface paths {
                                 health?: {
                                     [key: string]: unknown;
                                 };
+                                treatmentRecords?: {
+                                    [key: string]: unknown;
+                                }[];
                             };
                         };
                         "text/csv": string;
@@ -75854,7 +80538,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "CONSENT_REQUIRED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "CONSENT_REQUIRED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

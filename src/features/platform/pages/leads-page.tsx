@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-router';
 import { CheckCheck, Copy, MessageCircle, Phone, Plus } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -23,6 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
+import { useInvalidToast } from '@/lib/form-errors';
 import { cn } from '@/lib/utils';
 import {
   type Lead,
@@ -38,7 +40,7 @@ import {
   usePlans,
 } from '../api';
 import { INDUSTRY_KEYS } from '../components/common';
-import { formatDateTime, useIntlLocale } from '../format';
+import { formatDateTime, parseBahtToMinor, useIntlLocale } from '../format';
 
 /** Board columns in sales order (docs/02 §6.9: new → contacted → checked → proposal → won / lost; nurture parks a lead). */
 const STAGES: LeadStage[] = ['new', 'contacted', 'checked', 'proposal', 'won', 'lost', 'nurture'];
@@ -54,6 +56,7 @@ export function LeadsPage() {
   const [overStage, setOverStage] = useState<LeadStage | null>(null);
   const [lostFor, setLostFor] = useState<Lead | null>(null);
   const [lostReason, setLostReason] = useState('');
+  const [mobileStage, setMobileStage] = useState<LeadStage | null>(null);
 
   const move = (lead: Lead, stage: LeadStage) => {
     if (lead.stage === stage) return;
@@ -91,54 +94,84 @@ export function LeadsPage() {
         }
         skeleton={<div className="h-64 animate-pulse rounded-xl bg-muted" aria-busy="true" />}
       >
-        {(rows) => (
-          <div className="flex gap-3 overflow-x-auto pb-4" data-testid="kanban">
-            {STAGES.map((stage) => {
-              const cards = rows
-                .filter((l) => l.stage === stage)
-                .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-              return (
-                <section
-                  key={stage}
-                  aria-label={t(`leadStage.${stage}`)}
-                  data-stage={stage}
-                  className={cn(
-                    'flex min-h-56 w-64 shrink-0 flex-col gap-2 rounded-xl bg-muted/50 p-2',
-                    overStage === stage && 'ring-2 ring-primary',
-                  )}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setOverStage(stage);
-                  }}
-                  onDragLeave={() => setOverStage((s) => (s === stage ? null : s))}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    setOverStage(null);
-                    const lead = rows.find((l) => l.id === (dragId ?? e.dataTransfer.getData('text/plain')));
-                    if (lead) move(lead, stage);
-                    setDragId(null);
-                  }}
-                >
-                  <h2 className="flex items-center justify-between px-1 text-sm font-semibold">
-                    {t(`leadStage.${stage}`)}{' '}
-                    <Badge variant={stage === 'new' && cards.length > 0 ? 'destructive' : 'outline'}>
-                      {cards.length}
-                    </Badge>
-                  </h2>
-                  {cards.map((l) => (
-                    <LeadCard
-                      key={l.id}
-                      lead={l}
-                      onOpen={() => setSelected(l.id)}
-                      onMove={(s) => move(l, s)}
-                      onDragStart={() => setDragId(l.id)}
-                    />
-                  ))}
-                </section>
-              );
-            })}
-          </div>
-        )}
+        {(rows) => {
+          // phone: one stage at a time (chips), desktop/iPad: the whole board
+          const shown: LeadStage =
+            mobileStage ?? STAGES.find((s) => rows.some((l) => l.stage === s)) ?? 'new';
+          return (
+            <>
+              <nav
+                className="-mx-1 mb-3 flex gap-2 overflow-x-auto px-1 pb-1 md:hidden"
+                aria-label={t('leads.stagePicker')}
+              >
+                {STAGES.map((s) => {
+                  const n = rows.filter((l) => l.stage === s).length;
+                  return (
+                    <Button
+                      key={s}
+                      size="sm"
+                      className="h-11 shrink-0"
+                      variant={shown === s ? 'default' : 'outline'}
+                      aria-pressed={shown === s}
+                      onClick={() => setMobileStage(s)}
+                    >
+                      {t(`leadStage.${s}`)} <span className="tabular-nums">{n}</span>
+                    </Button>
+                  );
+                })}
+              </nav>
+              <div className="flex gap-3 overflow-x-auto pb-4" data-testid="kanban">
+                {STAGES.map((stage) => {
+                  const cards = rows
+                    .filter((l) => l.stage === stage)
+                    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+                  return (
+                    <section
+                      key={stage}
+                      aria-label={t(`leadStage.${stage}`)}
+                      data-stage={stage}
+                      className={cn(
+                        'flex min-h-56 w-full flex-col gap-2 rounded-xl bg-muted/50 p-2 md:w-64 md:shrink-0',
+                        stage !== shown && 'hidden md:flex',
+                        overStage === stage && 'ring-2 ring-primary',
+                      )}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setOverStage(stage);
+                      }}
+                      onDragLeave={() => setOverStage((s) => (s === stage ? null : s))}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setOverStage(null);
+                        const lead = rows.find(
+                          (l) => l.id === (dragId ?? e.dataTransfer.getData('text/plain')),
+                        );
+                        if (lead) move(lead, stage);
+                        setDragId(null);
+                      }}
+                    >
+                      <h2 className="flex items-center justify-between px-1 text-sm font-semibold">
+                        {t(`leadStage.${stage}`)}{' '}
+                        <Badge variant={stage === 'new' && cards.length > 0 ? 'destructive' : 'outline'}>
+                          {cards.length}
+                        </Badge>
+                      </h2>
+                      {cards.map((l) => (
+                        <LeadCard
+                          key={l.id}
+                          lead={l}
+                          onOpen={() => setSelected(l.id)}
+                          onMove={(s) => move(l, s)}
+                          onDragStart={() => setDragId(l.id)}
+                        />
+                      ))}
+                    </section>
+                  );
+                })}
+              </div>
+            </>
+          );
+        }}
       </QueryState>
 
       <AddLeadDialog open={adding} onOpenChange={setAdding} />
@@ -158,11 +191,18 @@ export function LeadsPage() {
             placeholder={t('leads.lostReason')}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setLostFor(null)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setLostFor(null);
+                setLostReason('');
+              }}
+            >
               {t('common.cancel')}
             </Button>
             <Button
-              disabled={lostReason.trim().length === 0 || patch.isPending}
+              disabled={patch.isPending}
+              blockedReason={lostReason.trim().length === 0 && t('leads.lostReasonNeeded')}
               onClick={() => {
                 if (!lostFor) return;
                 patch.mutate(
@@ -171,6 +211,7 @@ export function LeadsPage() {
                     onSuccess: () => {
                       setLostFor(null);
                       setLostReason('');
+                      toast.success(t('leads.lostToast'));
                     },
                   },
                 );
@@ -249,7 +290,7 @@ function LeadCard({
       ) : null}
       <div className="mt-1 text-xs text-muted-foreground">{lead.ownerName ?? t('leads.noOwner')}</div>
       <Select value={lead.stage} onValueChange={(v) => onMove(v as LeadStage)}>
-        <SelectTrigger className="mt-2 h-8 text-xs" aria-label={t('leads.moveTo')}>
+        <SelectTrigger className="mt-2 text-xs" aria-label={t('leads.moveTo')}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -281,6 +322,7 @@ function AddLeadDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
     resolver: zodResolver(addSchema),
     defaultValues: { businessName: '', contactName: '', phone: '', industryKey: undefined, message: '' },
   });
+  const invalid = useInvalidToast<AddValues>();
   const submit = form.handleSubmit(async (v) => {
     await create.mutateAsync({
       businessName: v.businessName,
@@ -290,9 +332,10 @@ function AddLeadDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
       message: v.message || undefined,
       source: 'manual',
     });
+    toast.success(t('leads.addedToast'));
     form.reset();
     onOpenChange(false);
-  });
+  }, invalid);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={tc('close')}>
@@ -426,6 +469,7 @@ function LeadSheet({
                       onSuccess: () => {
                         setNote('');
                         setNext('');
+                        toast.success(t('leads.activityToast'));
                       },
                     },
                   );
@@ -460,7 +504,12 @@ function LeadSheet({
                     onChange={(e) => setNext(e.target.value)}
                   />
                 </div>
-                <Button type="submit" disabled={activity.isPending} className="justify-self-start">
+                <Button
+                  type="submit"
+                  disabled={activity.isPending}
+                  blockedReason={note.trim() === '' && next === '' && t('leads.activityEmpty')}
+                  className="justify-self-start"
+                >
                   {t('leads.addActivity')}
                 </Button>
               </form>
@@ -500,8 +549,12 @@ function LeadQuickActions({ d }: { d: LeadDetail }) {
   const assignees = useLeadAssignees();
   const copy = async () => {
     if (!d.phone) return;
-    await navigator.clipboard.writeText(d.phone);
-    toast.success(t('leads.copied'));
+    try {
+      await navigator.clipboard.writeText(d.phone);
+      toast.success(t('leads.copied'));
+    } catch {
+      toast.error(t('leads.copyFailed', { phone: d.phone }));
+    }
   };
   return (
     <div className="grid gap-3 rounded-lg border p-3" data-testid="lead-quick-actions">
@@ -509,12 +562,12 @@ function LeadQuickActions({ d }: { d: LeadDetail }) {
       <div className="flex flex-wrap gap-2">
         {d.phone ? (
           <>
-            <Button asChild size="sm">
+            <Button asChild>
               <a href={`tel:${d.phone.replace(/[^\d+]/g, '')}`}>
                 <Phone /> {t('leads.call')}
               </a>
             </Button>
-            <Button size="sm" variant="outline" onClick={copy}>
+            <Button variant="outline" onClick={copy}>
               <Copy /> {t('leads.copyPhone')}
             </Button>
           </>
@@ -522,7 +575,7 @@ function LeadQuickActions({ d }: { d: LeadDetail }) {
           <span className="text-xs text-muted-foreground">{t('leads.noPhone')}</span>
         )}
         {d.lineId ? (
-          <Button asChild size="sm" variant="outline">
+          <Button asChild variant="outline">
             <a
               href={`https://line.me/ti/p/~${encodeURIComponent(d.lineId.replace(/^@/, ''))}`}
               target="_blank"
@@ -534,7 +587,6 @@ function LeadQuickActions({ d }: { d: LeadDetail }) {
         ) : null}
         {d.stage === 'new' ? (
           <Button
-            size="sm"
             variant="secondary"
             disabled={patch.isPending}
             onClick={() =>
@@ -679,10 +731,24 @@ function ConvertDialog({
     resolver: zodResolver(convertSchema),
     defaultValues: { ownerEmail: '', ownerName: '', planCode: '', engagementType: 'none', fee: '' },
   });
+  const navigate = useNavigate();
+  const invalid = useInvalidToast<z.infer<typeof convertSchema>>();
+  const firstPlan = (plans.data ?? []).find((p) => p.active)?.code;
+  const planCode = form.watch('planCode');
+  const engagementType = form.watch('engagementType');
+  const noEngagement = !engagementType || engagementType === 'none';
+  // one tap less: start from the first active package
+  useEffect(() => {
+    if (firstPlan && !planCode) form.setValue('planCode', firstPlan);
+  }, [firstPlan, planCode, form]);
   const industries = useMemo(() => INDUSTRY_KEYS as readonly string[], []);
   const errors = form.formState.errors;
   const submit = form.handleSubmit(async (v) => {
-    const fee = v.fee ? Math.round(Number.parseFloat(v.fee.replace(/,/g, '')) * 100) : 0;
+    const fee = !noEngagement && v.fee?.trim() ? parseBahtToMinor(v.fee) : 0;
+    if (fee === null) {
+      form.setError('fee', { message: 'leads.feeInvalid' });
+      return;
+    }
     const res = await convert.mutateAsync({
       id: leadId,
       body: {
@@ -690,21 +756,24 @@ function ConvertDialog({
         ownerName: v.ownerName || undefined,
         planCode: v.planCode,
         industryKey: defaultIndustry && industries.includes(defaultIndustry) ? defaultIndustry : undefined,
-        engagement:
-          v.engagementType && v.engagementType !== 'none'
-            ? {
-                type: v.engagementType as 'audit',
-                feeMinor: Number.isFinite(fee) ? fee : 0,
-                billing: 'one_time',
-              }
-            : undefined,
+        engagement: noEngagement
+          ? undefined
+          : { type: v.engagementType as 'audit', feeMinor: fee, billing: 'one_time' },
       },
     });
-    toast.success(t('leads.convertedToast'));
+    const { tenantId, engagementId } = res.data;
+    toast.success(t('leads.convertedToast'), {
+      action: {
+        label: engagementId ? t('leads.openEngagement') : t('leads.openShop'),
+        onClick: () =>
+          void (engagementId
+            ? navigate({ to: '/platform/engagements/$id', params: { id: engagementId } })
+            : navigate({ to: '/platform/tenants/$id', params: { id: tenantId } })),
+      },
+    });
     onOpenChange(false);
     onDone();
-    void res;
-  });
+  }, invalid);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={tc('close')}>
@@ -713,7 +782,7 @@ function ConvertDialog({
           <DialogDescription>{t('leads.convertHint')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="grid gap-3" noValidate>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label htmlFor="cv-email">{t('onboard.ownerEmail')}</Label>
               <Input id="cv-email" type="email" {...form.register('ownerEmail')} />
@@ -753,7 +822,7 @@ function ConvertDialog({
               </p>
             ) : null}
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label>{t('leads.firstEngagement')}</Label>
               <Select
@@ -777,7 +846,14 @@ function ConvertDialog({
             </div>
             <div>
               <Label htmlFor="cv-fee">{t('engagements.fee')}</Label>
-              <Input id="cv-fee" inputMode="decimal" placeholder="0" {...form.register('fee')} />
+              <Input
+                id="cv-fee"
+                inputMode="decimal"
+                placeholder="0"
+                disabled={noEngagement}
+                {...form.register('fee')}
+              />
+              {errors.fee ? <p className="mt-1 text-xs text-destructive">{t('leads.feeInvalid')}</p> : null}
             </div>
           </div>
           <DialogFooter>

@@ -81,16 +81,15 @@ export function UserDetailSheet({
                   <section className="grid gap-2">
                     {self ? <p className="text-xs text-muted-foreground">{t('detail.selfHint')}</p> : null}
                     <div className="flex flex-wrap gap-2">
-                      <Button size="sm" disabled={self} onClick={() => onAction('reset', u)}>
+                      <Button blockedReason={self && t('error.self')} onClick={() => onAction('reset', u)}>
                         <KeyRound /> {t('action.reset')}
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => onAction('link', u)}>
+                      <Button variant="outline" onClick={() => onAction('link', u)}>
                         <Link2 /> {t('action.link')}
                       </Button>
                       <Button
-                        size="sm"
                         variant="outline"
-                        disabled={self}
+                        blockedReason={self && t('error.self')}
                         onClick={() => onAction('revoke', u)}
                       >
                         <LogOut /> {t('action.revoke')}

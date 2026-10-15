@@ -171,12 +171,11 @@ function ExpenseForm({ company, expense }: { company: Company; expense?: Expense
     vendor: !f.contactId && f.vendorName.trim() === '' ? t('expense.pickVendor') : undefined,
     category: f.categoryId === '' ? t('validation.required') : undefined,
     amount:
-      lineErrors.lines || lineErrors.price || lineErrors.qty || lineErrors.description
+      lineErrors.lines || lineErrors.price || lineErrors.qty || (f.itemised && lineErrors.description)
         ? t('expense.needAmount')
         : undefined,
     paidOn: f.paymentStatus === 'paid' && f.paidOn === '' ? t('validation.required') : undefined,
   };
-  const invalid = Object.values(errors).some(Boolean);
 
   // single-amount mode edits the first line only
   const first = f.lines[0] ?? emptyLine();
@@ -185,7 +184,13 @@ function ExpenseForm({ company, expense }: { company: Company; expense?: Expense
 
   const submit = async () => {
     setTouched(true);
-    if (invalid) return toast.error(t('doc.fixErrors'));
+    const reason =
+      errors.vendor ??
+      (errors.category ? t('expense.reason.category') : undefined) ??
+      errors.amount ??
+      (errors.paidOn ? t('expense.reason.paidOn') : undefined) ??
+      (totals.totalMinor <= 0 ? t('expense.reason.zeroTotal') : undefined);
+    if (reason) return toast.error(reason, { id: 'expense-block' });
     const lines = f.itemised
       ? f.lines.filter((l) => !isBlankLine(l)).map(toLineBody)
       : [

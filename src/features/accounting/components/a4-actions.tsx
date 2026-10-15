@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { i18n } from '@/i18n';
 import { type A4Source, fetchA4Document, type PdfMode, renderA4Pdf, useCompany } from '../api';
 import { buildDocumentSheet, type DocSheetLabels, downloadDocumentXlsx } from '../lib/doc-xlsx';
 
@@ -21,6 +22,7 @@ export function downloadUrl(url: string, filename: string | null): void {
   document.body.append(a);
   a.click();
   a.remove();
+  toast.success(i18n.t('accounting:fileSaved'));
 }
 
 const MODES: readonly PdfMode[] = ['both', 'original', 'copy'];
@@ -109,6 +111,7 @@ export function ExcelButton({ source }: { source: A4Source }) {
       };
       const sheet = buildDocumentSheet(doc, company.data, labels);
       await downloadDocumentXlsx(doc.number ?? `${doc.type}-${doc.id.slice(0, 8)}`, sheet);
+      toast.success(t('fileSaved'));
     } catch {
       toast.error(t('a4.exportFailed'));
     } finally {
@@ -117,7 +120,12 @@ export function ExcelButton({ source }: { source: A4Source }) {
   };
 
   return (
-    <Button variant="outline" onClick={() => void run()} disabled={busy || !company.data}>
+    <Button
+      variant="outline"
+      onClick={() => void run()}
+      disabled={busy}
+      blockedReason={!company.data && t('a4.companyNotReady')}
+    >
       {busy ? <Loader2 className="animate-spin" /> : <FileSpreadsheet />}
       {t('a4.excel')}
     </Button>

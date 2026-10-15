@@ -29,7 +29,7 @@ export function FormField({
       </Label>
       {children}
       {error ? (
-        <p className="text-xs text-destructive" role="alert">
+        <p className="text-sm text-destructive" role="alert">
           {error}
         </p>
       ) : hint ? (

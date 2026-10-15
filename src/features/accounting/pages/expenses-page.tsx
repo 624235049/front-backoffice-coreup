@@ -86,7 +86,10 @@ export function ExpensesPage() {
         ],
         rows,
       },
-    ] as never).catch(() => toast.error(t('exportFailed')));
+    ] as never).then(
+      () => toast.success(t('fileSaved')),
+      () => toast.error(t('exportFailed')),
+    );
 
   return (
     <>
@@ -95,7 +98,11 @@ export function ExpensesPage() {
         description={t('expense.description')}
         actions={
           <>
-            <Button variant="outline" onClick={exportXlsx} disabled={rows.length === 0}>
+            <Button
+              variant="outline"
+              onClick={exportXlsx}
+              blockedReason={rows.length === 0 && t('nothingToExport')}
+            >
               <Download /> {t('exportExcel')}
             </Button>
             <Button onClick={add}>

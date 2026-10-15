@@ -105,9 +105,23 @@ export function DocumentEditor({
     return issueNow ? issue.mutateAsync({ id: doc.id, payment: payment ?? null }) : updated;
   };
 
+  /** Why the document cannot be saved / issued right now (most important first), or null when it is fine. */
+  const blockReason = (issuing: boolean): string | null => {
+    if (errors.contact) return t('doc.reason.customer');
+    if (errors.lines) return t('doc.reason.lines');
+    if (errors.description) return t('doc.reason.description');
+    if (errors.qty) return t('doc.reason.qty');
+    if (errors.price) return t('doc.reason.price');
+    if (errors.discount) return t('doc.reason.discount');
+    if (errors.dueDate) return t('doc.dueBeforeDate');
+    if (totals.totalMinor <= 0 && (!isQuotation || issuing)) return t('doc.reason.zeroTotal');
+    return null;
+  };
+
   const onSaveDraft = async () => {
     setTouched(true);
-    if (Object.keys(errors).length > 0) return toast.error(t('doc.fixErrors'));
+    const reason = blockReason(false);
+    if (reason) return toast.error(reason, { id: 'doc-block' });
     const saved = await save(false);
     toast.success(t('doc.draftSaved'));
     goTo(saved);
@@ -115,7 +129,8 @@ export function DocumentEditor({
 
   const requestIssue = () => {
     setTouched(true);
-    if (Object.keys(errors).length > 0) return toast.error(t('doc.fixErrors'));
+    const reason = blockReason(true);
+    if (reason) return toast.error(reason, { id: 'doc-block' });
     if (isDirectReceipt) setPaying(true);
     else setConfirmIssue(true);
   };
@@ -368,6 +383,7 @@ export function DocumentEditor({
         open={paying}
         onOpenChange={setPaying}
         title={t('payment.cashSaleTitle')}
+        mustSettleFull
         description={t('payment.cashSaleHint')}
         balanceMinor={totals.totalMinor}
         whtBaseMinor={totals.taxableMinor + totals.exemptMinor}

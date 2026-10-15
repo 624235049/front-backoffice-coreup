@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 import type * as React from 'react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
@@ -18,10 +19,10 @@ const buttonVariants = cva(
       size: {
         // docs/04 §9: touch targets >= 44px.
         default: 'h-11 px-4 py-2',
-        sm: 'h-9 gap-1.5 px-3 text-sm',
+        sm: 'h-9 gap-1.5 px-3 text-sm max-md:h-11',
         lg: 'h-12 px-6 text-base',
         icon: 'size-11',
-        'icon-sm': 'size-9',
+        'icon-sm': 'size-9 max-md:size-11',
       },
     },
     defaultVariants: { variant: 'default', size: 'default' },
@@ -31,11 +32,43 @@ const buttonVariants = cva(
 type ButtonProps = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    /**
+     * Why the action cannot run right now (already translated). When set the button looks disabled but stays
+     * clickable, and a click shows the reason as a toast instead of doing nothing. Use `disabled` only while a
+     * request is in flight; every other "can't do this yet" state MUST explain itself through this prop.
+     */
+    blockedReason?: string | false | null;
   };
 
-function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  blockedReason,
+  onClick,
+  ...props
+}: ButtonProps) {
   const Comp = asChild ? Slot.Root : 'button';
-  return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+  const blocked = typeof blockedReason === 'string' && blockedReason.length > 0;
+  return (
+    <Comp
+      data-slot="button"
+      data-blocked={blocked || undefined}
+      aria-disabled={blocked || props['aria-disabled']}
+      className={cn(buttonVariants({ variant, size, className }), blocked && 'cursor-not-allowed opacity-50')}
+      onClick={
+        blocked
+          ? (e: React.MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toast.warning(blockedReason, { id: `blocked:${blockedReason}` });
+            }
+          : onClick
+      }
+      {...props}
+    />
+  );
 }
 
 export { Button, buttonVariants };

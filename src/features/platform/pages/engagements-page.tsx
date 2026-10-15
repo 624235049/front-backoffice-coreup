@@ -4,6 +4,7 @@ import { Briefcase, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
@@ -15,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useInvalidToast } from '@/lib/form-errors';
 import { useCan } from '@/lib/permissions';
 import { type Engagement, useCreateEngagement, useEngagements, useTenants } from '../api';
 import { formatDate, formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
@@ -90,53 +92,84 @@ export function EngagementsPage() {
         }
       >
         {(rows) => (
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('engagements.col.shop')}</TableHead>
-                  <TableHead>{t('engagements.col.type')}</TableHead>
-                  <TableHead>{t('engagements.col.status')}</TableHead>
-                  <TableHead>{t('engagements.col.period')}</TableHead>
-                  <TableHead>{t('engagements.col.consultant')}</TableHead>
-                  <TableHead className="text-right">{t('engagements.col.fee')}</TableHead>
-                  <TableHead className="text-right">{t('engagements.col.progress')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((e) => (
-                  <TableRow key={e.id}>
-                    <TableCell>
-                      <Link
-                        to="/platform/engagements/$id"
-                        params={{ id: e.id }}
-                        className="font-medium hover:underline"
-                      >
-                        {e.tenantName}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{t(`engagementType.${e.type}`)}</TableCell>
-                    <TableCell>
+          <>
+            <ul className="grid gap-2 lg:hidden">
+              {rows.map((e) => (
+                <li key={e.id}>
+                  <Link
+                    to="/platform/engagements/$id"
+                    params={{ id: e.id }}
+                    className="block rounded-lg border bg-card p-4 active:bg-accent"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 font-semibold">{e.tenantName}</div>
                       <EngagementStatusBadge status={e.status} />
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
+                    </div>
+                    <div className="mt-1 text-sm">{t(`engagementType.${e.type}`)}</div>
+                    <div className="mt-1 text-sm text-muted-foreground">
                       {formatDate(e.startsOn, locale)} – {formatDate(e.endsOn, locale)}
-                    </TableCell>
-                    <TableCell>{e.leadConsultantName ?? '–'}</TableCell>
-                    <TableCell className="text-right">
-                      {formatMoney(e.feeMinor, locale)}
-                      {e.billing === 'monthly' ? (
-                        <span className="text-xs text-muted-foreground"> {t('engagements.perMonth')}</span>
-                      ) : null}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {e.tasksTotal === 0 ? '–' : `${e.tasksDone}/${e.tasksTotal}`}
-                    </TableCell>
+                    </div>
+                    <div className="mt-2 flex flex-wrap justify-between gap-2 text-sm">
+                      <span>
+                        {formatMoney(e.feeMinor, locale)}
+                        {e.billing === 'monthly' ? ` ${t('engagements.perMonth')}` : ''}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {e.tasksTotal === 0 ? '–' : `${e.tasksDone}/${e.tasksTotal}`}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden overflow-x-auto rounded-lg border lg:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('engagements.col.shop')}</TableHead>
+                    <TableHead>{t('engagements.col.type')}</TableHead>
+                    <TableHead>{t('engagements.col.status')}</TableHead>
+                    <TableHead>{t('engagements.col.period')}</TableHead>
+                    <TableHead>{t('engagements.col.consultant')}</TableHead>
+                    <TableHead className="text-right">{t('engagements.col.fee')}</TableHead>
+                    <TableHead className="text-right">{t('engagements.col.progress')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((e) => (
+                    <TableRow key={e.id}>
+                      <TableCell>
+                        <Link
+                          to="/platform/engagements/$id"
+                          params={{ id: e.id }}
+                          className="font-medium hover:underline"
+                        >
+                          {e.tenantName}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{t(`engagementType.${e.type}`)}</TableCell>
+                      <TableCell>
+                        <EngagementStatusBadge status={e.status} />
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {formatDate(e.startsOn, locale)} – {formatDate(e.endsOn, locale)}
+                      </TableCell>
+                      <TableCell>{e.leadConsultantName ?? '–'}</TableCell>
+                      <TableCell className="text-right">
+                        {formatMoney(e.feeMinor, locale)}
+                        {e.billing === 'monthly' ? (
+                          <span className="text-xs text-muted-foreground"> {t('engagements.perMonth')}</span>
+                        ) : null}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {e.tasksTotal === 0 ? '–' : `${e.tasksDone}/${e.tasksTotal}`}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </QueryState>
       <CreateEngagementDialog open={creating} onOpenChange={setCreating} />
@@ -178,6 +211,7 @@ function CreateEngagementDialog({
       billing: 'one_time',
     },
   });
+  const invalid = useInvalidToast<z.infer<typeof schema>>();
   const submit = form.handleSubmit(async (v) => {
     const fee = v.fee ? parseBahtToMinor(v.fee) : 0;
     if (fee === null) {
@@ -193,10 +227,11 @@ function CreateEngagementDialog({
       feeMinor: fee,
       billing: v.billing,
     });
+    toast.success(t('engagements.created'));
     onOpenChange(false);
     form.reset();
     void navigate({ to: '/platform/engagements/$id', params: { id: res.data.id } });
-  });
+  }, invalid);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={tc('close')}>
@@ -227,7 +262,7 @@ function CreateEngagementDialog({
               </p>
             ) : null}
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label>{t('engagements.col.type')}</Label>
               <Select
@@ -265,7 +300,7 @@ function CreateEngagementDialog({
               </Select>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label htmlFor="eg-start">{t('engagements.startsOn')}</Label>
               <Input id="eg-start" type="date" {...form.register('startsOn')} />
@@ -275,7 +310,7 @@ function CreateEngagementDialog({
               <Input id="eg-end" type="date" {...form.register('endsOn')} />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label htmlFor="eg-fee">{t('engagements.fee')}</Label>
               <Input id="eg-fee" inputMode="decimal" placeholder="0" {...form.register('fee')} />

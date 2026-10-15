@@ -181,6 +181,7 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
           rows: all,
         },
       ] as never);
+      toast.success(t('fileSaved'));
     } catch {
       toast.error(t('exportFailed'));
     } finally {
@@ -221,14 +222,16 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
             <Button
               variant="outline"
               onClick={() => void exportXlsx()}
-              disabled={rows.length === 0 || exporting !== null}
+              disabled={exporting !== null}
+              blockedReason={rows.length === 0 && t('nothingToExport')}
             >
               {exporting === 'xlsx' ? <Loader2 className="animate-spin" /> : <Download />} {t('exportExcel')}
             </Button>
             <Button
               variant="outline"
               onClick={() => void exportPdf()}
-              disabled={rows.length === 0 || exporting !== null}
+              disabled={exporting !== null}
+              blockedReason={rows.length === 0 && t('nothingToExport')}
             >
               {exporting === 'pdf' ? <Loader2 className="animate-spin" /> : <FileDown />} {t('a4.exportPdf')}
             </Button>

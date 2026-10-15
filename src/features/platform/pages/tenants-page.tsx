@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { Plus, Store } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -100,67 +100,106 @@ export function TenantsPage() {
         }
       >
         {(rows) => (
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('tenants.col.shop')}</TableHead>
-                  <TableHead>{t('tenants.col.plan')}</TableHead>
-                  <TableHead>{t('tenants.col.engagement')}</TableHead>
-                  <TableHead>{t('tenants.col.consultants')}</TableHead>
-                  <TableHead className="text-right">{t('tenants.col.users')}</TableHead>
-                  <TableHead className="text-right">{t('tenants.col.appointments')}</TableHead>
-                  <TableHead className="text-right">{t('tenants.col.health')}</TableHead>
-                  <TableHead className="text-right">{t('tenants.col.noShow')}</TableHead>
-                  <TableHead>{t('tenants.col.usage')}</TableHead>
-                  <TableHead>{t('tenants.col.renewal')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((r) => (
-                  <TableRow
-                    key={r.id}
-                    className="cursor-pointer"
-                    onClick={() => void navigate({ to: '/platform/tenants/$id', params: { id: r.id } })}
+          <>
+            <ul className="grid gap-2 lg:hidden">
+              {rows.map((r) => (
+                <li key={r.id}>
+                  <Link
+                    to="/platform/tenants/$id"
+                    params={{ id: r.id }}
+                    className="block rounded-lg border bg-card p-4 active:bg-accent"
                   >
-                    <TableCell>
-                      <div className="font-medium">{r.name}</div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        {t(`industry.${r.industryKey}`, { defaultValue: r.industryKey })} ·{' '}
-                        {t('tenants.branches', { count: r.branches })} <TenantStatusBadge status={r.status} />
-                      </div>
-                    </TableCell>
-                    <TableCell>{r.planName ?? '–'}</TableCell>
-                    <TableCell>
-                      {r.engagement ? (
-                        <>
-                          <div>{t(`engagementType.${r.engagement.type}`)}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {formatDate(r.engagement.endsOn, locale)}
-                          </div>
-                        </>
-                      ) : (
-                        '–'
-                      )}
-                    </TableCell>
-                    <TableCell>{r.consultants.map((c) => c.name).join(', ') || '–'}</TableCell>
-                    <TableCell className="text-right">{r.activeUsers7d}</TableCell>
-                    <TableCell className="text-right">{r.appointmentsThisWeek}</TableCell>
-                    <TableCell className="text-right">
-                      {r.healthScore === null ? '–' : r.healthScore.toFixed(0)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {r.noShowRateMonth === null ? '–' : `${r.noShowRateMonth}%`}
-                    </TableCell>
-                    <TableCell>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 font-semibold">{r.name}</div>
+                      <TenantStatusBadge status={r.status} />
+                    </div>
+                    <div className="mt-1 text-sm text-muted-foreground">
+                      {t(`industry.${r.industryKey}`, { defaultValue: r.industryKey })} ·{' '}
+                      {t('tenants.branches', { count: r.branches })} · {r.planName ?? '–'}
+                    </div>
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                       <UsageHealthBadge health={r.usageHealth} />
-                    </TableCell>
-                    <TableCell>{formatDate(r.renewalOn, locale)}</TableCell>
+                      <span>
+                        {t('tenants.col.users')}: {r.activeUsers7d}
+                      </span>
+                      <span>
+                        {t('tenants.col.appointments')}: {r.appointmentsThisWeek}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden overflow-x-auto rounded-lg border lg:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('tenants.col.shop')}</TableHead>
+                    <TableHead>{t('tenants.col.plan')}</TableHead>
+                    <TableHead>{t('tenants.col.engagement')}</TableHead>
+                    <TableHead>{t('tenants.col.consultants')}</TableHead>
+                    <TableHead className="text-right">{t('tenants.col.users')}</TableHead>
+                    <TableHead className="text-right">{t('tenants.col.appointments')}</TableHead>
+                    <TableHead className="text-right">{t('tenants.col.health')}</TableHead>
+                    <TableHead className="text-right">{t('tenants.col.noShow')}</TableHead>
+                    <TableHead>{t('tenants.col.usage')}</TableHead>
+                    <TableHead>{t('tenants.col.renewal')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {rows.map((r) => (
+                    <TableRow
+                      key={r.id}
+                      className="cursor-pointer"
+                      onClick={() => void navigate({ to: '/platform/tenants/$id', params: { id: r.id } })}
+                    >
+                      <TableCell>
+                        <Link
+                          to="/platform/tenants/$id"
+                          params={{ id: r.id }}
+                          className="font-medium hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {r.name}
+                        </Link>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          {t(`industry.${r.industryKey}`, { defaultValue: r.industryKey })} ·{' '}
+                          {t('tenants.branches', { count: r.branches })}{' '}
+                          <TenantStatusBadge status={r.status} />
+                        </div>
+                      </TableCell>
+                      <TableCell>{r.planName ?? '–'}</TableCell>
+                      <TableCell>
+                        {r.engagement ? (
+                          <>
+                            <div>{t(`engagementType.${r.engagement.type}`)}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {formatDate(r.engagement.endsOn, locale)}
+                            </div>
+                          </>
+                        ) : (
+                          '–'
+                        )}
+                      </TableCell>
+                      <TableCell>{r.consultants.map((c) => c.name).join(', ') || '–'}</TableCell>
+                      <TableCell className="text-right">{r.activeUsers7d}</TableCell>
+                      <TableCell className="text-right">{r.appointmentsThisWeek}</TableCell>
+                      <TableCell className="text-right">
+                        {r.healthScore === null ? '–' : r.healthScore.toFixed(0)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {r.noShowRateMonth === null ? '–' : `${r.noShowRateMonth}%`}
+                      </TableCell>
+                      <TableCell>
+                        <UsageHealthBadge health={r.usageHealth} />
+                      </TableCell>
+                      <TableCell>{formatDate(r.renewalOn, locale)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </QueryState>
       <OnboardDialog

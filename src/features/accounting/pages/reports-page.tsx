@@ -61,10 +61,10 @@ function GroupToggle({
   );
 }
 
-function ExportButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+function ExportButton({ onClick }: { onClick: () => void }) {
   const { t } = useTranslation('accounting');
   return (
-    <Button variant="outline" onClick={onClick} disabled={disabled}>
+    <Button variant="outline" onClick={onClick}>
       <Download /> {t('exportExcel')}
     </Button>
   );
@@ -854,7 +854,13 @@ export function ReportsPage() {
     exporter.current = fn;
   }, []);
   const runExport = () => {
-    void exporter.current?.().catch(() => toast.error(t('exportFailed')));
+    const run = exporter.current;
+    // no registered export = the active tab has no data to export (still loading, empty, or failed)
+    if (!run) return void toast.warning(t('report.nothingToExport'));
+    void run().then(
+      () => toast.success(t('fileSaved')),
+      () => toast.error(t('exportFailed')),
+    );
   };
 
   const showGroup = tab === 'pnl' || tab === 'expenses';

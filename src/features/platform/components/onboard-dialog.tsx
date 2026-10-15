@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useInvalidToast } from '@/lib/form-errors';
 import { useCreateTenant, usePlans } from '../api';
 import { INDUSTRY_KEYS } from './common';
 
@@ -57,6 +59,13 @@ export function OnboardDialog({
     },
   });
   const branches = useFieldArray({ control: form.control, name: 'branches' });
+  const invalid = useInvalidToast<Values>();
+  // one tap less: start from the first active package instead of an empty choice
+  const firstPlan = (plans.data ?? []).find((p) => p.active)?.code;
+  const planCode = form.watch('planCode');
+  useEffect(() => {
+    if (firstPlan && !planCode) form.setValue('planCode', firstPlan);
+  }, [firstPlan, planCode, form]);
   const errors = form.formState.errors;
   const err = (key?: string) =>
     key ? <p className="mt-1 text-xs text-destructive">{tc(key, { defaultValue: key })}</p> : null;
@@ -75,7 +84,7 @@ export function OnboardDialog({
     form.reset();
     onOpenChange(false);
     onCreated(res.data.tenantId);
-  });
+  }, invalid);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -173,7 +182,7 @@ export function OnboardDialog({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  disabled={branches.fields.length === 1}
+                  blockedReason={branches.fields.length === 1 && t('onboard.needOneBranch')}
                   onClick={() => branches.remove(i)}
                   aria-label={tc('delete')}
                 >

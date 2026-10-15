@@ -6,6 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { type ApiError, isApiError } from '@/lib/api';
@@ -39,15 +40,17 @@ export function useInvalidate() {
 }
 
 /** Human message for any thrown error: server message (already localised) or the i18n fallback by code. */
+export function errorMessageOf(e: unknown, t: TFunction<'errors'>): string {
+  if (isApiError(e)) {
+    if (e.code === 'NETWORK') return t('NETWORK');
+    return e.message && e.message !== e.code ? e.message : t(e.code, { defaultValue: t('UNKNOWN') });
+  }
+  return t('UNKNOWN');
+}
+
 export function useErrorMessage() {
   const { t } = useTranslation('errors');
-  return (e: unknown): string => {
-    if (isApiError(e)) {
-      if (e.code === 'NETWORK') return t('NETWORK');
-      return e.message && e.message !== e.code ? e.message : t(e.code, { defaultValue: t('UNKNOWN') });
-    }
-    return t('UNKNOWN');
-  };
+  return (e: unknown): string => errorMessageOf(e, t);
 }
 
 /** Mutation that toasts the error by default. Pass `onError` to override. */

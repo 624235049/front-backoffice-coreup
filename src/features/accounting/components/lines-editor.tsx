@@ -194,7 +194,12 @@ export function LinesEditor({
                 size="icon"
                 className="text-muted-foreground hover:text-destructive"
                 aria-label={t('doc.line.remove')}
-                disabled={lines.length === 1 && l.description === '' && l.unitPriceMinor === null}
+                blockedReason={
+                  lines.length === 1 &&
+                  l.description === '' &&
+                  l.unitPriceMinor === null &&
+                  t('doc.line.lastEmpty')
+                }
                 onClick={() => {
                   const next = lines.filter((x) => x.key !== l.key);
                   onChange(next.length === 0 ? [emptyLine(defaultVatType)] : next);

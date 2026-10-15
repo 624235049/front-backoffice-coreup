@@ -91,7 +91,7 @@ function LogoPreview({ fileId }: { fileId: string | null }) {
     if (fileId)
       void fileDownloadUrl(fileId)
         .then((u) => live && setUrl(u))
-        .catch(() => undefined);
+        .catch(() => undefined); // best-effort preview: the logo is optional and the upload field reports real failures
     return () => {
       live = false;
     };
@@ -131,12 +131,12 @@ function CompanyForm({ company }: { company: Company }) {
       : undefined,
     banks: f.bankAccounts.some((b) => b.accountNo.trim() === '') ? t('settings.bankNoRequired') : undefined,
   };
-  const invalid = Object.values(errors).some(Boolean);
   const show = (e: string | undefined) => (touched ? e : undefined);
 
   const submit = async () => {
     setTouched(true);
-    if (invalid) return toast.error(t('doc.fixErrors'));
+    const firstError = Object.values(errors).find(Boolean);
+    if (firstError) return void toast.error(firstError, { id: 'settings-invalid' });
     const body: CompanyBody = {
       legalName: f.legalName.trim(),
       legalNameEn: f.legalNameEn.trim() || null,
@@ -487,8 +487,7 @@ function CompanyForm({ company }: { company: Company }) {
             <Button
               type="button"
               variant="outline"
-              size="sm"
-              disabled={f.bankAccounts.length >= 10}
+              blockedReason={f.bankAccounts.length >= 10 && t('settings.bankLimit')}
               onClick={() =>
                 set('bankAccounts', [
                   ...f.bankAccounts,
@@ -569,10 +568,12 @@ function CategoriesCard() {
                       className="flex min-w-0 flex-1 gap-2"
                       onSubmit={(e) => {
                         e.preventDefault();
+                        if (!editing.name.trim()) return void toast.warning(t('settings.categoryNameNeeded'));
                         if (editing.name.trim())
-                          void patch
-                            .mutateAsync({ id: c.id, body: { name: editing.name.trim() } })
-                            .then(() => setEditing(null));
+                          patch.mutate(
+                            { id: c.id, body: { name: editing.name.trim() } },
+                            { onSuccess: () => setEditing(null) },
+                          );
                       }}
                     >
                       <Input
@@ -582,10 +583,8 @@ function CategoriesCard() {
                         aria-label={t('settings.categoryName')}
                         onChange={(e) => setEditing({ id: c.id, name: e.target.value })}
                       />
-                      <Button type="submit" size="sm">
-                        {t('save')}
-                      </Button>
-                      <Button type="button" size="sm" variant="ghost" onClick={() => setEditing(null)}>
+                      <Button type="submit">{t('save')}</Button>
+                      <Button type="button" variant="ghost" onClick={() => setEditing(null)}>
                         {t('cancel')}
                       </Button>
                     </form>
@@ -605,17 +604,21 @@ function CategoriesCard() {
                       <Switch
                         checked={c.isActive}
                         aria-label={t('contacts.active')}
-                        onCheckedChange={(v) => void patch.mutateAsync({ id: c.id, body: { isActive: v } })}
+                        onCheckedChange={(v) => patch.mutate({ id: c.id, body: { isActive: v } })}
                       />
                       <Button
                         type="button"
-                        size="icon-sm"
+                        size="icon"
                         variant="ghost"
                         className="text-muted-foreground hover:text-destructive"
                         aria-label={t('doc.line.remove')}
-                        disabled={c.usedCount > 0}
-                        title={c.usedCount > 0 ? t('settings.categoryInUse') : undefined}
-                        onClick={() => void remove.mutateAsync(c.id)}
+                        blockedReason={c.usedCount > 0 && t('settings.categoryInUse')}
+                        disabled={remove.isPending}
+                        onClick={() =>
+                          remove.mutate(c.id, {
+                            onSuccess: () => toast.success(t('settings.categoryDeleted')),
+                          })
+                        }
                       >
                         <Trash2 />
                       </Button>
@@ -630,7 +633,17 @@ function CategoriesCard() {
           className="flex gap-2"
           onSubmit={(e) => {
             e.preventDefault();
-            if (name.trim()) void create.mutateAsync({ name: name.trim() }).then(() => setName(''));
+            if (!name.trim()) return void toast.warning(t('settings.categoryNameNeeded'));
+            if (name.trim())
+              create.mutate(
+                { name: name.trim() },
+                {
+                  onSuccess: () => {
+                    setName('');
+                    toast.success(t('settings.categoryAdded'));
+                  },
+                },
+              );
           }}
         >
           <Input
@@ -640,7 +653,12 @@ function CategoriesCard() {
             aria-label={t('settings.newCategory')}
             onChange={(e) => setName(e.target.value)}
           />
-          <Button type="submit" variant="outline" disabled={create.isPending || !name.trim()}>
+          <Button
+            type="submit"
+            variant="outline"
+            disabled={create.isPending}
+            blockedReason={!name.trim() && t('settings.categoryNameNeeded')}
+          >
             <Plus /> {t('settings.addCategory')}
           </Button>
         </form>

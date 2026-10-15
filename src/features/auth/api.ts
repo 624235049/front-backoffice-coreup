@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import { type ApiBody, type ApiItem, api, unwrap, unwrapData } from '@/lib/api';
+import { type ApiBody, api, unwrap } from '@/lib/api';
 import { meQueryKey } from '@/lib/me';
+import { useApiMutation } from '@/lib/query';
 
-/** Email + password. On success the session cookie is set; refresh /me so the route guards see it. */
+/** Email + password. On success the session cookie is set; refresh /me so the route guards see it. The sign-in, magic-link, forgot and reset forms show their failure inline (`meta.inlineError`): no toast. */
 export function useSignIn() {
   const qc = useQueryClient();
   return useMutation({
+    meta: { inlineError: true },
     mutationFn: (body: ApiBody<'/v1/auth/sign-in/email', 'post'>) =>
       unwrap(api.POST('/v1/auth/sign-in/email', { body })),
     onSuccess: () => qc.invalidateQueries({ queryKey: meQueryKey }),
@@ -14,11 +16,12 @@ export function useSignIn() {
 }
 
 export function useSignOut() {
-  return useMutation({ mutationFn: () => unwrap(api.POST('/v1/auth/sign-out')) });
+  return useApiMutation({ mutationFn: () => unwrap(api.POST('/v1/auth/sign-out')) });
 }
 
 export function useRequestMagicLink() {
   return useMutation({
+    meta: { inlineError: true },
     mutationFn: (body: ApiBody<'/v1/auth/sign-in/magic-link', 'post'>) =>
       unwrap(api.POST('/v1/auth/sign-in/magic-link', { body })),
   });
@@ -26,6 +29,7 @@ export function useRequestMagicLink() {
 
 export function useForgotPassword() {
   return useMutation({
+    meta: { inlineError: true },
     mutationFn: (body: ApiBody<'/v1/auth/password/forgot', 'post'>) =>
       unwrap(api.POST('/v1/auth/password/forgot', { body })),
   });
@@ -33,6 +37,7 @@ export function useForgotPassword() {
 
 export function useResetPassword() {
   return useMutation({
+    meta: { inlineError: true },
     mutationFn: (body: ApiBody<'/v1/auth/password/reset', 'post'>) =>
       unwrap(api.POST('/v1/auth/password/reset', { body })),
   });

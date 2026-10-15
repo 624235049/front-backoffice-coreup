@@ -11,6 +11,7 @@ import { useAfterSignIn, useRequestMagicLink, useSignIn } from '@/features/auth/
 import { AuthCard } from '@/features/auth/components/auth-card';
 import { TwoFactorChallenge } from '@/features/security/components/two-factor-challenge';
 import { isApiError } from '@/lib/api';
+import { useInvalidToast } from '@/lib/form-errors';
 import { useErrorMessage } from '@/lib/query';
 
 const schema = z.object({
@@ -27,6 +28,7 @@ export function SignInPage() {
   const signIn = useSignIn();
   const magic = useRequestMagicLink();
   const [failure, setFailure] = useState<unknown>(null);
+  const invalid = useInvalidToast<Values>();
   // password accepted but the account has 2FA: the code screen finishes the sign-in
   const [needsCode, setNeedsCode] = useState(false);
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } });
@@ -40,7 +42,7 @@ export function SignInPage() {
     } catch (e) {
       setFailure(e);
     }
-  });
+  }, invalid);
 
   const sendMagicLink = async () => {
     const ok = await form.trigger('email');

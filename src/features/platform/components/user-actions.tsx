@@ -163,7 +163,13 @@ export function ResetPasswordDialog({
   const [done, setDone] = useState<{ password: string; revoked: number } | null>(null);
 
   const problem = mode === 'typed' && password.length > 0 ? passwordProblem(password) : null;
-  const valid = reasonReady(reason) && (mode === 'generate' || (password.length > 0 && !problem));
+  const blockedReason = !reasonReady(reason)
+    ? t('reason.needed', { min: MIN_REASON })
+    : mode === 'typed' && password.length === 0
+      ? t('reset.typeFirst')
+      : problem
+        ? t(`reset.problem.${problem}`)
+        : null;
   const email = user.email ?? '';
 
   const close = (next: boolean) => {
@@ -290,7 +296,7 @@ export function ResetPasswordDialog({
               <Button variant="outline" onClick={() => close(false)} disabled={reset.isPending}>
                 {tc('cancel')}
               </Button>
-              <Button onClick={submit} disabled={!valid || reset.isPending}>
+              <Button onClick={submit} disabled={reset.isPending} blockedReason={blockedReason}>
                 {reset.isPending ? t('working') : t('reset.confirm')}
               </Button>
             </DialogFooter>
@@ -377,7 +383,8 @@ export function ResetLinkDialog({
           </Button>
           {link ? null : (
             <Button
-              disabled={!reasonReady(reason) || create.isPending}
+              disabled={create.isPending}
+              blockedReason={!reasonReady(reason) && t('reason.needed', { min: MIN_REASON })}
               onClick={() =>
                 create.mutate(
                   { id: user.id, reason: reason.trim() },
@@ -439,7 +446,8 @@ export function RevokeSessionsDialog({
           </Button>
           <Button
             variant="destructive"
-            disabled={!reasonReady(reason) || revoke.isPending}
+            disabled={revoke.isPending}
+            blockedReason={!reasonReady(reason) && t('reason.needed', { min: MIN_REASON })}
             onClick={() =>
               revoke.mutate(
                 { id: user.id, reason: reason.trim() },

@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForgotPassword } from '@/features/auth/api';
 import { AuthCard } from '@/features/auth/components/auth-card';
+import { useInvalidToast } from '@/lib/form-errors';
 
 const schema = z.object({ email: z.string().trim().toLowerCase().pipe(z.email('validation.email')) });
 type Values = z.infer<typeof schema>;
@@ -16,6 +17,7 @@ export function ForgotPasswordPage() {
   const { t } = useTranslation('auth');
   const forgot = useForgotPassword();
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '' } });
+  const invalid = useInvalidToast<Values>();
 
   return (
     <AuthCard title={t('forgot.title')} description={t('forgot.description')}>
@@ -26,7 +28,11 @@ export function ForgotPasswordPage() {
         </p>
       ) : (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((v) => forgot.mutate(v))} className="grid gap-4" noValidate>
+          <form
+            onSubmit={form.handleSubmit((v) => forgot.mutate(v), invalid)}
+            className="grid gap-4"
+            noValidate
+          >
             <FormField
               control={form.control}
               name="email"

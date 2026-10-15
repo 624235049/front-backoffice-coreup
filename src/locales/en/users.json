@@ -66,7 +66,8 @@
   "reason": {
     "label": "Reason (kept in the audit log)",
     "placeholder": "e.g. forgot the password and got no email; the user contacted us on LINE",
-    "hint": "At least {{min}} characters"
+    "hint": "At least {{min}} characters",
+    "needed": "Type a reason of at least {{min}} characters first (it is kept in the history)"
   },
   "teamWarning": "This is a CoreUp team account. Changing its password affects sign-in to this back office and is logged.",
   "error": {
@@ -91,7 +92,12 @@
     "messageLabel": "Message ready to send on LINE",
     "copyMessage": "Copy message",
     "onceWarning": "This password is shown once. After you close this window it cannot be shown again; the plain password is never stored.",
-    "doneClose": "Copied, close"
+    "doneClose": "Copied, close",
+    "typeFirst": "Type the new password first, or switch to \"generate\"",
+    "problem": {
+      "tooShort": "Password too short (min 8)",
+      "tooLong": "Password too long (max 128)"
+    }
   },
   "link": {
     "title": "Send set-password link to {{name}}",
