@@ -16,9 +16,10 @@
   },
   "industry": {
     "generic": "Generic",
-    "clinic": "Clinic",
+    "clinic": "Aesthetic clinic",
     "spa": "Spa",
-    "salon": "Salon"
+    "salon": "Salon",
+    "dental": "Dental clinic"
   },
   "module": {
     "crm": "Customers & appointments",

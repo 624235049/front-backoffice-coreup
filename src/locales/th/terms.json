@@ -7,5 +7,7 @@
   "branch": "สาขา",
   "package": "แพ็กเกจ",
   "followup": "งานติดตาม",
-  "resource": "ทรัพยากร"
+  "resource": "ทรัพยากร",
+  "handFee": "ค่าตอบแทน",
+  "shopShare": "ส่วนร้าน"
 }

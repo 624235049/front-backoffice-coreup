@@ -223,7 +223,7 @@ app.openapi(route({ method: 'post', path: '/appointments', permission: 'appointm
 |---|---|
 | `owner` | ทั้งหมดใน tenant |
 | `branch_manager` | ทุกอย่างในสาขาตัวเอง ยกเว้น `tenant:manage`, `roles:*` |
-| `front_desk` | customers, appointments, followups, messages:send, checklists:run, service_records:write |
+| `front_desk` | customers, appointments, followups, messages:send, checklists:run, service_records:write, bills, cash:manage (cash drawer + ปิดวัน) |
 | `practitioner` | appointments:read:own, followups:own, shifts:read:own, checklists:run, sops:read, service_records:read:own, payouts:read:own |
 | `staff` | shifts:read:own, checklists:run, sops:read |
 | `platform_owner` / `platform_admin` / `platform_consultant` / `platform_sales` | `platform:*` ตามหน้าที่ — รายละเอียดและขอบเขตการเห็นข้อมูลดู [09-roles-and-platform.md](09-roles-and-platform.md) |
@@ -247,7 +247,7 @@ app.openapi(route({ method: 'post', path: '/appointments', permission: 'appointm
 | `sop` | คู่มือ + ยืนยันการอ่าน |
 | `surveys` | แบบสอบถามพนักงาน + คะแนนสุขภาพ |
 | `reports` | แจ้งปัญหาไม่ระบุชื่อ |
-| `payouts` | บันทึกบริการ กติกาคิว ค่ามือ ทิป |
+| `payouts` | บันทึกบริการ ค่ามือ ทิป |
 | `kpi` | dashboard + export |
 | `checkout` | บิล รับเงิน PromptPay QR ใบเสร็จ ลิ้นชักเงิน (POS-lite, ดู 11) |
 | `audit` | เครื่องมือออดิท (ใช้โดยทีม CoreUp) |
@@ -325,8 +325,8 @@ Customer = {
 | GET/POST | `/service-categories` | |
 | GET/POST/PATCH/DELETE | `/package-products` · GET `/package-products/:id` | สินค้าคอร์ส `{serviceIds, sessions, validDays, priceMinor}` (DELETE = เลิกขาย `active=false`) |
 | POST | `/customers/:id/packages` | ขายคอร์สให้ลูกค้า → `customer_packages` (Idempotency-Key; วันหมดอายุคำนวณจาก `validDays` ตาม timezone ร้าน) |
-| GET | `/customers/:id/packages` | คงเหลือ + วันหมดอายุ + `status` (active/exhausted/expired) |
-| POST | `/customers/:id/packages/:packageId/use` `{serviceId}` | ตัด 1 ครั้ง · 422 `PACKAGE_NOT_USABLE` `details.reason` = `PACKAGE_EXPIRED`/`PACKAGE_EXHAUSTED`/`SERVICE_NOT_COVERED` |
+| GET | `/customers/:id/packages` | คงเหลือ + วันหมดอายุ + `status` (active/exhausted/expired) + `uses[]` ประวัติการใช้ (ใหม่→เก่า, `reversed` = คืนครั้งแล้ว) · timeline มี `kind=package_use` |
+| POST | `/customers/:id/packages/:packageId/use` `{serviceId, performerMembershipId?, usedAt?, note?, branchId?}` | ตัด 1 ครั้ง + บันทึกประวัติ (`customer_package_uses`: วันไหน/บริการอะไร/ใครทำ) · 422 `PACKAGE_NOT_USABLE` `details.reason` = `PACKAGE_EXPIRED`/`PACKAGE_EXHAUSTED`/`SERVICE_NOT_COVERED` · 422 `PERFORMER_REQUIRED` เมื่อเปิดโมดูล payouts (สร้าง service record ราคา 0 ให้ช่างด้วย) · `usedAt` ห้ามอนาคตและห้ามก่อนวันซื้อ |
 | GET/POST/PATCH/DELETE | `/customers/:id/notes[/:noteId]` | "ข้อควรรู้" ≤ 500 ตัวอักษร (ไม่ใช่ข้อมูลการรักษา) · `pinned` → `customers.has_caution` |
 | GET/PUT | `/members/:id/skills` · GET `/member-skills` | ตารางทักษะ `member_skills` (`learning`/`can_do`/`can_teach`) · matrix พนักงาน × บริการ |
 
@@ -339,7 +339,7 @@ Customer = {
 | GET/PATCH | `/appointments/:id` | เลื่อน/แก้ (If-Match) → reschedule jobs |
 | POST | `/appointments/:id/status` | `{status, reason?}` เปลี่ยนสถานะตาม state machine |
 | GET | `/availability?branchId=&serviceId=&date=&memberId=` | ช่องว่าง (ใช้ทั้งหลังบ้านและ LIFF) |
-| GET | `/appointments/today-board?branchId=` | หน้าจอเคาน์เตอร์: นัดวันนี้ + สถานะยืนยัน + คิวถัดไป |
+| GET | `/appointments/today-board?branchId=` | หน้าจอเคาน์เตอร์: นัดวันนี้ + สถานะยืนยัน |
 | GET | `/appointments/:id/events` | ประวัติสถานะ (append-only) |
 | GET | `/appointments/:id/complete-preview?priceMinor&discountMinor&tipMinor&usePackageId` | กล่อง "ระบบจะทำต่อให้" ก่อนกดเสร็จ (ไม่เขียนข้อมูล) |
 | POST | `/appointments/:id/complete` | กด "เสร็จ" หนึ่งแตะ (Idempotency-Key): เดินสถานะถึง `completed` + ตัดคอร์ส (hold) + เปิดบิล (checkout) + service record (payouts) + งานติดตามตามแผนบริการ + `customers.nextDueAt`/`visitCount` + impact + outbox `appointment.completed` ใน transaction เดียว |
@@ -378,10 +378,19 @@ stateDiagram-v2
 
 | Method | Path | รายละเอียด |
 |---|---|---|
-| GET | `/followups?due=today&assignee=me&branchId=` | รายการต้องทัก/โทรวันนี้ |
+| GET | `/followups?due=today\|overdue\|upcoming\|due\|all&window=7&q=&assignee=me&branchId=` | `today` = ครบวันนี้, `overdue` = เกินกำหนด, `upcoming` = หลังวันนี้ภายใน `window` วัน (ค่าเริ่มต้น 7), `due` = เกินกำหนด+วันนี้, `all` = ทั้งหมด · `q` ค้นชื่อ/รหัสลูกค้า · แต่ละแถวมี `customerCode`, `phone` (เต็มเมื่อมี `customers:read`, ไม่งั้น `xxx-xxx-1234` + `phoneVisible:false`), `lastServiceName/At`, `customerFollowupsStopped` |
+| GET | `/followups/counts?window=` | จำนวนต่อแท็บ (วันนี้/เกินกำหนด/N วัน/ทั้งหมด) |
 | POST | `/followups` | สร้างเอง |
 | POST | `/followups/:id/complete` | `{outcome: 'ok'|'concern'|'no_answer'|'rebooked', note?}` → `concern` = สร้างงานด่วนให้หัวหน้า |
 | POST | `/followups/:id/snooze` `{until}` | |
+| POST | `/followups/:id/cancel` `{note?}` | ยกเลิกรายการเดียว (เก็บประวัติ, 409 ถ้าปิดไปแล้ว) |
+| GET/PUT | `/customers/:id/followup-state` | เลิกติดตามลูกค้าคนนี้ `{stopped, reason?}` — หยุดสร้าง follow-up อัตโนมัติ (post_care/no_show/rebook_due/lapsed/package_expiring) และยกเลิกรายการอัตโนมัติที่ค้าง; งานที่จดเอง/concern/complaint ไม่ถูกแตะ; เปิดกลับได้ (ไม่ย้อนรายการที่ยกเลิก); audit `customer.followups_stopped/resumed` |
+| GET/PUT | `/followups/settings` | แผนติดตามมาตรฐานของร้าน `{defaultPlan:[{afterDays,type,title}]}` (`tenants.settings.followups.defaultPlan`; ค่าเริ่มต้น 7 วัน "ถามอาการ" + 30 วัน "ชวนกลับมา") · บริการที่ `followupMode='default'` ใช้แผนนี้, `custom` ใช้ `followupPlan` ของตัวเอง, `none` ไม่ติดตาม |
+| GET/PUT | `/scheduling/reminder-settings` | เตือนพนักงานก่อนนัด `{enabled, offsetsMinutes:[30,10], notifyAssignee, notifyFrontDesk}` (`tenants.settings.staffReminders`; แก้ได้ด้วย `tenant:write`) |
+| GET | `/me/notifications?unread=&limit=` | กระดิ่งของฉัน + `unreadCount` (เห็นเฉพาะของตัวเอง) |
+| POST | `/me/notifications/read` `{ids}` หรือ `{all:true}` | ทำเครื่องหมายอ่านแล้ว |
+
+**บริการ (ตั้งค่า › บริการ)** เพิ่มจาก `/services`: `color`, `onlineBookable`, `followupMode`, `staffIds` (ใครทำได้ — บันทึกเป็นตารางทักษะ `can_do`; `requiredSkill=true` = เฉพาะคนที่เลือก) · `POST /services/:id/duplicate` · `POST /services/reorder` และ `POST /service-categories/reorder` `{ids}` (ลำดับใน `ids` = `sort`) · เก็บ = `DELETE` (active=false), เปิดกลับ = `PATCH {active:true}`
 
 **Messages**
 
@@ -462,13 +471,10 @@ stateDiagram-v2
 
 ข้อห้าม: ไม่เก็บ IP/user-agent ของผู้แจ้ง, เวลาเก็บแบบปัดเป็นชั่วโมง, เรื่องที่ผู้แจ้งระบุว่าเกี่ยวกับเจ้าของ (`category = about_owner`) ส่งให้ทีม CoreUp ที่ assign ร้านนี้แทน
 
-### 6.7 Payouts — คิว บริการ ค่ามือ `[M: payouts]`
+### 6.7 Payouts — บริการ ค่ามือ `[M: payouts]`
 
 | Method | Path | รายละเอียด |
 |---|---|---|
-| GET/PUT | `/rules/queue` | กติกาแบ่งคิว (JSON, version) ดู 05 §5 |
-| GET | `/queue/next?branchId=&serviceId=` | ใครคิวถัดไป + เหตุผล (`"เวียนลำดับ: คนถัดไปคือ แพร"`) |
-| POST | `/queue/assign` `{appointmentId|walkIn, memberId, reasonOverride?}` | บันทึกการจ่ายคิว (override ต้องใส่เหตุผล → audit) |
 | GET/PUT | `/rules/compensation` | สูตรค่ามือ/คอม/ทิป (JSON, version, `effectiveFrom`) |
 | POST | `/compensation/simulate` | ทดลองสูตรกับข้อมูลตัวอย่างก่อนบันทึก |
 | GET/POST/PATCH | `/service-records` | ใครทำอะไร ราคาเท่าไร ทิป ขายคอร์ส |
@@ -536,8 +542,8 @@ Worker: `platform.usage_daily` (02:30 ทุกคืน), `platform.weekly_repo
 | POST | `/liff/:tenantSlug/link` | liffToken | `{phone}` ผูกลูกค้า |
 | GET | `/liff/:tenantSlug/me/appointments` · `/me/packages` | liffToken | |
 | POST | `/liff/:tenantSlug/appointments/:id/confirm` · `/reschedule-request` · `/cancel` | liffToken | |
-| GET | `/liff/:tenantSlug/availability` | liffToken | ถ้าเปิด booking |
-| POST | `/liff/:tenantSlug/appointments` | liffToken + Idempotency | จองเอง |
+| GET | `/liff/:tenantSlug/booking/config` · `/services` · `/staff` · `/slots` · `/days` | — | ดูเวลาว่าง (ดู §12.1) |
+| POST | `/liff/:tenantSlug/booking/appointments` | liffToken + Idempotency | จองเอง (ดู §12.1) |
 | PATCH | `/liff/:tenantSlug/me/consent` | liffToken | |
 | POST | `/liff/feedback/:token` | token | ให้คะแนนหลังบริการ |
 
@@ -592,6 +598,7 @@ Worker: `platform.usage_daily` (02:30 ทุกคืน), `platform.weekly_repo
 | `messages` | ส่งข้อความตาม `message_jobs` | delayed job ตาม `sendAt`; เลื่อนออกนอกช่วงเวลาเงียบของร้าน |
 | `line-webhook` | ประมวลผล webhook | ทันที |
 | `followups` | สร้าง follow-up รายวัน (ถึงรอบ, หายไป 90 วัน, คอร์สใกล้หมด) | cron 06:00 ตาม timezone ร้าน |
+| `push` | `appointments.remind` — แจ้งพนักงานที่ได้รับนัด + หน้าร้านก่อนนัดเริ่ม (กระดิ่ง + Web Push; ค่าเริ่มต้น 30 และ 10 นาที, ไม่ซ้ำต่อนัด+เวลาเริ่ม+offset+คน) · `appointments.notify_event` — ลูกค้าจอง/ยกเลิกผ่าน LINE (จาก outbox `appointment.created` source=liff, `appointment.status_changed` actor=customer) | cron ทุก 1 นาที / ตาม event |
 | `kpi` | คำนวณ `kpi_snapshots` รายวัน/สัปดาห์/เดือน | cron 02:00 |
 | `health-score` | คำนวณคะแนน D1–D7 | เมื่อ survey ปิด + cron รายเดือน |
 | `checklists` | ตรวจรอบที่ค้าง | ทุก 15 นาที |
@@ -636,7 +643,7 @@ apps/api/src/
 
 | ระดับ | เครื่องมือ | ต้องมี |
 |---|---|---|
-| Unit | Vitest | `packages/domain` ครอบคลุม ≥ 90%: state machine นัด, availability, queue rules, compensation, health score, KPI, message scheduling + quiet hours |
+| Unit | Vitest | `packages/domain` ครอบคลุม ≥ 90%: state machine นัด, availability, compensation, health score, KPI, message scheduling + quiet hours |
 | Integration | Vitest + Postgres จริง (testcontainers หรือ DB ใน CI) | ทุก route: สิทธิ์, tenancy isolation, validation |
 | Contract | OpenAPI snapshot | PR ที่เปลี่ยน API ต้องเห็น diff |
 | E2E | Playwright | flow หลัก 5 เส้น: ลงนัด → LINE (mock) → ยืนยัน; เช็กลิสต์; ตอบแบบสอบถาม; ปิดงวดค่ามือ; lead จาก landing |
@@ -648,11 +655,14 @@ apps/api/src/
 
 | Method | Path | Permission · module | Notes |
 |---|---|---|---|
-| GET | `/daily-closes/draft?branchId=&date=&declaredCashMinor=&declaredTransferMinor=` | shifts:write · shifts | open items, expected takings, variance, owner-summary preview |
-| POST | `/daily-closes` | shifts:write · shifts | closes the day → outbox `daily_close.completed` + impact `owner_decision_delegated`; 409 `CLOSE_BLOCKED` / `ALREADY_CLOSED` |
+| GET | `/daily-closes/draft?branchId=&date=&declaredCashMinor=&declaredTransferMinor=` | shifts:write · shifts | open items, expected takings (cash = the open drawer's expected, else the last drawer session's), `drawer` (open drawer this close will close), the day's `cashMovements`, variance, owner-summary preview |
+| POST | `/daily-closes` | shifts:write · shifts | closes the day → outbox `daily_close.completed` + impact `owner_decision_delegated`; 409 `CLOSE_BLOCKED` / `ALREADY_CLOSED`; if the branch's drawer is still open it is closed in the same transaction with `declaredCashMinor` as the count (same expected, same variance; response `drawerClosed`) |
 | GET | `/daily-closes` · `/daily-closes/{id}` | shifts:read · shifts | history |
 | GET | `/reports/catalog` · `/reports/preview?key=&period=&branchId=` | kpi:read · core | definitions in `@coreup/reports`; preview path is a query (not `/reports/:key`) |
 | GET/POST | `/report-runs` · GET `/report-runs/{id}` | kpi:read · core | one run per (report, branch, period) |
+| GET | `/sales-reports/lines` · `/receipts` · `/payment-methods` · `/staff` · `/discounts` · `/outstanding` · `/cancelled` | kpi:read · checkout | รายงานยอดขายของเจ้าของ/หัวหน้า (`from`/`to` = วันที่ในเขตเวลาร้าน ≤ 400 วัน): รายการขายต่อบรรทัดบิล (ค่ามือ/คอมจากสมุดค่าตอบแทน, แยกช่องทางชำระตามสัดส่วน) พร้อม totals ทั้งช่วง + แบ่งหน้า `offset`/`limit` (≤ 5000 สำหรับ export Excel), ใบเสร็จต่อบิล, เงินเข้าต่อวัน×ช่องทาง, รายได้ต่อช่าง, ส่วนลด, ค้างชำระ, ยกเลิก/คืนเงิน — นิยามตัวเลขดู docs/08 §6.4 |
+| GET | `/sales-reports/lab-costs` · `/sales-reports/deposit-movements` | kpi:read · checkout | `lab-costs`: บรรทัดบิลที่ชำระแล้วที่มีค่าแลป (ค่าแลป `labCostMinor` + ชื่อแลป ต่อบรรทัด, ยอดหลังหักแลป, รวมต่อแลป); `deposit-movements`: สมุดมัดจำ — ทุกรายการรับ/ตัดใช้/คืนเข้า/คืนเงิน/ริบ พร้อมยอดคงเหลือของลูกค้าหลังรายการ + การ์ดสรุป (ยกมา, รับ, ตัดใช้, คืน, ริบ, คงเหลือปลายงวด) |
+| GET | `/sales-reports/summary?grain=day\|month\|year&period=` | kpi:read · checkout | dashboard สรุปยอด: งวดนี้ vs งวดก่อน vs ช่วงเดียวกันปีก่อน (basis points; เดือน/ปีที่ยังไม่จบเทียบเฉพาะ **วันเดียวกัน** เช่น 1–14 ต.ค. กับ 1–14 ก.ย. และ 1–14 ต.ค. ปีก่อน — `previous.partial`), กราฟรายชั่วโมง/วัน/เดือน, ช่องทางชำระ, หมวด, บริการขายดี 10 อันดับ, ช่างเด่น, ลูกค้าใหม่/เก่า, อัตราไม่มาตามนัด |
 | GET/PUT | `/report-subscriptions` | kpi:read · core | channels `line`/`email`/`in_app`; a never-configured report goes to its audience roles |
 | GET | `/me/today` | tenant:read · core | staff card |
 | GET | `/risk/summary` · `/risk/what-if?memberId=` · `/risk/backup-suggestions` · POST `/risk/assign-secondary` | members:write · core | `@coreup/domain/risk` |
@@ -669,17 +679,20 @@ Table style: Method · Path · permission · module · notes. Money is integer s
 | GET | `/bills?status=&branchId=&customerId=&q=&from=&to=` | bills:read · checkout | list (cursor); `from`/`to` are tenant-local dates |
 | POST | `/bills` | bills:write · checkout | `Idempotency-Key`; `{appointmentIds[], items[], customerId?, tipMinor?, branchId?}`; an appointment already on a non-void bill → 409 |
 | GET/PATCH | `/bills/{id}` | bills:read / bills:write · checkout | PATCH only while `open` (items replaced as a whole; editing items clears the discount); optional `If-Match: <version>` → 409 `VERSION_MISMATCH` |
-| POST | `/bills/{id}/discount` | bills:write · checkout | `{discountMinor | percentBp, reason}`; reason required (422 `CHECKOUT_RULE`); above the `discount` rule ceiling → `approvals` row (kind `discount`) and payment blocked (409 `APPROVAL_PENDING`); callers with `approvals:decide` are approved on the spot |
+| POST | `/bills/{id}/discount` | bills:write · checkout | `{discountMinor | percentBp, reason}`; reason required (422 `CHECKOUT_RULE`); above the `discount` rule ceiling → with the `approvals` module on: `approvals` row (kind `discount`) and payment blocked (409 `APPROVAL_PENDING`); with it off: 422 `CHECKOUT_RULE` `DISCOUNT_OVER_CEILING`; callers with `approvals:decide` are approved on the spot. The same gate (`checkDiscount`) guards appointment completion, walk-in completion and manual service records |
 | POST | `/bills/{id}/payments` | bills:write · checkout | `Idempotency-Key`; `{tenders:[{method, amountMinor, reference?, slipFileId?, customerPackageId?}], tipMinor?}`; cash needs an open drawer (409 `CASH_SESSION_REQUIRED`), only cash may overpay (change returned); paying the full amount closes the bill and issues the receipt (gap-free per branch) |
-| POST | `/bills/{id}/void` · `/bills/{id}/refund` | bills:write · checkout | `Idempotency-Key`; reason required; raises an `approvals` row (kind `void`/`refund`) decided in `/approvals/{id}/decide`; callers with `bills:void` are approved on the spot; paid bill voids refund the money (`method`) |
+| POST | `/bills/{id}/void` · `/bills/{id}/refund` | bills:write · checkout | `Idempotency-Key`; reason required; callers with `bills:void` (owner, branch manager) are approved on the spot, audited as self-approved (an `approvals` row born `approved`); anyone else raises an `approvals` row (kind `void`/`refund`) decided in `/approvals/{id}/decide` — but only with the `approvals` module on: with it off the request is refused 422 `CHECKOUT_RULE` `APPROVER_REQUIRED` ("ต้องให้เจ้าของร้านหรือหัวหน้าสาขาเป็นคนทำ") so no approval nobody can decide is ever created; paid bill voids refund the money (`method`) |
+| POST | `/bills/{id}/approvals/{approvalId}/decide` | bills:void · checkout | `{decision, note?}`; approve/reject a pending discount/void/refund from the bill page — same decision path as the inbox, works with the `approvals` module off |
+| POST | `/bills/{id}/approvals/{approvalId}/cancel` | bills:write · checkout | withdraw a pending void/refund (requester or `bills:void` holder); bill untouched, approval → `expired` |
 | GET | `/bills/{id}/receipt` | bills:read · checkout | receipt data for the print view |
 | POST | `/bills/{id}/receipt/send` | bills:write · checkout | `{via:'line'|'print'}`; `line` queues a `receipt` template message through the message worker (consent, quiet hours, dedupe `receipt:<billId>`) |
 | GET | `/public/receipts/{token}` | public | signed link carried by the LINE message → printable HTML |
 | POST | `/promptpay/qr` | bills:write · checkout | `{amountMinor, branchId?}` → EMVCo payload built from the PromptPay id; 409 `PROMPTPAY_NOT_CONFIGURED` |
 | GET/PUT | `/checkout/settings` | bills:read / tenant:write · checkout | PromptPay id/name (tenant default or per branch with `branchId`), prefixes |
 | GET | `/cash-sessions/current?branchId=` | bills:read · checkout | open session + running expected cash (null when closed) |
-| POST | `/cash-sessions/open` · `/cash-sessions/close` | bills:write · checkout | `Idempotency-Key`; one open session per branch (409 `CASH_SESSION_OPEN`); close `{countedMinor, note?}` → expected = float + cash taken − cash refunds, variance = counted − expected |
-| GET | `/cash-sessions` · `/cash-sessions/{id}` | cash:manage · checkout | history with variances |
+| POST | `/cash-sessions/open` · `/cash-sessions/close` | bills:write · checkout | `Idempotency-Key`; one open session per branch (409 `CASH_SESSION_OPEN`); close `{countedMinor, note?}` → expected = float + cash taken − cash refunds + pay-ins − pay-outs, variance = counted − expected |
+| POST | `/cash-sessions/movements` | cash:manage · checkout | `Idempotency-Key`; `{kind:'in'\|'out', amountMinor, reason ('supplies'\|'labor'\|'owner_deposit'\|'change_topup'\|'other'), note?}` (`in`: change_topup/other · `out`: supplies/labor/owner_deposit/other · `other` needs a note); needs an open drawer (409 `CASH_SESSION_REQUIRED`); a pay-out above the expected cash is 422 `CHECKOUT_RULE` `CASH_OUT_EXCEEDS_DRAWER`; audit `cash_movement.recorded` + outbox `cash_movement.recorded`; returns the live session |
+| GET | `/cash-sessions` · `/cash-sessions/{id}` | cash:manage · checkout | history with variances and pay-in / pay-out totals; `{id}` (and `/current`) also list the session's movements |
 | GET | `/imports/pos/systems` · `/imports/pos` | service_records:write · payouts | POS systems with the saved column mapping (`external_systems.config_enc`) · past imports (`imports` type `pos_daily`) |
 | POST | `/imports/pos/preview` | service_records:write · payouts | `{vendor, csv, dateFormat, amountUnit, columnMap?, defaultPerformerMembershipId?}` → detected/saved mapping, per-line service + staff match (exact, then pg_trgm fuzzy), status `ok|duplicate|unmatched|invalid`; nothing is saved |
 | POST | `/imports/pos/commit` | service_records:write · payouts | `Idempotency-Key`; `+ {overrides:[{line, serviceId?, membershipId?, skip?}], saveMapping}` → one `service_records` row per matched line (`custom_fields.source = 'import'`, commission via `service_record.created`); `external_refs` dedupe re-uploads |
@@ -690,7 +703,7 @@ Table style: Method · Path · permission · module · notes. Money is integer s
 
 2FA enforcement: when `TWO_FACTOR_ENFORCE=true` (default on in production only) every tenant route answers 403 `TWO_FACTOR_REQUIRED` to an `owner` / `platform_*` member whose user has not enabled 2FA; `/me` and `/auth/*` stay reachable so the user can set it up.
 
-Hooks other modules call: `openBillForAppointment` (appointment completion) and `applyCheckoutApproval` (approvals decide). Outbox events: `bill.created`, `bill.paid`, `bill.discount_applied`, `bill.discount_approved`, `bill.discount_rejected`, `bill.voided`, `bill.refunded`, `bill.void_rejected`, `bill.refund_rejected`, `approval.requested`, `cash_session.opened`, `cash_session.closed`, `import.completed`.
+Hooks other modules call: `openBillForAppointment` (appointment completion) and `applyCheckoutApproval` (approvals decide). Outbox events: `bill.created`, `bill.paid`, `bill.discount_applied`, `bill.discount_approved`, `bill.discount_rejected`, `bill.voided`, `bill.refunded`, `bill.void_rejected`, `bill.refund_rejected`, `approval.requested`, `cash_session.opened`, `cash_session.closed`, `cash_movement.recorded`, `import.completed`.
 
 ## M7 — endpoints เพิ่มเติมฝั่งร้าน (KPI / home / vacation / manual / billing / privacy / onboarding)
 
@@ -728,4 +741,67 @@ Module `messaging` (permissions `messages:read|send|templates`, channel accounts
 | POST | `/liff/:slug/session` · `/link` · `/appointments/:id/confirm` · `/reschedule-request` · `/cancel` · PATCH `/me/consent` | link = phone + matching name token (no SMS OTP provider yet) |
 | GET/POST | `/liff/feedback/:token` | HMAC token from the thank-you message; rating ≤ 3 opens a follow-up |
 
+### 12.1 จองคิวผ่าน LINE (LIFF กลาง) — endpoints as built
+
+ทุกร้านใช้ LIFF app กลางของ CoreUp (env `LIFF_ID`, Endpoint `<WEB_URL>/liff`): `https://liff.line.me/<LIFF_ID>/<slug>/book` (ถ้าไม่มี LIFF id ใช้ `<WEB_URL>/liff/<slug>/book`) — `liffId` ของ LINE OA ร้านเป็นแค่ตัวเลือก override `profile.liffId` ตกกลับไปใช้ `LIFF_ID` ร้านที่ไม่มี OA จองผ่านลิงก์/QR ได้ ข้อความยืนยันส่งทาง LINE เฉพาะลูกค้าที่ผูกกับ OA
+> ข้อควรระวัง: LINE userId ผูกกับ Provider ของ Login channel — การส่งข้อความหาลูกค้าด้วย OA ของร้านทำงานได้เมื่อ OA และ Login channel กลางอยู่ Provider เดียวกัน
+
+หน้าลูกค้า (ใต้ `/v1/liff/:slug/booking`, public, limit ต่อ IP+ร้าน: อ่าน 120/นาที รูป 300/นาที จอง/เลื่อน/สลิป 20/ชม. และ 10/ชม. ต่อ LINE user; slug ต้องเป็น `[a-z0-9-]`):
+
+| Method | Path | Auth | หมายเหตุ |
+|---|---|---|---|
+| GET | `/config` | — | ร้าน สาขา (เวลาเปิด แผนที่ กฎจองต่อสาขา) นโยบาย cover มัดจำ `enabled=false` เมื่อร้านยังไม่เปิดจองออนไลน์ |
+| GET | `/services?branchId` | — | เฉพาะบริการ active + `online_bookable` จัดกลุ่มตามหมวด พร้อม `depositMinor` |
+| GET | `/staff?branchId&serviceId` | — | เฉพาะคนที่ `customer-facing/มีทักษะ` และ `online_bookable`; `allowChoose=false` เมื่อกฎไม่ให้เลือกพนักงาน |
+| GET | `/slots?branchId&serviceId&memberId?&date` · `/days?…&month=YYYY-MM` | — | ใช้ `leadTimeMin`, `maxAdvanceDays`, `slotStepMin`, เฉพาะคนออนไลน์; ไม่ระบุ `memberId` = ใครก็ได้ (union ไม่ซ้ำ) `emptyReason`: `closed|full|too_soon|too_far` |
+| POST | `/appointments` | liffToken + `Idempotency-Key` | ครั้งแรกต้องส่ง `name` `phone` `consent=true` (ไม่งั้น `CONSENT_REQUIRED`); ตรวจ slot ใน tx เดียวกัน + DB exclusion constraint (แพ้ → 409 `APPOINTMENT_SLOT_TAKEN`; "ใครก็ได้" ลองคนถัดไป); `source='liff'`; `autoConfirm` → `confirmed` มิฉะนั้น `booked`; ต้องมัดจำ → `booked` + `deposit` (PromptPay payload); ค้างจองล่วงหน้าได้ ≤ 5 นัด |
+| POST | `/appointments/:id/reschedule` | liffToken | เลื่อนเองในช่วง cancellation window ไปยังเวลาที่เสนอ (`memberId` เว้น = คนเดิม, `null` = ใครก็ได้) |
+| POST | `/appointments/:id/deposit-slip/upload-url` → PUT → POST `/deposit-slip` `{fileId}` | liffToken | อัปโหลดสลิป (`files.purpose deposit_slip`) แล้วส่ง → `slip_submitted`; ถูกปฏิเสธแล้วส่งใหม่ได้ |
+| GET | `/images/:fileId` | — | 302 ไปรูปหน้าจอง (cover/บริการ/พนักงาน) เท่านั้น |
+
+`liffAppointment` (me/appointments) มี `branchId serviceId memberId canReschedule deposit` เพิ่ม; ยกเลิกเดิมใช้ `POST /liff/:slug/appointments/:id/cancel`
+
+หลังบ้าน (`/v1/online-booking/*`): `GET|PUT /settings` (`tenant:read|write`; ตัวเลขกฎบันทึกเป็น `rule_sets` booking ใหม่ทั้งร้าน, ที่เหลืออยู่ใน `tenants.settings.onlineBooking`), `GET /status` (เช็กลิสต์ `services_online staff_online hours_set line_oa_connected rich_menu_installed deposit_promptpay`), `GET /services` · `PUT /services/:id` `{onlineBookable?, imageFileId?}`, `GET /staff` · `PUT /staff/:id` `{onlineBookable?, nickname?, photoFileId?}`, `GET|POST|DELETE /rich-menu` (POST/DELETE ต้อง `tenant:manage`: สร้างริชเมนู 4 ช่อง จองคิว · นัดของฉัน · คอร์สของฉัน · ติดต่อร้าน ภาพ PNG 2500×843 ฝังในโค้ด อัปโหลด ตั้งเป็นค่าเริ่มต้น แล้วลบอันเก่า), `GET /share` (ลิงก์ + QR), `GET /deposits?status=` · `POST /deposits/:appointmentId/confirm` `{method, reference?}` (`bills:write`: บันทึก `deposits` จริง + ยืนยันนัด) · `POST …/reject` `{reason}`. `Appointment.onlineDeposit` แสดงสถานะ/สลิป (`files/{id}/download-url`, `bills:read`)
+
 Worker: outbox events `appointment.created|rescheduled|cancelled|status_changed|completed`, `rebook.due`, `package.expiring`, `customer.lapsed`, `customer.consent_revoked`, `customer.linked_line`, `message_job.created`, `followup.concern_raised` → jobs `message.plan`, `message.send`, `message.sweep` (cron 60 s), `line.webhook`, `message.notify_concern`. Other slices queue customer messages with `queueCustomerMessage()` from `@coreup/messaging`.
+
+## 6.13 CoreUp accounting — prefix `/v1/platform/accounting` `[M: platform]`
+
+ระบบบัญชีของบริษัท CoreUp เอง (ไม่ใช่ของร้านลูกค้า) ทุก route อยู่ใน tenant `coreup` สิทธิ์ `platform:accounting` — **`platform_owner` เท่านั้นโดยค่าเริ่มต้น** (ดู 09 §7) เงินเป็นสตางค์ วันที่ `YYYY-MM-DD` รายการ list ตอบ `{data, page:{nextCursor,hasMore}, totals?}` ทุกการเปลี่ยนแปลงลง `audit_logs` (`actor_type = 'platform'`, action `accounting.*`) Excel (.xlsx) สร้างฝั่งหน้าบ้านจาก JSON ของรายงาน
+
+| Method | Path | หมายเหตุ |
+|---|---|---|
+| GET/PUT | `/company` | โปรไฟล์บริษัท (เลขผู้เสียภาษี 13 หลักตรวจ checksum, สำนักงานใหญ่/สาขา, VAT จดทะเบียนหรือไม่ — default ไม่จด, คำนำหน้าเลข, รูปแบบเลข, บัญชีธนาคาร/พร้อมเพย์, ผู้ลงนาม, โลโก้ = `files.purpose accounting_file`) |
+| GET/POST | `/contacts` · GET/PATCH/DELETE `/contacts/{id}` · GET `/contacts/prefill?tenantId=` | ลูกค้า/ผู้ขาย/ทั้งสอง; ผูกกับร้านของ CoreUp ได้ (`linkedTenantId`, 1 ร้านต่อ 1 ผู้ติดต่อ); DELETE ได้เฉพาะที่ยังไม่ถูกใช้ (409 → ใช้ `isActive:false`); เบอร์/อีเมลเข้ารหัส |
+| GET/POST | `/items` · PATCH/DELETE `/items/{id}` | สินค้า/บริการ (ชนิด VAT `vat`/`none`/`exempt`) |
+| GET/POST | `/expense-categories` · PATCH/DELETE `/expense-categories/{id}` | seed 8 หมวดตอนสร้าง `acc_company`; ลบได้เฉพาะหมวดที่ยังไม่ถูกใช้ |
+| GET/POST | `/documents` · GET/PUT/DELETE `/documents/{id}` | ร่างแก้/ลบได้ ออกเลขแล้วแก้/ลบไม่ได้ (409 `RECORD_LOCKED`); list กรอง `type,status,contactId,q,from,to` + `totals` |
+| POST | `/documents/{id}/issue` | ออกเลขในทรานแซกชันเดียวกัน (`acc_sequences` FOR UPDATE); ใบเสร็จ/ใบกำกับภาษีที่สร้างตรง ๆ (ขายสด) ต้องส่ง `payment` ที่ชำระครบยอด |
+| POST | `/documents/{id}/void` `{reason}` | ยกเลิกหลังออกเลข เลขเดิมคงอยู่; ใบแจ้งหนี้ที่มีการรับชำระ/ใบลดหนี้ที่ใช้อยู่ต้อง void ก่อน (409) |
+| POST | `/documents/{id}/quotation-status` | `sent|accepted → accepted|rejected|expired` (หมดอายุคำนวณตอนเรียก list/get) |
+| POST | `/documents/{id}/convert` `{to:'invoice'|'credit_note', issue?}` | QT → IV, IV/TX → CN (คัดลอกรายการ) |
+| POST | `/documents/{id}/payments` | รับชำระใบแจ้งหนี้: `amountMinor` + `whtMinor` (ลูกค้าหัก) + ไฟล์หนังสือรับรอง; ออก RE (หรือ TX ถ้าจด VAT) ให้อัตโนมัติ; เกินยอดค้าง → 409 |
+| POST | `/payments/{id}/void` | ยกเลิกการรับชำระ + ใบเสร็จของมัน ใบแจ้งหนี้กลับเป็นค้างชำระ |
+| POST/GET | `/documents/{id}/pdf` (`?job=`) | `startPdf` → worker `pdf.render` (purpose `accounting_pdf`) เหมือนใบเสร็จของร้าน; `mode` = `original|copy|both` |
+| GET | `/sales` | ยอดขายรวม: เอกสารของเรา (ยกเว้นใบเสนอราคา) + ใบแจ้งหนี้ค่าแพ็กเกจ/ที่ปรึกษาที่ CoreUp ออกให้ร้าน (`source = shop_package|shop_engagement`, `readOnly:true`) + `totals` |
+| GET/POST | `/expenses` · GET/PUT/DELETE `/expenses/{id}` | ค่าใช้จ่าย (รายการ, VAT ซื้อ, หัก ณ ที่จ่ายที่เราหัก, สถานะจ่าย, ใบเสร็จ = `files.purpose expense_receipt`) |
+| GET | `/reports/dashboard` `?month=` | รายได้/ค่าใช้จ่าย/กำไรเดือนนี้เทียบเดือนก่อน, ลูกหนี้, เงินรับตามช่องทาง, กราฟ 12 เดือน |
+| GET | `/reports/profit-loss` `?from&to&granularity=month|year` | งบกำไรขาดทุนรายเดือน/ปี: รายได้ตามแหล่ง, ค่าใช้จ่ายตามหมวด |
+| GET | `/reports/expenses-by-category` | เหมือนข้างบนเฉพาะค่าใช้จ่าย |
+| GET | `/reports/receivables` `?asOf=` | ลูกหนี้ค้าง: 0–30 / 31–60 / 61–90 / >90 วันเกินกำหนด (ยังไม่ครบกำหนดอยู่ช่อง 0–30), รายเอกสาร + รายลูกค้า |
+| GET | `/reports/sales-tax` · `/reports/purchase-tax` | รายงานภาษีขาย/ซื้อรายเดือน (ภ.พ.30) |
+| GET | `/reports/withholding` | ภาษีหัก ณ ที่จ่าย: ลูกค้าหักเรา / เราหักผู้ขาย |
+
+**กติกาคำนวณ** (`packages/domain/src/accounting`): รายการ = `round(ราคา × จำนวน) − ส่วนลดรายการ` (จำนวนทศนิยมไม่เกิน 3 ตำแหน่ง) · ส่วนลดท้ายบิลกระจายตามสัดส่วนยอดรายการ (largest remainder ผลรวมตรงเป๊ะ) · VAT คิด **ครั้งเดียวจากยอดรวมที่ต้องเสียภาษี** ปัดครึ่งออกจากศูนย์ (ไม่คิดทีละบรรทัด): แยก VAT `vat = taxable × rate`, รวม VAT `vat = S × rate / (1+rate)` · `none`/`exempt` ไม่คิด VAT · หัก ณ ที่จ่ายคิดจากยอดก่อน VAT หลังส่วนลด (`ไม่หัก/1/2/3/5%`) · `net = total − wht` · ถ้าบริษัทไม่จด VAT เอกสารต้องเป็น `vatMode = none` และออกได้แต่ RE; ถ้าจด VAT ออกใบเสร็จตรง ๆ ได้เฉพาะ TX
+
+**เลขเอกสาร**: `{PREFIX}-{BE}{MM}-{SEQ}` เช่น `QT-256910-0001` (พ.ศ. + เดือน, ลำดับแยกตามชนิด+เดือน) ตั้งรูปแบบได้ใน `/company` โดยต้องมี `{SEQ}`, `{MM}` และ `{BE}|{CE}|{YY}` ร่างยังไม่มีเลข เลขออกตอน `issue` ในทรานแซกชันเดียวกับการเปลี่ยนสถานะ
+
+**รายได้ (ไม่รวม VAT, ตามเกณฑ์ค้างรับ)** = ใบแจ้งหนี้ที่ออกแล้ว (ไม่ void) + ใบเสร็จ/ใบกำกับที่สร้างตรง ๆ (ขายสด) − ใบลดหนี้ + `invoices` ของร้านสถานะ `issued|paid|overdue` อ่านตรงจากตาราง ใบเสร็จที่ออกจากการรับชำระ/ใบเสนอราคา/ร่าง/void **ไม่นับ** เพื่อไม่ให้นับซ้ำ · ค่าใช้จ่าย = ยอดรวม − VAT ซื้อที่เคลมได้
+
+
+## Checkout — มัดจำ / รอชำระเงิน / วิธีรับเงิน (BillUx)
+- `GET /v1/deposits`, `POST /v1/deposits`, `GET /v1/deposits/{id}`, `GET /v1/deposits/{id}/receipt`, `POST /v1/deposits/{id}/refund|forfeit` (ต้อง `bills:void`), `GET /v1/customers/{id}/deposit-balance`
+- `GET /v1/checkout/waiting` — บิลที่เปิดอยู่ + นัดที่เสร็จแล้วแต่ยังไม่เปิดบิล
+- `GET|PUT /v1/checkout/settings` เพิ่ม `paymentMethods[{method,enabled,label}]` และ `cardFeeBp`
+- `POST /v1/appointments` รับ `deposit` และ `saleMembershipId`; `PATCH /v1/bills/{id}/items/{itemId}` ตั้ง `saleMembershipId` ได้
+- ชำระบิลด้วย `method: deposit` (ตัดมัดจำเก่าสุดก่อน); บรรทัดบริการพิมพ์เอง = `kind: service`, `refId: null`, `name`, `categoryId?`

@@ -158,6 +158,7 @@ create table branch_resources (
   type text not null check (type in ('room','bed','chair','station','other')),
   capacity int not null default 1 check (capacity > 0),
   active boolean not null default true,
+  sort int not null default 0, -- shop-defined order of rooms (migration 0023)
   unique (tenant_id, id),
   foreign key (tenant_id, branch_id) references branches(tenant_id, id) on delete cascade
 );
@@ -299,6 +300,8 @@ create table customers (
   last_visit_at timestamptz, next_due_at timestamptz, visit_count int not null default 0 check (visit_count >= 0),
   created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
   deleted_at timestamptz, erased_at timestamptz,
+  -- migration 0021: set = no automatic follow-ups for this customer (reversible)
+  followups_stopped_at timestamptz, followups_stopped_by uuid,
   unique (tenant_id, id),
   unique (tenant_id, code),
   foreign key (tenant_id, owner_membership_id) references memberships(tenant_id, id),
@@ -333,6 +336,12 @@ create table services (
   sop_id uuid,
   active boolean not null default true, sort int not null default 0,
   custom_fields jsonb not null default '{}',
+  -- migration 0021: card colour, bookable from LINE, follow-up mode (default = shop plan | custom = followup_plan | none)
+  color text check (color is null or color ~ '^#[0-9a-fA-F]{6}$'),
+  online_bookable boolean not null default true,
+  followup_mode text not null default 'default' check (followup_mode in ('default','custom','none')),
+  -- migration 0024: default lab cost (ค่าแลป) of one session, satang
+  lab_cost_minor bigint not null default 0 check (lab_cost_minor >= 0),
   unique (tenant_id, id),
   foreign key (tenant_id, category_id) references service_categories(tenant_id, id)
 );
@@ -365,6 +374,90 @@ create table customer_packages (
   foreign key (tenant_id, customer_id) references customers(tenant_id, id),
   foreign key (tenant_id, package_product_id) references package_products(tenant_id, id)
 );
+-- migration 0016: ประวัติการใช้คอร์ส 1 แถวต่อ 1 ครั้ง (sessions_used ยังเป็นตัวนับ); void/refund ที่คืนครั้งให้ใส่ reversed_at
+create table customer_package_uses (
+  id uuid primary key, tenant_id uuid not null, customer_package_id uuid not null, customer_id uuid not null,
+  branch_id uuid, service_id uuid, performer_membership_id uuid,
+  used_at timestamptz not null,
+  source text not null check (source in ('manual','appointment','bill','backfill')),
+  appointment_id uuid, bill_id uuid, service_record_id uuid,
+  note text, created_by uuid, created_at timestamptz not null default now(),
+  reversed_at timestamptz, reversed_reason text,
+  unique (tenant_id, id),
+  foreign key (tenant_id, customer_package_id) references customer_packages(tenant_id, id) on delete cascade,
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id),
+  foreign key (tenant_id, service_id) references services(tenant_id, id),
+  foreign key (tenant_id, performer_membership_id) references memberships(tenant_id, id)
+);
+create index customer_package_uses_package_idx on customer_package_uses (customer_package_id, used_at desc);
+create index customer_package_uses_customer_idx on customer_package_uses (tenant_id, customer_id, used_at desc);
+
+-- migration 0019: ข้อมูลลูกค้าเสริม (รหัสลูกค้า, ช่องทางรู้จัก, แท็ก, ข้อมูลสุขภาพ PDPA, นับการมา, ผูก LINE, แสตมป์สะสม)
+create table customer_settings (
+  tenant_id uuid primary key references tenants(id) on delete cascade,
+  code_prefix text not null default 'C',
+  code_pattern text not null default '{BE2}{MM}{####}',   -- {BE2} {BE4} {CE2} {CE4} {MM} {DD} + เลขรัน #### (เว้นว่าง = ค่าเริ่มต้น)
+  sources jsonb,                                          -- [{key,label}] null = ค่าเริ่มต้นของระบบ
+  loyalty jsonb,                                          -- {enabled,stampsRequired,countMode,rewardText,expiryMonths} null = ปิด
+  updated_at timestamptz not null default now()
+);
+create table customer_code_counters (                     -- เลขรันไม่ขาดช่วง: แถวนี้ถูกล็อกตอนออกรหัส
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  scope text not null,                                    -- รหัสที่ render แล้วโดยไม่รวมเลขรัน (เช่น C6910)
+  last_seq int not null default 0 check (last_seq >= 0),
+  primary key (tenant_id, scope)
+);
+create table customer_tags (                              -- แท็กของร้าน; customers.tags เก็บ "ชื่อ" แท็ก
+  id uuid primary key, tenant_id uuid not null references tenants(id) on delete cascade,
+  name text not null, color text not null default '#0ea5e9' check (color ~ '^#[0-9a-fA-F]{6}$'),
+  created_at timestamptz not null default now(),
+  unique (tenant_id, id)
+);
+create unique index customer_tags_name_uq on customer_tags (tenant_id, lower(name));
+create table customer_health (                            -- ข้อมูลอ่อนไหว PDPA: เข้ารหัส + ต้องมีวันที่/ผู้บันทึกความยินยอม
+  tenant_id uuid not null, customer_id uuid not null,
+  data_enc bytea not null,                                -- JSON {allergies[],allergyNote,chronicConditions[],medicationsNote}
+  has_allergy boolean not null default false, has_chronic boolean not null default false,
+  consent_at timestamptz not null, consent_by uuid,
+  updated_by uuid, updated_at timestamptz not null default now(),
+  primary key (tenant_id, customer_id),
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id) on delete cascade
+);
+create table customer_visits (                            -- 1 แถวต่อ ลูกค้า/วัน (ตามเวลาร้าน) = 1 ครั้งที่มา
+  tenant_id uuid not null, customer_id uuid not null, visit_date date not null,
+  source text not null check (source in ('appointment','bill')), ref_id uuid,
+  created_at timestamptz not null default now(),
+  primary key (tenant_id, customer_id, visit_date),
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id) on delete cascade
+);
+create index customer_visits_ref_idx on customer_visits (tenant_id, source, ref_id);
+create table customer_link_tokens (                       -- ลิงก์เชิญผูก LINE เฉพาะลูกค้า (เก็บ hash, ใช้ครั้งเดียว)
+  id uuid primary key, tenant_id uuid not null, customer_id uuid not null,
+  token_hash text not null unique, expires_at timestamptz not null, used_at timestamptz,
+  created_by uuid, created_at timestamptz not null default now(),
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id) on delete cascade
+);
+create index customer_link_tokens_customer_idx on customer_link_tokens (tenant_id, customer_id);
+create table loyalty_redemptions (
+  id uuid primary key, tenant_id uuid not null, customer_id uuid not null,
+  stamps_used int not null check (stamps_used > 0), reward_text text not null, note text,
+  redeemed_by uuid, redeemed_at timestamptz not null default now(),
+  unique (tenant_id, id),
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id)
+);
+create index loyalty_redemptions_customer_idx on loyalty_redemptions (tenant_id, customer_id, redeemed_at desc);
+create table loyalty_stamps (                             -- 1 แถวต่อ 1 แสตมป์; ใช้ได้ = ไม่ reversed, ไม่ถูกแลก, ไม่หมดอายุ
+  id uuid primary key, tenant_id uuid not null, customer_id uuid not null,
+  source text not null check (source in ('bill','manual')), bill_id uuid, reason text,
+  earned_at timestamptz not null default now(), expires_at timestamptz,
+  created_by uuid,
+  reversed_at timestamptz, reversed_reason text, reversed_by uuid,
+  redemption_id uuid,
+  foreign key (tenant_id, customer_id) references customers(tenant_id, id),
+  foreign key (tenant_id, redemption_id) references loyalty_redemptions(tenant_id, id)
+);
+create index loyalty_stamps_customer_idx on loyalty_stamps (tenant_id, customer_id, earned_at);
+create index loyalty_stamps_bill_idx on loyalty_stamps (tenant_id, bill_id);
 
 create table appointments (
   id uuid primary key, tenant_id uuid not null, branch_id uuid not null,
@@ -372,7 +465,7 @@ create table appointments (
   membership_id uuid, resource_id uuid,
   start_at timestamptz not null, end_at timestamptz not null,
   status text not null default 'booked' check (status in ('booked','confirmed','reschedule_requested','checked_in','in_service','completed','no_show','cancelled')),
-  source text not null default 'front_desk' check (source in ('front_desk','liff','phone','walk_in','import','waitlist')),
+  source text not null default 'front_desk' check (source in ('front_desk','liff','phone','walk_in','import')),
   is_requested_member boolean not null default false,
   customer_package_id uuid,
   note text, custom_fields jsonb not null default '{}',
@@ -417,17 +510,6 @@ create table followups (
 );
 create index on followups (tenant_id, status, due_at);
 create index on followups (tenant_id, assignee_membership_id, status);
-
-create table waitlist_entries (
-  id uuid primary key, tenant_id uuid not null, branch_id uuid not null, customer_id uuid,
-  display_name text not null, party_size int not null default 1 check (party_size between 1 and 20),
-  service_id uuid, requested_membership_id uuid,
-  joined_at timestamptz not null default now(), called_at timestamptz, served_at timestamptz, left_at timestamptz,
-  status text not null default 'waiting' check (status in ('waiting','called','serving','done','left')),
-  source text not null default 'front_desk' check (source in ('front_desk','liff_qr')),
-  foreign key (tenant_id, branch_id) references branches(tenant_id, id)
-);
-create index on waitlist_entries (tenant_id, branch_id, status, joined_at);
 
 -- ---------- 3. Messaging ----------
 create table channel_accounts (
@@ -514,7 +596,7 @@ create table sop_acknowledgements (sop_id uuid references sops(id) on delete cas
 
 create table approvals (                             -- กล่องอนุมัติเดียว ใช้กับทุกเรื่อง
   id uuid primary key, tenant_id uuid not null references tenants(id) on delete cascade, branch_id uuid,
-  kind text not null check (kind in ('leave','shift_swap','discount','void','refund','queue_override','other')),
+  kind text not null check (kind in ('leave','shift_swap','discount','void','refund','other')),
   ref_id uuid not null, requested_by uuid not null, approver_role text not null,
   status text not null default 'pending' check (status in ('pending','approved','rejected','expired')),
   decided_by uuid, decided_at timestamptz, note text, created_at timestamptz not null default now()
@@ -554,17 +636,16 @@ create table customer_complaints (id uuid primary key, tenant_id uuid not null, 
 -- ---------- 6. Rules, payouts, checkout ----------
 create table rule_sets (
   id uuid primary key, tenant_id uuid not null references tenants(id) on delete cascade,
-  kind text not null check (kind in ('queue','compensation','booking','discount')),
+  kind text not null check (kind in ('compensation','booking','discount')),
   branch_id uuid, schema_version int not null, body jsonb not null,
   effective_from date not null, created_by uuid, created_at timestamptz not null default now(),
   unique (tenant_id, kind, branch_id, effective_from)
 );
-create table queue_assignments (id uuid primary key, tenant_id uuid not null, branch_id uuid not null, appointment_id uuid, waitlist_entry_id uuid, membership_id uuid not null, rule_set_id uuid references rule_sets(id), reason text not null, overridden boolean not null default false, override_reason text, assigned_by uuid, created_at timestamptz not null default now(), check (not overridden or override_reason is not null));
-create table queue_state (tenant_id uuid not null, branch_id uuid not null, date date not null, state jsonb not null, primary key (branch_id, date));
 
 create table bills (
   id uuid primary key, tenant_id uuid not null, branch_id uuid not null,
-  number text not null, customer_id uuid, appointment_ids uuid[] not null default '{}',
+  number text not null, customer_id uuid, walk_in_name text,   -- walk_in_name: ชื่อลูกค้าเดินเข้าที่ไม่มีใน CRM (บิลจากคิว)
+  appointment_ids uuid[] not null default '{}',
   status text not null default 'open' check (status in ('open','paid','void','refunded','partially_refunded')),
   subtotal_minor bigint not null default 0, discount_minor bigint not null default 0, discount_reason text, discount_approved_by uuid,
   total_minor bigint not null default 0, tip_minor bigint not null default 0,
@@ -575,11 +656,24 @@ create table bills (
   check (total_minor = subtotal_minor - discount_minor),
   check (discount_minor = 0 or discount_reason is not null)
 );
-create table bill_items (id uuid primary key, tenant_id uuid not null, bill_id uuid not null, kind text not null check (kind in ('service','product','package_sale','package_use')), ref_id uuid, name text not null, qty int not null default 1 check (qty > 0), unit_price_minor bigint not null check (unit_price_minor >= 0), discount_minor bigint not null default 0, performer_membership_id uuid, sale_membership_id uuid, foreign key (tenant_id, bill_id) references bills(tenant_id, id) on delete cascade);
-create table payments (id uuid primary key, tenant_id uuid not null, bill_id uuid not null, method text not null check (method in ('cash','transfer','promptpay','card_external','package','other')), amount_minor bigint not null check (amount_minor > 0), reference text, slip_file_id uuid, confirmed_by uuid, confirmed_at timestamptz, foreign key (tenant_id, bill_id) references bills(tenant_id, id));
+create table bill_items (id uuid primary key, tenant_id uuid not null, bill_id uuid not null, kind text not null check (kind in ('service','product','package_sale','package_use')), ref_id uuid, name text not null, qty int not null default 1 check (qty > 0), unit_price_minor bigint not null check (unit_price_minor >= 0), discount_minor bigint not null default 0, performer_membership_id uuid, sale_membership_id uuid, lab_cost_minor bigint not null default 0 check (lab_cost_minor >= 0) /* migration 0024: lab cost of the whole line */, lab_vendor text, foreign key (tenant_id, bill_id) references bills(tenant_id, id) on delete cascade);
+create table payments (id uuid primary key, tenant_id uuid not null, bill_id uuid not null, method text not null check (method in ('cash','transfer','promptpay','card_external','package','deposit','other')), amount_minor bigint not null check (amount_minor > 0), reference text, slip_file_id uuid, confirmed_by uuid, confirmed_at timestamptz, foreign key (tenant_id, bill_id) references bills(tenant_id, id));
 create table receipts (id uuid primary key, tenant_id uuid not null, bill_id uuid not null unique, number text not null, issued_at timestamptz not null default now(), delivered_via text, file_id uuid);
 create table cash_sessions (id uuid primary key, tenant_id uuid not null, branch_id uuid not null, opened_by uuid not null, opened_at timestamptz not null, opening_float_minor bigint not null default 0, closed_by uuid, closed_at timestamptz, counted_minor bigint, expected_minor bigint, variance_minor bigint, note text);
 create unique index one_open_cash_session on cash_sessions (branch_id) where closed_at is null;
+-- เงินเข้า/ออกลิ้นชักระหว่างกะ (ซื้อของใช้ ค่ามือ ส่งเจ้าของ/ฝากธนาคาร เติมเงินทอน) — append-only, นับรวมในเงินสดที่ควรมี
+create table cash_movements (id uuid primary key, tenant_id uuid not null, branch_id uuid not null, session_id uuid not null references cash_sessions(id), kind text not null check (kind in ('in','out')), amount_minor bigint not null check (amount_minor > 0), reason text not null check (reason in ('supplies','labor','owner_deposit','change_topup','deposit_in','deposit_out','other')), note text, deposit_id uuid, created_by uuid not null, created_at timestamptz not null default now(), check ((kind = 'in' and reason in ('change_topup','deposit_in','other')) or (kind = 'out' and reason in ('supplies','labor','owner_deposit','deposit_out','other'))), check (reason <> 'other' or coalesce(length(btrim(note)), 0) > 0));
+create index cash_movements_session_idx on cash_movements (session_id, created_at);
+create index cash_movements_branch_idx on cash_movements (tenant_id, branch_id, created_at);
+-- 0020 มัดจำ (deposits): held until applied on a bill (payments.method = 'deposit'), refunded or forfeited
+create table deposits (id uuid primary key, tenant_id uuid not null, branch_id uuid not null, customer_id uuid not null, appointment_id uuid references appointments(id), amount_minor bigint not null check (amount_minor > 0), remaining_minor bigint not null, method text not null check (method in ('cash','transfer','promptpay','card_external','other')), reference text, receipt_number text not null, note text, status text not null default 'held' check (status in ('held','applied','refunded','forfeited')), taken_by uuid, taken_at timestamptz not null default now(), unique (tenant_id, id), check (remaining_minor >= 0 and remaining_minor <= amount_minor), foreign key (tenant_id, customer_id) references customers(tenant_id, id));
+-- 0020: appointments.sale_membership_id uuid (ผู้ดูแล / sales person of the booking, copied to its bill line)
+create index deposits_customer_idx on deposits (tenant_id, customer_id, taken_at desc);
+create index deposits_branch_idx on deposits (tenant_id, branch_id, taken_at desc);
+-- append-only trail: apply (on a bill) / refund / forfeit / restore (a voided bill gives the deposit back)
+create table deposit_uses (id uuid primary key, tenant_id uuid not null, deposit_id uuid not null, kind text not null check (kind in ('apply','refund','forfeit','restore')), amount_minor bigint not null check (amount_minor > 0), bill_id uuid, reason text, method text, created_by uuid, created_at timestamptz not null default now(), foreign key (tenant_id, deposit_id) references deposits(tenant_id, id));
+create index deposit_uses_deposit_idx on deposit_uses (deposit_id, created_at);
+create index deposit_uses_day_idx on deposit_uses (tenant_id, created_at);
 create table refunds (id uuid primary key, tenant_id uuid not null, bill_id uuid not null, amount_minor bigint not null check (amount_minor > 0), reason text not null, approved_by uuid not null, created_at timestamptz not null default now());
 -- เลขเอกสารต่อเนื่องต่อสาขา (ห้ามข้าม)
 create table doc_sequences (tenant_id uuid not null, branch_id uuid not null, doc_type text not null, prefix text not null, next_value bigint not null default 1, primary key (branch_id, doc_type));
@@ -589,6 +683,7 @@ create table service_records (
   customer_id uuid, service_id uuid not null, membership_id uuid not null, assistant_membership_ids uuid[] not null default '{}',
   performed_at timestamptz not null, price_minor bigint not null check (price_minor >= 0), discount_minor bigint not null default 0,
   paid_minor bigint not null default 0, tip_minor bigint not null default 0, customer_package_id uuid,
+  lab_cost_minor bigint not null default 0 check (lab_cost_minor >= 0), -- migration 0024: `paid_after_lab` compensation base
   is_requested_by_customer boolean not null default false, sale_membership_id uuid,
   custom_fields jsonb not null default '{}', payout_period_id uuid, locked boolean not null default false,
   unique (tenant_id, id), unique (appointment_id),
@@ -608,7 +703,7 @@ create table baselines (tenant_id uuid not null references tenants(id) on delete
 -- "ระบบช่วยอะไรไปแล้ว" — นับทุกงานที่ระบบทำแทนคน (แสดงให้ร้านเห็นคุณค่า)
 create table impact_events (
   id bigserial primary key, tenant_id uuid not null, branch_id uuid,
-  kind text not null check (kind in ('reminder_sent','confirm_by_customer','followup_auto_created','overlap_prevented','queue_auto_assigned','payout_auto_calculated','checklist_completed','owner_decision_delegated','reschedule_self_service','report_auto_sent','no_show_recovered')),
+  kind text not null check (kind in ('reminder_sent','confirm_by_customer','followup_auto_created','overlap_prevented','payout_auto_calculated','checklist_completed','owner_decision_delegated','reschedule_self_service','report_auto_sent','no_show_recovered')),
   minutes_saved numeric(6,2) not null default 0,       -- ค่าประมาณต่องาน (ตั้งค่าได้ต่อร้าน)
   ref jsonb, created_at timestamptz not null default now()
 );
@@ -706,6 +801,53 @@ create table push_subscriptions (
   unique (tenant_id, membership_id, endpoint),
   foreign key (tenant_id, membership_id) references memberships(tenant_id, id) on delete cascade
 );
+-- migration 0021: in-app bell for staff (appointment reminders, new / cancelled LINE bookings)
+create table notifications (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  membership_id uuid not null,
+  kind text not null check (kind in ('appointment_soon','booking_new','booking_cancelled')),
+  title text not null, body text, url text,
+  ref_type text, ref_id uuid,
+  dedupe_key text,
+  read_at timestamptz,
+  created_at timestamptz not null default now(),
+  foreign key (tenant_id, membership_id) references memberships(tenant_id, id) on delete cascade
+);
+create unique index notifications_dedupe_uq on notifications (tenant_id, dedupe_key) where dedupe_key is not null;
+create index notifications_member_idx on notifications (tenant_id, membership_id, created_at desc);
+create index notifications_unread_idx on notifications (tenant_id, membership_id) where read_at is null;
+alter table notifications enable row level security;
+alter table notifications force row level security;
+create policy tenant_isolation on notifications using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+-- migration 0022: LINE self-booking (shared LIFF app)
+alter table memberships add column online_bookable boolean not null default true;
+alter table memberships add column online_nickname text;
+alter table memberships add column online_photo_file_id uuid references files(id) on delete set null;
+alter table services add column image_file_id uuid references files(id) on delete set null;
+alter table channel_accounts add column rich_menu_id text;
+alter table channel_accounts add column rich_menu_installed_at timestamptz;
+create table booking_deposit_requests (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  appointment_id uuid not null,
+  amount_minor bigint not null check (amount_minor > 0),
+  status text not null default 'awaiting_slip' check (status in ('awaiting_slip','slip_submitted','confirmed','rejected')),
+  slip_file_id uuid references files(id) on delete set null,
+  slip_submitted_at timestamptz,
+  reject_reason text,
+  deposit_id uuid,
+  reviewed_by uuid,
+  reviewed_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (tenant_id, appointment_id),
+  foreign key (tenant_id, appointment_id) references appointments(tenant_id, id) on delete cascade
+);
+create index booking_deposit_requests_status_idx on booking_deposit_requests (tenant_id, status, created_at desc);
+alter table booking_deposit_requests enable row level security;
+alter table booking_deposit_requests force row level security;
+create policy tenant_isolation on booking_deposit_requests using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
 alter table sop_acknowledgements add column tenant_id uuid;
 update sop_acknowledgements a set tenant_id = s.tenant_id from sops s where s.id = a.sop_id;
 alter table sop_acknowledgements alter column tenant_id set not null;
@@ -792,6 +934,10 @@ create trigger appointment_events_append_only before update or delete on appoint
   for each row execute function app_forbid_mutation();
 create trigger audit_logs_append_only before update or delete on audit_logs
   for each row execute function app_forbid_mutation();
+create trigger cash_movements_append_only before update or delete on cash_movements
+  for each row execute function app_forbid_mutation();
+create trigger deposit_uses_append_only before update or delete on deposit_uses
+  for each row execute function app_forbid_mutation();
 
 -- 0007_refund_method.sql
 -- Refunds record how money was paid back (cash drawer expected value, docs/11 §4)
@@ -827,3 +973,270 @@ $$;
 revoke all on function app_last_invoice_number(text) from public;
 grant execute on function app_last_invoice_number(text) to coreup_app, coreup_platform;
 
+-- 0017_accounting.sql
+-- CoreUp's own accounting (team console, /v1/platform/accounting). Every row belongs to the platform tenant
+-- (`coreup`) and sits under tenant RLS like any shop table. Idempotent: production runs migrate on every deploy.
+-- Money = bigint satang. Document numbers are allocated gap-free from acc_sequences (row locked FOR UPDATE).
+
+create table if not exists acc_company (
+  tenant_id uuid primary key references tenants(id) on delete cascade,
+  legal_name text not null,
+  legal_name_en text,
+  tax_id text,
+  branch_code text not null default '00000',
+  branch_name text,
+  address text,
+  phone text,
+  email text,
+  website text,
+  logo_file_id uuid,
+  vat_registered boolean not null default false,
+  vat_rate_bp integer not null default 700,
+  prefixes jsonb not null default '{"quotation":"QT","invoice":"IV","receipt":"RE","taxInvoice":"TX","creditNote":"CN"}'::jsonb,
+  number_format text not null default '{PREFIX}-{BE}{MM}-{SEQ}',
+  seq_digits smallint not null default 4,
+  default_due_days integer not null default 30,
+  quotation_valid_days integer not null default 30,
+  default_note text,
+  bank_accounts jsonb not null default '[]'::jsonb,
+  signers jsonb not null default '{"issuer":null,"approver":null}'::jsonb,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now()
+);
+create table if not exists acc_contacts (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  kind text not null,
+  name text not null,
+  tax_id text,
+  branch_code text,
+  address text,
+  contact_person text,
+  phone_enc bytea,
+  email_enc bytea,
+  note text,
+  linked_tenant_id uuid references tenants(id),
+  is_active boolean not null default true,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint acc_contacts_kind_check check (kind in ('customer','vendor','both'))
+);
+create index if not exists acc_contacts_name_idx on acc_contacts (tenant_id, name);
+create table if not exists acc_items (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  code text,
+  name text not null,
+  description text,
+  unit text,
+  unit_price_minor bigint not null default 0,
+  vat_type text not null default 'vat',
+  is_active boolean not null default true,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint acc_items_vat_type_check check (vat_type in ('vat','none','exempt')),
+  constraint acc_items_price_check check (unit_price_minor >= 0)
+);
+create index if not exists acc_items_name_idx on acc_items (tenant_id, name);
+create table if not exists acc_expense_categories (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  name text not null,
+  sort integer not null default 0,
+  is_active boolean not null default true,
+  created_at timestamp with time zone not null default now()
+);
+create unique index if not exists acc_expense_categories_name_uq on acc_expense_categories (tenant_id, name);
+create table if not exists acc_sequences (
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  doc_type text not null,
+  period text not null,
+  next_value integer not null default 1,
+  primary key (tenant_id, doc_type, period),
+  constraint acc_sequences_doc_type_check check (doc_type in ('quotation','invoice','receipt','tax_invoice','credit_note')),
+  constraint acc_sequences_next_check check (next_value >= 1)
+);
+create table if not exists acc_documents (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  type text not null,
+  number text,
+  status text not null default 'draft',
+  doc_date date not null,
+  due_date date,
+  contact_id uuid references acc_contacts(id),
+  contact_snapshot jsonb not null,
+  issuer_snapshot jsonb,
+  reference text,
+  vat_mode text not null,
+  vat_rate_bp integer not null default 700,
+  wht_bp integer not null default 0,
+  lines_total_minor bigint not null default 0,
+  discount_minor bigint not null default 0,
+  taxable_minor bigint not null default 0,
+  exempt_minor bigint not null default 0,
+  vat_minor bigint not null default 0,
+  total_minor bigint not null default 0,
+  wht_minor bigint not null default 0,
+  net_minor bigint not null default 0,
+  settled_minor bigint not null default 0,
+  credited_minor bigint not null default 0,
+  note text,
+  internal_note text,
+  ref_document_id uuid,
+  converted_to_id uuid,
+  receipt_for_payment_id uuid,
+  issued_at timestamp with time zone,
+  issued_by uuid,
+  voided_at timestamp with time zone,
+  voided_by uuid,
+  void_reason text,
+  created_by uuid,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint acc_documents_type_check check (type in ('quotation','invoice','receipt','tax_invoice','credit_note')),
+  constraint acc_documents_status_check check (status in ('draft','sent','accepted','rejected','expired','issued','partially_paid','paid','void')),
+  constraint acc_documents_vat_mode_check check (vat_mode in ('exclusive','inclusive','none')),
+  constraint acc_documents_wht_check check (wht_bp in (0,100,200,300,500)),
+  constraint acc_documents_number_check check (status = 'draft' or number is not null)
+);
+create unique index if not exists acc_documents_number_uq on acc_documents (tenant_id, type, number);
+create index if not exists acc_documents_list_idx on acc_documents (tenant_id, type, doc_date);
+create index if not exists acc_documents_contact_idx on acc_documents (tenant_id, contact_id);
+create index if not exists acc_documents_ref_idx on acc_documents (ref_document_id);
+create table if not exists acc_document_lines (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  document_id uuid not null references acc_documents(id) on delete cascade,
+  position integer not null,
+  item_id uuid,
+  description text not null,
+  qty numeric(14,3) not null,
+  unit text,
+  unit_price_minor bigint not null,
+  discount_minor bigint not null default 0,
+  vat_type text not null,
+  amount_minor bigint not null,
+  constraint acc_document_lines_vat_type_check check (vat_type in ('vat','none','exempt')),
+  constraint acc_document_lines_qty_check check (qty > 0)
+);
+create index if not exists acc_document_lines_doc_idx on acc_document_lines (document_id, position);
+create table if not exists acc_payments (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  document_id uuid not null references acc_documents(id),
+  paid_on date not null,
+  method text not null,
+  account text,
+  reference text,
+  amount_minor bigint not null,
+  wht_minor bigint not null default 0,
+  wht_certificate_file_id uuid,
+  receipt_id uuid,
+  note text,
+  status text not null default 'active',
+  voided_at timestamp with time zone,
+  voided_by uuid,
+  void_reason text,
+  created_by uuid,
+  created_at timestamp with time zone not null default now(),
+  constraint acc_payments_method_check check (method in ('cash','transfer','promptpay','card','cheque')),
+  constraint acc_payments_status_check check (status in ('active','void')),
+  constraint acc_payments_amount_check check (amount_minor >= 0 and wht_minor >= 0 and amount_minor + wht_minor > 0)
+);
+create index if not exists acc_payments_doc_idx on acc_payments (document_id);
+create index if not exists acc_payments_paid_on_idx on acc_payments (tenant_id, paid_on);
+create table if not exists acc_expenses (
+  id uuid primary key,
+  tenant_id uuid not null references tenants(id) on delete cascade,
+  contact_id uuid references acc_contacts(id),
+  vendor_name text not null,
+  vendor_tax_id text,
+  vendor_branch_code text,
+  expense_date date not null,
+  category_id uuid not null references acc_expense_categories(id),
+  reference text,
+  description text,
+  vat_mode text not null,
+  vat_rate_bp integer not null default 700,
+  vat_claimable boolean not null default true,
+  wht_bp integer not null default 0,
+  lines jsonb not null default '[]'::jsonb,
+  lines_total_minor bigint not null default 0,
+  discount_minor bigint not null default 0,
+  taxable_minor bigint not null default 0,
+  exempt_minor bigint not null default 0,
+  vat_minor bigint not null default 0,
+  total_minor bigint not null default 0,
+  wht_minor bigint not null default 0,
+  net_minor bigint not null default 0,
+  payment_status text not null default 'unpaid',
+  paid_on date,
+  payment_method text,
+  payment_account text,
+  receipt_file_id uuid,
+  note text,
+  created_by uuid,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  constraint acc_expenses_vat_mode_check check (vat_mode in ('exclusive','inclusive','none')),
+  constraint acc_expenses_wht_check check (wht_bp in (0,100,200,300,500)),
+  constraint acc_expenses_payment_status_check check (payment_status in ('unpaid','paid')),
+  constraint acc_expenses_paid_check check (payment_status = 'unpaid' or paid_on is not null)
+);
+create index if not exists acc_expenses_list_idx on acc_expenses (tenant_id, expense_date);
+create index if not exists acc_expenses_category_idx on acc_expenses (category_id);
+alter table acc_company enable row level security;
+alter table acc_company force row level security;
+drop policy if exists tenant_isolation on acc_company;
+create policy tenant_isolation on acc_company
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_company to coreup_app, coreup_platform;
+alter table acc_contacts enable row level security;
+alter table acc_contacts force row level security;
+drop policy if exists tenant_isolation on acc_contacts;
+create policy tenant_isolation on acc_contacts
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_contacts to coreup_app, coreup_platform;
+alter table acc_items enable row level security;
+alter table acc_items force row level security;
+drop policy if exists tenant_isolation on acc_items;
+create policy tenant_isolation on acc_items
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_items to coreup_app, coreup_platform;
+alter table acc_expense_categories enable row level security;
+alter table acc_expense_categories force row level security;
+drop policy if exists tenant_isolation on acc_expense_categories;
+create policy tenant_isolation on acc_expense_categories
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_expense_categories to coreup_app, coreup_platform;
+alter table acc_sequences enable row level security;
+alter table acc_sequences force row level security;
+drop policy if exists tenant_isolation on acc_sequences;
+create policy tenant_isolation on acc_sequences
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_sequences to coreup_app, coreup_platform;
+alter table acc_documents enable row level security;
+alter table acc_documents force row level security;
+drop policy if exists tenant_isolation on acc_documents;
+create policy tenant_isolation on acc_documents
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_documents to coreup_app, coreup_platform;
+alter table acc_document_lines enable row level security;
+alter table acc_document_lines force row level security;
+drop policy if exists tenant_isolation on acc_document_lines;
+create policy tenant_isolation on acc_document_lines
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_document_lines to coreup_app, coreup_platform;
+alter table acc_payments enable row level security;
+alter table acc_payments force row level security;
+drop policy if exists tenant_isolation on acc_payments;
+create policy tenant_isolation on acc_payments
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_payments to coreup_app, coreup_platform;
+alter table acc_expenses enable row level security;
+alter table acc_expenses force row level security;
+drop policy if exists tenant_isolation on acc_expenses;
+create policy tenant_isolation on acc_expenses
+  using (tenant_id = app_tenant_id()) with check (tenant_id = app_tenant_id());
+grant select, insert, update, delete on acc_expenses to coreup_app, coreup_platform;

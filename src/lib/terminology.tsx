@@ -12,6 +12,8 @@ export const TERM_KEYS = [
   'package',
   'followup',
   'resource',
+  'handFee',
+  'shopShare',
 ] as const;
 export type TermKey = (typeof TERM_KEYS)[number];
 
@@ -53,7 +55,7 @@ export function Term({ k }: { k: TermKey }) {
 
 /**
  * Translation hook that always supplies the term variables, so any message may use
- * `{{customer}} {{customers}} {{service}} {{appointment}} {{practitioner}} {{branch}} {{package}} {{followup}} {{resource}}`.
+ * `{{customer}} {{customers}} {{service}} {{appointment}} {{practitioner}} {{branch}} {{package}} {{followup}} {{resource}} {{handFee}} {{shopShare}}`.
  * Explicit options win over terms.
  */
 export function useT(ns?: string | string[]) {

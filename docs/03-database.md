@@ -10,8 +10,8 @@
 |---|---|
 | **Composite FK `(tenant_id, id)`** — แถวลูกอ้างข้ามร้านไม่ได้ในระดับ DB | `custom_fields jsonb` + `field_definitions` ต่อร้าน |
 | **RLS + FORCE** ทุกตาราง tenant, ตารางที่มีแถวกลางอ่านได้ทั้งของร้านและของกลาง | `metadata jsonb` บนตารางหลัก สำหรับข้อมูลที่ยังไม่แน่ใจ (ย้ายเป็นคอลัมน์เมื่อใช้จริง) |
-| **Exclusion constraint** กันนัดชนทั้งพนักงานและห้อง | `rule_sets` (คิว ค่ามือ การจอง ส่วนลด) มี `schema_version` + `effective_from` ไม่ทับของเดิม |
-| **CHECK** ทุก enum ตัวเลข ช่วงเวลา (`end_at > start_at`, ส่วนลด ≤ ยอด, ส่วนลดต้องมีเหตุผล, override คิวต้องมีเหตุผล) | `industry_templates (key, version)` ร้านอ้างเวอร์ชันที่ใช้ |
+| **Exclusion constraint** กันนัดชนทั้งพนักงานและห้อง | `rule_sets` (ค่ามือ การจอง ส่วนลด) มี `schema_version` + `effective_from` ไม่ทับของเดิม |
+| **CHECK** ทุก enum ตัวเลข ช่วงเวลา (`end_at > start_at`, ส่วนลด ≤ ยอด, ส่วนลดต้องมีเหตุผล) | `industry_templates (key, version)` ร้านอ้างเวอร์ชันที่ใช้ |
 | **Unique ตามธุรกิจ** (เลขบิลต่อสาขา, 1 service record ต่อ 1 นัด, `message_jobs.dedupe_key` กันส่งซ้ำ, ลิ้นชักเปิดได้ทีละ 1) | `external_systems` + `external_refs` ต่อ POS/โปรแกรมคลินิกได้ทุกยี่ห้อ |
 | **Append-only** สำหรับเงินและประวัติ (`commission_ledger`, `appointment_events`, `audit_logs`) | enum เป็น `text + check` เพิ่มค่าได้ด้วย migration สั้น ๆ |
 | **Optimistic lock** `version` + trigger | `impact_events.kind`, `kpi_snapshots.kpi_key` เพิ่มชนิดใหม่ได้ไม่ต้องเพิ่มตาราง |
@@ -153,10 +153,11 @@ index: `(tenant_id, phone_hash)`, `(tenant_id, line_user_id)`, `(tenant_id, next
 **`service_categories`** · **`services`**
 `services: id, tenant_id, category_id, name, description, duration_min, buffer_min, price_minor, rebook_after_days, followup_plan jsonb ([{afterDays:1, type:'message', templateKey:'post_care_d1'}, ...]), resource_type, required_skill bool, active, sort, custom_fields jsonb`
 
-**`package_products`** · **`customer_packages`** · **`package_usages`**
+**`package_products`** · **`customer_packages`** · **`customer_package_uses`**
 `package_products: id, tenant_id, name, service_ids uuid[], sessions int, valid_days int, price_minor, active`
 `customer_packages: id, tenant_id, customer_id, package_product_id, sessions_total, sessions_used, purchased_at, expires_at, sold_by_membership_id, branch_id`
-`package_usages: id, tenant_id, customer_package_id, appointment_id, used_at`
+`customer_package_uses: id, tenant_id, customer_package_id, customer_id, branch_id, service_id, performer_membership_id (null = ข้อมูลเก่า), used_at, source ('manual'|'appointment'|'bill'|'backfill'), appointment_id, bill_id, service_record_id, note, created_by, created_at, reversed_at, reversed_reason` (migration 0016)
+ทุกทางที่ตัดคอร์ส (ปุ่ม "ใช้ 1 ครั้ง", ปิดคิวที่ใช้คอร์ส, จ่ายบิลด้วย tender `package`) เขียน 1 แถวต่อ 1 ครั้ง ใน transaction เดียวกับ `sessions_used + 1`; void/คืนเงินเต็มที่คืนครั้งให้ จะใส่ `reversed_at` (ไม่ลบแถว). `sessions_used` ยังเป็นตัวนับหลัก. ข้อมูลเก่า backfill จาก service_records / payments(package) / audit `customer_package.session_used`
 
 **`appointments`**
 `id, tenant_id, branch_id, customer_id, service_id, membership_id (null = ยังไม่กำหนด), resource_id, start_at, end_at, status, source ('front_desk'|'liff'|'phone'|'walk_in'|'import'), customer_package_id, note, custom_fields jsonb, version, created_by, created_at, updated_at`
@@ -234,14 +235,11 @@ index: `(status, send_at)`, `(tenant_id, appointment_id)`
 ### 3.6 Payouts
 
 **`rule_sets`** — กติกาทุกชนิดเก็บที่เดียว
-`id, tenant_id, kind ('queue'|'compensation'|'booking'), branch_id (null = ทุกสาขา), schema_version, body jsonb, effective_from date, created_by, created_at`
+`id, tenant_id, kind ('compensation'|'booking'|'discount'), branch_id (null = ทุกสาขา), schema_version, body jsonb, effective_from date, created_by, created_at`
 > ไม่ update แถวเดิม — สร้างแถวใหม่เสมอ คำนวณย้อนหลังใช้กติกาที่มีผล ณ วันนั้น
 
-**`queue_assignments`** `id, tenant_id, branch_id, appointment_id, membership_id, rule_set_id, reason, overridden bool, override_reason, assigned_by, created_at`
-**`queue_state`** `tenant_id, branch_id, date, state jsonb` (ตัวชี้ลำดับเวียน)
-
 **`service_records`**
-`id, tenant_id, branch_id, appointment_id, customer_id, service_id, membership_id, assistant_membership_ids uuid[], performed_at, price_minor, discount_minor, paid_minor, tip_minor, customer_package_id, is_requested_by_customer bool, sale_membership_id, custom_fields jsonb, payout_period_id, locked bool`
+`id, tenant_id, branch_id, appointment_id, customer_id, service_id, membership_id, assistant_membership_ids uuid[], performed_at, price_minor, discount_minor, paid_minor, lab_cost_minor (ค่าแลปของบริการนี้ — ฐาน `paid_after_lab` = paid − lab), tip_minor, customer_package_id, is_requested_by_customer bool, sale_membership_id, custom_fields jsonb, payout_period_id, locked bool`
 
 **`commission_ledger`** — ผลการคำนวณ (append-only)
 `id, tenant_id, membership_id, service_record_id, rule_set_id, component ('base'|'hand_fee'|'commission'|'tip'|'bonus'|'adjustment'), amount_minor, explain jsonb, created_at`
@@ -276,6 +274,26 @@ PK (`tenant_id`, `branch_id`, `kpi_key`, `grain`, `period_start`) — ใช้ 
 | 0008 | `message_jobs.vars` | ข้อความครั้งเดียวที่มีตัวแปรของตัวเอง (เช่น ใบเสร็จ) |
 | 0009 | RLS บน `vacation_tests`, `invoices` | route ฝั่งร้านอ่าน/เขียนผ่าน `withTenantTx`; ฝั่ง platform ใช้ role bypassrls |
 | 0010 | `app_last_invoice_number(prefix)` + policy `owner_lookup` บน invoices | เลขใบแจ้งหนี้ `INV-YYYYMM-####` เป็นของทั้งระบบ แต่ตารางถูก RLS แยกร้าน |
+| 0017 | ตาราง `acc_company`, `acc_contacts`, `acc_items`, `acc_expense_categories`, `acc_sequences`, `acc_documents`, `acc_document_lines`, `acc_payments`, `acc_expenses` (tenant_id = tenant `coreup`, RLS ทุกตาราง) | ระบบบัญชีของ CoreUp เอง (§3.10, 02 §6.13) |
+| 0018 | ลบ `waitlist_entries`, `queue_assignments`, `queue_state`; `rule_sets.kind` ตัด `queue`; `approvals.kind` ตัด `queue_override` (ลบแถวเก่า); `appointments.source` ตัด `waitlist` (แถวเก่า → `walk_in`); `impact_events.kind` ตัด `queue_auto_assigned`; ตัด module/permission `queue` และ KPI `fairness_score`/`queue_override_rate` | ถอดระบบคิว walk-in ออกจากผลิตภัณฑ์ (08 §4) |
+| 0021 | `services.{color,online_bookable,followup_mode}`; `customers.{followups_stopped_at,followups_stopped_by}`; ตาราง `notifications` (RLS, unique `(tenant_id, dedupe_key)`) | บริการตั้งเองได้ (สี/จองออนไลน์/แผนติดตามต่อบริการ), เลิกติดตามลูกค้าได้ (reversible), กระดิ่งแจ้งเตือนพนักงาน (นัดใกล้ถึง, ลูกค้าจอง/ยกเลิกผ่าน LINE) |
+| 0022 | `memberships.{online_bookable,online_nickname,online_photo_file_id}`; `services.image_file_id`; `channel_accounts.{rich_menu_id,rich_menu_installed_at}`; ตาราง `booking_deposit_requests` (RLS, unique `(tenant_id, appointment_id)`, status `awaiting_slip→slip_submitted→confirmed/rejected`) | จองคิวผ่าน LINE: เปิด/ปิดพนักงานที่ลูกค้าเลือกได้ + ชื่อเล่น/รูป, รูปบริการ, ริชเมนูของ OA, มัดจำออนไลน์ (สลิป → พนักงานยืนยัน → บันทึกเป็น `deposits` จริง) การตั้งค่าอื่น ๆ อยู่ใน `tenants.settings.onlineBooking` + `rule_sets` kind `booking` |
+
+### 3.10 บัญชีของ CoreUp เอง (`acc_*`, migration 0017)
+
+ทุกตารางมี `tenant_id` = tenant แพลตฟอร์ม (`coreup`) และเปิด RLS + `FORCE` + policy `tenant_isolation` เหมือนตารางร้าน (route ใช้ `withPlatformTx` แล้วกรอง `tenant_id` เอง) เงินเป็น `bigint` สตางค์ ไม่มีการลบแถวเอกสารที่ออกเลขแล้ว (ยกเลิกด้วยสถานะ `void` + เหตุผล)
+
+**`acc_company`** (1 แถวต่อ tenant, สร้างเมื่อเรียกใช้ครั้งแรก พร้อม seed หมวดค่าใช้จ่าย) `tenant_id PK, legal_name, legal_name_en, tax_id, branch_code ('00000' = สำนักงานใหญ่), branch_name, address, phone, email, website, logo_file_id, vat_registered (default false), vat_rate_bp (700), prefixes jsonb ({quotation,invoice,receipt,taxInvoice,creditNote}), number_format ('{PREFIX}-{BE}{MM}-{SEQ}'), seq_digits (4), default_due_days, quotation_valid_days, default_note, bank_accounts jsonb, signers jsonb`
+**`acc_contacts`** `id, tenant_id, kind ('customer'|'vendor'|'both'), name, tax_id, branch_code, address, contact_person, phone_enc, email_enc (เข้ารหัส), note, linked_tenant_id → tenants (ร้านของ CoreUp), is_active`
+**`acc_items`** สินค้า/บริการ `id, tenant_id, code, name, description, unit, unit_price_minor, vat_type ('vat'|'none'|'exempt'), is_active`
+**`acc_expense_categories`** `id, tenant_id, name (unique ต่อ tenant), sort, is_active`
+**`acc_sequences`** `PK (tenant_id, doc_type, period 'YYYYMM'), next_value` — ล็อก `FOR UPDATE` ตอนออกเลข (เลขไม่ข้าม, rollback แล้วคืนเลข)
+**`acc_documents`** ใบเสนอราคา/ใบแจ้งหนี้/ใบเสร็จ/ใบกำกับภาษี/ใบลดหนี้ — `type ('quotation'|'invoice'|'receipt'|'tax_invoice'|'credit_note'), number (null ตอนร่าง; unique ต่อ tenant+type), status ('draft'|'sent'|'accepted'|'rejected'|'expired'|'issued'|'partially_paid'|'paid'|'void'), doc_date, due_date (ใบแจ้งหนี้ = ครบกำหนด · ใบเสนอราคา = ใช้ได้ถึง), contact_id, contact_snapshot jsonb, issuer_snapshot jsonb (ถ่ายตอนออกเลข — เอกสารที่ออกแล้วไม่เปลี่ยนตามข้อมูลบริษัท/ลูกค้าที่แก้ภายหลัง), reference, vat_mode ('exclusive'|'inclusive'|'none'), vat_rate_bp, wht_bp (0|100|200|300|500), lines_total_minor, discount_minor, taxable_minor, exempt_minor, vat_minor, total_minor, wht_minor, net_minor, settled_minor (Σ ชำระ + WHT), credited_minor (Σ ใบลดหนี้), note, internal_note, ref_document_id (ใบต้นทาง: QT→IV, IV→RE/CN), converted_to_id, receipt_for_payment_id, issued_at/by, voided_at/by, void_reason`
+**`acc_document_lines`** `id, tenant_id, document_id (cascade), position, item_id, description, qty numeric(14,3), unit, unit_price_minor, discount_minor, vat_type, amount_minor`
+**`acc_payments`** การรับชำระ `id, tenant_id, document_id, paid_on, method ('cash'|'transfer'|'promptpay'|'card'|'cheque'), account, reference, amount_minor (เงินที่ได้รับจริง), wht_minor (ลูกค้าหัก ณ ที่จ่าย), wht_certificate_file_id, receipt_id, note, status ('active'|'void'), voided_*`
+**`acc_expenses`** `id, tenant_id, contact_id, vendor_name, vendor_tax_id, vendor_branch_code, expense_date, category_id, reference, description, vat_mode, vat_rate_bp, vat_claimable, wht_bp, lines jsonb, (lines_total/discount/taxable/exempt/vat/total/wht/net)_minor, payment_status ('unpaid'|'paid'), paid_on, payment_method, payment_account, receipt_file_id, note`
+
+ใบแจ้งหนี้ค่าแพ็กเกจของร้าน (`invoices`) **ไม่ถูกคัดลอก**เข้า `acc_*` — รายงานบัญชีอ่านจาก `invoices` ตรง ๆ แบบอ่านอย่างเดียว จึงนับรายได้ครั้งเดียว ไฟล์แนบใช้ตาราง `files` (purpose `expense_receipt`, `accounting_file`; PDF เอกสารใช้ purpose `accounting_pdf`)
 
 SQL ฉบับเต็มอยู่ท้าย `12-database-ddl.sql` §10
 
@@ -324,3 +342,10 @@ create policy tenant_isolation on customers
 - Railway backup รายวัน + `pg_dump` รายวันไป R2 (เก็บ 30 วัน) — ทดสอบ restore ทุกเดือน
 - `tenants.data_retention_days` (default 730) worker anonymize ลูกค้าที่ไม่มีความเคลื่อนไหวเกินกำหนด
 - ร้านเลิกใช้: export ให้ร้าน → ลบภายใน 30 วันตามสัญญา
+
+
+### Customer profile (migration 0019)
+
+**`customer_settings`** (1 แถว/ร้าน: รูปแบบรหัส `code_prefix`+`code_pattern` เช่น `C` + `{BE2}{MM}{####}`, รายการช่องทางรู้จัก `sources`, ตั้งค่าบัตรสะสมแต้ม `loyalty`) · **`customer_code_counters`** (เลขรันไม่ขาดช่วงต่อ scope; ล็อกแถวตอนออกรหัส) · **`customer_tags`** (แท็กของร้าน ชื่อ+สี; `customers.tags` เก็บชื่อแท็ก) · **`customer_health`** (อาการแพ้/โรคประจำตัว เข้ารหัสทั้งก้อน + `has_allergy/has_chronic` + วันที่/ผู้บันทึกความยินยอม; สิทธิ์ `customers:health`/`customers:health_write`; อ่าน/เขียนลง audit) · **`customer_visits`** (1 แถว/ลูกค้า/วัน = 1 ครั้งที่มา; `customers.visit_count` นับจากตารางนี้ผ่าน `recordVisit`) · **`customer_link_tokens`** (ลิงก์ผูก LINE เฉพาะลูกค้า เก็บ hash ใช้ครั้งเดียว 7 วัน) · **`loyalty_stamps`** (1 แถว/แสตมป์: ใช้ได้ = ไม่ถูกยกเลิก/แลก/หมดอายุ) · **`loyalty_redemptions`** (การมอบรางวัล)
+
+Backfill ใน migration: ใส่รหัสให้ลูกค้าเดิมตาม `created_at` และสร้าง `customer_visits` จากนัดที่เสร็จ + บิลที่จ่ายแล้ว

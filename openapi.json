@@ -2542,6 +2542,822 @@
         }
       }
     },
+    "/v1/tenant/business-types": {
+      "get": {
+        "tags": [
+          "tenant"
+        ],
+        "summary": "Business types the shop can switch to (industry templates) and its current one",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Business types",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "current": {
+                          "type": "string"
+                        },
+                        "types": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "object",
+                                "properties": {
+                                  "th": {
+                                    "type": "string"
+                                  },
+                                  "en": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "th"
+                                ]
+                              },
+                              "version": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "name",
+                              "version"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "current",
+                        "types"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenant/template-preview": {
+      "get": {
+        "tags": [
+          "tenant"
+        ],
+        "summary": "Preview what switching to a business type would change (read-only, per section)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "required": true,
+            "name": "industryKey",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "currentIndustryKey": {
+                          "type": "string"
+                        },
+                        "industryKey": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "object",
+                          "properties": {
+                            "th": {
+                              "type": "string"
+                            },
+                            "en": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "th"
+                          ]
+                        },
+                        "version": {
+                          "type": "integer"
+                        },
+                        "terminology": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string"
+                              },
+                              "current": {
+                                "type": "string"
+                              },
+                              "next": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "current",
+                              "next"
+                            ]
+                          }
+                        },
+                        "customerCode": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "string"
+                            },
+                            "next": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "current",
+                            "next"
+                          ]
+                        },
+                        "resources": {
+                          "type": "object",
+                          "properties": {
+                            "add": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "skip": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "branches": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "add",
+                            "skip",
+                            "branches"
+                          ]
+                        },
+                        "positions": {
+                          "type": "object",
+                          "properties": {
+                            "add": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "skip": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "add",
+                            "skip"
+                          ]
+                        },
+                        "services": {
+                          "type": "object",
+                          "properties": {
+                            "categories": {
+                              "type": "object",
+                              "properties": {
+                                "add": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "add",
+                                "skip"
+                              ]
+                            },
+                            "services": {
+                              "type": "object",
+                              "properties": {
+                                "add": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "add",
+                                "skip"
+                              ]
+                            },
+                            "packages": {
+                              "type": "object",
+                              "properties": {
+                                "add": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "add",
+                                "skip"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "categories",
+                            "services",
+                            "packages"
+                          ]
+                        },
+                        "compensation": {
+                          "type": "object",
+                          "properties": {
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "add",
+                                "same",
+                                "replace_default",
+                                "keep_custom"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "state"
+                          ]
+                        },
+                        "messages": {
+                          "type": "object",
+                          "properties": {
+                            "templates": {
+                              "type": "object",
+                              "properties": {
+                                "add": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "add",
+                                "skip"
+                              ]
+                            },
+                            "plans": {
+                              "type": "object",
+                              "properties": {
+                                "add": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "add",
+                                "skip"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "templates",
+                            "plans"
+                          ]
+                        },
+                        "settings": {
+                          "type": "object",
+                          "properties": {
+                            "calendarDefaultBy": {
+                              "type": "object",
+                              "properties": {
+                                "current": {
+                                  "type": "string",
+                                  "enum": [
+                                    "member",
+                                    "resource"
+                                  ]
+                                },
+                                "next": {
+                                  "type": "string",
+                                  "enum": [
+                                    "member",
+                                    "resource"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "current",
+                                "next"
+                              ]
+                            },
+                            "useLabCost": {
+                              "type": "object",
+                              "properties": {
+                                "current": {
+                                  "type": "boolean"
+                                },
+                                "next": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "current",
+                                "next"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "calendarDefaultBy",
+                            "useLabCost"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "currentIndustryKey",
+                        "industryKey",
+                        "name",
+                        "version",
+                        "terminology",
+                        "customerCode",
+                        "resources",
+                        "positions",
+                        "services",
+                        "compensation",
+                        "messages",
+                        "settings"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tenant/apply-template": {
+      "post": {
+        "tags": [
+          "tenant"
+        ],
+        "summary": "Switch business type and add the ticked parts of its template (words, code prefix, rooms, positions, services, pay rule, LINE messages). Additive and idempotent: existing rows are skipped by name, never edited or deleted",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "industryKey": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "terminology",
+                        "customerCode",
+                        "resources",
+                        "positions",
+                        "services",
+                        "compensation",
+                        "messages",
+                        "settings"
+                      ]
+                    },
+                    "maxItems": 8,
+                    "default": []
+                  }
+                },
+                "required": [
+                  "industryKey"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "What was added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "previousIndustryKey": {
+                          "type": "string"
+                        },
+                        "industryKey": {
+                          "type": "string"
+                        },
+                        "sections": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "terminology",
+                              "customerCode",
+                              "resources",
+                              "positions",
+                              "services",
+                              "compensation",
+                              "messages",
+                              "settings"
+                            ]
+                          }
+                        },
+                        "created": {
+                          "type": "object",
+                          "properties": {
+                            "resources": {
+                              "type": "integer"
+                            },
+                            "positions": {
+                              "type": "integer"
+                            },
+                            "categories": {
+                              "type": "integer"
+                            },
+                            "services": {
+                              "type": "integer"
+                            },
+                            "packages": {
+                              "type": "integer"
+                            },
+                            "messageTemplates": {
+                              "type": "integer"
+                            },
+                            "messagePlans": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "resources",
+                            "positions",
+                            "categories",
+                            "services",
+                            "packages",
+                            "messageTemplates",
+                            "messagePlans"
+                          ]
+                        },
+                        "terminologyChanged": {
+                          "type": "integer"
+                        },
+                        "customerCodeChanged": {
+                          "type": "boolean"
+                        },
+                        "compensation": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "added",
+                            "new_version",
+                            "unchanged",
+                            "kept"
+                          ]
+                        },
+                        "settingsChanged": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "previousIndustryKey",
+                        "industryKey",
+                        "sections",
+                        "created",
+                        "terminologyChanged",
+                        "customerCodeChanged",
+                        "compensation",
+                        "settingsChanged"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/branches": {
       "get": {
         "tags": [
@@ -3751,6 +4567,9 @@
                           },
                           "active": {
                             "type": "boolean"
+                          },
+                          "sort": {
+                            "type": "integer"
                           }
                         },
                         "required": [
@@ -3759,7 +4578,8 @@
                           "name",
                           "type",
                           "capacity",
-                          "active"
+                          "active",
+                          "sort"
                         ]
                       }
                     }
@@ -3955,6 +4775,9 @@
                         },
                         "active": {
                           "type": "boolean"
+                        },
+                        "sort": {
+                          "type": "integer"
                         }
                       },
                       "required": [
@@ -3963,8 +4786,204 @@
                         "name",
                         "type",
                         "capacity",
-                        "active"
+                        "active",
+                        "sort"
                       ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/branches/{id}/resources/order": {
+      "put": {
+        "tags": [
+          "branches"
+        ],
+        "summary": "Set the order of a branch's rooms / beds (calendar columns follow it)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "minItems": 1,
+                    "maxItems": 200
+                  }
+                },
+                "required": [
+                  "ids"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resources in the new order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "branchId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "room",
+                              "bed",
+                              "chair",
+                              "station",
+                              "other"
+                            ]
+                          },
+                          "capacity": {
+                            "type": "integer"
+                          },
+                          "active": {
+                            "type": "boolean"
+                          },
+                          "sort": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "branchId",
+                          "name",
+                          "type",
+                          "capacity",
+                          "active",
+                          "sort"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -4165,6 +5184,9 @@
                         },
                         "active": {
                           "type": "boolean"
+                        },
+                        "sort": {
+                          "type": "integer"
                         }
                       },
                       "required": [
@@ -4173,7 +5195,8 @@
                         "name",
                         "type",
                         "capacity",
-                        "active"
+                        "active",
+                        "sort"
                       ]
                     }
                   },
@@ -48969,10 +49992,10 @@
           {
             "schema": {
               "type": "string",
-              "maxLength": 120
+              "maxLength": 4000
             },
             "required": false,
-            "name": "item",
+            "name": "serviceIds",
             "in": "query"
           },
           {
@@ -48982,6 +50005,15 @@
             },
             "required": false,
             "name": "categories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
             "in": "query"
           },
           {
@@ -49006,15 +50038,6 @@
             },
             "required": false,
             "name": "status",
-            "in": "query"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 120
-            },
-            "required": false,
-            "name": "q",
             "in": "query"
           },
           {
@@ -49065,6 +50088,12 @@
                           },
                           "billNumber": {
                             "type": "string"
+                          },
+                          "receiptNumber": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "billStatus": {
                             "type": "string",
@@ -49122,6 +50151,19 @@
                           },
                           "itemName": {
                             "type": "string"
+                          },
+                          "serviceId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "itemCode": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "kind": {
                             "type": "string",
@@ -49181,6 +50223,27 @@
                             "type": "integer",
                             "description": "integer satang"
                           },
+                          "labCostMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "labVendor": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "practitionerShareMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "cardFeeMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "shopShareMinor": {
+                            "type": "integer"
+                          },
                           "methods": {
                             "type": "object",
                             "properties": {
@@ -49228,6 +50291,7 @@
                           "id",
                           "billId",
                           "billNumber",
+                          "receiptNumber",
                           "billStatus",
                           "at",
                           "date",
@@ -49238,6 +50302,8 @@
                           "staffId",
                           "staffName",
                           "itemName",
+                          "serviceId",
+                          "itemCode",
                           "kind",
                           "categoryKey",
                           "categoryName",
@@ -49251,6 +50317,11 @@
                           "revenueMinor",
                           "handFeeMinor",
                           "commissionMinor",
+                          "labCostMinor",
+                          "labVendor",
+                          "practitionerShareMinor",
+                          "cardFeeMinor",
+                          "shopShareMinor",
                           "methods"
                         ]
                       }
@@ -49302,6 +50373,21 @@
                         "commissionMinor": {
                           "type": "integer",
                           "description": "integer satang"
+                        },
+                        "labCostMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "practitionerShareMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "cardFeeMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "shopShareMinor": {
+                          "type": "integer"
                         },
                         "methods": {
                           "type": "object",
@@ -49359,8 +50445,15 @@
                         "revenueMinor",
                         "handFeeMinor",
                         "commissionMinor",
+                        "labCostMinor",
+                        "practitionerShareMinor",
+                        "cardFeeMinor",
+                        "shopShareMinor",
                         "methods"
                       ]
+                    },
+                    "cardFeeBp": {
+                      "type": "integer"
                     },
                     "page": {
                       "type": "object",
@@ -49385,7 +50478,796 @@
                   "required": [
                     "data",
                     "totals",
+                    "cardFeeBp",
                     "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sales-reports/lab-costs": {
+      "get": {
+        "tags": [
+          "sales-reports"
+        ],
+        "summary": "Lab costs (ค่าแลป) per bill line with totals and per-vendor sums",
+        "description": "Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "branchId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "paid",
+                "open",
+                "cancelled",
+                "all"
+              ],
+              "default": "paid"
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "required": false,
+            "name": "serviceIds",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 600
+            },
+            "required": false,
+            "name": "categories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lab costs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "bill item id"
+                          },
+                          "billId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "billNumber": {
+                            "type": "string"
+                          },
+                          "receiptNumber": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "billStatus": {
+                            "type": "string",
+                            "enum": [
+                              "open",
+                              "paid",
+                              "void",
+                              "refunded",
+                              "partially_refunded"
+                            ]
+                          },
+                          "at": {
+                            "type": "string",
+                            "description": "ISO instant"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "local YYYY-MM-DD"
+                          },
+                          "time": {
+                            "type": "string",
+                            "description": "local HH:mm"
+                          },
+                          "customerId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "customerCode": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "customerName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "staffId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "staffName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "itemName": {
+                            "type": "string"
+                          },
+                          "serviceId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "itemCode": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "service",
+                              "product",
+                              "package_sale",
+                              "package_use"
+                            ]
+                          },
+                          "categoryKey": {
+                            "type": "string",
+                            "description": "category uuid | product | package | none"
+                          },
+                          "categoryName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "qty": {
+                            "type": "integer"
+                          },
+                          "priceMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "discountMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "netMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "paidMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "refundedMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "outstandingMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "revenueMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "handFeeMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "commissionMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "labCostMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "labVendor": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "practitionerShareMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "cardFeeMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "shopShareMinor": {
+                            "type": "integer"
+                          },
+                          "methods": {
+                            "type": "object",
+                            "properties": {
+                              "cash": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "transfer": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "promptpay": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "card_external": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "deposit": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "package": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "other": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              }
+                            },
+                            "required": [
+                              "cash",
+                              "transfer",
+                              "promptpay",
+                              "card_external",
+                              "deposit",
+                              "package",
+                              "other"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "billId",
+                          "billNumber",
+                          "receiptNumber",
+                          "billStatus",
+                          "at",
+                          "date",
+                          "time",
+                          "customerId",
+                          "customerCode",
+                          "customerName",
+                          "staffId",
+                          "staffName",
+                          "itemName",
+                          "serviceId",
+                          "itemCode",
+                          "kind",
+                          "categoryKey",
+                          "categoryName",
+                          "qty",
+                          "priceMinor",
+                          "discountMinor",
+                          "netMinor",
+                          "paidMinor",
+                          "refundedMinor",
+                          "outstandingMinor",
+                          "revenueMinor",
+                          "handFeeMinor",
+                          "commissionMinor",
+                          "labCostMinor",
+                          "labVendor",
+                          "practitionerShareMinor",
+                          "cardFeeMinor",
+                          "shopShareMinor",
+                          "methods"
+                        ]
+                      }
+                    },
+                    "totals": {
+                      "type": "object",
+                      "properties": {
+                        "lines": {
+                          "type": "integer"
+                        },
+                        "bills": {
+                          "type": "integer"
+                        },
+                        "revenueMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "labCostMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "afterLabMinor": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "lines",
+                        "bills",
+                        "revenueMinor",
+                        "labCostMinor",
+                        "afterLabMinor"
+                      ]
+                    },
+                    "byVendor": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "vendor": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "lines": {
+                            "type": "integer"
+                          },
+                          "labCostMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          }
+                        },
+                        "required": [
+                          "vendor",
+                          "lines",
+                          "labCostMinor"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "totals",
+                    "byVendor"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sales-reports/deposit-movements": {
+      "get": {
+        "tags": [
+          "sales-reports"
+        ],
+        "summary": "Deposit ledger: every take / use / refund / forfeit with the customer balance, plus the period cards",
+        "description": "Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "branchId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit movements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "at": {
+                            "type": "string",
+                            "description": "ISO instant"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "local YYYY-MM-DD"
+                          },
+                          "time": {
+                            "type": "string",
+                            "description": "local HH:mm"
+                          },
+                          "customerId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "customerCode": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "customerName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "depositId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "take",
+                              "apply",
+                              "restore",
+                              "refund",
+                              "forfeit"
+                            ]
+                          },
+                          "documentNo": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "signedMinor": {
+                            "type": "integer"
+                          },
+                          "balanceAfterMinor": {
+                            "type": "integer"
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "estimated": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "at",
+                          "date",
+                          "time",
+                          "customerId",
+                          "customerCode",
+                          "customerName",
+                          "depositId",
+                          "kind",
+                          "documentNo",
+                          "signedMinor",
+                          "balanceAfterMinor",
+                          "note",
+                          "estimated"
+                        ]
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "openingMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "takenMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "appliedMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "refundedMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "forfeitedMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "closingMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        }
+                      },
+                      "required": [
+                        "openingMinor",
+                        "takenMinor",
+                        "appliedMinor",
+                        "refundedMinor",
+                        "forfeitedMinor",
+                        "closingMinor"
+                      ]
+                    },
+                    "branches": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "branchId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "branchName": {
+                            "type": "string"
+                          },
+                          "takenMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "appliedMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "forfeitedMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "refundedMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "netMinor": {
+                            "type": "integer"
+                          },
+                          "customers": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "branchId",
+                          "branchName",
+                          "takenMinor",
+                          "appliedMinor",
+                          "forfeitedMinor",
+                          "refundedMinor",
+                          "netMinor",
+                          "customers"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "summary",
+                    "branches"
                   ]
                 }
               }
@@ -50365,6 +52247,301 @@
         }
       }
     },
+    "/v1/sales-reports/share-by-method": {
+      "get": {
+        "tags": [
+          "sales-reports"
+        ],
+        "summary": "Practitioner share (hand fee + commission) split by how the bill line was paid",
+        "description": "Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "to",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "branchId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "required": false,
+            "name": "serviceIds",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 600
+            },
+            "required": false,
+            "name": "categories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Share by method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "staffId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i",
+                            "description": "null = lines without a named staff"
+                          },
+                          "staffName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "lines": {
+                            "type": "integer"
+                          },
+                          "shareMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
+                          },
+                          "methods": {
+                            "type": "object",
+                            "properties": {
+                              "cash": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "transfer": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "promptpay": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "card_external": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "deposit": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "package": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              },
+                              "other": {
+                                "type": "integer",
+                                "description": "integer satang"
+                              }
+                            },
+                            "required": [
+                              "cash",
+                              "transfer",
+                              "promptpay",
+                              "card_external",
+                              "deposit",
+                              "package",
+                              "other"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "staffId",
+                          "staffName",
+                          "lines",
+                          "shareMinor",
+                          "methods"
+                        ]
+                      }
+                    },
+                    "totals": {
+                      "type": "object",
+                      "properties": {
+                        "lines": {
+                          "type": "integer"
+                        },
+                        "shareMinor": {
+                          "type": "integer",
+                          "description": "integer satang"
+                        },
+                        "methods": {
+                          "type": "object",
+                          "properties": {
+                            "cash": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "transfer": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "promptpay": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "card_external": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "deposit": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "package": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            },
+                            "other": {
+                              "type": "integer",
+                              "description": "integer satang"
+                            }
+                          },
+                          "required": [
+                            "cash",
+                            "transfer",
+                            "promptpay",
+                            "card_external",
+                            "deposit",
+                            "package",
+                            "other"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "lines",
+                        "shareMinor",
+                        "methods"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "totals"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/sales-reports/discounts": {
       "get": {
         "tags": [
@@ -50418,6 +52595,15 @@
             },
             "required": false,
             "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
             "in": "query"
           }
         ],
@@ -50659,6 +52845,15 @@
             "required": false,
             "name": "branchId",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
           }
         ],
         "responses": {
@@ -50883,6 +53078,15 @@
             },
             "required": false,
             "name": "branchId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "required": false,
+            "name": "q",
             "in": "query"
           }
         ],
@@ -51203,6 +53407,13 @@
                         "noShowBp": {
                           "type": "integer",
                           "description": "no-shows ÷ appointments (not cancelled), basis points"
+                        },
+                        "utilizationBp": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable"
                         }
                       },
                       "required": [
@@ -51216,7 +53427,8 @@
                         "customersReturning",
                         "appointments",
                         "noShows",
-                        "noShowBp"
+                        "noShowBp",
+                        "utilizationBp"
                       ]
                     },
                     "previous": {
@@ -51230,6 +53442,9 @@
                         },
                         "toDate": {
                           "type": "string"
+                        },
+                        "partial": {
+                          "type": "boolean"
                         },
                         "metrics": {
                           "type": "object",
@@ -51273,6 +53488,13 @@
                             "noShowBp": {
                               "type": "integer",
                               "description": "no-shows ÷ appointments (not cancelled), basis points"
+                            },
+                            "utilizationBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "description": "booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable"
                             }
                           },
                           "required": [
@@ -51286,7 +53508,8 @@
                             "customersReturning",
                             "appointments",
                             "noShows",
-                            "noShowBp"
+                            "noShowBp",
+                            "utilizationBp"
                           ]
                         }
                       },
@@ -51294,6 +53517,7 @@
                         "period",
                         "fromDate",
                         "toDate",
+                        "partial",
                         "metrics"
                       ]
                     },
@@ -51312,6 +53536,9 @@
                         "toDate": {
                           "type": "string"
                         },
+                        "partial": {
+                          "type": "boolean"
+                        },
                         "metrics": {
                           "type": "object",
                           "properties": {
@@ -51354,6 +53581,13 @@
                             "noShowBp": {
                               "type": "integer",
                               "description": "no-shows ÷ appointments (not cancelled), basis points"
+                            },
+                            "utilizationBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "description": "booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable"
                             }
                           },
                           "required": [
@@ -51367,7 +53601,8 @@
                             "customersReturning",
                             "appointments",
                             "noShows",
-                            "noShowBp"
+                            "noShowBp",
+                            "utilizationBp"
                           ]
                         }
                       },
@@ -51375,7 +53610,19 @@
                         "period",
                         "fromDate",
                         "toDate",
+                        "partial",
                         "metrics"
+                      ]
+                    },
+                    "utilizationBasis": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "resource",
+                        "practitioner",
+                        null
                       ]
                     },
                     "change": {
@@ -51494,13 +53741,18 @@
                           "previousMinor": {
                             "type": "integer",
                             "description": "integer satang"
+                          },
+                          "lastYearMinor": {
+                            "type": "integer",
+                            "description": "integer satang"
                           }
                         },
                         "required": [
                           "key",
                           "name",
                           "salesMinor",
-                          "previousMinor"
+                          "previousMinor",
+                          "lastYearMinor"
                         ]
                       }
                     },
@@ -51572,6 +53824,7 @@
                     "current",
                     "previous",
                     "lastYear",
+                    "utilizationBasis",
                     "change",
                     "series",
                     "methods",
@@ -68134,12 +70387,46 @@
                               "caution"
                             ]
                           },
+                          "customerBirthDate": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
                           "serviceId": {
                             "type": "string",
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           },
                           "serviceName": {
                             "type": "string"
+                          },
+                          "extraServices": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name"
+                              ]
+                            }
+                          },
+                          "labels": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 24
+                            }
                           },
                           "durationMin": {
                             "type": "integer"
@@ -68310,8 +70597,11 @@
                           "customerName",
                           "customerHasCaution",
                           "customer",
+                          "customerBirthDate",
                           "serviceId",
                           "serviceName",
+                          "extraServices",
+                          "labels",
                           "durationMin",
                           "membershipId",
                           "memberName",
@@ -68498,6 +70788,23 @@
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 24
+                    },
+                    "maxItems": 6
+                  },
+                  "extraServiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 8
+                  },
                   "source": {
                     "type": "string",
                     "enum": [
@@ -68638,12 +70945,46 @@
                             "caution"
                           ]
                         },
+                        "customerBirthDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "serviceId": {
                           "type": "string",
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                         },
                         "serviceName": {
                           "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 24
+                          }
                         },
                         "durationMin": {
                           "type": "integer"
@@ -68814,8 +71155,11 @@
                         "customerName",
                         "customerHasCaution",
                         "customer",
+                        "customerBirthDate",
                         "serviceId",
                         "serviceName",
+                        "extraServices",
+                        "labels",
                         "durationMin",
                         "membershipId",
                         "memberName",
@@ -69028,12 +71372,46 @@
                                   "caution"
                                 ]
                               },
+                              "customerBirthDate": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
                               "serviceId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "serviceName": {
                                 "type": "string"
+                              },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24
+                                }
                               },
                               "durationMin": {
                                 "type": "integer"
@@ -69204,8 +71582,11 @@
                               "customerName",
                               "customerHasCaution",
                               "customer",
+                              "customerBirthDate",
                               "serviceId",
                               "serviceName",
+                              "extraServices",
+                              "labels",
                               "durationMin",
                               "membershipId",
                               "memberName",
@@ -69297,12 +71678,46 @@
                                   "caution"
                                 ]
                               },
+                              "customerBirthDate": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
                               "serviceId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "serviceName": {
                                 "type": "string"
+                              },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24
+                                }
                               },
                               "durationMin": {
                                 "type": "integer"
@@ -69473,8 +71888,11 @@
                               "customerName",
                               "customerHasCaution",
                               "customer",
+                              "customerBirthDate",
                               "serviceId",
                               "serviceName",
+                              "extraServices",
+                              "labels",
                               "durationMin",
                               "membershipId",
                               "memberName",
@@ -69566,12 +71984,46 @@
                                   "caution"
                                 ]
                               },
+                              "customerBirthDate": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
                               "serviceId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "serviceName": {
                                 "type": "string"
+                              },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24
+                                }
                               },
                               "durationMin": {
                                 "type": "integer"
@@ -69745,8 +72197,11 @@
                               "customerName",
                               "customerHasCaution",
                               "customer",
+                              "customerBirthDate",
                               "serviceId",
                               "serviceName",
+                              "extraServices",
+                              "labels",
                               "durationMin",
                               "membershipId",
                               "memberName",
@@ -69839,12 +72294,46 @@
                                   "caution"
                                 ]
                               },
+                              "customerBirthDate": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
                               "serviceId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "serviceName": {
                                 "type": "string"
+                              },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24
+                                }
                               },
                               "durationMin": {
                                 "type": "integer"
@@ -70015,8 +72504,11 @@
                               "customerName",
                               "customerHasCaution",
                               "customer",
+                              "customerBirthDate",
                               "serviceId",
                               "serviceName",
+                              "extraServices",
+                              "labels",
                               "durationMin",
                               "membershipId",
                               "memberName",
@@ -70109,12 +72601,46 @@
                                 "caution"
                               ]
                             },
+                            "customerBirthDate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
                             "serviceId": {
                               "type": "string",
                               "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                             },
                             "serviceName": {
                               "type": "string"
+                            },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
+                            "labels": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
                             },
                             "durationMin": {
                               "type": "integer"
@@ -70285,8 +72811,11 @@
                             "customerName",
                             "customerHasCaution",
                             "customer",
+                            "customerBirthDate",
                             "serviceId",
                             "serviceName",
+                            "extraServices",
+                            "labels",
                             "durationMin",
                             "membershipId",
                             "memberName",
@@ -70755,12 +73284,46 @@
                             "caution"
                           ]
                         },
+                        "customerBirthDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "serviceId": {
                           "type": "string",
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                         },
                         "serviceName": {
                           "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 24
+                          }
                         },
                         "durationMin": {
                           "type": "integer"
@@ -70931,8 +73494,11 @@
                         "customerName",
                         "customerHasCaution",
                         "customer",
+                        "customerBirthDate",
                         "serviceId",
                         "serviceName",
+                        "extraServices",
+                        "labels",
                         "durationMin",
                         "membershipId",
                         "memberName",
@@ -71111,6 +73677,23 @@
                   "isRequestedMember": {
                     "type": "boolean"
                   },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 24
+                    },
+                    "maxItems": 6
+                  },
+                  "extraServiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 8
+                  },
                   "overrideReason": {
                     "type": "string",
                     "minLength": 1,
@@ -71197,12 +73780,46 @@
                             "caution"
                           ]
                         },
+                        "customerBirthDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "serviceId": {
                           "type": "string",
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                         },
                         "serviceName": {
                           "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 24
+                          }
                         },
                         "durationMin": {
                           "type": "integer"
@@ -71373,8 +73990,11 @@
                         "customerName",
                         "customerHasCaution",
                         "customer",
+                        "customerBirthDate",
                         "serviceId",
                         "serviceName",
+                        "extraServices",
+                        "labels",
                         "durationMin",
                         "membershipId",
                         "memberName",
@@ -71629,12 +74249,46 @@
                             "caution"
                           ]
                         },
+                        "customerBirthDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "serviceId": {
                           "type": "string",
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                         },
                         "serviceName": {
                           "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 24
+                          }
                         },
                         "durationMin": {
                           "type": "integer"
@@ -71805,8 +74459,11 @@
                         "customerName",
                         "customerHasCaution",
                         "customer",
+                        "customerBirthDate",
                         "serviceId",
                         "serviceName",
+                        "extraServices",
+                        "labels",
                         "durationMin",
                         "membershipId",
                         "memberName",
@@ -72514,12 +75171,46 @@
                                 "caution"
                               ]
                             },
+                            "customerBirthDate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
                             "serviceId": {
                               "type": "string",
                               "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                             },
                             "serviceName": {
                               "type": "string"
+                            },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
+                            "labels": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
                             },
                             "durationMin": {
                               "type": "integer"
@@ -72690,8 +75381,11 @@
                             "customerName",
                             "customerHasCaution",
                             "customer",
+                            "customerBirthDate",
                             "serviceId",
                             "serviceName",
+                            "extraServices",
+                            "labels",
                             "durationMin",
                             "membershipId",
                             "memberName",
@@ -73181,12 +75875,20 @@
                                   "type": "string",
                                   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                 }
+                              },
+                              "resourceIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                }
                               }
                             },
                             "required": [
                               "startAt",
                               "endAt",
-                              "memberIds"
+                              "memberIds",
+                              "resourceIds"
                             ]
                           }
                         },
@@ -73434,7 +76136,8 @@
                                 "type": "string",
                                 "enum": [
                                   "member",
-                                  "resource"
+                                  "resource",
+                                  "unassigned"
                                 ]
                               },
                               "name": {
@@ -73522,12 +76225,46 @@
                                   "caution"
                                 ]
                               },
+                              "customerBirthDate": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
                               "serviceId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "serviceName": {
                                 "type": "string"
+                              },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24
+                                }
                               },
                               "durationMin": {
                                 "type": "integer"
@@ -73698,8 +76435,11 @@
                               "customerName",
                               "customerHasCaution",
                               "customer",
+                              "customerBirthDate",
                               "serviceId",
                               "serviceName",
+                              "extraServices",
+                              "labels",
                               "durationMin",
                               "membershipId",
                               "memberName",
@@ -73832,6 +76572,57 @@
                             ]
                           }
                         },
+                        "blocks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "membershipId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "resourceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "startAt": {
+                                "type": "string"
+                              },
+                              "endAt": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "branchId",
+                              "membershipId",
+                              "resourceId",
+                              "startAt",
+                              "endAt",
+                              "reason"
+                            ]
+                          }
+                        },
                         "closures": {
                           "type": "array",
                           "items": {
@@ -73936,6 +76727,7 @@
                         "shifts",
                         "leaves",
                         "breaks",
+                        "blocks",
                         "closures",
                         "capacity",
                         "days",
@@ -73950,6 +76742,329 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/schedule-blocks": {
+      "post": {
+        "tags": [
+          "appointments"
+        ],
+        "summary": "Block a practitioner and/or room for a time range (break, meeting, cleaning)",
+        "description": "Counts as busy time: bookings into the range are refused (409) and the slots vanish from availability. Shown as a grey block on the calendar.\n\nRequires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "branchId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "membershipId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "resourceId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "startAt": {
+                    "type": "string"
+                  },
+                  "endAt": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "branchId",
+                  "startAt",
+                  "endAt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "membershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "resourceId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "startAt": {
+                          "type": "string"
+                        },
+                        "endAt": {
+                          "type": "string"
+                        },
+                        "reason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "branchId",
+                        "membershipId",
+                        "resourceId",
+                        "startAt",
+                        "endAt",
+                        "reason"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/schedule-blocks/{id}": {
+      "delete": {
+        "tags": [
+          "appointments"
+        ],
+        "summary": "Remove a blocked time range",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed"
           },
           "400": {
             "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
@@ -80525,6 +83640,18 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "labCostMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "labVendor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 120
                         }
                       },
                       "required": [
@@ -80790,6 +83917,17 @@
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
+                              "labCostMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "integer satang"
+                              },
+                              "labVendor": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "id": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -80810,6 +83948,8 @@
                               "unitPriceMinor",
                               "performerMembershipId",
                               "saleMembershipId",
+                              "labCostMinor",
+                              "labVendor",
                               "id",
                               "discountMinor",
                               "custom"
@@ -81378,6 +84518,17 @@
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
+                              "labCostMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "integer satang"
+                              },
+                              "labVendor": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "id": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -81398,6 +84549,8 @@
                               "unitPriceMinor",
                               "performerMembershipId",
                               "saleMembershipId",
+                              "labCostMinor",
+                              "labVendor",
                               "id",
                               "discountMinor",
                               "custom"
@@ -81804,6 +84957,18 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "labCostMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "labVendor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 120
                         }
                       },
                       "required": [
@@ -82074,6 +85239,17 @@
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
+                              "labCostMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "integer satang"
+                              },
+                              "labVendor": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "id": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -82094,6 +85270,8 @@
                               "unitPriceMinor",
                               "performerMembershipId",
                               "saleMembershipId",
+                              "labCostMinor",
+                              "labVendor",
                               "id",
                               "discountMinor",
                               "custom"
@@ -82467,6 +85645,18 @@
                       "null"
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "labCostMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "integer satang"
+                  },
+                  "labVendor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
                   }
                 }
               }
@@ -82709,6 +85899,17 @@
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
+                              "labCostMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "integer satang"
+                              },
+                              "labVendor": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "id": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -82729,6 +85930,8 @@
                               "unitPriceMinor",
                               "performerMembershipId",
                               "saleMembershipId",
+                              "labCostMinor",
+                              "labVendor",
                               "id",
                               "discountMinor",
                               "custom"
@@ -83338,6 +86541,17 @@
                                     ],
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                   },
+                                  "labCostMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "labVendor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
                                   "id": {
                                     "type": "string",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -83358,6 +86572,8 @@
                                   "unitPriceMinor",
                                   "performerMembershipId",
                                   "saleMembershipId",
+                                  "labCostMinor",
+                                  "labVendor",
                                   "id",
                                   "discountMinor",
                                   "custom"
@@ -84067,6 +87283,17 @@
                                     ],
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                   },
+                                  "labCostMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "labVendor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
                                   "id": {
                                     "type": "string",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -84087,6 +87314,8 @@
                                   "unitPriceMinor",
                                   "performerMembershipId",
                                   "saleMembershipId",
+                                  "labCostMinor",
+                                  "labVendor",
                                   "id",
                                   "discountMinor",
                                   "custom"
@@ -84712,6 +87941,17 @@
                                     ],
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                   },
+                                  "labCostMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "labVendor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
                                   "id": {
                                     "type": "string",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -84732,6 +87972,8 @@
                                   "unitPriceMinor",
                                   "performerMembershipId",
                                   "saleMembershipId",
+                                  "labCostMinor",
+                                  "labVendor",
                                   "id",
                                   "discountMinor",
                                   "custom"
@@ -85406,6 +88648,17 @@
                                     ],
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                   },
+                                  "labCostMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "labVendor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
                                   "id": {
                                     "type": "string",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -85426,6 +88679,8 @@
                                   "unitPriceMinor",
                                   "performerMembershipId",
                                   "saleMembershipId",
+                                  "labCostMinor",
+                                  "labVendor",
                                   "id",
                                   "discountMinor",
                                   "custom"
@@ -86389,6 +89644,17 @@
                                     ],
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                   },
+                                  "labCostMinor": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "integer satang"
+                                  },
+                                  "labVendor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
                                   "id": {
                                     "type": "string",
                                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
@@ -86409,6 +89675,8 @@
                                   "unitPriceMinor",
                                   "performerMembershipId",
                                   "saleMembershipId",
+                                  "labCostMinor",
+                                  "labVendor",
                                   "id",
                                   "discountMinor",
                                   "custom"
@@ -93607,6 +96875,11 @@
                           "maximum": 10000000000
                         },
                         "paidMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 10000000000
+                        },
+                        "labCostMinor": {
                           "type": "integer",
                           "minimum": 0,
                           "maximum": 10000000000
@@ -128403,6 +131676,9 @@
                           "priceMinor": {
                             "type": "integer"
                           },
+                          "labCostMinor": {
+                            "type": "integer"
+                          },
                           "rebookAfterDays": {
                             "type": [
                               "integer",
@@ -128505,6 +131781,7 @@
                           "durationMin",
                           "bufferMin",
                           "priceMinor",
+                          "labCostMinor",
                           "rebookAfterDays",
                           "followupPlan",
                           "followupMode",
@@ -128698,6 +131975,12 @@
                     "maximum": 100000000,
                     "default": 0
                   },
+                  "labCostMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000,
+                    "default": 0
+                  },
                   "rebookAfterDays": {
                     "type": [
                       "integer",
@@ -128852,6 +132135,9 @@
                         "priceMinor": {
                           "type": "integer"
                         },
+                        "labCostMinor": {
+                          "type": "integer"
+                        },
                         "rebookAfterDays": {
                           "type": [
                             "integer",
@@ -128954,6 +132240,7 @@
                         "durationMin",
                         "bufferMin",
                         "priceMinor",
+                        "labCostMinor",
                         "rebookAfterDays",
                         "followupPlan",
                         "followupMode",
@@ -129118,6 +132405,9 @@
                         "priceMinor": {
                           "type": "integer"
                         },
+                        "labCostMinor": {
+                          "type": "integer"
+                        },
                         "rebookAfterDays": {
                           "type": [
                             "integer",
@@ -129220,6 +132510,7 @@
                         "durationMin",
                         "bufferMin",
                         "priceMinor",
+                        "labCostMinor",
                         "rebookAfterDays",
                         "followupPlan",
                         "followupMode",
@@ -129389,6 +132680,11 @@
                     "minimum": 0,
                     "maximum": 100000000
                   },
+                  "labCostMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100000000
+                  },
                   "rebookAfterDays": {
                     "type": [
                       "integer",
@@ -129532,6 +132828,9 @@
                         "priceMinor": {
                           "type": "integer"
                         },
+                        "labCostMinor": {
+                          "type": "integer"
+                        },
                         "rebookAfterDays": {
                           "type": [
                             "integer",
@@ -129634,6 +132933,7 @@
                         "durationMin",
                         "bufferMin",
                         "priceMinor",
+                        "labCostMinor",
                         "rebookAfterDays",
                         "followupPlan",
                         "followupMode",
@@ -130064,6 +133364,9 @@
                         "priceMinor": {
                           "type": "integer"
                         },
+                        "labCostMinor": {
+                          "type": "integer"
+                        },
                         "rebookAfterDays": {
                           "type": [
                             "integer",
@@ -130166,6 +133469,7 @@
                         "durationMin",
                         "bufferMin",
                         "priceMinor",
+                        "labCostMinor",
                         "rebookAfterDays",
                         "followupPlan",
                         "followupMode",

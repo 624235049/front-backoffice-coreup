@@ -7,5 +7,7 @@
   "branch": "branch",
   "package": "package",
   "followup": "follow-up",
-  "resource": "resource"
+  "resource": "resource",
+  "handFee": "fee",
+  "shopShare": "shop share"
 }

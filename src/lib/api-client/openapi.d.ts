@@ -1676,6 +1676,427 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tenant/business-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Business types the shop can switch to (industry templates) and its current one
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Business types */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                current: string;
+                                types: {
+                                    key: string;
+                                    name: {
+                                        th: string;
+                                        en?: string;
+                                    };
+                                    version: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tenant/template-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview what switching to a business type would change (read-only, per section)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    industryKey: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Preview */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                currentIndustryKey: string;
+                                industryKey: string;
+                                name: {
+                                    th: string;
+                                    en?: string;
+                                };
+                                version: number;
+                                terminology: {
+                                    key: string;
+                                    current: string;
+                                    next: string;
+                                }[];
+                                customerCode: {
+                                    current: string;
+                                    next: string;
+                                };
+                                resources: {
+                                    add: string[];
+                                    skip: string[];
+                                    branches: number;
+                                };
+                                positions: {
+                                    add: string[];
+                                    skip: string[];
+                                };
+                                services: {
+                                    categories: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    services: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    packages: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                };
+                                compensation: {
+                                    /** @enum {string} */
+                                    state: "add" | "same" | "replace_default" | "keep_custom";
+                                };
+                                messages: {
+                                    templates: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    plans: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                };
+                                settings: {
+                                    calendarDefaultBy: {
+                                        /** @enum {string} */
+                                        current: "member" | "resource";
+                                        /** @enum {string} */
+                                        next: "member" | "resource";
+                                    };
+                                    useLabCost: {
+                                        current: boolean;
+                                        next: boolean;
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tenant/apply-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Switch business type and add the ticked parts of its template (words, code prefix, rooms, positions, services, pay rule, LINE messages). Additive and idempotent: existing rows are skipped by name, never edited or deleted
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        industryKey: string;
+                        /** @default [] */
+                        sections?: ("terminology" | "customerCode" | "resources" | "positions" | "services" | "compensation" | "messages" | "settings")[];
+                    };
+                };
+            };
+            responses: {
+                /** @description What was added */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                previousIndustryKey: string;
+                                industryKey: string;
+                                sections: ("terminology" | "customerCode" | "resources" | "positions" | "services" | "compensation" | "messages" | "settings")[];
+                                created: {
+                                    resources: number;
+                                    positions: number;
+                                    categories: number;
+                                    services: number;
+                                    packages: number;
+                                    messageTemplates: number;
+                                    messagePlans: number;
+                                };
+                                terminologyChanged: number;
+                                customerCodeChanged: boolean;
+                                /** @enum {string} */
+                                compensation: "none" | "added" | "new_version" | "unchanged" | "kept";
+                                settingsChanged: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/branches": {
         parameters: {
             query?: never;
@@ -2323,6 +2744,7 @@ export interface paths {
                                 type: "room" | "bed" | "chair" | "station" | "other";
                                 capacity: number;
                                 active: boolean;
+                                sort: number;
                             }[];
                         };
                     };
@@ -2440,6 +2862,7 @@ export interface paths {
                                 type: "room" | "bed" | "chair" | "station" | "other";
                                 capacity: number;
                                 active: boolean;
+                                sort: number;
                             };
                         };
                     };
@@ -2509,6 +2932,132 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/branches/{id}/resources/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the order of a branch's rooms / beds (calendar columns follow it)
+         * @description Requires header `X-Tenant-Id`. Permission: `branches:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        ids: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Resources in the new order */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                name: string;
+                                /** @enum {string} */
+                                type: "room" | "bed" | "chair" | "station" | "other";
+                                capacity: number;
+                                active: boolean;
+                                sort: number;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2668,6 +3217,7 @@ export interface paths {
                                 type: "room" | "bed" | "chair" | "station" | "other";
                                 capacity: number;
                                 active: boolean;
+                                sort: number;
                             };
                         };
                     };
@@ -24352,11 +24902,11 @@ export interface paths {
                     from: string;
                     to: string;
                     branchId?: string;
-                    item?: string;
+                    serviceIds?: string;
                     categories?: string;
+                    q?: string;
                     staffId?: string;
                     status?: "paid" | "open" | "cancelled" | "all";
-                    q?: string;
                     offset?: number | null;
                     limit?: number;
                 };
@@ -24378,6 +24928,7 @@ export interface paths {
                                 id: string;
                                 billId: string;
                                 billNumber: string;
+                                receiptNumber: string | null;
                                 /** @enum {string} */
                                 billStatus: "open" | "paid" | "void" | "refunded" | "partially_refunded";
                                 /** @description ISO instant */
@@ -24392,6 +24943,8 @@ export interface paths {
                                 staffId: string | null;
                                 staffName: string | null;
                                 itemName: string;
+                                serviceId: string | null;
+                                itemCode: string | null;
                                 /** @enum {string} */
                                 kind: "service" | "product" | "package_sale" | "package_use";
                                 /** @description category uuid | product | package | none */
@@ -24416,6 +24969,14 @@ export interface paths {
                                 handFeeMinor: number;
                                 /** @description integer satang */
                                 commissionMinor: number;
+                                /** @description integer satang */
+                                labCostMinor: number;
+                                labVendor: string | null;
+                                /** @description integer satang */
+                                practitionerShareMinor: number;
+                                /** @description integer satang */
+                                cardFeeMinor: number;
+                                shopShareMinor: number;
                                 methods: {
                                     /** @description integer satang */
                                     cash: number;
@@ -24455,6 +25016,13 @@ export interface paths {
                                 handFeeMinor: number;
                                 /** @description integer satang */
                                 commissionMinor: number;
+                                /** @description integer satang */
+                                labCostMinor: number;
+                                /** @description integer satang */
+                                practitionerShareMinor: number;
+                                /** @description integer satang */
+                                cardFeeMinor: number;
+                                shopShareMinor: number;
                                 methods: {
                                     /** @description integer satang */
                                     cash: number;
@@ -24472,11 +25040,364 @@ export interface paths {
                                     other: number;
                                 };
                             };
+                            cardFeeBp: number;
                             page: {
                                 offset: number;
                                 limit: number;
                                 hasMore: boolean;
                             };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sales-reports/lab-costs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lab costs (ค่าแลป) per bill line with totals and per-vendor sums
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                    status?: "paid" | "open" | "cancelled" | "all";
+                    serviceIds?: string;
+                    categories?: string;
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lab costs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @description bill item id */
+                                id: string;
+                                billId: string;
+                                billNumber: string;
+                                receiptNumber: string | null;
+                                /** @enum {string} */
+                                billStatus: "open" | "paid" | "void" | "refunded" | "partially_refunded";
+                                /** @description ISO instant */
+                                at: string;
+                                /** @description local YYYY-MM-DD */
+                                date: string;
+                                /** @description local HH:mm */
+                                time: string;
+                                customerId: string | null;
+                                customerCode: string | null;
+                                customerName: string | null;
+                                staffId: string | null;
+                                staffName: string | null;
+                                itemName: string;
+                                serviceId: string | null;
+                                itemCode: string | null;
+                                /** @enum {string} */
+                                kind: "service" | "product" | "package_sale" | "package_use";
+                                /** @description category uuid | product | package | none */
+                                categoryKey: string;
+                                categoryName: string | null;
+                                qty: number;
+                                /** @description integer satang */
+                                priceMinor: number;
+                                /** @description integer satang */
+                                discountMinor: number;
+                                /** @description integer satang */
+                                netMinor: number;
+                                /** @description integer satang */
+                                paidMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                /** @description integer satang */
+                                outstandingMinor: number;
+                                /** @description integer satang */
+                                revenueMinor: number;
+                                /** @description integer satang */
+                                handFeeMinor: number;
+                                /** @description integer satang */
+                                commissionMinor: number;
+                                /** @description integer satang */
+                                labCostMinor: number;
+                                labVendor: string | null;
+                                /** @description integer satang */
+                                practitionerShareMinor: number;
+                                /** @description integer satang */
+                                cardFeeMinor: number;
+                                shopShareMinor: number;
+                                methods: {
+                                    /** @description integer satang */
+                                    cash: number;
+                                    /** @description integer satang */
+                                    transfer: number;
+                                    /** @description integer satang */
+                                    promptpay: number;
+                                    /** @description integer satang */
+                                    card_external: number;
+                                    /** @description integer satang */
+                                    deposit: number;
+                                    /** @description integer satang */
+                                    package: number;
+                                    /** @description integer satang */
+                                    other: number;
+                                };
+                            }[];
+                            totals: {
+                                lines: number;
+                                bills: number;
+                                /** @description integer satang */
+                                revenueMinor: number;
+                                /** @description integer satang */
+                                labCostMinor: number;
+                                afterLabMinor: number;
+                            };
+                            byVendor: {
+                                vendor: string | null;
+                                lines: number;
+                                /** @description integer satang */
+                                labCostMinor: number;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sales-reports/deposit-movements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Deposit ledger: every take / use / refund / forfeit with the customer balance, plus the period cards
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deposit movements */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @description ISO instant */
+                                at: string;
+                                /** @description local YYYY-MM-DD */
+                                date: string;
+                                /** @description local HH:mm */
+                                time: string;
+                                customerId: string;
+                                customerCode: string | null;
+                                customerName: string | null;
+                                depositId: string;
+                                /** @enum {string} */
+                                kind: "take" | "apply" | "restore" | "refund" | "forfeit";
+                                documentNo: string | null;
+                                signedMinor: number;
+                                balanceAfterMinor: number;
+                                note: string | null;
+                                estimated: boolean;
+                            }[];
+                            summary: {
+                                /** @description integer satang */
+                                openingMinor: number;
+                                /** @description integer satang */
+                                takenMinor: number;
+                                /** @description integer satang */
+                                appliedMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                /** @description integer satang */
+                                forfeitedMinor: number;
+                                /** @description integer satang */
+                                closingMinor: number;
+                            };
+                            branches: {
+                                branchId: string;
+                                branchName: string;
+                                /** @description integer satang */
+                                takenMinor: number;
+                                /** @description integer satang */
+                                appliedMinor: number;
+                                /** @description integer satang */
+                                forfeitedMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                netMinor: number;
+                                customers: number;
+                            }[];
                         };
                     };
                 };
@@ -25023,6 +25944,161 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/sales-reports/share-by-method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Practitioner share (hand fee + commission) split by how the bill line was paid
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                    serviceIds?: string;
+                    categories?: string;
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Share by method */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @description null = lines without a named staff */
+                                staffId: string | null;
+                                staffName: string | null;
+                                lines: number;
+                                /** @description integer satang */
+                                shareMinor: number;
+                                methods: {
+                                    /** @description integer satang */
+                                    cash: number;
+                                    /** @description integer satang */
+                                    transfer: number;
+                                    /** @description integer satang */
+                                    promptpay: number;
+                                    /** @description integer satang */
+                                    card_external: number;
+                                    /** @description integer satang */
+                                    deposit: number;
+                                    /** @description integer satang */
+                                    package: number;
+                                    /** @description integer satang */
+                                    other: number;
+                                };
+                            }[];
+                            totals: {
+                                lines: number;
+                                /** @description integer satang */
+                                shareMinor: number;
+                                methods: {
+                                    /** @description integer satang */
+                                    cash: number;
+                                    /** @description integer satang */
+                                    transfer: number;
+                                    /** @description integer satang */
+                                    promptpay: number;
+                                    /** @description integer satang */
+                                    card_external: number;
+                                    /** @description integer satang */
+                                    deposit: number;
+                                    /** @description integer satang */
+                                    package: number;
+                                    /** @description integer satang */
+                                    other: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/sales-reports/discounts": {
         parameters: {
             query?: never;
@@ -25041,6 +26117,7 @@ export interface paths {
                     to: string;
                     branchId?: string;
                     status?: "paid" | "open" | "cancelled" | "all";
+                    q?: string;
                 };
                 header?: never;
                 path?: never;
@@ -25174,6 +26251,7 @@ export interface paths {
                     from?: string;
                     to?: string;
                     branchId?: string;
+                    q?: string;
                 };
                 header?: never;
                 path?: never;
@@ -25306,6 +26384,7 @@ export interface paths {
                     from: string;
                     to: string;
                     branchId?: string;
+                    q?: string;
                 };
                 header?: never;
                 path?: never;
@@ -25478,11 +26557,14 @@ export interface paths {
                                 noShows: number;
                                 /** @description no-shows ÷ appointments (not cancelled), basis points */
                                 noShowBp: number;
+                                /** @description booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable */
+                                utilizationBp: number | null;
                             };
                             previous: {
                                 period: string;
                                 fromDate: string;
                                 toDate: string;
+                                partial: boolean;
                                 metrics: {
                                     /** @description integer satang */
                                     salesMinor: number;
@@ -25502,12 +26584,15 @@ export interface paths {
                                     noShows: number;
                                     /** @description no-shows ÷ appointments (not cancelled), basis points */
                                     noShowBp: number;
+                                    /** @description booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable */
+                                    utilizationBp: number | null;
                                 };
                             };
                             lastYear: {
                                 period: string;
                                 fromDate: string;
                                 toDate: string;
+                                partial: boolean;
                                 metrics: {
                                     /** @description integer satang */
                                     salesMinor: number;
@@ -25527,8 +26612,12 @@ export interface paths {
                                     noShows: number;
                                     /** @description no-shows ÷ appointments (not cancelled), basis points */
                                     noShowBp: number;
+                                    /** @description booked minutes ÷ open minutes × rooms (or practitioners when the branch has no rooms), up to now, basis points; null = not measurable */
+                                    utilizationBp: number | null;
                                 };
                             } | null;
+                            /** @enum {string|null} */
+                            utilizationBasis: "resource" | "practitioner" | null;
                             change: {
                                 previous: {
                                     [key: string]: number | null;
@@ -25561,6 +26650,8 @@ export interface paths {
                                 salesMinor: number;
                                 /** @description integer satang */
                                 previousMinor: number;
+                                /** @description integer satang */
+                                lastYearMinor: number;
                             }[];
                             topServices: {
                                 name: string;
@@ -34107,8 +35198,14 @@ export interface paths {
                                         chronic: boolean;
                                     };
                                 };
+                                customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
                                 memberName: string | null;
@@ -34238,6 +35335,8 @@ export interface paths {
                         isRequestedMember?: boolean;
                         customerPackageId?: string | null;
                         saleMembershipId?: string | null;
+                        labels?: string[];
+                        extraServiceIds?: string[];
                         /** @enum {string} */
                         source?: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                         overrideReason?: string;
@@ -34276,8 +35375,14 @@ export interface paths {
                                         chronic: boolean;
                                     };
                                 };
+                                customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
                                 memberName: string | null;
@@ -34430,8 +35535,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -34478,8 +35589,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -34526,8 +35643,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -34575,8 +35698,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -34623,8 +35752,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -34825,8 +35960,14 @@ export interface paths {
                                         chronic: boolean;
                                     };
                                 };
+                                customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
                                 memberName: string | null;
@@ -34957,6 +36098,8 @@ export interface paths {
                         resourceId?: string | null;
                         note?: string | null;
                         isRequestedMember?: boolean;
+                        labels?: string[];
+                        extraServiceIds?: string[];
                         overrideReason?: string;
                     };
                 };
@@ -34986,8 +36129,14 @@ export interface paths {
                                         chronic: boolean;
                                     };
                                 };
+                                customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
                                 memberName: string | null;
@@ -35152,8 +36301,14 @@ export interface paths {
                                         chronic: boolean;
                                     };
                                 };
+                                customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
                                 memberName: string | null;
@@ -35571,8 +36726,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -35767,6 +36928,7 @@ export interface paths {
                                     startAt: string;
                                     endAt: string;
                                     memberIds: string[];
+                                    resourceIds: string[];
                                 }[];
                                 /** @enum {string|null} */
                                 emptyReason: "branch_closed" | "no_staff" | "no_shifts" | "no_resource" | "all_booked" | null;
@@ -35895,7 +37057,7 @@ export interface paths {
                                 columns: {
                                     id: string;
                                     /** @enum {string} */
-                                    type: "member" | "resource";
+                                    type: "member" | "resource" | "unassigned";
                                     name: string;
                                     onShift: boolean;
                                 }[];
@@ -35916,8 +37078,14 @@ export interface paths {
                                             chronic: boolean;
                                         };
                                     };
+                                    customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
                                     memberName: string | null;
@@ -35969,6 +37137,15 @@ export interface paths {
                                     membershipId: string;
                                     startAt: string;
                                     endAt: string;
+                                }[];
+                                blocks: {
+                                    id: string;
+                                    branchId: string;
+                                    membershipId: string | null;
+                                    resourceId: string | null;
+                                    startAt: string;
+                                    endAt: string;
+                                    reason: string | null;
                                 }[];
                                 closures: {
                                     date: string;
@@ -36062,6 +37239,243 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/schedule-blocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Block a practitioner and/or room for a time range (break, meeting, cleaning)
+         * @description Counts as busy time: bookings into the range are refused (409) and the slots vanish from availability. Shown as a grey block on the calendar.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        branchId: string;
+                        membershipId?: string | null;
+                        resourceId?: string | null;
+                        startAt: string;
+                        endAt: string;
+                        reason?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                membershipId: string | null;
+                                resourceId: string | null;
+                                startAt: string;
+                                endAt: string;
+                                reason: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/schedule-blocks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove a blocked time range
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Removed */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -39714,6 +41128,9 @@ export interface paths {
                             unitPriceMinor: number;
                             performerMembershipId?: string | null;
                             saleMembershipId?: string | null;
+                            /** @description integer satang */
+                            labCostMinor?: number;
+                            labVendor?: string | null;
                         }[];
                         /**
                          * @description integer satang
@@ -39788,6 +41205,9 @@ export interface paths {
                                     unitPriceMinor: number;
                                     performerMembershipId: string | null;
                                     saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
                                     id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
@@ -39990,6 +41410,9 @@ export interface paths {
                                     unitPriceMinor: number;
                                     performerMembershipId: string | null;
                                     saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
                                     id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
@@ -40139,6 +41562,9 @@ export interface paths {
                             unitPriceMinor: number;
                             performerMembershipId?: string | null;
                             saleMembershipId?: string | null;
+                            /** @description integer satang */
+                            labCostMinor?: number;
+                            labVendor?: string | null;
                         }[];
                         /** @description integer satang */
                         tipMinor?: number;
@@ -40211,6 +41637,9 @@ export interface paths {
                                     unitPriceMinor: number;
                                     performerMembershipId: string | null;
                                     saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
                                     id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
@@ -40361,6 +41790,9 @@ export interface paths {
                     "application/json": {
                         performerMembershipId?: string | null;
                         saleMembershipId?: string | null;
+                        /** @description integer satang */
+                        labCostMinor?: number;
+                        labVendor?: string | null;
                     };
                 };
             };
@@ -40428,6 +41860,9 @@ export interface paths {
                                     unitPriceMinor: number;
                                     performerMembershipId: string | null;
                                     saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
                                     id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
@@ -40643,6 +42078,9 @@ export interface paths {
                                         unitPriceMinor: number;
                                         performerMembershipId: string | null;
                                         saleMembershipId: string | null;
+                                        /** @description integer satang */
+                                        labCostMinor: number;
+                                        labVendor: string | null;
                                         id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
@@ -40879,6 +42317,9 @@ export interface paths {
                                         unitPriceMinor: number;
                                         performerMembershipId: string | null;
                                         saleMembershipId: string | null;
+                                        /** @description integer satang */
+                                        labCostMinor: number;
+                                        labVendor: string | null;
                                         id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
@@ -41103,6 +42544,9 @@ export interface paths {
                                         unitPriceMinor: number;
                                         performerMembershipId: string | null;
                                         saleMembershipId: string | null;
+                                        /** @description integer satang */
+                                        labCostMinor: number;
+                                        labVendor: string | null;
                                         id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
@@ -41336,6 +42780,9 @@ export interface paths {
                                         unitPriceMinor: number;
                                         performerMembershipId: string | null;
                                         saleMembershipId: string | null;
+                                        /** @description integer satang */
+                                        labCostMinor: number;
+                                        labVendor: string | null;
                                         id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
@@ -41713,6 +43160,9 @@ export interface paths {
                                         unitPriceMinor: number;
                                         performerMembershipId: string | null;
                                         saleMembershipId: string | null;
+                                        /** @description integer satang */
+                                        labCostMinor: number;
+                                        labVendor: string | null;
                                         id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
@@ -45717,6 +47167,7 @@ export interface paths {
                             priceMinor: number;
                             discountMinor?: number;
                             paidMinor?: number;
+                            labCostMinor?: number;
                             tipMinor?: number;
                             isRequestedByCustomer?: boolean;
                             usesPackage?: boolean;
@@ -64702,6 +66153,7 @@ export interface paths {
                                 durationMin: number;
                                 bufferMin: number;
                                 priceMinor: number;
+                                labCostMinor: number;
                                 rebookAfterDays: number | null;
                                 followupPlan: {
                                     afterDays: number;
@@ -64830,6 +66282,8 @@ export interface paths {
                         bufferMin?: number;
                         /** @default 0 */
                         priceMinor?: number;
+                        /** @default 0 */
+                        labCostMinor?: number;
                         rebookAfterDays?: number | null;
                         /** @default [] */
                         followupPlan?: {
@@ -64882,6 +66336,7 @@ export interface paths {
                                 durationMin: number;
                                 bufferMin: number;
                                 priceMinor: number;
+                                labCostMinor: number;
                                 rebookAfterDays: number | null;
                                 followupPlan: {
                                     afterDays: number;
@@ -65019,6 +66474,7 @@ export interface paths {
                                 durationMin: number;
                                 bufferMin: number;
                                 priceMinor: number;
+                                labCostMinor: number;
                                 rebookAfterDays: number | null;
                                 followupPlan: {
                                     afterDays: number;
@@ -65235,6 +66691,7 @@ export interface paths {
                         durationMin?: number;
                         bufferMin?: number;
                         priceMinor?: number;
+                        labCostMinor?: number;
                         rebookAfterDays?: number | null;
                         followupPlan?: {
                             afterDays: number;
@@ -65278,6 +66735,7 @@ export interface paths {
                                 durationMin: number;
                                 bufferMin: number;
                                 priceMinor: number;
+                                labCostMinor: number;
                                 rebookAfterDays: number | null;
                                 followupPlan: {
                                     afterDays: number;
@@ -65535,6 +66993,7 @@ export interface paths {
                                 durationMin: number;
                                 bufferMin: number;
                                 priceMinor: number;
+                                labCostMinor: number;
                                 rebookAfterDays: number | null;
                                 followupPlan: {
                                     afterDays: number;

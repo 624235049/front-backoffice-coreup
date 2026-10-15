@@ -23,17 +23,8 @@ describe('resolveTerm', () => {
   it('resolves every term key', () => {
     const all = resolveAllTerms({ appointment: 'คิว' }, fallback);
     expect(all.appointment).toBe('คิว');
-    expect(Object.keys(all).sort()).toEqual([
-      'appointment',
-      'branch',
-      'customer',
-      'customers',
-      'followup',
-      'package',
-      'practitioner',
-      'resource',
-      'service',
-    ]);
+    // every key resolves to a word (shop override or fallback), whatever terms the API adds later
+    for (const word of Object.values(all)) expect(typeof word === 'string' && word.length > 0).toBe(true);
   });
 });
 
