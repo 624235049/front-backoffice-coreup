@@ -63,6 +63,10 @@ export default defineConfig(() => ({
         ],
       },
       workbox: {
+        // take over on install: without these the new worker waited for every tab to close, so tabs open all day
+        // (and tabs still running an old bundle that never asks it to) kept serving the old app for days
+        skipWaiting: true,
+        clientsClaim: true,
         // Cache the app shell only. API responses hold personal data: never cached (docs/04 §8).
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         navigateFallback: '/index.html',
