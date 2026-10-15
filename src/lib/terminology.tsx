@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOptionalMembership } from '@/lib/membership';
 
@@ -61,8 +62,13 @@ export function Term({ k }: { k: TermKey }) {
 export function useT(ns?: string | string[]) {
   const { t, i18n } = useTranslation(ns);
   const { t: tTerms } = useTranslation('terms');
-  const terms = resolveAllTerms(useOptionalMembership()?.terminology, (k) => tTerms(k));
-  const tt = (key: string, options?: Record<string, unknown>): string =>
-    t(key, { ...terms, ...options } as never) as unknown as string;
+  const terminology = useOptionalMembership()?.terminology;
+  // stable across renders: forms list `t` in effect deps, a fresh function each render reset them on every keystroke/tick
+  const terms = useMemo(() => resolveAllTerms(terminology, (k) => tTerms(k)), [terminology, tTerms]);
+  const tt = useCallback(
+    (key: string, options?: Record<string, unknown>): string =>
+      t(key, { ...terms, ...options } as never) as unknown as string,
+    [t, terms],
+  );
   return { t: tt, i18n, terms };
 }

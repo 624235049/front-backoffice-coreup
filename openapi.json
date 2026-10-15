@@ -81244,6 +81244,15 @@
             "required": false,
             "name": "ignoreAppointmentId",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 400
+            },
+            "required": false,
+            "name": "extraServiceIds",
+            "in": "query"
           }
         ],
         "responses": {

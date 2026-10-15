@@ -39873,6 +39873,7 @@ export interface paths {
                     date: string;
                     memberId?: string;
                     ignoreAppointmentId?: string;
+                    extraServiceIds?: string;
                 };
                 header?: never;
                 path?: never;
