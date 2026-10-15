@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as NoAccessRouteImport } from './routes/no-access'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppLeadsRouteImport } from './routes/_app/leads'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
@@ -27,6 +28,7 @@ import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformRevenueRouteImport } from './routes/_app/platform.revenue'
 import { Route as AppPlatformTeamRouteImport } from './routes/_app/platform.team'
+import { Route as AppPlatformUsersRouteImport } from './routes/_app/platform.users'
 import { Route as AppAccountingA4ShopIdRouteImport } from './routes/_app/accounting.a4-shop.$id'
 import { Route as AppAccountingA4IdRouteImport } from './routes/_app/accounting.a4.$id'
 import { Route as AppAccountingCreditNotesIndexRouteImport } from './routes/_app/accounting.credit-notes.index'
@@ -68,6 +70,11 @@ const NoAccessRoute = NoAccessRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeadsRoute = AppLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
   getParentRoute: () => AppRoute,
 } as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
@@ -138,6 +145,11 @@ const AppPlatformRevenueRoute = AppPlatformRevenueRouteImport.update({
 const AppPlatformTeamRoute = AppPlatformTeamRouteImport.update({
   id: '/platform/team',
   path: '/platform/team',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformUsersRoute = AppPlatformUsersRouteImport.update({
+  id: '/platform/users',
+  path: '/platform/users',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAccountingA4ShopIdRoute = AppAccountingA4ShopIdRouteImport.update({
@@ -278,6 +290,7 @@ const AppPlatformTenantsIdRoute = AppPlatformTenantsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/no-access': typeof NoAccessRoute
+  '/leads': typeof AppLeadsRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
@@ -290,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
+  '/platform/users': typeof AppPlatformUsersRoute
   '/accounting/': typeof AppAccountingIndexRoute
   '/platform/': typeof AppPlatformIndexRoute
   '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
@@ -320,6 +334,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/no-access': typeof NoAccessRoute
+  '/leads': typeof AppLeadsRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/sign-in': typeof AuthSignInRoute
@@ -332,6 +347,7 @@ export interface FileRoutesByTo {
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
+  '/platform/users': typeof AppPlatformUsersRoute
   '/accounting': typeof AppAccountingIndexRoute
   '/platform': typeof AppPlatformIndexRoute
   '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
@@ -364,6 +380,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
   '/no-access': typeof NoAccessRoute
+  '/_app/leads': typeof AppLeadsRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/sign-in': typeof AuthSignInRoute
@@ -377,6 +394,7 @@ export interface FileRoutesById {
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
   '/_app/platform/revenue': typeof AppPlatformRevenueRoute
   '/_app/platform/team': typeof AppPlatformTeamRoute
+  '/_app/platform/users': typeof AppPlatformUsersRoute
   '/_app/accounting/': typeof AppAccountingIndexRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
   '/_app/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
@@ -409,6 +427,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/no-access'
+    | '/leads'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -421,6 +440,7 @@ export interface FileRouteTypes {
     | '/platform/leads'
     | '/platform/revenue'
     | '/platform/team'
+    | '/platform/users'
     | '/accounting/'
     | '/platform/'
     | '/accounting/a4-shop/$id'
@@ -451,6 +471,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/no-access'
+    | '/leads'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -463,6 +484,7 @@ export interface FileRouteTypes {
     | '/platform/leads'
     | '/platform/revenue'
     | '/platform/team'
+    | '/platform/users'
     | '/accounting'
     | '/platform'
     | '/accounting/a4-shop/$id'
@@ -494,6 +516,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_auth'
     | '/no-access'
+    | '/_app/leads'
     | '/_auth/forgot-password'
     | '/_auth/reset-password'
     | '/_auth/sign-in'
@@ -507,6 +530,7 @@ export interface FileRouteTypes {
     | '/_app/platform/leads'
     | '/_app/platform/revenue'
     | '/_app/platform/team'
+    | '/_app/platform/users'
     | '/_app/accounting/'
     | '/_app/platform/'
     | '/_app/accounting/a4-shop/$id'
@@ -569,6 +593,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leads': {
+      id: '/_app/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AppLeadsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_auth/forgot-password': {
@@ -667,6 +698,13 @@ declare module '@tanstack/react-router' {
       path: '/platform/team'
       fullPath: '/platform/team'
       preLoaderRoute: typeof AppPlatformTeamRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/users': {
+      id: '/_app/platform/users'
+      path: '/platform/users'
+      fullPath: '/platform/users'
+      preLoaderRoute: typeof AppPlatformUsersRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/accounting/a4-shop/$id': {
@@ -841,6 +879,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppLeadsRoute: typeof AppLeadsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppAccountingContactsRoute: typeof AppAccountingContactsRoute
@@ -851,6 +890,7 @@ interface AppRouteChildren {
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
   AppPlatformRevenueRoute: typeof AppPlatformRevenueRoute
   AppPlatformTeamRoute: typeof AppPlatformTeamRoute
+  AppPlatformUsersRoute: typeof AppPlatformUsersRoute
   AppAccountingIndexRoute: typeof AppAccountingIndexRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
   AppAccountingA4ShopIdRoute: typeof AppAccountingA4ShopIdRoute
@@ -880,6 +920,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppLeadsRoute: AppLeadsRoute,
   AppIndexRoute: AppIndexRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppAccountingContactsRoute: AppAccountingContactsRoute,
@@ -890,6 +931,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
   AppPlatformRevenueRoute: AppPlatformRevenueRoute,
   AppPlatformTeamRoute: AppPlatformTeamRoute,
+  AppPlatformUsersRoute: AppPlatformUsersRoute,
   AppAccountingIndexRoute: AppAccountingIndexRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
   AppAccountingA4ShopIdRoute: AppAccountingA4ShopIdRoute,

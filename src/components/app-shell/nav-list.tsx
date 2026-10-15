@@ -14,6 +14,25 @@ function isActive(pathname: string, item: NavItem): boolean {
   return item.exact ? pathname === item.to : pathname === item.to || pathname.startsWith(`${item.to}/`);
 }
 
+/** Red count on a nav item (e.g. new leads). The hook only runs while the item is visible. */
+function NavBadge({ useBadge, variant }: { useBadge: () => number; variant: 'sidebar' | 'bottom' }) {
+  const { t } = useTranslation('nav');
+  const count = useBadge();
+  if (count <= 0) return null;
+  return (
+    <span
+      role="status"
+      aria-label={t('newCount', { count })}
+      className={cn(
+        'inline-flex min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[11px] leading-5 font-semibold text-white tabular-nums',
+        variant === 'sidebar' ? 'ml-auto' : 'absolute top-1.5 left-1/2 ml-3',
+      )}
+    >
+      {count > 99 ? '99+' : count}
+    </span>
+  );
+}
+
 export function NavLink({
   item,
   onNavigate,
@@ -47,6 +66,7 @@ export function NavLink({
     >
       <Icon className="size-5 shrink-0" aria-hidden />
       <span className="truncate">{t(item.labelKey)}</span>
+      {item.useBadge ? <NavBadge useBadge={item.useBadge} variant={variant} /> : null}
     </Link>
   );
 }

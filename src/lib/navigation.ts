@@ -31,6 +31,8 @@ export type NavItem = {
   advanced?: boolean;
   /** Match only the exact path for the active state (default: prefix match). */
   exact?: boolean;
+  /** React hook returning a count shown as a red badge on the item (hidden at 0). Only called while the item is visible. */
+  useBadge?: () => number;
 };
 
 const modules = import.meta.glob<{ navItems?: NavItem[] }>('../features/*/nav.ts', { eager: true });

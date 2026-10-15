@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Phone, Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { CheckCheck, Copy, MessageCircle, Phone, Plus } from 'lucide-react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -23,15 +23,16 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
-import { useMe } from '@/lib/me';
 import { cn } from '@/lib/utils';
 import {
   type Lead,
+  type LeadDetail,
   type LeadStage,
   useAddLeadActivity,
   useConvertLead,
   useCreateLead,
   useLead,
+  useLeadAssignees,
   useLeads,
   usePatchLead,
   usePlans,
@@ -93,7 +94,9 @@ export function LeadsPage() {
         {(rows) => (
           <div className="flex gap-3 overflow-x-auto pb-4" data-testid="kanban">
             {STAGES.map((stage) => {
-              const cards = rows.filter((l) => l.stage === stage);
+              const cards = rows
+                .filter((l) => l.stage === stage)
+                .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
               return (
                 <section
                   key={stage}
@@ -117,7 +120,10 @@ export function LeadsPage() {
                   }}
                 >
                   <h2 className="flex items-center justify-between px-1 text-sm font-semibold">
-                    {t(`leadStage.${stage}`)} <Badge variant="outline">{cards.length}</Badge>
+                    {t(`leadStage.${stage}`)}{' '}
+                    <Badge variant={stage === 'new' && cards.length > 0 ? 'destructive' : 'outline'}>
+                      {cards.length}
+                    </Badge>
                   </h2>
                   {cards.map((l) => (
                     <LeadCard
@@ -205,10 +211,18 @@ function LeadCard({
         e.dataTransfer.effectAllowed = 'move';
         onDragStart();
       }}
-      className="cursor-grab rounded-lg border bg-card p-3 text-sm shadow-xs active:cursor-grabbing"
+      className={cn(
+        'cursor-grab rounded-lg border bg-card p-3 text-sm shadow-xs active:cursor-grabbing',
+        lead.stage === 'new' && 'border-destructive/40 bg-destructive/5',
+      )}
       data-lead-id={lead.id}
     >
       <button type="button" onClick={onOpen} className="block w-full text-left font-medium hover:underline">
+        {lead.stage === 'new' ? (
+          <Badge variant="destructive" className="mr-1.5 align-middle">
+            {t('leads.newBadge')}
+          </Badge>
+        ) : null}
         {lead.businessName}
       </button>
       <div className="mt-0.5 text-xs text-muted-foreground">
@@ -219,6 +233,12 @@ function LeadCard({
           .filter(Boolean)
           .join(' · ')}
       </div>
+      {lead.phone || lead.lineId ? (
+        <div className="mt-1 text-xs">
+          {[lead.phone, lead.lineId ? `LINE ${lead.lineId}` : null].filter(Boolean).join(' · ')}
+        </div>
+      ) : null}
+      <div className="mt-1 text-xs text-muted-foreground">{formatDateTime(lead.createdAt, locale)}</div>
       {lead.nextActionAt ? (
         <div
           className={cn('mt-1 text-xs', overdue ? 'font-medium text-destructive' : 'text-muted-foreground')}
@@ -345,15 +365,12 @@ function LeadSheet({
   const { t: tc } = useTranslation('common');
   const locale = useIntlLocale();
   const lead = useLead(id);
-  const patch = usePatchLead();
   const activity = useAddLeadActivity();
-  const me = useMe();
   const [type, setType] = useState<(typeof ACTIVITY_TYPES)[number]>('call');
   const [note, setNote] = useState('');
   const [next, setNext] = useState('');
   const [converting, setConverting] = useState(false);
   const data = lead.data?.data;
-  const myId = me.data?.user.id;
 
   return (
     <Sheet open={id !== null} onOpenChange={(o) => !o && onClose()}>
@@ -365,35 +382,8 @@ function LeadSheet({
         <QueryState query={lead}>
           {({ data: d }) => (
             <div className="grid gap-4 px-4 pb-6 text-sm">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <div className="text-xs text-muted-foreground">{t('leads.contactName')}</div>
-                  {d.contactName ?? '–'}
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">{t('leads.phone')}</div>
-                  {d.phone ?? '–'}
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">{t('leads.owner')}</div>
-                  {d.ownerName ?? '–'}{' '}
-                  {myId && d.ownerUserId !== myId ? (
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="h-auto p-0"
-                      onClick={() => patch.mutate({ id: d.id, body: { ownerUserId: myId } })}
-                    >
-                      {t('leads.takeOver')}
-                    </Button>
-                  ) : null}
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">{t('leads.nextAction')}</div>
-                  {d.nextActionAt ? formatDateTime(d.nextActionAt, locale) : '–'}
-                </div>
-              </div>
-              {d.message ? <p className="rounded-md bg-muted/60 p-3">{d.message}</p> : null}
+              <LeadQuickActions d={d} />
+              <LeadDetails d={d} />
               {d.lostReason ? (
                 <p className="text-destructive">
                   {t('leads.lostReason')}: {d.lostReason}
@@ -500,6 +490,163 @@ function LeadSheet({
         </QueryState>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/** Call / copy number / open LINE / mark contacted / hand over to a teammate: what a salesperson does first. */
+function LeadQuickActions({ d }: { d: LeadDetail }) {
+  const { t } = useTranslation('platform');
+  const patch = usePatchLead();
+  const assignees = useLeadAssignees();
+  const copy = async () => {
+    if (!d.phone) return;
+    await navigator.clipboard.writeText(d.phone);
+    toast.success(t('leads.copied'));
+  };
+  return (
+    <div className="grid gap-3 rounded-lg border p-3" data-testid="lead-quick-actions">
+      <div className="text-sm font-medium">{t('leads.quickActions')}</div>
+      <div className="flex flex-wrap gap-2">
+        {d.phone ? (
+          <>
+            <Button asChild size="sm">
+              <a href={`tel:${d.phone.replace(/[^\d+]/g, '')}`}>
+                <Phone /> {t('leads.call')}
+              </a>
+            </Button>
+            <Button size="sm" variant="outline" onClick={copy}>
+              <Copy /> {t('leads.copyPhone')}
+            </Button>
+          </>
+        ) : (
+          <span className="text-xs text-muted-foreground">{t('leads.noPhone')}</span>
+        )}
+        {d.lineId ? (
+          <Button asChild size="sm" variant="outline">
+            <a
+              href={`https://line.me/ti/p/~${encodeURIComponent(d.lineId.replace(/^@/, ''))}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MessageCircle /> {t('leads.openLine')}
+            </a>
+          </Button>
+        ) : null}
+        {d.stage === 'new' ? (
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={patch.isPending}
+            onClick={() =>
+              patch.mutate(
+                { id: d.id, body: { stage: 'contacted' } },
+                { onSuccess: () => toast.success(t('leads.contactedToast')) },
+              )
+            }
+          >
+            <CheckCheck /> {t('leads.markContacted')}
+          </Button>
+        ) : null}
+      </div>
+      <div>
+        <Label>{t('leads.assign')}</Label>
+        <Select
+          value={d.ownerUserId ?? ''}
+          onValueChange={(v) =>
+            patch.mutate(
+              { id: d.id, body: { ownerUserId: v } },
+              { onSuccess: () => toast.success(t('leads.assignedToast')) },
+            )
+          }
+        >
+          <SelectTrigger aria-label={t('leads.assign')}>
+            <SelectValue placeholder={t('leads.assignPlaceholder')} />
+          </SelectTrigger>
+          <SelectContent>
+            {(assignees.data ?? []).map((m) => (
+              <SelectItem key={m.userId} value={m.userId}>
+                {m.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="break-words">{children}</div>
+    </div>
+  );
+}
+
+/** Everything the customer typed in the website form, plus where they came from. */
+function LeadDetails({ d }: { d: LeadDetail }) {
+  const { t } = useTranslation('platform');
+  const locale = useIntlLocale();
+  const utm = d.utm ?? {};
+  const str = (k: string) => (typeof utm[k] === 'string' && utm[k] ? (utm[k] as string) : null);
+  const campaign = ['utm_source', 'utm_medium', 'utm_campaign', 'campaign', 'medium']
+    .map((k) => str(k))
+    .filter(Boolean)
+    .join(' / ');
+  const leakMinor = (d.leakEstimate as { result?: { totalMonthlyMinor?: number } } | null)?.result
+    ?.totalMonthlyMinor;
+  return (
+    <div className="grid gap-3" data-testid="lead-details">
+      <div className="text-sm font-medium">{t('leads.details')}</div>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label={t('leads.contactName')}>{d.contactName ?? '–'}</Field>
+        <Field label={t('leads.phone')}>{d.phone ?? '–'}</Field>
+        <Field label={t('leads.lineId')}>{d.lineId ?? '–'}</Field>
+        <Field label={t('leads.industry')}>
+          {d.industryKey ? t(`industry.${d.industryKey}`, { defaultValue: d.industryKey }) : '–'}
+        </Field>
+        <Field label={t('leads.branchCount')}>
+          {d.branchCount ? t('leads.branchValue', { value: d.branchCount }) : '–'}
+        </Field>
+        <Field label={t('leads.staffCount')}>
+          {d.staffCount ? t('leads.staffValue', { value: d.staffCount }) : '–'}
+        </Field>
+        <Field label={t('leads.province')}>{d.province ?? '–'}</Field>
+        <Field label={t('leads.receivedAt')}>{formatDateTime(d.createdAt, locale)}</Field>
+        <Field label={t('leads.owner')}>{d.ownerName ?? t('leads.noOwner')}</Field>
+        <Field label={t('leads.nextAction')}>
+          {d.nextActionAt ? formatDateTime(d.nextActionAt, locale) : '–'}
+        </Field>
+      </div>
+      {d.painPoints.length > 0 ? (
+        <Field label={t('leads.painPoints')}>
+          <ul className="mt-1 flex flex-wrap gap-1.5">
+            {d.painPoints.map((p) => (
+              <li key={p}>
+                <Badge variant="outline">{p}</Badge>
+              </li>
+            ))}
+          </ul>
+        </Field>
+      ) : null}
+      {d.message ? (
+        <Field label={t('leads.message')}>
+          <p className="whitespace-pre-wrap rounded-md bg-muted/60 p-3">{d.message}</p>
+        </Field>
+      ) : null}
+      {leakMinor ? (
+        <Field label={t('leads.leak')}>
+          {t('leads.leakValue', { amount: Math.round(leakMinor / 100).toLocaleString(locale) })}
+        </Field>
+      ) : null}
+      <div className="grid grid-cols-2 gap-3">
+        <Field label={t('leads.source')}>{d.source ?? '–'}</Field>
+        <Field label={t('leads.landingPath')}>{str('landingPath') ?? '–'}</Field>
+        <Field label={t('leads.referrer')}>{str('referrer') ?? '–'}</Field>
+        <Field label={t('leads.utm')}>{campaign || '–'}</Field>
+      </div>
+    </div>
   );
 }
 

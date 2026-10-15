@@ -99,6 +99,21 @@ export const useLead = (id: string | null) =>
     { enabled: id !== null },
   );
 
+/** Leads nobody has contacted yet; polled so the nav badge (and the toast) notice a new website lead. */
+export const useLeadSummary = (enabled = true) =>
+  useTenantQuery(
+    [part, 'leads-summary'],
+    async () => (await unwrap(api.GET('/v1/platform/leads/summary'))).data,
+    { enabled, refetchInterval: 30_000 },
+  );
+
+/** Active CoreUp team members a lead can be handed to. */
+export const useLeadAssignees = () =>
+  useTenantQuery(
+    [part, 'lead-assignees'],
+    async () => (await unwrap(api.GET('/v1/platform/leads/assignees'))).data,
+  );
+
 export const useEngagements = (query: { tenantId?: string; status?: Engagement['status'] } = {}) =>
   useTenantQuery(
     [part, 'engagements', query],
@@ -290,4 +305,62 @@ export const usePatchInvoice = () =>
 export const useGenerateInvoices = () =>
   useMut((month: string | undefined) =>
     unwrap(api.POST('/v1/platform/invoices/generate', { body: { month } })),
+  );
+
+/* ---------------- user accounts (ผู้ใช้งาน) ---------------- */
+export type UserRow = ListItem<ApiData<'/v1/platform/users'>>;
+export type UserDetail = ApiItem<'/v1/platform/users/{id}'>;
+export type UsersQuery = NonNullable<
+  NonNullable<import('@/lib/api-client').paths['/v1/platform/users']['get']['parameters']['query']>
+>;
+export type ResetPasswordBody = ApiBody<'/v1/platform/users/{id}/reset-password', 'post'>;
+
+export const useUsers = (query: UsersQuery) =>
+  useTenantQuery([part, 'users', query], () => unwrap(api.GET('/v1/platform/users', { params: { query } })), {
+    placeholderData: (prev) => prev,
+  });
+
+export const useUser = (id: string | null) =>
+  useTenantQuery(
+    [part, 'users', 'detail', id],
+    async () =>
+      (await unwrap(api.GET('/v1/platform/users/{id}', { params: { path: { id: id as string } } }))).data,
+    { enabled: id !== null },
+  );
+
+/** Account actions refresh the user list/detail only; their own error handling (specific Thai messages) lives in the dialogs. */
+function useUserMut<TData, TVars>(fn: (v: TVars) => Promise<TData>) {
+  const invalidate = useInvalidate();
+  return useApiMutation<TData, TVars>({
+    mutationFn: fn,
+    onSuccess: () => invalidate(part, 'users'),
+    onError: () => undefined,
+  });
+}
+
+export const useResetUserPassword = () =>
+  useUserMut((v: { id: string; body: ResetPasswordBody }) =>
+    unwrap(
+      api.POST('/v1/platform/users/{id}/reset-password', { params: { path: { id: v.id } }, body: v.body }),
+    ),
+  );
+
+export const useCreateUserResetLink = () =>
+  useUserMut((v: { id: string; reason: string }) =>
+    unwrap(
+      api.POST('/v1/platform/users/{id}/reset-link', {
+        params: { path: { id: v.id } },
+        body: { reason: v.reason },
+      }),
+    ),
+  );
+
+export const useRevokeUserSessions = () =>
+  useUserMut((v: { id: string; reason: string }) =>
+    unwrap(
+      api.POST('/v1/platform/users/{id}/revoke-sessions', {
+        params: { path: { id: v.id } },
+        body: { reason: v.reason },
+      }),
+    ),
   );

@@ -6,9 +6,11 @@ import {
   Receipt,
   Store,
   TrendingUp,
+  UserRoundSearch,
   Users,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
+import { useNewLeadBadge } from './new-lead-badge';
 
 export const navItems: NavItem[] = [
   {
@@ -35,6 +37,7 @@ export const navItems: NavItem[] = [
     permission: 'platform:leads',
     module: 'platform',
     order: 30,
+    useBadge: useNewLeadBadge,
   },
   {
     to: '/platform/engagements',
@@ -77,5 +80,13 @@ export const navItems: NavItem[] = [
     role: 'platform_owner',
     module: 'platform',
     order: 80,
+  },
+  {
+    to: '/platform/users',
+    labelKey: 'nav:users',
+    icon: UserRoundSearch,
+    permission: 'platform:manage',
+    module: 'platform',
+    order: 75,
   },
 ];

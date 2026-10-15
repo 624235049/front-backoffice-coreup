@@ -27,6 +27,7 @@
   "dashboard": "ภาพรวม",
   "tenants": "ร้านลูกค้า",
   "leads": "Lead",
+  "newCount": "Lead ใหม่ {{count}}",
   "engagements": "งานที่ปรึกษา",
   "audits": "ออดิท",
   "invoices": "ใบแจ้งหนี้",
@@ -42,5 +43,6 @@
   "accContacts": "ผู้ติดต่อ",
   "accProducts": "สินค้า / บริการ",
   "accReports": "รายงานบัญชี",
-  "accSettings": "ตั้งค่าบริษัท"
+  "accSettings": "ตั้งค่าบริษัท",
+  "users": "ผู้ใช้งาน"
 }

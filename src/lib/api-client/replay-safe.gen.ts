@@ -211,6 +211,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'POST /v1/platform/tenants',
   'POST /v1/platform/tenants/{id}/demo-data',
   'POST /v1/platform/tenants/{id}/impersonate',
+  'POST /v1/platform/users/{id}/revoke-sessions',
   'POST /v1/positions',
   'POST /v1/promptpay/qr',
   'POST /v1/push-subscriptions',

@@ -1,0 +1,134 @@
+{
+  "title": "Users",
+  "description": {
+    "owner": "Find any shop or CoreUp account and help people who are locked out: set a new password or send a set-password link",
+    "readOnly": "Search and view accounts of every shop. Only the CoreUp owner can reset passwords"
+  },
+  "search": "Search name or email",
+  "filter": {
+    "shop": "Shop",
+    "allShops": "All shops",
+    "team": "CoreUp team",
+    "everyone": "All accounts",
+    "teamOnly": "CoreUp team only",
+    "shopsOnly": "Shop users only"
+  },
+  "empty": "No users match your search",
+  "total": "{{count}} accounts",
+  "pageNo": "Page {{page}}",
+  "prev": "Previous page",
+  "next": "Next page",
+  "col": {
+    "user": "Name / email",
+    "shops": "Shop / role",
+    "lastSignIn": "Last sign-in",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "never": "Never signed in",
+  "sessions": "Signed in on {{count}} device(s)",
+  "noShop": "Not in any shop",
+  "yes": "Verified",
+  "no": "Not verified",
+  "copy": "Copy",
+  "copied": "Copied",
+  "copyEmail": "Copy email",
+  "working": "Working…",
+  "actionsFor": "Actions for {{name}}",
+  "badge": {
+    "team": "CoreUp team",
+    "twoFactor": "2FA on",
+    "line": "LINE linked",
+    "noPassword": "No password"
+  },
+  "memberStatus": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "invited": "Invited"
+  },
+  "role": {
+    "platform_owner": "CoreUp owner",
+    "platform_admin": "CoreUp admin",
+    "platform_consultant": "CoreUp consultant",
+    "platform_sales": "CoreUp sales",
+    "owner": "Shop owner",
+    "branch_manager": "Branch manager",
+    "front_desk": "Front desk",
+    "practitioner": "Practitioner",
+    "staff": "Staff"
+  },
+  "action": {
+    "open": "View details",
+    "reset": "Reset password",
+    "link": "Send set-password link",
+    "revoke": "Sign out everywhere"
+  },
+  "reason": {
+    "label": "Reason (kept in the audit log)",
+    "placeholder": "e.g. forgot the password and got no email; the user contacted us on LINE",
+    "hint": "At least {{min}} characters"
+  },
+  "teamWarning": "This is a CoreUp team account. Changing its password affects sign-in to this back office and is logged.",
+  "error": {
+    "self": "You cannot do this to your own account; change your password in account security instead",
+    "noEmail": "This account signs in with LINE only and has no real email to set a password for"
+  },
+  "reset": {
+    "title": "Reset password for {{name}}",
+    "description": "Email {{email}}",
+    "modeLabel": "How to set the new password",
+    "mode": {
+      "generate": "Generate new",
+      "typed": "Type my own"
+    },
+    "generateHint": "The system generates a readable 12-character password and shows it once after you confirm.",
+    "newPassword": "New password",
+    "passwordHint": "8–128 characters, same as sign-up",
+    "sideEffects": "On confirm the user is signed out of every device and the old password stops working.",
+    "confirm": "Confirm password reset",
+    "doneTitle": "New password set",
+    "doneHint": "Signed out of {{count}} device(s)",
+    "messageLabel": "Message ready to send on LINE",
+    "copyMessage": "Copy message",
+    "onceWarning": "This password is shown once. After you close this window it cannot be shown again; the plain password is never stored.",
+    "doneClose": "Copied, close"
+  },
+  "link": {
+    "title": "Send set-password link to {{name}}",
+    "description": "Creates a one-time link valid for 1 hour that you can pass on over LINE, no email needed.",
+    "sideEffects": "The user opens the link and sets a new password; they are then signed out of every device.",
+    "confirm": "Create link",
+    "url": "Set-password link",
+    "expires": "Expires {{at}}"
+  },
+  "revoke": {
+    "title": "Sign {{name}} out everywhere",
+    "description": "Currently signed in on {{count}} device(s). All of them must sign in again; the password stays the same.",
+    "confirm": "Sign out",
+    "done": "Signed out of {{count}} device(s)"
+  },
+  "detail": {
+    "title": "User details",
+    "description": "Shops, recent sign-ins and what the team did to this account (IP addresses are partly hidden)",
+    "createdAt": "Account created",
+    "sessions": "Signed-in devices",
+    "emailVerified": "Email",
+    "selfHint": "This is your own account: you cannot reset or sign yourself out here.",
+    "ownerOnly": "Only the CoreUp owner can reset passwords or sign users out.",
+    "memberships": "Shops and roles",
+    "recentSignIns": "Recent sign-ins",
+    "noSignIns": "No device is signed in right now",
+    "expired": "Expired",
+    "recentActions": "What the team did to this account",
+    "noActions": "No reset or link yet",
+    "actionName": {
+      "platform.user_password_reset": "Password reset",
+      "platform.user_reset_link_created": "Set-password link created",
+      "platform.user_sessions_revoked": "Signed out everywhere"
+    }
+  },
+  "tab": {
+    "title": "Users of this shop",
+    "empty": "This shop has no users yet"
+  }
+}

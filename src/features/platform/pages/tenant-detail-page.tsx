@@ -1,8 +1,9 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { Eye } from 'lucide-react';
+import { Eye, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +15,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { isApiError } from '@/lib/api';
+import { useMe } from '@/lib/me';
+import { useMembership } from '@/lib/membership';
 import { Can, useCan } from '@/lib/permissions';
 import {
   type TenantDetail,
@@ -27,10 +30,12 @@ import {
   useTenant,
   useTenantReport,
   useTenantUsage,
+  useUsers,
 } from '../api';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
+import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
 
 /** Module keys a consultant can switch on per shop (docs/02 §5; `core` is always on). */
@@ -56,6 +61,7 @@ export function TenantDetailPage() {
   const tenant = useTenant(id);
   const [impersonate, setImpersonate] = useState(false);
   const canImpersonate = useCan('platform:impersonate');
+  const canSeeUsers = useCan('platform:manage');
 
   return (
     <QueryState query={tenant}>
@@ -80,13 +86,22 @@ export function TenantDetailPage() {
             />
             <Tabs defaultValue="overview">
               <TabsList className="mb-4 flex h-auto flex-wrap justify-start">
-                {(['overview', 'engagements', 'usage', 'reports', 'finance', 'access', 'team'] as const).map(
-                  (k) => (
-                    <TabsTrigger key={k} value={k}>
-                      {t(`tenantTabs.${k}`)}
-                    </TabsTrigger>
-                  ),
-                )}
+                {(
+                  [
+                    'overview',
+                    'engagements',
+                    'usage',
+                    'reports',
+                    'finance',
+                    'access',
+                    'team',
+                    ...(canSeeUsers ? (['users'] as const) : []),
+                  ] as const
+                ).map((k) => (
+                  <TabsTrigger key={k} value={k}>
+                    {t(`tenantTabs.${k}`)}
+                  </TabsTrigger>
+                ))}
               </TabsList>
               <TabsContent value="overview">
                 <OverviewTab d={d} />
@@ -109,6 +124,11 @@ export function TenantDetailPage() {
               <TabsContent value="team">
                 <TeamTab d={d} />
               </TabsContent>
+              {canSeeUsers ? (
+                <TabsContent value="users">
+                  <ShopUsersTab tenantId={d.id} />
+                </TabsContent>
+              ) : null}
             </Tabs>
             <ImpersonateDialog
               tenantId={d.id}
@@ -549,5 +569,22 @@ function TeamTab({ d }: { d: TenantDetail }) {
         </div>
       ) : null}
     </div>
+  );
+}
+
+/** The shop's accounts with the same actions as `/platform/users` (owners change, admins read). */
+function ShopUsersTab({ tenantId }: { tenantId: string }) {
+  const { t } = useTranslation('users');
+  const canChange = useMembership().roles.includes('platform_owner');
+  const selfId = useMe().data?.user.id;
+  const users = useUsers({ tenantId, page: 1, limit: 100 });
+  return (
+    <QueryState
+      query={users}
+      isEmpty={(res) => res.data.length === 0}
+      empty={<EmptyState icon={Users} title={t('tab.empty')} />}
+    >
+      {(res) => <UsersPanel rows={res.data} canChange={canChange} selfId={selfId} />}
+    </QueryState>
   );
 }

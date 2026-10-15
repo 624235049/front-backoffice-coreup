@@ -16007,6 +16007,13 @@
                               "null"
                             ]
                           },
+                          "utm": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "additionalProperties": {}
+                          },
                           "leakEstimate": {},
                           "lostReason": {
                             "type": [
@@ -16048,6 +16055,7 @@
                           "ownerName",
                           "nextActionAt",
                           "source",
+                          "utm",
                           "lostReason",
                           "convertedTenantId",
                           "createdAt",
@@ -16352,6 +16360,13 @@
                             "null"
                           ]
                         },
+                        "utm": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {}
+                        },
                         "leakEstimate": {},
                         "lostReason": {
                           "type": [
@@ -16452,6 +16467,7 @@
                         "ownerName",
                         "nextActionAt",
                         "source",
+                        "utm",
                         "lostReason",
                         "convertedTenantId",
                         "createdAt",
@@ -16462,6 +16478,282 @@
                   },
                   "required": [
                     "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/leads/summary": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "How many leads are still new (nobody contacted them yet): nav badge",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "newCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "newCount"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/leads/assignees": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Active CoreUp team members a lead can be assigned to",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assignees",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "role": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "enum": [
+                              "platform_owner",
+                              "platform_admin",
+                              "platform_consultant",
+                              "platform_sales",
+                              null
+                            ]
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "name",
+                          "role"
+                        ]
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "hasMore": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "nextCursor",
+                        "hasMore"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "page"
                   ]
                 }
               }
@@ -16672,6 +16964,13 @@
                             "null"
                           ]
                         },
+                        "utm": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {}
+                        },
                         "leakEstimate": {},
                         "lostReason": {
                           "type": [
@@ -16772,6 +17071,7 @@
                         "ownerName",
                         "nextActionAt",
                         "source",
+                        "utm",
                         "lostReason",
                         "convertedTenantId",
                         "createdAt",
@@ -17060,6 +17360,13 @@
                             "null"
                           ]
                         },
+                        "utm": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {}
+                        },
                         "leakEstimate": {},
                         "lostReason": {
                           "type": [
@@ -17160,6 +17467,7 @@
                         "ownerName",
                         "nextActionAt",
                         "source",
+                        "utm",
                         "lostReason",
                         "convertedTenantId",
                         "createdAt",
@@ -26865,6 +27173,1074 @@
                       },
                       "required": [
                         "ended"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Search user accounts across all shops (owner and admin read; only platform_owner changes accounts). Never returns password hashes",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "matches email or name (case-insensitive, partial)"
+            },
+            "required": false,
+            "description": "matches email or name (case-insensitive, partial)",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i",
+              "description": "only users with a membership in this shop"
+            },
+            "required": false,
+            "description": "only users with a membership in this shop",
+            "name": "tenantId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "only users holding this role key in any shop"
+            },
+            "required": false,
+            "description": "only users holding this role key in any shop",
+            "name": "role",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "true = only CoreUp team accounts"
+            },
+            "required": false,
+            "description": "true = only CoreUp team accounts",
+            "name": "team",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "emailVerified": {
+                            "type": "boolean"
+                          },
+                          "lineLinked": {
+                            "type": "boolean"
+                          },
+                          "twoFactorEnabled": {
+                            "type": "boolean"
+                          },
+                          "hasPassword": {
+                            "type": "boolean"
+                          },
+                          "emailIsPlaceholder": {
+                            "type": "boolean"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "lastSignInAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "activeSessions": {
+                            "type": "integer"
+                          },
+                          "isTeam": {
+                            "type": "boolean",
+                            "description": "holds a membership in the CoreUp platform tenant"
+                          },
+                          "memberships": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "membershipId": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "tenantId": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "tenantName": {
+                                  "type": "string"
+                                },
+                                "tenantSlug": {
+                                  "type": "string"
+                                },
+                                "roles": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "invited",
+                                    "active",
+                                    "inactive"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "membershipId",
+                                "tenantId",
+                                "tenantName",
+                                "tenantSlug",
+                                "roles",
+                                "status"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "email",
+                          "emailVerified",
+                          "lineLinked",
+                          "twoFactorEnabled",
+                          "hasPassword",
+                          "emailIsPlaceholder",
+                          "createdAt",
+                          "lastSignInAt",
+                          "activeSessions",
+                          "isTeam",
+                          "memberships"
+                        ]
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "hasMore": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "nextCursor",
+                        "hasMore"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users/{id}": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "User account detail with memberships, recent sign-ins (masked IP) and recent account actions (audited view)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "emailVerified": {
+                          "type": "boolean"
+                        },
+                        "lineLinked": {
+                          "type": "boolean"
+                        },
+                        "twoFactorEnabled": {
+                          "type": "boolean"
+                        },
+                        "hasPassword": {
+                          "type": "boolean"
+                        },
+                        "emailIsPlaceholder": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "lastSignInAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "activeSessions": {
+                          "type": "integer"
+                        },
+                        "isTeam": {
+                          "type": "boolean",
+                          "description": "holds a membership in the CoreUp platform tenant"
+                        },
+                        "memberships": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "membershipId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "tenantName": {
+                                "type": "string"
+                              },
+                              "tenantSlug": {
+                                "type": "string"
+                              },
+                              "roles": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "invited",
+                                  "active",
+                                  "inactive"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "membershipId",
+                              "tenantId",
+                              "tenantName",
+                              "tenantSlug",
+                              "roles",
+                              "status"
+                            ]
+                          }
+                        },
+                        "recentSignIns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "at": {
+                                "type": "string"
+                              },
+                              "ipMasked": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "userAgent": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "expiresAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "at",
+                              "ipMasked",
+                              "userAgent",
+                              "expiresAt"
+                            ]
+                          }
+                        },
+                        "recentActions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "at": {
+                                "type": "string"
+                              },
+                              "action": {
+                                "type": "string",
+                                "enum": [
+                                  "platform.user_password_reset",
+                                  "platform.user_reset_link_created",
+                                  "platform.user_sessions_revoked"
+                                ]
+                              },
+                              "actorName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "reason": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "at",
+                              "action",
+                              "actorName",
+                              "reason"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "email",
+                        "emailVerified",
+                        "lineLinked",
+                        "twoFactorEnabled",
+                        "hasPassword",
+                        "emailIsPlaceholder",
+                        "createdAt",
+                        "lastSignInAt",
+                        "activeSessions",
+                        "isTeam",
+                        "memberships",
+                        "recentSignIns",
+                        "recentActions"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users/{id}/reset-password": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Set a new password (typed or generated) and sign the user out everywhere. platform_owner only; reason required and audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128,
+                    "description": "the team member types the new password"
+                  },
+                  "generate": {
+                    "type": "boolean",
+                    "description": "let the server generate a strong readable password"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "only when generated: shown once, never stored in plain text"
+                        },
+                        "revokedSessions": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "password",
+                        "revokedSessions"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users/{id}/reset-link": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Create a one-time set-password link (valid 1 hour) to hand over without email. platform_owner only; audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "url",
+                        "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users/{id}/revoke-sessions": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Sign the user out of every device. platform_owner only; reason required and audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "revokedSessions": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "revokedSessions"
                       ]
                     }
                   },

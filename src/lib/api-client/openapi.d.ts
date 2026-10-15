@@ -9186,6 +9186,9 @@ export interface paths {
                                 ownerName: string | null;
                                 nextActionAt: string | null;
                                 source: string | null;
+                                utm: {
+                                    [key: string]: unknown;
+                                } | null;
                                 leakEstimate?: unknown;
                                 lostReason: string | null;
                                 convertedTenantId: string | null;
@@ -9326,6 +9329,9 @@ export interface paths {
                                 ownerName: string | null;
                                 nextActionAt: string | null;
                                 source: string | null;
+                                utm: {
+                                    [key: string]: unknown;
+                                } | null;
                                 leakEstimate?: unknown;
                                 lostReason: string | null;
                                 convertedTenantId: string | null;
@@ -9416,6 +9422,228 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/leads/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * How many leads are still new (nobody contacted them yet): nav badge
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                newCount: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/leads/assignees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Active CoreUp team members a lead can be assigned to
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Assignees */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                userId: string;
+                                name: string;
+                                /** @enum {string|null} */
+                                role: "platform_owner" | "platform_admin" | "platform_consultant" | "platform_sales" | null;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/platform/leads/{id}": {
         parameters: {
             query?: never;
@@ -9463,6 +9691,9 @@ export interface paths {
                                 ownerName: string | null;
                                 nextActionAt: string | null;
                                 source: string | null;
+                                utm: {
+                                    [key: string]: unknown;
+                                } | null;
                                 leakEstimate?: unknown;
                                 lostReason: string | null;
                                 convertedTenantId: string | null;
@@ -9609,6 +9840,9 @@ export interface paths {
                                 ownerName: string | null;
                                 nextActionAt: string | null;
                                 source: string | null;
+                                utm: {
+                                    [key: string]: unknown;
+                                } | null;
                                 leakEstimate?: unknown;
                                 lostReason: string | null;
                                 convertedTenantId: string | null;
@@ -14574,6 +14808,647 @@ export interface paths {
                         "application/json": {
                             data: {
                                 ended: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search user accounts across all shops (owner and admin read; only platform_owner changes accounts). Never returns password hashes
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description matches email or name (case-insensitive, partial) */
+                    q?: string;
+                    /** @description only users with a membership in this shop */
+                    tenantId?: string;
+                    /** @description only users holding this role key in any shop */
+                    role?: string;
+                    /** @description true = only CoreUp team accounts */
+                    team?: "true" | "false";
+                    page?: number;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Users */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                emailVerified: boolean;
+                                lineLinked: boolean;
+                                twoFactorEnabled: boolean;
+                                hasPassword: boolean;
+                                emailIsPlaceholder: boolean;
+                                createdAt: string;
+                                lastSignInAt: string | null;
+                                activeSessions: number;
+                                /** @description holds a membership in the CoreUp platform tenant */
+                                isTeam: boolean;
+                                memberships: {
+                                    membershipId: string;
+                                    tenantId: string;
+                                    tenantName: string;
+                                    tenantSlug: string;
+                                    roles: string[];
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "inactive";
+                                }[];
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * User account detail with memberships, recent sign-ins (masked IP) and recent account actions (audited view)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description User */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                email: string | null;
+                                emailVerified: boolean;
+                                lineLinked: boolean;
+                                twoFactorEnabled: boolean;
+                                hasPassword: boolean;
+                                emailIsPlaceholder: boolean;
+                                createdAt: string;
+                                lastSignInAt: string | null;
+                                activeSessions: number;
+                                /** @description holds a membership in the CoreUp platform tenant */
+                                isTeam: boolean;
+                                memberships: {
+                                    membershipId: string;
+                                    tenantId: string;
+                                    tenantName: string;
+                                    tenantSlug: string;
+                                    roles: string[];
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "inactive";
+                                }[];
+                                recentSignIns: {
+                                    at: string;
+                                    ipMasked: string | null;
+                                    userAgent: string | null;
+                                    expiresAt: string;
+                                }[];
+                                recentActions: {
+                                    at: string;
+                                    /** @enum {string} */
+                                    action: "platform.user_password_reset" | "platform.user_reset_link_created" | "platform.user_sessions_revoked";
+                                    actorName: string | null;
+                                    reason: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/users/{id}/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a new password (typed or generated) and sign the user out everywhere. platform_owner only; reason required and audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @description the team member types the new password */
+                        password?: string;
+                        /** @description let the server generate a strong readable password */
+                        generate?: boolean;
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Reset */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @description only when generated: shown once, never stored in plain text */
+                                password: string | null;
+                                revokedSessions: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/users/{id}/reset-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a one-time set-password link (valid 1 hour) to hand over without email. platform_owner only; audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Link */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                url: string;
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/users/{id}/revoke-sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sign the user out of every device. platform_owner only; reason required and audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Revoked */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                revokedSessions: number;
                             };
                         };
                     };

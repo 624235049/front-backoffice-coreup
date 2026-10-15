@@ -27,6 +27,7 @@
   "dashboard": "Overview",
   "tenants": "Shops",
   "leads": "Leads",
+  "newCount": "{{count}} new leads",
   "engagements": "Engagements",
   "audits": "Audits",
   "invoices": "Invoices",
@@ -42,5 +43,6 @@
   "accContacts": "Contacts",
   "accProducts": "Products / services",
   "accReports": "Reports",
-  "accSettings": "Company settings"
+  "accSettings": "Company settings",
+  "users": "Users"
 }
