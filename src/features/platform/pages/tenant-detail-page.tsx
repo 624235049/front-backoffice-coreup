@@ -29,6 +29,7 @@ import {
   useTenantUsage,
 } from '../api';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
+import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
 
@@ -45,6 +46,7 @@ const MODULE_KEYS = [
   'approvals',
   'payouts',
   'checkout',
+  'inventory',
   'kpi',
 ] as const;
 
@@ -243,6 +245,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           ))}
         </CardContent>
       </Card>
+      <DemoDataCard d={d} />
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{t('detail.notes')}</CardTitle>

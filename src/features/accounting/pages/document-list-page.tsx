@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Download, ExternalLink, FileText, Plus } from 'lucide-react';
-import { useMemo } from 'react';
+import { Download, ExternalLink, FileDown, FileText, Loader2, Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { EmptyState } from '@/components/empty-state';
@@ -13,12 +13,16 @@ import {
   type DocStatus,
   type DocType,
   type DocumentItem,
+  fetchAllDocuments,
+  fetchAllSales,
+  renderListPdf,
   type SalesListFilter,
   type SalesRow,
   useCompany,
   useDocuments,
   useSales,
 } from '../api';
+import { downloadUrl } from '../components/a4-actions';
 import { DocStatusBadge, SourceBadge } from '../components/badges';
 import { DataTable, DtCell, DtHead, DtRow, DtTh, DtTotalCell, DtTotals } from '../components/data-table';
 import { DateRangeFilter, FilterBar, SearchBox, StatusFilter } from '../components/filter-bar';
@@ -123,47 +127,86 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
   const hasFilters = Boolean(search.q || search.status || search.from || search.to || search.source);
   const showBalance = kind === 'invoice';
   const showDue = kind === 'invoice' || kind === 'quotation';
+  // Our own documents open their detail page; a shop invoice (read-only here) opens its A4 view.
   const open = (r: Row) => {
-    if (r.readOnly) return;
-    void navigate({ to: detailPath(r.type, r.id) as never });
+    void navigate({
+      to: (r.readOnly ? `/accounting/a4-shop/${r.id}` : detailPath(r.type, r.id)) as never,
+    });
   };
 
-  const exportXlsx = () => {
-    void downloadXlsx(`${t(`list.${kind}.title`)}`, [
-      {
-        name: t(`list.${kind}.title`),
-        totalsLabel: t('totalRow'),
-        columns: [
-          { header: t('col.number'), value: (r: Row) => r.number ?? '' },
-          { header: t('col.date'), kind: 'date' as const, value: (r: Row) => r.docDate },
-          ...(showDue
-            ? [
-                {
-                  header: showBalance ? t('col.due') : t('col.validUntil'),
-                  kind: 'date' as const,
-                  value: (r: Row) => r.dueDate,
-                },
-              ]
-            : []),
-          { header: t('col.customer'), value: (r: Row) => r.contactName },
-          { header: t('col.status'), value: (r: Row) => t(`status.${r.status}`) },
-          { header: t('col.base'), kind: 'money' as const, total: true, value: (r: Row) => r.baseMinor },
-          { header: t('col.vat'), kind: 'money' as const, total: true, value: (r: Row) => r.vatMinor },
-          { header: t('col.total'), kind: 'money' as const, total: true, value: (r: Row) => r.totalMinor },
-          ...(showBalance
-            ? [
-                {
-                  header: t('col.balance'),
-                  kind: 'money' as const,
-                  total: true,
-                  value: (r: Row) => r.balanceMinor,
-                },
-              ]
-            : []),
-        ],
-        rows,
-      },
-    ] as never).catch(() => toast.error(t('exportFailed')));
+  const [exporting, setExporting] = useState<'xlsx' | 'pdf' | null>(null);
+
+  /** Excel / PDF cover every row matching the filters, not only the pages loaded on screen. */
+  const exportXlsx = async () => {
+    setExporting('xlsx');
+    try {
+      const all: Row[] =
+        kind === 'quotation'
+          ? (
+              await fetchAllDocuments({ ...base, type: 'quotation', status: status as DocStatus | undefined })
+            ).map(fromDocument)
+          : (await fetchAllSales(salesFilter)).map(fromSales);
+      await downloadXlsx(`${t(`list.${kind}.title`)}`, [
+        {
+          name: t(`list.${kind}.title`),
+          totalsLabel: t('totalRow'),
+          columns: [
+            { header: t('col.number'), value: (r: Row) => r.number ?? '' },
+            { header: t('col.date'), kind: 'date' as const, value: (r: Row) => r.docDate },
+            ...(showDue
+              ? [
+                  {
+                    header: showBalance ? t('col.due') : t('col.validUntil'),
+                    kind: 'date' as const,
+                    value: (r: Row) => r.dueDate,
+                  },
+                ]
+              : []),
+            { header: t('col.customer'), value: (r: Row) => r.contactName },
+            { header: t('col.status'), value: (r: Row) => t(`status.${r.status}`) },
+            { header: t('col.base'), kind: 'money' as const, total: true, value: (r: Row) => r.baseMinor },
+            { header: t('col.vat'), kind: 'money' as const, total: true, value: (r: Row) => r.vatMinor },
+            { header: t('col.total'), kind: 'money' as const, total: true, value: (r: Row) => r.totalMinor },
+            ...(showBalance
+              ? [
+                  {
+                    header: t('col.balance'),
+                    kind: 'money' as const,
+                    total: true,
+                    value: (r: Row) => r.balanceMinor,
+                  },
+                ]
+              : []),
+          ],
+          rows: all,
+        },
+      ] as never);
+    } catch {
+      toast.error(t('exportFailed'));
+    } finally {
+      setExporting(null);
+    }
+  };
+
+  const exportPdf = async () => {
+    setExporting('pdf');
+    try {
+      const { url, filename } = await renderListPdf({
+        title: t(`list.${kind}.title`),
+        list: kind === 'quotation' ? 'documents' : 'sales',
+        type: kind === 'quotation' ? 'quotation' : salesFilter.type,
+        status: status as DocStatus | 'overdue' | undefined,
+        source: salesFilter.source,
+        q: search.q,
+        from: search.from,
+        to: search.to,
+      });
+      downloadUrl(url, filename);
+    } catch {
+      toast.error(t('pdf.failed'));
+    } finally {
+      setExporting(null);
+    }
   };
 
   const statusOptions = KIND_STATUSES[kind].map((s) => ({ value: s, label: t(`status.${s}`) }));
@@ -175,8 +218,19 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
         description={t(`list.${kind}.description`)}
         actions={
           <>
-            <Button variant="outline" onClick={exportXlsx} disabled={rows.length === 0}>
-              <Download /> {t('exportExcel')}
+            <Button
+              variant="outline"
+              onClick={() => void exportXlsx()}
+              disabled={rows.length === 0 || exporting !== null}
+            >
+              {exporting === 'xlsx' ? <Loader2 className="animate-spin" /> : <Download />} {t('exportExcel')}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => void exportPdf()}
+              disabled={rows.length === 0 || exporting !== null}
+            >
+              {exporting === 'pdf' ? <Loader2 className="animate-spin" /> : <FileDown />} {t('a4.exportPdf')}
             </Button>
             <Button onClick={() => void navigate({ to: newPath(kind) as never })}>
               <Plus /> {t(`list.${kind}.add`)}
@@ -260,9 +314,8 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
               <li key={r.key}>
                 <button
                   type="button"
-                  disabled={r.readOnly}
                   onClick={() => open(r)}
-                  className="flex w-full flex-col gap-1.5 rounded-xl border bg-white p-3 text-left shadow-xs active:bg-mint-50 disabled:cursor-default"
+                  className="flex w-full flex-col gap-1.5 rounded-xl border bg-white p-3 text-left shadow-xs active:bg-mint-50"
                 >
                   <span className="flex items-start justify-between gap-2">
                     <span className="font-mono text-xs text-navy-700">{r.number ?? t('draftNumber')}</span>
@@ -300,7 +353,7 @@ export function DocumentListPage({ kind }: { kind: DocKind }) {
               </DtHead>
               <tbody>
                 {rows.map((r) => (
-                  <DtRow key={r.key} onClick={r.readOnly ? undefined : () => open(r)}>
+                  <DtRow key={r.key} onClick={() => open(r)}>
                     <DtCell className="font-mono text-xs whitespace-nowrap">
                       {r.number ?? <span className="text-muted-foreground">{t('draftNumber')}</span>}
                     </DtCell>

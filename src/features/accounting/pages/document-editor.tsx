@@ -23,6 +23,7 @@ import {
   type VatMode,
   type WhtBp,
 } from '../api';
+import { A4Link } from '../components/a4-actions';
 import { ContactPicker } from '../components/contact-picker';
 import { DateField } from '../components/date-pickers';
 import { FormField } from '../components/form-field';
@@ -141,9 +142,12 @@ export function DocumentEditor({
         description={t('doc.editorHint')}
         actions={
           doc ? (
-            <Button variant="outline" onClick={() => setDeleting(true)} disabled={busy}>
-              <Trash2 /> {t('doc.deleteDraft')}
-            </Button>
+            <>
+              <A4Link source={{ kind: 'document', id: doc.id }} />
+              <Button variant="outline" onClick={() => setDeleting(true)} disabled={busy}>
+                <Trash2 /> {t('doc.deleteDraft')}
+              </Button>
+            </>
           ) : undefined
         }
       />

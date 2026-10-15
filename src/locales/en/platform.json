@@ -19,7 +19,8 @@
     "clinic": "Aesthetic clinic",
     "spa": "Spa",
     "salon": "Salon",
-    "dental": "Dental clinic"
+    "dental": "Dental clinic",
+    "retail": "Retail shop (stock)"
   },
   "module": {
     "crm": "Customers & appointments",
@@ -33,6 +34,7 @@
     "approvals": "Approvals",
     "payouts": "Payouts",
     "checkout": "Checkout",
+    "inventory": "Products & stock",
     "kpi": "KPI"
   },
   "moduleSource": {
@@ -304,7 +306,11 @@
     "start": "Start viewing",
     "starting": "Starting…",
     "started": "The shop back office opened in a new tab. Expires {{until}}.",
-    "openAgain": "Open again"
+    "openAgain": "Open again",
+    "branch": "Open at branch",
+    "allBranches": "All branches (whole shop)",
+    "startedBranch": "Opened the shop at {{branch}} in a new tab. Expires {{until}}",
+    "popupBlocked": "The browser blocked the new tab. Press “Open again” to view the shop."
   },
   "leads": {
     "title": "Leads (sales CRM)",
@@ -501,5 +507,30 @@
     },
     "deactivate": "Deactivate",
     "activate": "Activate"
+  },
+  "demo": {
+    "title": "Demo shop / sample data",
+    "badge": "Demo shop",
+    "flag": "Demo shop",
+    "flagHint": "When on, the team can fill or clear this shop's sample data (never turn it on for a real shop)",
+    "slugHint": "The slug starts with demo-, so this is always a demo shop",
+    "daysBack": "Days back",
+    "days": "{{count}} days",
+    "size": "Data size",
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "fill": "Fill sample data",
+    "clear": "Clear sample data",
+    "confirmFillTitle": "Fill sample data for “{{name}}”?",
+    "confirmFill": "Creates made-up customers, appointments, bills and sales for the last {{days}} days ({{size}} size) and the same span last year. Sample data from an earlier run is deleted and rebuilt; anything the shop entered itself is left alone.",
+    "confirmClearTitle": "Clear sample data of “{{name}}”?",
+    "confirmClear": "Only the rows the generator made are deleted; what the shop entered itself stays.",
+    "filled": "Sample data filled ({{count}} appointments)",
+    "cleared": "Sample data cleared",
+    "lastRun": "Last filled {{at}} · {{customers}} customers · {{appointments}} appointments · {{bills}} bills · sales {{paid}}",
+    "never": "Sample data has never been filled"
   }
 }

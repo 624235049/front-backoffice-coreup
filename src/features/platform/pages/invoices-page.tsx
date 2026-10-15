@@ -1,4 +1,4 @@
-import { Plus, Receipt } from 'lucide-react';
+import { Download, Plus, Receipt } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -19,6 +19,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { A4Link } from '@/features/accounting/components/a4-actions';
+import { downloadXlsx } from '@/features/accounting/lib/xlsx';
 import {
   type Invoice,
   useCreateInvoice,
@@ -64,6 +66,61 @@ export function InvoicesPage() {
         description={t('invoices.description')}
         actions={
           <>
+            <Button
+              variant="outline"
+              disabled={!invoices.data || invoices.data.length === 0}
+              onClick={() =>
+                void downloadXlsx(t('invoices.title'), [
+                  {
+                    name: t('invoices.title'),
+                    totalsLabel: t('totalRow', { ns: 'accounting' }),
+                    columns: [
+                      { header: t('invoices.col.number'), value: (i: Invoice) => i.number },
+                      { header: t('invoices.col.shop'), value: (i: Invoice) => i.tenantName },
+                      {
+                        header: t('invoices.col.source'),
+                        value: (i: Invoice) => t(`invoiceSource.${i.source}`),
+                      },
+                      {
+                        header: t('invoices.col.issued'),
+                        kind: 'date' as const,
+                        value: (i: Invoice) => i.issuedOn,
+                      },
+                      {
+                        header: t('invoices.col.due'),
+                        kind: 'date' as const,
+                        value: (i: Invoice) => i.dueOn,
+                      },
+                      {
+                        header: t('invoices.col.amount'),
+                        kind: 'money' as const,
+                        total: true,
+                        value: (i: Invoice) => i.amountMinor,
+                      },
+                      {
+                        header: t('invoices.col.vat'),
+                        kind: 'money' as const,
+                        total: true,
+                        value: (i: Invoice) => i.vatMinor,
+                      },
+                      {
+                        header: t('invoices.col.total'),
+                        kind: 'money' as const,
+                        total: true,
+                        value: (i: Invoice) => i.totalMinor,
+                      },
+                      {
+                        header: t('invoices.col.status'),
+                        value: (i: Invoice) => t(`invoiceStatus.${i.status}`),
+                      },
+                    ],
+                    rows: invoices.data ?? [],
+                  },
+                ] as never).catch(() => toast.error(t('exportFailed', { ns: 'accounting' })))
+              }
+            >
+              <Download /> {t('exportExcel', { ns: 'accounting' })}
+            </Button>
             <Button variant="outline" onClick={() => setRunning(true)}>
               {t('invoices.run')}
             </Button>
@@ -139,6 +196,7 @@ export function InvoicesPage() {
                       <InvoiceStatusBadge status={i.status} />
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-right">
+                      <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
                       {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
                         <>
                           <Button

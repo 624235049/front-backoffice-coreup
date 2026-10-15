@@ -26,11 +26,11 @@ import {
   useVoidDocument,
   useVoidPayment,
 } from '../api';
+import { A4Link, ExcelButton, PdfDownloadButton } from '../components/a4-actions';
 import { DocStatusBadge } from '../components/badges';
 import { DataTable, DtCell, DtHead, DtRow, DtTh } from '../components/data-table';
 import { openFile } from '../components/file-field';
 import { PaymentDialog } from '../components/payment-dialog';
-import { PdfButton } from '../components/pdf-button';
 import { TotalsPanel } from '../components/totals-panel';
 import { VoidDialog } from '../components/void-dialog';
 import { detailPath, kindOf, listPath } from '../lib/doc-meta';
@@ -108,7 +108,9 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
         }
         actions={
           <>
-            <PdfButton documentId={doc.id} />
+            <A4Link source={{ kind: 'document', id: doc.id }} />
+            <PdfDownloadButton source={{ kind: 'document', id: doc.id }} />
+            <ExcelButton source={{ kind: 'document', id: doc.id }} />
             {canPay ? (
               <Button onClick={() => setPaying(true)}>
                 <Banknote /> {t('doc.recordPayment')}

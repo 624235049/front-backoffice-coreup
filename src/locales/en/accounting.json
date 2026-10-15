@@ -261,7 +261,8 @@
       "both": "Original + copy",
       "original": "Original only",
       "copy": "Copy only"
-    }
+    },
+    "download": "Download PDF"
   },
   "file": {
     "attached": "File attached",
@@ -539,5 +540,53 @@
     "nextMonth": "Next month",
     "prevYear": "Previous year",
     "nextYear": "Next year"
+  },
+  "a4": {
+    "view": "View A4 document",
+    "title": "A4 document",
+    "back": "Back",
+    "print": "Print",
+    "download": "Download PDF",
+    "excel": "Export Excel",
+    "exportPdf": "Export PDF",
+    "showing": "Show",
+    "loading": "Preparing the document…",
+    "printHint": "Prints on A4 paper exactly as shown (turn off the browser's header and footer in the print dialog)",
+    "exportFailed": "Export failed, please try again",
+    "printFailed": "Could not print, please try again",
+    "listPdfReady": "List PDF is ready",
+    "xlsx": {
+      "headOffice": "Head office",
+      "branch": "Branch",
+      "taxId": "Tax id",
+      "phone": "Tel",
+      "email": "Email",
+      "number": "No.",
+      "date": "Date",
+      "due": "Due date",
+      "validUntil": "Valid until",
+      "reference": "Reference",
+      "customer": "Customer",
+      "address": "Address",
+      "draftNumber": "Draft",
+      "col": {
+        "no": "#",
+        "description": "Description",
+        "qty": "Qty",
+        "unit": "Unit",
+        "unitPrice": "Unit price",
+        "discount": "Discount",
+        "amount": "Amount"
+      },
+      "totals": {
+        "lines": "Subtotal",
+        "discount": "Discount",
+        "beforeVat": "Amount before VAT",
+        "vat": "VAT",
+        "total": "Grand total",
+        "wht": "Withholding tax",
+        "net": "Net payable"
+      }
+    }
   }
 }

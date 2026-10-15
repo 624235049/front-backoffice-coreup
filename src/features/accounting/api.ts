@@ -375,34 +375,136 @@ export const fetchContactPrefill = async (tenantId: string) =>
 
 export type PdfMode = 'original' | 'copy' | 'both';
 
+/**
+ * What an A4 document is made from: one of our own documents, or an invoice CoreUp sent to a shop (read through the
+ * accounting module or through the platform invoices page — each has its own permission).
+ */
+export type A4Source = { kind: 'document' | 'shop-accounting' | 'shop-platform'; id: string };
+export type A4Preview = ApiItem<'/v1/platform/accounting/documents/{id}/preview'>;
+type PdfJob = ApiItem<'/v1/platform/accounting/documents/{id}/pdf'>;
+
+/** Server-rendered pages of the document (the exact HTML the PDF is made from), as A4 sheets. */
+export const fetchA4Preview = async (src: A4Source, mode: PdfMode): Promise<A4Preview> => {
+  const path = { id: src.id };
+  const query = { mode };
+  if (src.kind === 'document')
+    return (await unwrap(api.GET(`${B}/documents/{id}/preview`, { params: { path, query } }))).data;
+  if (src.kind === 'shop-accounting')
+    return (await unwrap(api.GET(`${B}/shop-invoices/{id}/preview`, { params: { path, query } }))).data;
+  return (await unwrap(api.GET('/v1/platform/invoices/{id}/preview', { params: { path, query } }))).data;
+};
+
+export const useA4Preview = (src: A4Source, mode: PdfMode) =>
+  useTenantQuery(['accounting', 'a4', src.kind, src.id, mode], () => fetchA4Preview(src, mode));
+
+/** The structured document behind an A4 page (own document, or the shop invoice shaped like one). */
+export const fetchA4Document = async (src: A4Source): Promise<AccDocument> => {
+  const path = { id: src.id };
+  if (src.kind === 'document')
+    return (await unwrap(api.GET(`${B}/documents/{id}`, { params: { path } }))).data;
+  if (src.kind === 'shop-accounting')
+    return (await unwrap(api.GET(`${B}/shop-invoices/{id}`, { params: { path } }))).data;
+  return (await unwrap(api.GET('/v1/platform/invoices/{id}', { params: { path } }))).data;
+};
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/**
- * Start the PDF render (worker `pdf.render`) and poll until the file is ready. Resolves to the presigned URL
- * and file name. Throws when the render fails or takes longer than `timeoutMs`.
- */
-export async function renderDocumentPdf(
-  id: string,
-  mode: PdfMode,
-  timeoutMs = 60_000,
+/** Poll a started worker job until the file is ready. Throws PDF_FAILED / PDF_TIMEOUT. */
+async function pollPdf(
+  started: PdfJob,
+  check: (jobId: string) => Promise<PdfJob>,
+  timeoutMs: number,
 ): Promise<{ url: string; filename: string | null }> {
-  const started = (
-    await unwrap(api.POST(`${B}/documents/{id}/pdf`, { params: { path: { id } }, body: { mode } }))
-  ).data;
   let job = started;
   const deadline = Date.now() + timeoutMs;
   while (job.status !== 'ready') {
     if (job.status === 'failed') throw new Error('PDF_FAILED');
     if (Date.now() > deadline) throw new Error('PDF_TIMEOUT');
     await sleep(1500);
-    job = (
-      await unwrap(
-        api.GET(`${B}/documents/{id}/pdf`, { params: { path: { id }, query: { job: started.id } } }),
-      )
-    ).data;
+    job = await check(started.id);
   }
   if (!job.url) throw new Error('PDF_FAILED');
   return { url: job.url, filename: job.filename };
+}
+
+/**
+ * Start the PDF render (worker `pdf.render`) and poll until the file is ready. Resolves to the presigned URL
+ * and file name. Throws when the render fails or takes longer than `timeoutMs`.
+ */
+export async function renderA4Pdf(
+  src: A4Source,
+  mode: PdfMode,
+  timeoutMs = 60_000,
+): Promise<{ url: string; filename: string | null }> {
+  const path = { id: src.id };
+  const body = { mode };
+  if (src.kind === 'document') {
+    const started = (await unwrap(api.POST(`${B}/documents/{id}/pdf`, { params: { path }, body }))).data;
+    return pollPdf(
+      started,
+      async (job) =>
+        (await unwrap(api.GET(`${B}/documents/{id}/pdf`, { params: { path, query: { job } } }))).data,
+      timeoutMs,
+    );
+  }
+  if (src.kind === 'shop-accounting') {
+    const started = (await unwrap(api.POST(`${B}/shop-invoices/{id}/pdf`, { params: { path }, body }))).data;
+    return pollPdf(
+      started,
+      async (job) =>
+        (await unwrap(api.GET(`${B}/shop-invoices/{id}/pdf`, { params: { path, query: { job } } }))).data,
+      timeoutMs,
+    );
+  }
+  const started = (await unwrap(api.POST('/v1/platform/invoices/{id}/pdf', { params: { path }, body }))).data;
+  return pollPdf(
+    started,
+    async (job) =>
+      (await unwrap(api.GET('/v1/platform/invoices/{id}/pdf', { params: { path, query: { job } } }))).data,
+    timeoutMs,
+  );
+}
+
+export type ListPdfBody = ApiBody<'/v1/platform/accounting/export/documents-pdf', 'post'>;
+
+/** A4 landscape summary of a list (same filters as the screen). */
+export async function renderListPdf(
+  body: ListPdfBody,
+  timeoutMs = 90_000,
+): Promise<{ url: string; filename: string | null }> {
+  const started = (await unwrap(api.POST(`${B}/export/documents-pdf`, { body }))).data;
+  return pollPdf(
+    started,
+    async (job) => (await unwrap(api.GET(`${B}/export/documents-pdf`, { params: { query: { job } } }))).data,
+    timeoutMs,
+  );
+}
+
+/** Every row of a list for the Excel export (the screen only holds the pages loaded so far). */
+export async function fetchAllSales(filter: SalesListFilter): Promise<SalesRow[]> {
+  const rows: SalesRow[] = [];
+  let cursor: string | undefined;
+  do {
+    const page = await unwrap(
+      api.GET(`${B}/sales`, { params: { query: { ...filter, limit: 500, cursor } } }),
+    );
+    rows.push(...page.data);
+    cursor = page.page.nextCursor ?? undefined;
+  } while (cursor);
+  return rows;
+}
+
+export async function fetchAllDocuments(filter: DocumentListFilter): Promise<DocumentItem[]> {
+  const rows: DocumentItem[] = [];
+  let cursor: string | undefined;
+  do {
+    const page = await unwrap(
+      api.GET(`${B}/documents`, { params: { query: { ...filter, limit: 500, cursor } } }),
+    );
+    rows.push(...page.data);
+    cursor = page.page.nextCursor ?? undefined;
+  } while (cursor);
+  return rows;
 }
 
 export type AccountingFilePurpose = 'accounting_file' | 'expense_receipt';

@@ -134,15 +134,19 @@ export async function buildWorkbookBlob(sheets: readonly XlsxSheet<never>[]): Pr
   });
 }
 
-/** Build the workbook and trigger a browser download. */
-export async function downloadXlsx(filename: string, sheets: readonly XlsxSheet<never>[]): Promise<void> {
-  const blob = await buildWorkbookBlob(sheets);
+/** Trigger a browser download of a blob (object URL + temporary link). */
+export function saveBlob(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = filename.endsWith('.xlsx') ? filename : `${filename}.xlsx`;
+  a.download = filename;
   document.body.append(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
+}
+
+/** Build the workbook and trigger a browser download. */
+export async function downloadXlsx(filename: string, sheets: readonly XlsxSheet<never>[]): Promise<void> {
+  saveBlob(await buildWorkbookBlob(sheets), filename.endsWith('.xlsx') ? filename : `${filename}.xlsx`);
 }

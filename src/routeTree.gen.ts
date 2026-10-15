@@ -27,6 +27,8 @@ import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformRevenueRouteImport } from './routes/_app/platform.revenue'
 import { Route as AppPlatformTeamRouteImport } from './routes/_app/platform.team'
+import { Route as AppAccountingA4ShopIdRouteImport } from './routes/_app/accounting.a4-shop.$id'
+import { Route as AppAccountingA4IdRouteImport } from './routes/_app/accounting.a4.$id'
 import { Route as AppAccountingCreditNotesIndexRouteImport } from './routes/_app/accounting.credit-notes.index'
 import { Route as AppAccountingCreditNotesIdRouteImport } from './routes/_app/accounting.credit-notes.$id'
 import { Route as AppAccountingCreditNotesNewRouteImport } from './routes/_app/accounting.credit-notes.new'
@@ -42,6 +44,7 @@ import { Route as AppAccountingQuotationsNewRouteImport } from './routes/_app/ac
 import { Route as AppAccountingReceiptsIndexRouteImport } from './routes/_app/accounting.receipts.index'
 import { Route as AppAccountingReceiptsIdRouteImport } from './routes/_app/accounting.receipts.$id'
 import { Route as AppAccountingReceiptsNewRouteImport } from './routes/_app/accounting.receipts.new'
+import { Route as AppPlatformA4IdRouteImport } from './routes/_app/platform.a4.$id'
 import { Route as AppPlatformAuditsIndexRouteImport } from './routes/_app/platform.audits.index'
 import { Route as AppPlatformAuditsIdRouteImport } from './routes/_app/platform.audits.$id'
 import { Route as AppPlatformEngagementsIndexRouteImport } from './routes/_app/platform.engagements.index'
@@ -137,6 +140,16 @@ const AppPlatformTeamRoute = AppPlatformTeamRouteImport.update({
   path: '/platform/team',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAccountingA4ShopIdRoute = AppAccountingA4ShopIdRouteImport.update({
+  id: '/accounting/a4-shop/$id',
+  path: '/accounting/a4-shop/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountingA4IdRoute = AppAccountingA4IdRouteImport.update({
+  id: '/accounting/a4/$id',
+  path: '/accounting/a4/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAccountingCreditNotesIndexRoute =
   AppAccountingCreditNotesIndexRouteImport.update({
     id: '/accounting/credit-notes/',
@@ -224,6 +237,11 @@ const AppAccountingReceiptsNewRoute =
     path: '/accounting/receipts/new',
     getParentRoute: () => AppRoute,
   } as any)
+const AppPlatformA4IdRoute = AppPlatformA4IdRouteImport.update({
+  id: '/platform/a4/$id',
+  path: '/platform/a4/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlatformAuditsIndexRoute = AppPlatformAuditsIndexRouteImport.update({
   id: '/platform/audits/',
   path: '/platform/audits/',
@@ -274,6 +292,8 @@ export interface FileRoutesByFullPath {
   '/platform/team': typeof AppPlatformTeamRoute
   '/accounting/': typeof AppAccountingIndexRoute
   '/platform/': typeof AppPlatformIndexRoute
+  '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
+  '/accounting/a4/$id': typeof AppAccountingA4IdRoute
   '/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
   '/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
   '/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
@@ -284,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
   '/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
   '/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
+  '/platform/a4/$id': typeof AppPlatformA4IdRoute
   '/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
@@ -313,6 +334,8 @@ export interface FileRoutesByTo {
   '/platform/team': typeof AppPlatformTeamRoute
   '/accounting': typeof AppAccountingIndexRoute
   '/platform': typeof AppPlatformIndexRoute
+  '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
+  '/accounting/a4/$id': typeof AppAccountingA4IdRoute
   '/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
   '/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
   '/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
@@ -323,6 +346,7 @@ export interface FileRoutesByTo {
   '/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
   '/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
   '/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
+  '/platform/a4/$id': typeof AppPlatformA4IdRoute
   '/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
@@ -355,6 +379,8 @@ export interface FileRoutesById {
   '/_app/platform/team': typeof AppPlatformTeamRoute
   '/_app/accounting/': typeof AppAccountingIndexRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
+  '/_app/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
+  '/_app/accounting/a4/$id': typeof AppAccountingA4IdRoute
   '/_app/accounting/credit-notes/$id': typeof AppAccountingCreditNotesIdRoute
   '/_app/accounting/credit-notes/new': typeof AppAccountingCreditNotesNewRoute
   '/_app/accounting/expenses/$id': typeof AppAccountingExpensesIdRoute
@@ -365,6 +391,7 @@ export interface FileRoutesById {
   '/_app/accounting/quotations/new': typeof AppAccountingQuotationsNewRoute
   '/_app/accounting/receipts/$id': typeof AppAccountingReceiptsIdRoute
   '/_app/accounting/receipts/new': typeof AppAccountingReceiptsNewRoute
+  '/_app/platform/a4/$id': typeof AppPlatformA4IdRoute
   '/_app/platform/audits/$id': typeof AppPlatformAuditsIdRoute
   '/_app/platform/engagements/$id': typeof AppPlatformEngagementsIdRoute
   '/_app/platform/tenants/$id': typeof AppPlatformTenantsIdRoute
@@ -396,6 +423,8 @@ export interface FileRouteTypes {
     | '/platform/team'
     | '/accounting/'
     | '/platform/'
+    | '/accounting/a4-shop/$id'
+    | '/accounting/a4/$id'
     | '/accounting/credit-notes/$id'
     | '/accounting/credit-notes/new'
     | '/accounting/expenses/$id'
@@ -406,6 +435,7 @@ export interface FileRouteTypes {
     | '/accounting/quotations/new'
     | '/accounting/receipts/$id'
     | '/accounting/receipts/new'
+    | '/platform/a4/$id'
     | '/platform/audits/$id'
     | '/platform/engagements/$id'
     | '/platform/tenants/$id'
@@ -435,6 +465,8 @@ export interface FileRouteTypes {
     | '/platform/team'
     | '/accounting'
     | '/platform'
+    | '/accounting/a4-shop/$id'
+    | '/accounting/a4/$id'
     | '/accounting/credit-notes/$id'
     | '/accounting/credit-notes/new'
     | '/accounting/expenses/$id'
@@ -445,6 +477,7 @@ export interface FileRouteTypes {
     | '/accounting/quotations/new'
     | '/accounting/receipts/$id'
     | '/accounting/receipts/new'
+    | '/platform/a4/$id'
     | '/platform/audits/$id'
     | '/platform/engagements/$id'
     | '/platform/tenants/$id'
@@ -476,6 +509,8 @@ export interface FileRouteTypes {
     | '/_app/platform/team'
     | '/_app/accounting/'
     | '/_app/platform/'
+    | '/_app/accounting/a4-shop/$id'
+    | '/_app/accounting/a4/$id'
     | '/_app/accounting/credit-notes/$id'
     | '/_app/accounting/credit-notes/new'
     | '/_app/accounting/expenses/$id'
@@ -486,6 +521,7 @@ export interface FileRouteTypes {
     | '/_app/accounting/quotations/new'
     | '/_app/accounting/receipts/$id'
     | '/_app/accounting/receipts/new'
+    | '/_app/platform/a4/$id'
     | '/_app/platform/audits/$id'
     | '/_app/platform/engagements/$id'
     | '/_app/platform/tenants/$id'
@@ -633,6 +669,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlatformTeamRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/accounting/a4-shop/$id': {
+      id: '/_app/accounting/a4-shop/$id'
+      path: '/accounting/a4-shop/$id'
+      fullPath: '/accounting/a4-shop/$id'
+      preLoaderRoute: typeof AppAccountingA4ShopIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/accounting/a4/$id': {
+      id: '/_app/accounting/a4/$id'
+      path: '/accounting/a4/$id'
+      fullPath: '/accounting/a4/$id'
+      preLoaderRoute: typeof AppAccountingA4IdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/accounting/credit-notes/': {
       id: '/_app/accounting/credit-notes/'
       path: '/accounting/credit-notes'
@@ -738,6 +788,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountingReceiptsNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/platform/a4/$id': {
+      id: '/_app/platform/a4/$id'
+      path: '/platform/a4/$id'
+      fullPath: '/platform/a4/$id'
+      preLoaderRoute: typeof AppPlatformA4IdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/platform/audits/': {
       id: '/_app/platform/audits/'
       path: '/platform/audits'
@@ -796,6 +853,8 @@ interface AppRouteChildren {
   AppPlatformTeamRoute: typeof AppPlatformTeamRoute
   AppAccountingIndexRoute: typeof AppAccountingIndexRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
+  AppAccountingA4ShopIdRoute: typeof AppAccountingA4ShopIdRoute
+  AppAccountingA4IdRoute: typeof AppAccountingA4IdRoute
   AppAccountingCreditNotesIdRoute: typeof AppAccountingCreditNotesIdRoute
   AppAccountingCreditNotesNewRoute: typeof AppAccountingCreditNotesNewRoute
   AppAccountingExpensesIdRoute: typeof AppAccountingExpensesIdRoute
@@ -806,6 +865,7 @@ interface AppRouteChildren {
   AppAccountingQuotationsNewRoute: typeof AppAccountingQuotationsNewRoute
   AppAccountingReceiptsIdRoute: typeof AppAccountingReceiptsIdRoute
   AppAccountingReceiptsNewRoute: typeof AppAccountingReceiptsNewRoute
+  AppPlatformA4IdRoute: typeof AppPlatformA4IdRoute
   AppPlatformAuditsIdRoute: typeof AppPlatformAuditsIdRoute
   AppPlatformEngagementsIdRoute: typeof AppPlatformEngagementsIdRoute
   AppPlatformTenantsIdRoute: typeof AppPlatformTenantsIdRoute
@@ -832,6 +892,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppPlatformTeamRoute: AppPlatformTeamRoute,
   AppAccountingIndexRoute: AppAccountingIndexRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
+  AppAccountingA4ShopIdRoute: AppAccountingA4ShopIdRoute,
+  AppAccountingA4IdRoute: AppAccountingA4IdRoute,
   AppAccountingCreditNotesIdRoute: AppAccountingCreditNotesIdRoute,
   AppAccountingCreditNotesNewRoute: AppAccountingCreditNotesNewRoute,
   AppAccountingExpensesIdRoute: AppAccountingExpensesIdRoute,
@@ -842,6 +904,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingQuotationsNewRoute: AppAccountingQuotationsNewRoute,
   AppAccountingReceiptsIdRoute: AppAccountingReceiptsIdRoute,
   AppAccountingReceiptsNewRoute: AppAccountingReceiptsNewRoute,
+  AppPlatformA4IdRoute: AppPlatformA4IdRoute,
   AppPlatformAuditsIdRoute: AppPlatformAuditsIdRoute,
   AppPlatformEngagementsIdRoute: AppPlatformEngagementsIdRoute,
   AppPlatformTenantsIdRoute: AppPlatformTenantsIdRoute,

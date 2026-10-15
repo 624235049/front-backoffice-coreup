@@ -21,6 +21,7 @@ export type Invoice = ListItem<ApiData<'/v1/platform/invoices'>>;
 export type Revenue = ApiItem<'/v1/platform/revenue'>;
 export type TeamMember = ListItem<ApiData<'/v1/platform/team'>>;
 export type Assignment = ListItem<ApiData<'/v1/platform/assignments'>>;
+export type TenantBranch = ListItem<ApiData<'/v1/platform/tenants/{id}/branches'>>;
 export type AccessLogRow = ListItem<ApiData<'/v1/platform/tenants/{id}/access-log'>>;
 
 const part = 'platform';
@@ -38,6 +39,14 @@ export const useTenants = (query: TenantsQuery) =>
 export const useTenant = (id: string) =>
   useTenantQuery([part, 'tenant', id], () =>
     unwrap(api.GET('/v1/platform/tenants/{id}', { params: { path: { id } } })),
+  );
+
+export const useTenantBranches = (id: string, enabled = true) =>
+  useTenantQuery(
+    [part, 'tenant', id, 'branches'],
+    async () =>
+      (await unwrap(api.GET('/v1/platform/tenants/{id}/branches', { params: { path: { id } } }))).data,
+    { enabled },
   );
 
 export const useAccessLog = (id: string) =>
@@ -164,6 +173,14 @@ export const useSetModules = (id: string) =>
   useMut((body: ApiBody<'/v1/platform/tenants/{id}/modules', 'put'>) =>
     unwrap(api.PUT('/v1/platform/tenants/{id}/modules', { params: { path: { id } }, body })),
   );
+
+export const useFillDemoData = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/demo-data', 'post'>) =>
+    unwrap(api.POST('/v1/platform/tenants/{id}/demo-data', { params: { path: { id } }, body })),
+  );
+
+export const useClearDemoData = (id: string) =>
+  useMut(() => unwrap(api.DELETE('/v1/platform/tenants/{id}/demo-data', { params: { path: { id } } })));
 
 export const useImpersonate = (id: string) =>
   useMut((body: ApiBody<'/v1/platform/tenants/{id}/impersonate', 'post'>) =>
