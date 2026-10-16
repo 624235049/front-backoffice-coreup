@@ -42,3 +42,14 @@ export function parseBahtToMinor(input: string): number | null {
 
 export const todayBangkok = (): string =>
   new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
+
+/** "Booking Basic · ฿299/เดือน" for plan dropdowns. */
+export function usePlanLabel(): (p: {
+  name: string;
+  priceMinor: number;
+  interval: 'month' | 'year';
+}) => string {
+  const { t } = useTranslation('platform');
+  const locale = useIntlLocale();
+  return (p) => `${p.name} · ${formatMoney(p.priceMinor, locale)}${t(`plans.per.${p.interval}`)}`;
+}

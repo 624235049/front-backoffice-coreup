@@ -40,7 +40,7 @@ import {
   usePlans,
 } from '../api';
 import { INDUSTRY_KEYS } from '../components/common';
-import { formatDateTime, parseBahtToMinor, useIntlLocale } from '../format';
+import { formatDateTime, parseBahtToMinor, useIntlLocale, usePlanLabel } from '../format';
 
 /** Board columns in sales order (docs/02 §6.9: new → contacted → checked → proposal → won / lost; nurture parks a lead). */
 const STAGES: LeadStage[] = ['new', 'contacted', 'checked', 'proposal', 'won', 'lost', 'nurture'];
@@ -726,6 +726,7 @@ function ConvertDialog({
   const { t } = useTranslation('platform');
   const { t: tc } = useTranslation('common');
   const plans = usePlans();
+  const planLabel = usePlanLabel();
   const convert = useConvertLead();
   const form = useForm<z.infer<typeof convertSchema>>({
     resolver: zodResolver(convertSchema),
@@ -811,7 +812,7 @@ function ConvertDialog({
                   .filter((p) => p.active)
                   .map((p) => (
                     <SelectItem key={p.code} value={p.code}>
-                      {p.name}
+                      {planLabel(p)}
                     </SelectItem>
                   ))}
               </SelectContent>

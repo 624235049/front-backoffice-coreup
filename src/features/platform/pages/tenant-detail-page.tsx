@@ -37,7 +37,7 @@ import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { UsersPanel } from '../components/users-panel';
-import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
+import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
 
 /** Module keys a consultant can switch on per shop (docs/02 §5; `core` is always on). */
 const MODULE_KEYS = [
@@ -150,6 +150,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
   const canWrite = useCan('platform:write');
   const patch = usePatchTenant(d.id);
   const plans = usePlans();
+  const planLabel = usePlanLabel();
   const setModules = useSetModules(d.id);
   const [notes, setNotes] = useState(d.notes);
   const [pendingStatus, setPendingStatus] = useState<TenantDetail['status'] | null>(null);
@@ -226,15 +227,17 @@ function OverviewTab({ d }: { d: TenantDetail }) {
                   patch.mutate({ planCode: code }, { onSuccess: () => toast.success(t('detail.planSaved')) })
                 }
               >
-                <SelectTrigger className="w-48" aria-label={t('detail.plan')}>
+                <SelectTrigger className="w-64" aria-label={t('detail.plan')}>
                   <SelectValue placeholder="–" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(plans.data ?? []).map((p) => (
-                    <SelectItem key={p.code} value={p.code}>
-                      {p.name} · {formatMoney(p.priceMinor, locale)}
-                    </SelectItem>
-                  ))}
+                  {(plans.data ?? [])
+                    .filter((p) => p.active || p.code === d.planCode)
+                    .map((p) => (
+                      <SelectItem key={p.code} value={p.code}>
+                        {planLabel(p)}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             ) : (

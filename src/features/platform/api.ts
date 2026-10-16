@@ -228,6 +228,14 @@ export const usePatchTeamMember = () =>
     unwrap(api.PATCH('/v1/platform/team/{id}', { params: { path: { id: v.id } }, body: v.body })),
   );
 
+export const useCreatePlan = () =>
+  useMut((body: ApiBody<'/v1/platform/plans', 'post'>) => unwrap(api.POST('/v1/platform/plans', { body })));
+
+export const usePatchPlan = () =>
+  useMut((v: { id: string; body: ApiBody<'/v1/platform/plans/{id}', 'patch'> }) =>
+    unwrap(api.PATCH('/v1/platform/plans/{id}', { params: { path: { id: v.id } }, body: v.body })),
+  );
+
 export const useCreateLead = () =>
   useMut((body: ApiBody<'/v1/platform/leads', 'post'>) => unwrap(api.POST('/v1/platform/leads', { body })));
 

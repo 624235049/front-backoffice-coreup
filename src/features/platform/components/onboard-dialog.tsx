@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useInvalidToast } from '@/lib/form-errors';
 import { useCreateTenant, usePlans } from '../api';
+import { usePlanLabel } from '../format';
 import { INDUSTRY_KEYS } from './common';
 
 const schema = z.object({
@@ -45,6 +46,7 @@ export function OnboardDialog({
   const { t } = useTranslation('platform');
   const { t: tc } = useTranslation('common');
   const plans = usePlans();
+  const planLabel = usePlanLabel();
   const create = useCreateTenant();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
@@ -132,7 +134,7 @@ export function OnboardDialog({
                     .filter((p) => p.active)
                     .map((p) => (
                       <SelectItem key={p.code} value={p.code}>
-                        {p.name}
+                        {planLabel(p)}
                       </SelectItem>
                     ))}
                 </SelectContent>

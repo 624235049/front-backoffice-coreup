@@ -3,6 +3,7 @@ import {
   ClipboardCheck,
   KanbanSquare,
   LayoutDashboard,
+  Package,
   Receipt,
   Store,
   TrendingUp,
@@ -88,5 +89,13 @@ export const navItems: NavItem[] = [
     permission: 'platform:manage',
     module: 'platform',
     order: 75,
+  },
+  {
+    to: '/platform/plans',
+    labelKey: 'nav:plans',
+    icon: Package,
+    permission: 'platform:manage',
+    module: 'platform',
+    order: 77,
   },
 ];

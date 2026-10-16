@@ -35,7 +35,9 @@
     "payouts": "Payouts",
     "checkout": "Checkout",
     "inventory": "Products & stock",
-    "kpi": "KPI"
+    "kpi": "KPI",
+    "core": "Core",
+    "clinical": "Clinical"
   },
   "moduleSource": {
     "plan": "Plan",
@@ -563,6 +565,82 @@
     "byMonth": "By month",
     "noData": "No data in this period",
     "topShops": "Top shops by invoiced"
+  },
+  "plans": {
+    "title": "Plans",
+    "description": "Create and edit the packages sold to shops: price, features and quotas",
+    "create": "Create plan",
+    "edit": "Edit",
+    "editTitle": "Edit plan",
+    "dialogHint": "Price is in baht, before 7% VAT. Leave a quota empty for unlimited.",
+    "empty": "No plans yet. Press \"Create plan\" to start.",
+    "col": {
+      "name": "Plan",
+      "price": "Price",
+      "modules": "Features",
+      "limits": "Quotas",
+      "status": "Status"
+    },
+    "vat": "+7% VAT",
+    "per": {
+      "month": "/month",
+      "year": "/year"
+    },
+    "interval": {
+      "month": "Monthly",
+      "year": "Yearly"
+    },
+    "unlimited": "Unlimited",
+    "active": "On sale",
+    "inactive": "Off",
+    "toggle": "Turn plan {{name}} on or off",
+    "activated": "Plan {{name}} is on sale",
+    "deactivated": "Plan {{name}} is off",
+    "saved": "Plan {{name}} saved",
+    "created": "Plan {{name}} created",
+    "save": "Save",
+    "preset": "Start from LINE booking",
+    "hint": "Changing a plan's modules only affects shops opened, or moved to a plan, from now on. Existing shops keep their modules.",
+    "field": {
+      "code": "Plan code",
+      "codeHint": "Lowercase English letters/digits, e.g. booking-basic (cannot be changed later)",
+      "name": "Plan name",
+      "price": "Price (baht)",
+      "priceHint": "Before VAT, e.g. 299",
+      "interval": "Billing period",
+      "modules": "Features for the shop",
+      "limits": "Quotas",
+      "limitsHint": "Empty = unlimited"
+    },
+    "limit": {
+      "branches": "Branches",
+      "members": "Staff",
+      "customers": "Customers",
+      "messages_per_month": "LINE messages per month"
+    },
+    "err": {
+      "code": "Plan code: lowercase English letters, digits, - and _ only, 2-31 characters, e.g. booking-basic",
+      "name": "Enter a plan name first (up to 80 characters)",
+      "price": "Enter a valid price in baht first, e.g. 299 (0 is allowed)",
+      "limit": "Quota for {{name}} must be a whole number, or empty for unlimited"
+    },
+    "moduleHint": {
+      "core": "Core system, always on for every shop",
+      "crm": "Customers, calendar, appointments, services",
+      "messaging": "LINE OA + automatic appointment reminders",
+      "booking": "Online booking rules",
+      "checkout": "Payments, bills, receipts, deposits / slip checking",
+      "payouts": "Staff commissions",
+      "inventory": "Products and stock",
+      "shifts": "Work shifts",
+      "checklists": "Daily task checklists",
+      "sop": "Step-by-step work guides",
+      "surveys": "Anonymous staff surveys",
+      "reports": "Sales, customer and appointment reports",
+      "approvals": "Approvals inbox",
+      "clinical": "Treatment records and plans",
+      "kpi": "Team indicators and targets"
+    }
   },
   "team": {
     "title": "CoreUp team",
