@@ -42,8 +42,10 @@ const MODULES = [
   'approvals',
   'clinical',
   'kpi',
+  'lite',
 ] as const;
-const LINE_BOOKING_PRESET = ['core', 'crm', 'messaging', 'booking'];
+// booking-only product: small shop app, no LINE OA connection
+const LINE_BOOKING_PRESET = ['core', 'crm', 'booking', 'lite'];
 const LIMITS = ['branches', 'members', 'customers', 'messages_per_month'] as const;
 type PlanModules = NonNullable<ApiBody<'/v1/platform/plans', 'post'>['modules']>;
 const CODE_RE = /^[a-z0-9][a-z0-9_-]{1,30}$/;

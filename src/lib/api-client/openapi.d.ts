@@ -1841,7 +1841,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -4363,7 +4363,7 @@ export interface paths {
                             data: {
                                 key: string;
                                 /** @enum {string} */
-                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
+                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                 resource: string;
                                 action: string;
                             }[];
@@ -7754,7 +7754,7 @@ export interface paths {
                     "application/json": {
                         modules: {
                             /** @enum {string} */
-                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
+                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                             /**
                              * @default consultant
                              * @enum {string}
@@ -10244,7 +10244,7 @@ export interface paths {
                                         /** @enum {string} */
                                         owner: "consultant" | "tenant";
                                         /** @enum {string} */
-                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform";
+                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     }[];
                                 }[];
                             }[];
@@ -14170,7 +14170,7 @@ export interface paths {
                          *       "core"
                          *     ]
                          */
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         /** @default {} */
                         limits?: {
                             [key: string]: number;
@@ -14312,7 +14312,7 @@ export interface paths {
                         /** @enum {string} */
                         interval?: "month" | "year";
                         active?: boolean;
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         limits?: {
                             [key: string]: number;
                         };

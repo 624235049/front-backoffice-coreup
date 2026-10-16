@@ -37,7 +37,8 @@
     "inventory": "Products & stock",
     "kpi": "KPI",
     "core": "Core",
-    "clinical": "Clinical"
+    "clinical": "Clinical",
+    "lite": "Booking-only shop"
   },
   "moduleSource": {
     "plan": "Plan",
@@ -597,7 +598,8 @@
         "reports": "Sales, customer and appointment reports",
         "approvals": "Approval inbox, e.g. discounts or voided bills need a manager's approval",
         "clinical": "Treatment records and treatment plans for clinics",
-        "kpi": "Team KPIs and targets"
+        "kpi": "Team KPIs and targets",
+        "lite": "A simple app with a short menu, ready to use without connecting a LINE OA"
       }
     },
     "edit": "Edit",
@@ -628,7 +630,7 @@
     "saved": "Plan {{name}} saved",
     "created": "Plan {{name}} created",
     "save": "Save",
-    "preset": "Start from LINE booking",
+    "preset": "Start from booking-only",
     "hint": "Changing a plan's modules only affects shops opened, or moved to a plan, from now on. Existing shops keep their modules.",
     "field": {
       "code": "Plan code",
@@ -668,7 +670,8 @@
       "reports": "Sales, customer and appointment reports",
       "approvals": "Approvals inbox",
       "clinical": "Treatment records and plans",
-      "kpi": "Team indicators and targets"
+      "kpi": "Team indicators and targets",
+      "lite": "The shop sees the booking-only app (short menu, no LINE OA connection); unticked = the full system"
     }
   },
   "team": {
