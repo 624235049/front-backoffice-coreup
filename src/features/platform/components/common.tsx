@@ -71,4 +71,21 @@ export function Field({ label, children }: { label: ReactNode; children: ReactNo
   );
 }
 
-export const INDUSTRY_KEYS = ['generic', 'clinic', 'dental', 'spa', 'salon', 'retail'] as const;
+export const INDUSTRY_KEYS = [
+  'generic',
+  'clinic',
+  'dental',
+  'spa',
+  'salon',
+  'barber',
+  'nail',
+  'car_care',
+  'pet_grooming',
+  'tattoo',
+  'physio',
+  'pilates',
+  'fitness',
+  'fortune',
+  'court',
+  'retail',
+] as const;
