@@ -99,7 +99,6 @@ export function PlansPage() {
                         {formatMoney(p.priceMinor, locale)}
                         {t(`plans.per.${p.interval}`)}
                       </div>
-                      <div className="text-xs text-muted-foreground">{t('plans.vat')}</div>
                     </TableCell>
                     <TableCell className="max-w-xs">
                       <div className="flex flex-wrap gap-1">

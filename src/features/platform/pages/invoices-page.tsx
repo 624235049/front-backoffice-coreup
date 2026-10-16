@@ -290,14 +290,12 @@ export function InvoicesPage() {
 
 function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t } = useTranslation('platform');
-  const locale = useIntlLocale();
   const tenants = useTenants({});
   const create = useCreateInvoice();
   const [tenantId, setTenantId] = useState('');
   const [source, setSource] = useState<'subscription' | 'engagement'>('engagement');
   const [amount, setAmount] = useState('');
   const minor = parseBahtToMinor(amount);
-  const vat = minor === null ? null : Math.round(minor * 0.07);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={t('common.close')}>
@@ -344,14 +342,6 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               />
             </div>
           </div>
-          {minor !== null && vat !== null ? (
-            <p className="text-sm text-muted-foreground">
-              {t('invoices.preview', {
-                vat: formatMoney(vat, locale),
-                total: formatMoney(minor + vat, locale),
-              })}
-            </p>
-          ) : null}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

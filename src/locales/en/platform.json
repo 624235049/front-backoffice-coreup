@@ -507,7 +507,7 @@
   },
   "invoices": {
     "title": "Invoices",
-    "description": "Subscription and consulting invoices, numbered INV-YYYYMM-#### incl. 7% VAT",
+    "description": "Subscription and consulting invoices, numbered INV-YYYYMM-#### (VAT added only once CoreUp is VAT-registered)",
     "add": "Issue invoice",
     "issue": "Issue",
     "run": "Run monthly billing",
@@ -536,8 +536,7 @@
     "voidTitle": "Void invoice {{number}}?",
     "voidHint": "A voided invoice cannot be edited; issue a new one instead",
     "amountExVat": "Amount excl. VAT (THB)",
-    "vatHint": "7% VAT is added automatically",
-    "preview": "VAT {{vat}} · total {{total}}",
+    "vatHint": "VAT is added automatically only once CoreUp is VAT-registered",
     "nothingToExport": "No invoices to export",
     "voidedToast": "Invoice {{number}} voided",
     "createdToast": "Invoice issued",
@@ -575,7 +574,7 @@
       "title": "Plan details to send to a customer",
       "hint": "Copy into a LINE chat, or print / save as PDF for the customer",
       "heading": "{{name}} plan",
-      "price": "Price {{price}}{{per}} (before 7% VAT)",
+      "price": "Price {{price}}{{per}}",
       "gets": "What the shop gets",
       "limits": "Quotas",
       "unlimited": "Unlimited",
@@ -603,7 +602,7 @@
     },
     "edit": "Edit",
     "editTitle": "Edit plan",
-    "dialogHint": "Price is in baht, before 7% VAT. Leave a quota empty for unlimited.",
+    "dialogHint": "Price is in baht. Leave a quota empty for unlimited.",
     "empty": "No plans yet. Press \"Create plan\" to start.",
     "col": {
       "name": "Plan",
@@ -612,7 +611,6 @@
       "limits": "Quotas",
       "status": "Status"
     },
-    "vat": "+7% VAT",
     "per": {
       "month": "/month",
       "year": "/year"
@@ -637,7 +635,7 @@
       "codeHint": "Lowercase English letters/digits, e.g. booking-basic (cannot be changed later)",
       "name": "Plan name",
       "price": "Price (baht)",
-      "priceHint": "Before VAT, e.g. 299",
+      "priceHint": "e.g. 249",
       "interval": "Billing period",
       "modules": "Features for the shop",
       "limits": "Quotas",
