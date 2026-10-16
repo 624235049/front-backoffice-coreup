@@ -1,4 +1,4 @@
-import { Package, Pencil, Plus } from 'lucide-react';
+import { Copy, Package, Pencil, Plus, Printer, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -56,6 +56,7 @@ export function PlansPage() {
   const patch = usePatchPlan();
   // `null` = closed, `'new'` = create, a plan = edit
   const [editing, setEditing] = useState<Plan | 'new' | null>(null);
+  const [offer, setOffer] = useState<Plan | null>(null);
 
   return (
     <>
@@ -142,7 +143,10 @@ export function PlansPage() {
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right whitespace-nowrap">
+                      <Button size="sm" variant="ghost" onClick={() => setOffer(p)}>
+                        <Send /> {t('plans.offer.button')}
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>
                         <Pencil /> {t('plans.edit')}
                       </Button>
@@ -162,7 +166,79 @@ export function PlansPage() {
           onClose={() => setEditing(null)}
         />
       ) : null}
+      {offer ? <OfferDialog plan={offer} onClose={() => setOffer(null)} /> : null}
     </>
+  );
+}
+
+/** What a customer gets on this plan, in plain Thai: copied into a LINE chat or printed / saved as PDF. */
+function OfferDialog({ plan, onClose }: { plan: Plan; onClose: () => void }) {
+  const { t } = useTranslation('platform');
+  const locale = useIntlLocale();
+  const text = [
+    t('plans.offer.heading', { name: plan.name }),
+    t('plans.offer.price', {
+      price: formatMoney(plan.priceMinor, locale),
+      per: t(`plans.per.${plan.interval}`),
+    }),
+    '',
+    t('plans.offer.gets'),
+    ...MODULES.filter((m) => plan.modules.includes(m)).map((m) => `• ${t(`plans.offer.module.${m}`)}`),
+    '',
+    t('plans.offer.limits'),
+    ...LIMITS.map(
+      (k) =>
+        `• ${t(`plans.limit.${k}`)}: ${
+          plan.limits[k] === undefined ? t('plans.offer.unlimited') : plan.limits[k].toLocaleString(locale)
+        }`,
+    ),
+    '',
+    t('plans.offer.footer'),
+  ].join('\n');
+
+  const print = () => {
+    const w = window.open('', '_blank');
+    if (!w) return;
+    const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    w.document.write(
+      `<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(plan.name)}</title>` +
+        '<style>@page{size:A4;margin:18mm}body{font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;' +
+        'font-size:15px;line-height:1.7;color:#0f2540;white-space:pre-line}' +
+        'body::first-line{font-size:22px;font-weight:700}</style></head>' +
+        `<body>${esc(text)}</body></html>`,
+    );
+    w.document.close();
+    w.focus();
+    w.print();
+  };
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent closeLabel={t('common.close')} className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{t('plans.offer.title')}</DialogTitle>
+          <DialogDescription>{t('plans.offer.hint')}</DialogDescription>
+        </DialogHeader>
+        <div
+          className="rounded-lg border bg-muted/40 p-4 text-sm whitespace-pre-line"
+          data-testid="plan-offer"
+        >
+          {text}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={print}>
+            <Printer /> {t('plans.offer.print')}
+          </Button>
+          <Button
+            onClick={() =>
+              void navigator.clipboard.writeText(text).then(() => toast.success(t('plans.offer.copied')))
+            }
+          >
+            <Copy /> {t('plans.offer.copy')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
