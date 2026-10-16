@@ -599,7 +599,7 @@
         "approvals": "Approval inbox, e.g. discounts or voided bills need a manager's approval",
         "clinical": "Treatment records and treatment plans for clinics",
         "kpi": "Team KPIs and targets",
-        "lite": "A simple app with a short menu, ready to use without connecting a LINE OA"
+        "lite": "A simple app with a short menu, ready to use; the shop's LINE OA can be connected later"
       }
     },
     "edit": "Edit",
@@ -671,7 +671,7 @@
       "approvals": "Approvals inbox",
       "clinical": "Treatment records and plans",
       "kpi": "Team indicators and targets",
-      "lite": "The shop sees the booking-only app (short menu, no LINE OA connection); unticked = the full system"
+      "lite": "The shop sees the booking-only app (short menu); unticked = the full system"
     }
   },
   "team": {

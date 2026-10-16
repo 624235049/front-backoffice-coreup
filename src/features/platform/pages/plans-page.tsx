@@ -44,8 +44,8 @@ const MODULES = [
   'kpi',
   'lite',
 ] as const;
-// booking-only product: small shop app, no LINE OA connection
-const LINE_BOOKING_PRESET = ['core', 'crm', 'booking', 'lite'];
+// booking-only product: small shop app; LINE reminders from the shop's own OA, capped by the plan's message quota
+const LINE_BOOKING_PRESET = ['core', 'crm', 'booking', 'messaging', 'lite'];
 const LIMITS = ['branches', 'members', 'customers', 'messages_per_month'] as const;
 type PlanModules = NonNullable<ApiBody<'/v1/platform/plans', 'post'>['modules']>;
 const CODE_RE = /^[a-z0-9][a-z0-9_-]{1,30}$/;
