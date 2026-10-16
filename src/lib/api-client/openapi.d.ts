@@ -39548,6 +39548,11 @@ export interface paths {
                         "application/json": {
                             data: {
                                 priceMinor: number;
+                                extraServices: {
+                                    serviceId: string;
+                                    name: string;
+                                    priceMinor: number;
+                                }[];
                                 steps: {
                                     /** @enum {string} */
                                     kind: "service_record" | "payout_preview" | "package_session" | "followup_message" | "followup_task" | "next_due" | "bill" | "customer_updated";
