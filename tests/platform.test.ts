@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import type { Plan } from '@/features/platform/api';
 import { formatMoney, parseBahtToMinor } from '@/features/platform/format';
 import { navItems } from '@/features/platform/nav';
+import { defaultPlanCode } from '@/features/platform/plans';
 import { pickPlatformMembership } from '@/lib/membership';
 import { buildNav } from '@/lib/navigation';
 import { membership } from './fixtures';
@@ -83,5 +85,30 @@ describe('platform access', () => {
     );
     expect(routes(consultant)).not.toContain('/platform/leads');
     expect(routes(consultant)).not.toContain('/platform/invoices');
+  });
+});
+
+describe('new-shop plan default', () => {
+  it('picks the cheapest active plan with a real price, never a ฿0 or switched-off one', () => {
+    const plan = (code: string, priceMinor: number, active = true): Plan => ({
+      id: code,
+      code,
+      name: code,
+      priceMinor,
+      interval: 'month',
+      active,
+      modules: [],
+      limits: {},
+    });
+    expect(
+      defaultPlanCode([
+        plan('growth', 0),
+        plan('pro', 99_900),
+        plan('old', 19_900, false),
+        plan('basic', 29_900),
+      ]),
+    ).toBe('basic');
+    expect(defaultPlanCode([plan('growth', 0)])).toBeUndefined();
+    expect(defaultPlanCode(undefined)).toBeUndefined();
   });
 });

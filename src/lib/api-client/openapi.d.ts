@@ -3003,7 +3003,7 @@ export interface paths {
                                 branchId: string;
                                 name: string;
                                 /** @enum {string} */
-                                type: "room" | "bed" | "chair" | "station" | "other";
+                                type: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
@@ -3100,7 +3100,7 @@ export interface paths {
                     "application/json": {
                         name: string;
                         /** @enum {string} */
-                        type: "room" | "bed" | "chair" | "station" | "other";
+                        type: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                         /** @default 1 */
                         capacity?: number;
                         /** @default true */
@@ -3121,7 +3121,7 @@ export interface paths {
                                 branchId: string;
                                 name: string;
                                 /** @enum {string} */
-                                type: "room" | "bed" | "chair" | "station" | "other";
+                                type: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
@@ -3246,7 +3246,7 @@ export interface paths {
                                 branchId: string;
                                 name: string;
                                 /** @enum {string} */
-                                type: "room" | "bed" | "chair" | "station" | "other";
+                                type: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
@@ -3455,7 +3455,7 @@ export interface paths {
                     "application/json": {
                         name?: string;
                         /** @enum {string} */
-                        type?: "room" | "bed" | "chair" | "station" | "other";
+                        type?: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                         /** @default 1 */
                         capacity?: number;
                         /** @default true */
@@ -3476,7 +3476,7 @@ export interface paths {
                                 branchId: string;
                                 name: string;
                                 /** @enum {string} */
-                                type: "room" | "bed" | "chair" | "station" | "other";
+                                type: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
@@ -4926,6 +4926,7 @@ export interface paths {
                                 roleIds: string[];
                                 roles: string[];
                                 branchIds: string[];
+                                bookable: boolean;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5064,6 +5065,7 @@ export interface paths {
                                 roleIds: string[];
                                 roles: string[];
                                 branchIds: string[];
+                                bookable: boolean;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5188,6 +5190,7 @@ export interface paths {
                                 roleIds: string[];
                                 roles: string[];
                                 branchIds: string[];
+                                bookable: boolean;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5326,6 +5329,7 @@ export interface paths {
                                 roleIds: string[];
                                 roles: string[];
                                 branchIds: string[];
+                                bookable: boolean;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5453,6 +5457,7 @@ export interface paths {
                                 roleIds: string[];
                                 roles: string[];
                                 branchIds: string[];
+                                bookable: boolean;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -14173,7 +14178,10 @@ export interface paths {
                         modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         /** @default {} */
                         limits?: {
-                            [key: string]: number;
+                            branches?: number;
+                            members?: number;
+                            customers?: number;
+                            messages_per_month?: number;
                         };
                     };
                 };
@@ -14314,8 +14322,12 @@ export interface paths {
                         active?: boolean;
                         modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         limits?: {
-                            [key: string]: number;
+                            branches?: number;
+                            members?: number;
+                            customers?: number;
+                            messages_per_month?: number;
                         };
+                        applyToShops?: boolean;
                     };
                 };
             };
@@ -38192,6 +38204,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                 isRequestedMember: boolean;
+                                partySize: number;
                                 customerPackageId: string | null;
                                 saleMembershipId: string | null;
                                 note: string | null;
@@ -38307,6 +38320,7 @@ export interface paths {
                         startAt: string;
                         note?: string | null;
                         isRequestedMember?: boolean;
+                        partySize?: number;
                         customerPackageId?: string | null;
                         saleMembershipId?: string | null;
                         labels?: string[];
@@ -38370,6 +38384,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                 isRequestedMember: boolean;
+                                partySize: number;
                                 customerPackageId: string | null;
                                 saleMembershipId: string | null;
                                 note: string | null;
@@ -38531,6 +38546,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -38586,6 +38602,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -38641,6 +38658,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -38697,6 +38715,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -38752,6 +38771,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -38961,6 +38981,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                 isRequestedMember: boolean;
+                                partySize: number;
                                 customerPackageId: string | null;
                                 saleMembershipId: string | null;
                                 note: string | null;
@@ -39079,6 +39100,7 @@ export interface paths {
                         resourceId?: string | null;
                         note?: string | null;
                         isRequestedMember?: boolean;
+                        partySize?: number;
                         labels?: string[];
                         extraServiceIds?: string[];
                         overrideReason?: string;
@@ -39131,6 +39153,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                 isRequestedMember: boolean;
+                                partySize: number;
                                 customerPackageId: string | null;
                                 saleMembershipId: string | null;
                                 note: string | null;
@@ -39304,6 +39327,7 @@ export interface paths {
                                 /** @enum {string} */
                                 source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                 isRequestedMember: boolean;
+                                partySize: number;
                                 customerPackageId: string | null;
                                 saleMembershipId: string | null;
                                 note: string | null;
@@ -39569,6 +39593,7 @@ export interface paths {
                                     expiresAt: string;
                                 }[];
                                 nextDueAt: string | null;
+                                discountReasons: string[];
                             };
                         };
                     };
@@ -39685,6 +39710,30 @@ export interface paths {
                         usePackageId?: string | null;
                         /** @default [] */
                         assistantIds?: string[];
+                        /** @default [] */
+                        items?: {
+                            /** @enum {string} */
+                            kind: "service" | "product" | "package_sale" | "package_use";
+                            refId?: string | null;
+                            categoryId?: string | null;
+                            course?: {
+                                serviceIds: string[];
+                                sessions: number;
+                                validDays: number;
+                                /** @default false */
+                                save?: boolean;
+                            } | null;
+                            name: string;
+                            /** @default 1 */
+                            qty?: number;
+                            /** @description integer satang */
+                            unitPriceMinor: number;
+                            performerMembershipId?: string | null;
+                            saleMembershipId?: string | null;
+                            /** @description integer satang */
+                            labCostMinor?: number;
+                            labVendor?: string | null;
+                        }[];
                     };
                 };
             };
@@ -39735,6 +39784,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -39890,6 +39940,7 @@ export interface paths {
                     memberId?: string;
                     ignoreAppointmentId?: string;
                     extraServiceIds?: string;
+                    partySize?: number;
                 };
                 header?: never;
                 path?: never;
@@ -39910,9 +39961,10 @@ export interface paths {
                                 slots: {
                                     startAt: string;
                                     endAt: string;
-                                    memberId: string;
-                                    memberName: string;
+                                    memberId: string | null;
+                                    memberName: string | null;
                                     resourceId: string | null;
+                                    resourceName: string | null;
                                 }[];
                                 starts: {
                                     startAt: string;
@@ -40089,6 +40141,7 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                                     isRequestedMember: boolean;
+                                    partySize: number;
                                     customerPackageId: string | null;
                                     saleMembershipId: string | null;
                                     note: string | null;
@@ -43843,6 +43896,7 @@ export interface paths {
                 query?: {
                     branchId?: string;
                     days?: number;
+                    inProgress?: "true" | "false";
                 };
                 header?: never;
                 path?: never;
@@ -43863,6 +43917,8 @@ export interface paths {
                                 billId: string | null;
                                 billNumber: string | null;
                                 appointmentId: string | null;
+                                /** @enum {string|null} */
+                                appointmentStatus: "checked_in" | "in_service" | "completed" | null;
                                 customerId: string | null;
                                 customerName: string | null;
                                 customerCode: string | null;
@@ -43944,6 +44000,125 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/checkout/waiting/{id}/no-charge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ไม่เก็บเงิน: take a finished, unbilled appointment off the waiting list for good. Needs a reason and a bills:void holder (others get APPROVER_REQUIRED); audited
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Settled */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointmentId: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -45668,10 +45843,10 @@ export interface paths {
                     "application/json": {
                         reason: string;
                         /**
-                         * @default cash
-                         * @enum {string}
+                         * @default null
+                         * @enum {string|null}
                          */
-                        method?: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                        method?: "cash" | "transfer" | "promptpay" | "card_external" | "other" | null;
                     };
                 };
             };
@@ -62573,6 +62748,7 @@ export interface paths {
                                     }[];
                                 };
                                 missingVariables: string[];
+                                blockingVariables: string[];
                                 unknownVariables: string[];
                                 sample: boolean;
                             };
@@ -63044,6 +63220,7 @@ export interface paths {
                                     }[];
                                 };
                                 missingVariables: string[];
+                                blockingVariables: string[];
                                 unknownVariables: string[];
                                 sample: boolean;
                             };
@@ -65959,6 +66136,11 @@ export interface paths {
                                 introText: string | null;
                                 policyText: string | null;
                                 coverUrl: string | null;
+                                highlights: {
+                                    /** @enum {string} */
+                                    icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
+                                    label: string;
+                                }[];
                                 autoConfirm: boolean;
                                 deposit: {
                                     /** @enum {string} */
@@ -65972,6 +66154,7 @@ export interface paths {
                                     version: string;
                                 };
                                 promptpayConfigured: boolean;
+                                lineBasicId: string | null;
                                 branches: {
                                     id: string;
                                     name: string;
@@ -66113,6 +66296,8 @@ export interface paths {
                                         priceMinor: number;
                                         imageUrl: string | null;
                                         depositMinor: number | null;
+                                        /** @enum {string} */
+                                        bookBy: "staff" | "resource";
                                     }[];
                                 }[];
                             };
@@ -66327,6 +66512,7 @@ export interface paths {
                     serviceId: string;
                     memberId?: string;
                     date: string;
+                    partySize?: number;
                 };
                 header?: never;
                 path: {
@@ -66350,6 +66536,8 @@ export interface paths {
                                     startAt: string;
                                     endAt: string;
                                     time: string;
+                                    resourceId: string | null;
+                                    resourceName: string | null;
                                 }[];
                                 /** @enum {string|null} */
                                 emptyReason: "closed" | "full" | "too_soon" | "too_far" | null;
@@ -66447,6 +66635,7 @@ export interface paths {
                     branchId: string;
                     serviceId: string;
                     memberId?: string;
+                    partySize?: number;
                     month: string;
                 };
                 header?: never;
@@ -66681,6 +66870,7 @@ export interface paths {
                         serviceId: string;
                         memberId: string | null;
                         startAt: string;
+                        partySize?: number;
                         note?: string;
                         name?: string;
                         phone?: string;
@@ -67268,6 +67458,7 @@ export interface paths {
                         serviceId: string;
                         memberId: string | null;
                         startAt: string;
+                        partySize?: number;
                         note?: string;
                         name: string;
                         phone: string;
@@ -67980,6 +68171,11 @@ export interface paths {
                                 policyText: string | null;
                                 coverFileId: string | null;
                                 coverUrl: string | null;
+                                highlights: {
+                                    /** @enum {string} */
+                                    icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
+                                    label: string;
+                                }[];
                                 autoConfirm: boolean;
                                 terms: {
                                     required: boolean;
@@ -68093,6 +68289,11 @@ export interface paths {
                         introText: string | null;
                         policyText: string | null;
                         coverFileId: string | null;
+                        highlights?: {
+                            /** @enum {string} */
+                            icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
+                            label: string;
+                        }[];
                         autoConfirm: boolean;
                         terms: {
                             required: boolean;
@@ -68129,6 +68330,11 @@ export interface paths {
                                 policyText: string | null;
                                 coverFileId: string | null;
                                 coverUrl: string | null;
+                                highlights: {
+                                    /** @enum {string} */
+                                    icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
+                                    label: string;
+                                }[];
                                 autoConfirm: boolean;
                                 terms: {
                                     required: boolean;
@@ -70129,13 +70335,24 @@ export interface paths {
                                     id: string;
                                     name: string;
                                 }[];
+                                introText: string | null;
+                                coverUrl: string | null;
+                                highlights: {
+                                    /** @enum {string} */
+                                    icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
+                                    label: string;
+                                }[];
                                 allowChooseStaff: boolean;
                                 services: {
                                     id: string;
                                     name: string;
                                     categoryName: string | null;
+                                    description: string | null;
                                     durationMin: number;
                                     priceMinor: number;
+                                    imageUrl: string | null;
+                                    /** @enum {string} */
+                                    bookBy: "staff" | "resource";
                                 }[];
                                 staff: {
                                     id: string;
@@ -70239,6 +70456,7 @@ export interface paths {
                         phone: string;
                         serviceIds: string[];
                         memberId: string | null;
+                        partySize?: number;
                         /** @enum {boolean} */
                         consent: true;
                         /** @default false */
@@ -70271,6 +70489,7 @@ export interface paths {
                                     time: string;
                                     services: string[];
                                     staffName: string | null;
+                                    resourceName: string | null;
                                     shop: {
                                         name: string;
                                         logoUrl: string | null;
@@ -70307,6 +70526,7 @@ export interface paths {
                                     time: string;
                                     services: string[];
                                     staffName: string | null;
+                                    resourceName: string | null;
                                     shop: {
                                         name: string;
                                         logoUrl: string | null;
@@ -70436,6 +70656,7 @@ export interface paths {
                                 time: string;
                                 services: string[];
                                 staffName: string | null;
+                                resourceName: string | null;
                                 shop: {
                                     name: string;
                                     logoUrl: string | null;
@@ -78862,6 +79083,9 @@ export interface paths {
                                 url: string | null;
                                 personal: boolean;
                                 expiresAt: string | null;
+                                code: string | null;
+                                shopName: string;
+                                lineBasicId: string | null;
                             };
                         };
                     };
@@ -80215,6 +80439,8 @@ export interface paths {
                                 followupMode: "default" | "custom" | "none";
                                 resourceType: string | null;
                                 requiredSkill: boolean;
+                                /** @enum {string} */
+                                bookBy: "staff" | "resource";
                                 staffIds: string[];
                                 color: string | null;
                                 onlineBookable: boolean;
@@ -80350,6 +80576,11 @@ export interface paths {
                         resourceType?: string | null;
                         /** @default false */
                         requiredSkill?: boolean;
+                        /**
+                         * @default staff
+                         * @enum {string}
+                         */
+                        bookBy?: "staff" | "resource";
                         staffIds?: string[];
                         color?: string | null;
                         /** @default true */
@@ -80398,6 +80629,8 @@ export interface paths {
                                 followupMode: "default" | "custom" | "none";
                                 resourceType: string | null;
                                 requiredSkill: boolean;
+                                /** @enum {string} */
+                                bookBy: "staff" | "resource";
                                 staffIds: string[];
                                 color: string | null;
                                 onlineBookable: boolean;
@@ -80536,6 +80769,8 @@ export interface paths {
                                 followupMode: "default" | "custom" | "none";
                                 resourceType: string | null;
                                 requiredSkill: boolean;
+                                /** @enum {string} */
+                                bookBy: "staff" | "resource";
                                 staffIds: string[];
                                 color: string | null;
                                 onlineBookable: boolean;
@@ -80753,6 +80988,8 @@ export interface paths {
                         followupMode?: "default" | "custom" | "none";
                         resourceType?: string | null;
                         requiredSkill?: boolean;
+                        /** @enum {string} */
+                        bookBy?: "staff" | "resource";
                         staffIds?: string[];
                         color?: string | null;
                         onlineBookable?: boolean;
@@ -80797,6 +81034,8 @@ export interface paths {
                                 followupMode: "default" | "custom" | "none";
                                 resourceType: string | null;
                                 requiredSkill: boolean;
+                                /** @enum {string} */
+                                bookBy: "staff" | "resource";
                                 staffIds: string[];
                                 color: string | null;
                                 onlineBookable: boolean;
@@ -81055,6 +81294,8 @@ export interface paths {
                                 followupMode: "default" | "custom" | "none";
                                 resourceType: string | null;
                                 requiredSkill: boolean;
+                                /** @enum {string} */
+                                bookBy: "staff" | "resource";
                                 staffIds: string[];
                                 color: string | null;
                                 onlineBookable: boolean;

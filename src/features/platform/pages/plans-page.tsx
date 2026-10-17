@@ -24,29 +24,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { ApiBody } from '@/lib/api';
 import { type Plan, useCreatePlan, usePatchPlan, usePlans } from '../api';
 import { formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
+import { PLAN_LIMITS as LIMITS, SHOP_MODULES as MODULES } from '../plans';
 
-/** Modules a shop can have switched on (`core` is always on). Order = order shown in the dialog. */
-const MODULES = [
-  'core',
-  'crm',
-  'messaging',
-  'booking',
-  'checkout',
-  'payouts',
-  'inventory',
-  'shifts',
-  'checklists',
-  'sop',
-  'surveys',
-  'reports',
-  'approvals',
-  'clinical',
-  'kpi',
-  'lite',
-] as const;
 // booking-only product: small shop app; LINE reminders from the shop's own OA, capped by the plan's message quota
 const LINE_BOOKING_PRESET = ['core', 'crm', 'booking', 'messaging', 'lite'];
-const LIMITS = ['branches', 'members', 'customers', 'messages_per_month'] as const;
 type PlanModules = NonNullable<ApiBody<'/v1/platform/plans', 'post'>['modules']>;
 const CODE_RE = /^[a-z0-9][a-z0-9_-]{1,30}$/;
 
@@ -212,6 +193,9 @@ function OfferDialog({ plan, onClose }: { plan: Plan; onClose: () => void }) {
     w.focus();
     w.print();
   };
+  // a ฿0 or switched-off plan cannot be paid for by the shop, so never send it to a customer
+  const notSellable =
+    (plan.priceMinor === 0 && t('plans.offer.zeroPrice')) || (!plan.active && t('plans.offer.inactive'));
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
@@ -226,11 +210,17 @@ function OfferDialog({ plan, onClose }: { plan: Plan; onClose: () => void }) {
         >
           {text}
         </div>
+        {notSellable ? (
+          <p className="rounded-md border border-warning/50 bg-warning/10 p-3 text-sm" role="alert">
+            {notSellable}
+          </p>
+        ) : null}
         <DialogFooter>
-          <Button variant="outline" onClick={print}>
+          <Button variant="outline" blockedReason={notSellable} onClick={print}>
             <Printer /> {t('plans.offer.print')}
           </Button>
           <Button
+            blockedReason={notSellable}
             onClick={() =>
               void navigator.clipboard.writeText(text).then(() => toast.success(t('plans.offer.copied')))
             }
@@ -255,6 +245,7 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
   const [limits, setLimits] = useState<Record<string, string>>(
     Object.fromEntries(Object.entries(plan?.limits ?? {}).map(([k, v]) => [k, String(v)])),
   );
+  const [applyToShops, setApplyToShops] = useState(false);
 
   const priceMinor = parseBahtToMinor(price);
   const badLimit = LIMITS.find(
@@ -267,21 +258,15 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
     (badLimit ? t('plans.err.limit', { name: t(`plans.limit.${badLimit}`) }) : false);
 
   const save = () => {
-    // keep limits this form has no field for (set elsewhere); empty field = unlimited = no key
-    const kept = Object.fromEntries(
-      Object.entries(plan?.limits ?? {}).filter(([k]) => !(LIMITS as readonly string[]).includes(k)),
-    );
+    // empty field = unlimited = no key
     const body = {
       name: name.trim(),
       priceMinor: priceMinor as number,
       interval,
       modules: modules as PlanModules,
-      limits: {
-        ...kept,
-        ...Object.fromEntries(
-          LIMITS.flatMap((k) => ((limits[k] ?? '').trim() === '' ? [] : [[k, Number(limits[k])]])),
-        ),
-      },
+      limits: Object.fromEntries(
+        LIMITS.flatMap((k) => ((limits[k] ?? '').trim() === '' ? [] : [[k, Number(limits[k])]])),
+      ),
     };
     const done = (msg: string) => ({
       onSuccess: () => {
@@ -289,7 +274,11 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
         onClose();
       },
     });
-    if (plan) patch.mutate({ id: plan.id, body }, done(t('plans.saved', { name: body.name })));
+    if (plan)
+      patch.mutate(
+        { id: plan.id, body: { ...body, applyToShops } },
+        done(t('plans.saved', { name: body.name })),
+      );
     else create.mutate({ ...body, code }, done(t('plans.created', { name: body.name })));
   };
 
@@ -330,6 +319,9 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
                 placeholder="299"
               />
               <p className="mt-1 text-xs text-muted-foreground">{t('plans.field.priceHint')}</p>
+              {priceMinor === 0 ? (
+                <p className="mt-1 text-xs text-warning">{t('plans.field.zeroPrice')}</p>
+              ) : null}
             </div>
             <div>
               <Label>{t('plans.field.interval')}</Label>
@@ -397,6 +389,19 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
               ))}
             </div>
           </div>
+          {plan ? (
+            <Label className="flex items-start gap-2 font-normal">
+              <Checkbox
+                className="mt-0.5"
+                checked={applyToShops}
+                onCheckedChange={(on) => setApplyToShops(on === true)}
+              />
+              <span>
+                <span className="block font-medium">{t('plans.applyToShops')}</span>
+                <span className="block text-xs text-muted-foreground">{t('plans.applyToShopsHint')}</span>
+              </span>
+            </Label>
+          ) : null}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>

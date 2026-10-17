@@ -41,6 +41,7 @@ import {
 } from '../api';
 import { INDUSTRY_KEYS } from '../components/common';
 import { formatDateTime, parseBahtToMinor, useIntlLocale, usePlanLabel } from '../format';
+import { defaultPlanCode } from '../plans';
 
 /** Board columns in sales order (docs/02 §6.9: new → contacted → checked → proposal → won / lost; nurture parks a lead). */
 const STAGES: LeadStage[] = ['new', 'contacted', 'checked', 'proposal', 'won', 'lost', 'nurture'];
@@ -734,11 +735,11 @@ function ConvertDialog({
   });
   const navigate = useNavigate();
   const invalid = useInvalidToast<z.infer<typeof convertSchema>>();
-  const firstPlan = (plans.data ?? []).find((p) => p.active)?.code;
+  const firstPlan = defaultPlanCode(plans.data);
   const planCode = form.watch('planCode');
   const engagementType = form.watch('engagementType');
   const noEngagement = !engagementType || engagementType === 'none';
-  // one tap less: start from the first active package
+  // one tap less: start from the cheapest paid package (never a ฿0 one)
   useEffect(() => {
     if (firstPlan && !planCode) form.setValue('planCode', firstPlan);
   }, [firstPlan, planCode, form]);

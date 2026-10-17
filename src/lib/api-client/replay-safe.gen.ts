@@ -118,6 +118,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'POST /v1/channel-accounts/{id}/verify',
   'POST /v1/checklists',
   'POST /v1/checklists/{id}/runs',
+  'POST /v1/checkout/waiting/{id}/no-charge',
   'POST /v1/clinical/codes',
   'POST /v1/clinical/plans',
   'POST /v1/clinical/plans/{id}/accept',

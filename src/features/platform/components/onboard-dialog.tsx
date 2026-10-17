@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useInvalidToast } from '@/lib/form-errors';
 import { useCreateTenant, usePlans } from '../api';
 import { usePlanLabel } from '../format';
+import { defaultPlanCode } from '../plans';
 import { INDUSTRY_KEYS } from './common';
 
 const schema = z.object({
@@ -62,8 +63,8 @@ export function OnboardDialog({
   });
   const branches = useFieldArray({ control: form.control, name: 'branches' });
   const invalid = useInvalidToast<Values>();
-  // one tap less: start from the first active package instead of an empty choice
-  const firstPlan = (plans.data ?? []).find((p) => p.active)?.code;
+  // one tap less: start from the cheapest paid package (never a ฿0 one) instead of an empty choice
+  const firstPlan = defaultPlanCode(plans.data);
   const planCode = form.watch('planCode');
   useEffect(() => {
     if (firstPlan && !planCode) form.setValue('planCode', firstPlan);

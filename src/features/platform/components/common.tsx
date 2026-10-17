@@ -87,5 +87,6 @@ export const INDUSTRY_KEYS = [
   'fitness',
   'fortune',
   'court',
+  'restaurant',
   'retail',
 ] as const;

@@ -38,23 +38,10 @@ import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
+import { SHOP_MODULES } from '../plans';
 
-/** Module keys a consultant can switch on per shop (docs/02 §5; `core` is always on). */
-const MODULE_KEYS = [
-  'crm',
-  'booking',
-  'messaging',
-  'shifts',
-  'checklists',
-  'sop',
-  'surveys',
-  'reports',
-  'approvals',
-  'payouts',
-  'checkout',
-  'inventory',
-  'kpi',
-] as const;
+/** Modules a consultant can switch on per shop (`core` is always on). */
+const MODULE_KEYS = SHOP_MODULES.filter((k) => k !== 'core');
 
 export function TenantDetailPage() {
   const { id } = useParams({ from: '/_app/platform/tenants/$id' });
