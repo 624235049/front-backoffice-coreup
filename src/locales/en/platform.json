@@ -205,6 +205,22 @@
       "noShow": "No-show",
       "usage": "Usage",
       "renewal": "Renewal"
+    },
+    "views": {
+      "all": "All shops",
+      "selfServe": "Trials (self sign-up)"
+    },
+    "selfServe": {
+      "empty": "No self sign-up shops yet",
+      "emptyHint": "Shops that sign up themselves on coreup.biz show up here, soonest trial end first. Open a shop to change its plan once you have talked to the owner.",
+      "owner": "Owner",
+      "signedUp": "Signed up",
+      "trialEnds": "Trial ends",
+      "daysLeft": "{{count}} day(s) left",
+      "endsToday": "Ends today",
+      "expired": "Ended {{count}} day(s) ago",
+      "noTrial": "Not on trial",
+      "noEmail": "No email (signs in with LINE)"
     }
   },
   "onboard": {

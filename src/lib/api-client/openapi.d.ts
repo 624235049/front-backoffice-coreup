@@ -7084,6 +7084,7 @@ export interface paths {
                     status?: "trial" | "active" | "paused" | "closed";
                     health?: "good" | "declining" | "at_risk";
                     consultant?: string;
+                    selfServe?: "true" | "false";
                     limit?: number;
                 };
                 header?: never;
@@ -7128,6 +7129,12 @@ export interface paths {
                                 /** @enum {string} */
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
+                                trialEndsOn: string | null;
+                                selfServe: boolean;
+                                owner: {
+                                    name: string;
+                                    email: string | null;
+                                } | null;
                                 createdAt: string;
                             }[];
                             page: {
@@ -7392,6 +7399,12 @@ export interface paths {
                                 /** @enum {string} */
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
+                                trialEndsOn: string | null;
+                                selfServe: boolean;
+                                owner: {
+                                    name: string;
+                                    email: string | null;
+                                } | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;
@@ -7595,6 +7608,12 @@ export interface paths {
                                 /** @enum {string} */
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
+                                trialEndsOn: string | null;
+                                selfServe: boolean;
+                                owner: {
+                                    name: string;
+                                    email: string | null;
+                                } | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;
@@ -7807,6 +7826,12 @@ export interface paths {
                                 /** @enum {string} */
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
+                                trialEndsOn: string | null;
+                                selfServe: boolean;
+                                owner: {
+                                    name: string;
+                                    email: string | null;
+                                } | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;

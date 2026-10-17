@@ -2811,7 +2811,8 @@
                                   "kpi",
                                   "audit",
                                   "ai",
-                                  "platform"
+                                  "platform",
+                                  "lite"
                                 ]
                               },
                               "source": {
@@ -5009,6 +5010,8 @@
                               "bed",
                               "chair",
                               "station",
+                              "table",
+                              "court",
                               "other"
                             ]
                           },
@@ -5166,6 +5169,8 @@
                       "bed",
                       "chair",
                       "station",
+                      "table",
+                      "court",
                       "other"
                     ]
                   },
@@ -5217,6 +5222,8 @@
                             "bed",
                             "chair",
                             "station",
+                            "table",
+                            "court",
                             "other"
                           ]
                         },
@@ -5411,6 +5418,8 @@
                               "bed",
                               "chair",
                               "station",
+                              "table",
+                              "court",
                               "other"
                             ]
                           },
@@ -5579,6 +5588,8 @@
                       "bed",
                       "chair",
                       "station",
+                      "table",
+                      "court",
                       "other"
                     ]
                   },
@@ -5626,6 +5637,8 @@
                             "bed",
                             "chair",
                             "station",
+                            "table",
+                            "court",
                             "other"
                           ]
                         },
@@ -7041,7 +7054,8 @@
                               "kpi",
                               "audit",
                               "ai",
-                              "platform"
+                              "platform",
+                              "lite"
                             ]
                           },
                           "resource": {
@@ -7930,6 +7944,9 @@
                               "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                             }
                           },
+                          "bookable": {
+                            "type": "boolean"
+                          },
                           "customFields": {
                             "type": "object",
                             "additionalProperties": {}
@@ -7954,6 +7971,7 @@
                           "roleIds",
                           "roles",
                           "branchIds",
+                          "bookable",
                           "customFields",
                           "createdAt",
                           "updatedAt"
@@ -8240,6 +8258,9 @@
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           }
                         },
+                        "bookable": {
+                          "type": "boolean"
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8264,6 +8285,7 @@
                         "roleIds",
                         "roles",
                         "branchIds",
+                        "bookable",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -8463,6 +8485,9 @@
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           }
                         },
+                        "bookable": {
+                          "type": "boolean"
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8487,6 +8512,7 @@
                         "roleIds",
                         "roles",
                         "branchIds",
+                        "bookable",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -8770,6 +8796,9 @@
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           }
                         },
+                        "bookable": {
+                          "type": "boolean"
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8794,6 +8823,7 @@
                         "roleIds",
                         "roles",
                         "branchIds",
+                        "bookable",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -9005,6 +9035,9 @@
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           }
                         },
+                        "bookable": {
+                          "type": "boolean"
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -9029,6 +9062,7 @@
                         "roleIds",
                         "roles",
                         "branchIds",
+                        "bookable",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -11690,6 +11724,18 @@
           },
           {
             "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "selfServe",
+            "in": "query"
+          },
+          {
+            "schema": {
               "type": "integer",
               "minimum": 1,
               "maximum": 200,
@@ -11847,6 +11893,37 @@
                             ],
                             "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                           },
+                          "trialEndsOn": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "selfServe": {
+                            "type": "boolean"
+                          },
+                          "owner": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "email"
+                            ]
+                          },
                           "createdAt": {
                             "type": "string"
                           }
@@ -11868,6 +11945,9 @@
                           "noShowRateMonth",
                           "usageHealth",
                           "renewalOn",
+                          "trialEndsOn",
+                          "selfServe",
+                          "owner",
                           "createdAt"
                         ]
                       }
@@ -12378,6 +12458,37 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "trialEndsOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "selfServe": {
+                          "type": "boolean"
+                        },
+                        "owner": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "email"
+                          ]
+                        },
                         "createdAt": {
                           "type": "string"
                         },
@@ -12673,6 +12784,9 @@
                         "noShowRateMonth",
                         "usageHealth",
                         "renewalOn",
+                        "trialEndsOn",
+                        "selfServe",
+                        "owner",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -12983,6 +13097,37 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "trialEndsOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "selfServe": {
+                          "type": "boolean"
+                        },
+                        "owner": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "email"
+                          ]
+                        },
                         "createdAt": {
                           "type": "string"
                         },
@@ -13278,6 +13423,9 @@
                         "noShowRateMonth",
                         "usageHealth",
                         "renewalOn",
+                        "trialEndsOn",
+                        "selfServe",
+                        "owner",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -13439,7 +13587,8 @@
                             "kpi",
                             "audit",
                             "ai",
-                            "platform"
+                            "platform",
+                            "lite"
                           ]
                         },
                         "source": {
@@ -13618,6 +13767,37 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "trialEndsOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "selfServe": {
+                          "type": "boolean"
+                        },
+                        "owner": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "email"
+                          ]
+                        },
                         "createdAt": {
                           "type": "string"
                         },
@@ -13913,6 +14093,9 @@
                         "noShowRateMonth",
                         "usageHealth",
                         "renewalOn",
+                        "trialEndsOn",
+                        "selfServe",
+                        "owner",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -18125,7 +18308,8 @@
                                           "kpi",
                                           "audit",
                                           "ai",
-                                          "platform"
+                                          "platform",
+                                          "lite"
                                         ]
                                       }
                                     },
@@ -26133,7 +26317,8 @@
                         "kpi",
                         "audit",
                         "ai",
-                        "platform"
+                        "platform",
+                        "lite"
                       ]
                     },
                     "default": [
@@ -26142,11 +26327,26 @@
                   },
                   "limits": {
                     "type": "object",
-                    "additionalProperties": {
-                      "type": "integer",
-                      "minimum": 0
+                    "properties": {
+                      "branches": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "members": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "customers": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "messages_per_month": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
                     },
-                    "default": {}
+                    "default": {},
+                    "additionalProperties": false
                   }
                 },
                 "required": [
@@ -26380,16 +26580,35 @@
                         "kpi",
                         "audit",
                         "ai",
-                        "platform"
+                        "platform",
+                        "lite"
                       ]
                     }
                   },
                   "limits": {
                     "type": "object",
-                    "additionalProperties": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
+                    "properties": {
+                      "branches": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "members": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "customers": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "messages_per_month": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "applyToShops": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -75936,6 +76155,9 @@
                           "isRequestedMember": {
                             "type": "boolean"
                           },
+                          "partySize": {
+                            "type": "integer"
+                          },
                           "customerPackageId": {
                             "type": [
                               "string",
@@ -76059,6 +76281,7 @@
                           "status",
                           "source",
                           "isRequestedMember",
+                          "partySize",
                           "customerPackageId",
                           "saleMembershipId",
                           "note",
@@ -76220,6 +76443,11 @@
                   },
                   "isRequestedMember": {
                     "type": "boolean"
+                  },
+                  "partySize": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
                   },
                   "customerPackageId": {
                     "type": [
@@ -76498,6 +76726,9 @@
                         "isRequestedMember": {
                           "type": "boolean"
                         },
+                        "partySize": {
+                          "type": "integer"
+                        },
                         "customerPackageId": {
                           "type": [
                             "string",
@@ -76621,6 +76852,7 @@
                         "status",
                         "source",
                         "isRequestedMember",
+                        "partySize",
                         "customerPackageId",
                         "saleMembershipId",
                         "note",
@@ -76929,6 +77161,9 @@
                               "isRequestedMember": {
                                 "type": "boolean"
                               },
+                              "partySize": {
+                                "type": "integer"
+                              },
                               "customerPackageId": {
                                 "type": [
                                   "string",
@@ -77052,6 +77287,7 @@
                               "status",
                               "source",
                               "isRequestedMember",
+                              "partySize",
                               "customerPackageId",
                               "saleMembershipId",
                               "note",
@@ -77239,6 +77475,9 @@
                               "isRequestedMember": {
                                 "type": "boolean"
                               },
+                              "partySize": {
+                                "type": "integer"
+                              },
                               "customerPackageId": {
                                 "type": [
                                   "string",
@@ -77362,6 +77601,7 @@
                               "status",
                               "source",
                               "isRequestedMember",
+                              "partySize",
                               "customerPackageId",
                               "saleMembershipId",
                               "note",
@@ -77549,6 +77789,9 @@
                               "isRequestedMember": {
                                 "type": "boolean"
                               },
+                              "partySize": {
+                                "type": "integer"
+                              },
                               "customerPackageId": {
                                 "type": [
                                   "string",
@@ -77675,6 +77918,7 @@
                               "status",
                               "source",
                               "isRequestedMember",
+                              "partySize",
                               "customerPackageId",
                               "saleMembershipId",
                               "note",
@@ -77863,6 +78107,9 @@
                               "isRequestedMember": {
                                 "type": "boolean"
                               },
+                              "partySize": {
+                                "type": "integer"
+                              },
                               "customerPackageId": {
                                 "type": [
                                   "string",
@@ -77986,6 +78233,7 @@
                               "status",
                               "source",
                               "isRequestedMember",
+                              "partySize",
                               "customerPackageId",
                               "saleMembershipId",
                               "note",
@@ -78174,6 +78422,9 @@
                             "isRequestedMember": {
                               "type": "boolean"
                             },
+                            "partySize": {
+                              "type": "integer"
+                            },
                             "customerPackageId": {
                               "type": [
                                 "string",
@@ -78297,6 +78548,7 @@
                             "status",
                             "source",
                             "isRequestedMember",
+                            "partySize",
                             "customerPackageId",
                             "saleMembershipId",
                             "note",
@@ -78861,6 +79113,9 @@
                         "isRequestedMember": {
                           "type": "boolean"
                         },
+                        "partySize": {
+                          "type": "integer"
+                        },
                         "customerPackageId": {
                           "type": [
                             "string",
@@ -78984,6 +79239,7 @@
                         "status",
                         "source",
                         "isRequestedMember",
+                        "partySize",
                         "customerPackageId",
                         "saleMembershipId",
                         "note",
@@ -79151,6 +79407,11 @@
                   },
                   "isRequestedMember": {
                     "type": "boolean"
+                  },
+                  "partySize": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
                   },
                   "labels": {
                     "type": "array",
@@ -79361,6 +79622,9 @@
                         "isRequestedMember": {
                           "type": "boolean"
                         },
+                        "partySize": {
+                          "type": "integer"
+                        },
                         "customerPackageId": {
                           "type": [
                             "string",
@@ -79484,6 +79748,7 @@
                         "status",
                         "source",
                         "isRequestedMember",
+                        "partySize",
                         "customerPackageId",
                         "saleMembershipId",
                         "note",
@@ -79834,6 +80099,9 @@
                         "isRequestedMember": {
                           "type": "boolean"
                         },
+                        "partySize": {
+                          "type": "integer"
+                        },
                         "customerPackageId": {
                           "type": [
                             "string",
@@ -79957,6 +80225,7 @@
                         "status",
                         "source",
                         "isRequestedMember",
+                        "partySize",
                         "customerPackageId",
                         "saleMembershipId",
                         "note",
@@ -80315,6 +80584,29 @@
                         "priceMinor": {
                           "type": "integer"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "serviceId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "priceMinor": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "serviceId",
+                              "name",
+                              "priceMinor"
+                            ]
+                          }
+                        },
                         "steps": {
                           "type": "array",
                           "items": {
@@ -80401,13 +80693,21 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "discountReasons": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       },
                       "required": [
                         "priceMinor",
+                        "extraServices",
                         "steps",
                         "packageOptions",
-                        "nextDueAt"
+                        "nextDueAt",
+                        "discountReasons"
                       ]
                     }
                   },
@@ -80568,6 +80868,122 @@
                       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                     },
                     "maxItems": 10,
+                    "default": []
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "service",
+                            "product",
+                            "package_sale",
+                            "package_use"
+                          ]
+                        },
+                        "refId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "categoryId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "course": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "serviceIds": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "minItems": 1,
+                              "maxItems": 50
+                            },
+                            "sessions": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 500
+                            },
+                            "validDays": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 3650
+                            },
+                            "save": {
+                              "type": "boolean",
+                              "default": false
+                            }
+                          },
+                          "required": [
+                            "serviceIds",
+                            "sessions",
+                            "validDays"
+                          ]
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "qty": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 999,
+                          "default": 1
+                        },
+                        "unitPriceMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "performerMembershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "saleMembershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "labCostMinor": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "integer satang"
+                        },
+                        "labVendor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 120
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "name",
+                        "unitPriceMinor"
+                      ]
+                    },
+                    "maxItems": 50,
                     "default": []
                   }
                 }
@@ -80760,6 +81176,9 @@
                             "isRequestedMember": {
                               "type": "boolean"
                             },
+                            "partySize": {
+                              "type": "integer"
+                            },
                             "customerPackageId": {
                               "type": [
                                 "string",
@@ -80883,6 +81302,7 @@
                             "status",
                             "source",
                             "isRequestedMember",
+                            "partySize",
                             "customerPackageId",
                             "saleMembershipId",
                             "note",
@@ -81299,6 +81719,16 @@
             "required": false,
             "name": "extraServiceIds",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "required": false,
+            "name": "partySize",
+            "in": "query"
           }
         ],
         "responses": {
@@ -81331,11 +81761,17 @@
                                 "type": "string"
                               },
                               "memberId": {
-                                "type": "string",
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
                               "memberName": {
-                                "type": "string"
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               },
                               "resourceId": {
                                 "type": [
@@ -81343,6 +81779,12 @@
                                   "null"
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "resourceName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -81350,7 +81792,8 @@
                               "endAt",
                               "memberId",
                               "memberName",
-                              "resourceId"
+                              "resourceId",
+                              "resourceName"
                             ]
                           }
                         },
@@ -81828,6 +82271,9 @@
                               "isRequestedMember": {
                                 "type": "boolean"
                               },
+                              "partySize": {
+                                "type": "integer"
+                              },
                               "customerPackageId": {
                                 "type": [
                                   "string",
@@ -81951,6 +82397,7 @@
                               "status",
                               "source",
                               "isRequestedMember",
+                              "partySize",
                               "customerPackageId",
                               "saleMembershipId",
                               "note",
@@ -88545,6 +88992,18 @@
             "required": false,
             "name": "days",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "inProgress",
+            "in": "query"
           }
         ],
         "responses": {
@@ -88586,6 +89045,18 @@
                               "null"
                             ],
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "appointmentStatus": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "enum": [
+                              "checked_in",
+                              "in_service",
+                              "completed",
+                              null
+                            ]
                           },
                           "customerId": {
                             "type": [
@@ -88637,6 +89108,7 @@
                           "billId",
                           "billNumber",
                           "appointmentId",
+                          "appointmentStatus",
                           "customerId",
                           "customerName",
                           "customerCode",
@@ -88647,6 +89119,162 @@
                           "depositBalanceMinor"
                         ]
                       }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/checkout/waiting/{id}/no-charge": {
+      "post": {
+        "tags": [
+          "checkout"
+        ],
+        "summary": "ไม่เก็บเงิน: take a finished, unbilled appointment off the waiting list for good. Needs a reason and a bills:void holder (others get APPROVER_REQUIRED); audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Required; unique per logical operation"
+            },
+            "required": false,
+            "description": "Required; unique per logical operation",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Settled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "appointmentId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        }
+                      },
+                      "required": [
+                        "appointmentId"
+                      ]
                     }
                   },
                   "required": [
@@ -93785,15 +94413,19 @@
                     "maxLength": 300
                   },
                   "method": {
-                    "type": "string",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "enum": [
                       "cash",
                       "transfer",
                       "promptpay",
                       "card_external",
-                      "other"
+                      "other",
+                      null
                     ],
-                    "default": "cash"
+                    "default": null
                   }
                 },
                 "required": [
@@ -128785,6 +129417,12 @@
                             "type": "string"
                           }
                         },
+                        "blockingVariables": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
                         "unknownVariables": {
                           "type": "array",
                           "items": {
@@ -128798,6 +129436,7 @@
                       "required": [
                         "content",
                         "missingVariables",
+                        "blockingVariables",
                         "unknownVariables",
                         "sample"
                       ]
@@ -129893,6 +130532,12 @@
                             "type": "string"
                           }
                         },
+                        "blockingVariables": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
                         "unknownVariables": {
                           "type": "array",
                           "items": {
@@ -129906,6 +130551,7 @@
                       "required": [
                         "content",
                         "missingVariables",
+                        "blockingVariables",
                         "unknownVariables",
                         "sample"
                       ]
@@ -132836,7 +133482,7 @@
                   },
                   "token": {
                     "type": "string",
-                    "minLength": 16,
+                    "minLength": 6,
                     "maxLength": 100
                   },
                   "consentMessaging": {
@@ -135083,6 +135729,37 @@
                             "null"
                           ]
                         },
+                        "highlights": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "icon": {
+                                "type": "string",
+                                "enum": [
+                                  "leaf",
+                                  "sparkles",
+                                  "heart",
+                                  "star",
+                                  "shield-check",
+                                  "clock",
+                                  "award",
+                                  "smile"
+                                ]
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "icon",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 3
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -135142,6 +135819,12 @@
                         },
                         "promptpayConfigured": {
                           "type": "boolean"
+                        },
+                        "lineBasicId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "branches": {
                           "type": "array",
@@ -135241,10 +135924,12 @@
                         "introText",
                         "policyText",
                         "coverUrl",
+                        "highlights",
                         "autoConfirm",
                         "deposit",
                         "terms",
                         "promptpayConfigured",
+                        "lineBasicId",
                         "branches"
                       ]
                     }
@@ -135422,6 +136107,13 @@
                                         "null"
                                       ],
                                       "minimum": 0
+                                    },
+                                    "bookBy": {
+                                      "type": "string",
+                                      "enum": [
+                                        "staff",
+                                        "resource"
+                                      ]
                                     }
                                   },
                                   "required": [
@@ -135431,7 +136123,8 @@
                                     "durationMin",
                                     "priceMinor",
                                     "imageUrl",
-                                    "depositMinor"
+                                    "depositMinor",
+                                    "bookBy"
                                   ]
                                 }
                               }
@@ -135757,6 +136450,16 @@
             "required": true,
             "name": "date",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "required": false,
+            "name": "partySize",
+            "in": "query"
           }
         ],
         "responses": {
@@ -135789,12 +136492,27 @@
                               },
                               "time": {
                                 "type": "string"
+                              },
+                              "resourceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "resourceName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
                               "startAt",
                               "endAt",
-                              "time"
+                              "time",
+                              "resourceId",
+                              "resourceName"
                             ]
                           }
                         },
@@ -135945,6 +136663,16 @@
             },
             "required": false,
             "name": "memberId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "required": false,
+            "name": "partySize",
             "in": "query"
           },
           {
@@ -136236,6 +136964,11 @@
                   },
                   "startAt": {
                     "type": "string"
+                  },
+                  "partySize": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
                   },
                   "note": {
                     "type": "string",
@@ -137486,6 +138219,11 @@
                   },
                   "startAt": {
                     "type": "string"
+                  },
+                  "partySize": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
                   },
                   "note": {
                     "type": "string",
@@ -138942,6 +139680,37 @@
                             "null"
                           ]
                         },
+                        "highlights": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "icon": {
+                                "type": "string",
+                                "enum": [
+                                  "leaf",
+                                  "sparkles",
+                                  "heart",
+                                  "star",
+                                  "shield-check",
+                                  "clock",
+                                  "award",
+                                  "smile"
+                                ]
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "icon",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 3
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -139050,6 +139819,7 @@
                         "policyText",
                         "coverFileId",
                         "coverUrl",
+                        "highlights",
                         "autoConfirm",
                         "terms",
                         "rules",
@@ -139189,6 +139959,37 @@
                       "null"
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "highlights": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "icon": {
+                          "type": "string",
+                          "enum": [
+                            "leaf",
+                            "sparkles",
+                            "heart",
+                            "star",
+                            "shield-check",
+                            "clock",
+                            "award",
+                            "smile"
+                          ]
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        }
+                      },
+                      "required": [
+                        "icon",
+                        "label"
+                      ]
+                    },
+                    "maxItems": 3
                   },
                   "autoConfirm": {
                     "type": "boolean"
@@ -139337,6 +140138,37 @@
                             "null"
                           ]
                         },
+                        "highlights": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "icon": {
+                                "type": "string",
+                                "enum": [
+                                  "leaf",
+                                  "sparkles",
+                                  "heart",
+                                  "star",
+                                  "shield-check",
+                                  "clock",
+                                  "award",
+                                  "smile"
+                                ]
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "icon",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 3
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -139445,6 +140277,7 @@
                         "policyText",
                         "coverFileId",
                         "coverUrl",
+                        "highlights",
                         "autoConfirm",
                         "terms",
                         "rules",
@@ -142376,6 +143209,49 @@
                             ]
                           }
                         },
+                        "introText": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "coverUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "highlights": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "icon": {
+                                "type": "string",
+                                "enum": [
+                                  "leaf",
+                                  "sparkles",
+                                  "heart",
+                                  "star",
+                                  "shield-check",
+                                  "clock",
+                                  "award",
+                                  "smile"
+                                ]
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              }
+                            },
+                            "required": [
+                              "icon",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 3
+                        },
                         "allowChooseStaff": {
                           "type": "boolean"
                         },
@@ -142397,20 +143273,42 @@
                                   "null"
                                 ]
                               },
+                              "description": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "durationMin": {
                                 "type": "integer"
                               },
                               "priceMinor": {
                                 "type": "integer",
                                 "minimum": 0
+                              },
+                              "imageUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "bookBy": {
+                                "type": "string",
+                                "enum": [
+                                  "staff",
+                                  "resource"
+                                ]
                               }
                             },
                             "required": [
                               "id",
                               "name",
                               "categoryName",
+                              "description",
                               "durationMin",
-                              "priceMinor"
+                              "priceMinor",
+                              "imageUrl",
+                              "bookBy"
                             ]
                           }
                         },
@@ -142465,6 +143363,9 @@
                         "tenant",
                         "terminology",
                         "branches",
+                        "introText",
+                        "coverUrl",
+                        "highlights",
                         "allowChooseStaff",
                         "services",
                         "staff",
@@ -142613,6 +143514,11 @@
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   },
+                  "partySize": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 500
+                  },
                   "consent": {
                     "type": "boolean",
                     "enum": [
@@ -142719,6 +143625,12 @@
                                 "null"
                               ]
                             },
+                            "resourceName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
                             "shop": {
                               "type": "object",
                               "properties": {
@@ -142755,6 +143667,7 @@
                             "time",
                             "services",
                             "staffName",
+                            "resourceName",
                             "shop"
                           ]
                         },
@@ -142863,6 +143776,12 @@
                                 "null"
                               ]
                             },
+                            "resourceName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
                             "shop": {
                               "type": "object",
                               "properties": {
@@ -142899,6 +143818,7 @@
                             "time",
                             "services",
                             "staffName",
+                            "resourceName",
                             "shop"
                           ]
                         },
@@ -143107,6 +144027,12 @@
                             "null"
                           ]
                         },
+                        "resourceName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "shop": {
                           "type": "object",
                           "properties": {
@@ -143143,6 +144069,7 @@
                         "time",
                         "services",
                         "staffName",
+                        "resourceName",
                         "shop"
                       ]
                     }
@@ -158529,6 +159456,21 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "shopName": {
+                          "type": "string"
+                        },
+                        "lineBasicId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
@@ -158536,7 +159478,10 @@
                         "liffConfigured",
                         "url",
                         "personal",
-                        "expiresAt"
+                        "expiresAt",
+                        "code",
+                        "shopName",
+                        "lineBasicId"
                       ]
                     }
                   },
@@ -160779,6 +161724,13 @@
                           "requiredSkill": {
                             "type": "boolean"
                           },
+                          "bookBy": {
+                            "type": "string",
+                            "enum": [
+                              "staff",
+                              "resource"
+                            ]
+                          },
                           "staffIds": {
                             "type": "array",
                             "items": {
@@ -160829,6 +161781,7 @@
                           "followupMode",
                           "resourceType",
                           "requiredSkill",
+                          "bookBy",
                           "staffIds",
                           "color",
                           "onlineBookable",
@@ -161088,6 +162041,14 @@
                     "type": "boolean",
                     "default": false
                   },
+                  "bookBy": {
+                    "type": "string",
+                    "enum": [
+                      "staff",
+                      "resource"
+                    ],
+                    "default": "staff"
+                  },
                   "staffIds": {
                     "type": "array",
                     "items": {
@@ -161238,6 +162199,13 @@
                         "requiredSkill": {
                           "type": "boolean"
                         },
+                        "bookBy": {
+                          "type": "string",
+                          "enum": [
+                            "staff",
+                            "resource"
+                          ]
+                        },
                         "staffIds": {
                           "type": "array",
                           "items": {
@@ -161288,6 +162256,7 @@
                         "followupMode",
                         "resourceType",
                         "requiredSkill",
+                        "bookBy",
                         "staffIds",
                         "color",
                         "onlineBookable",
@@ -161508,6 +162477,13 @@
                         "requiredSkill": {
                           "type": "boolean"
                         },
+                        "bookBy": {
+                          "type": "string",
+                          "enum": [
+                            "staff",
+                            "resource"
+                          ]
+                        },
                         "staffIds": {
                           "type": "array",
                           "items": {
@@ -161558,6 +162534,7 @@
                         "followupMode",
                         "resourceType",
                         "requiredSkill",
+                        "bookBy",
                         "staffIds",
                         "color",
                         "onlineBookable",
@@ -161789,6 +162766,13 @@
                   "requiredSkill": {
                     "type": "boolean"
                   },
+                  "bookBy": {
+                    "type": "string",
+                    "enum": [
+                      "staff",
+                      "resource"
+                    ]
+                  },
                   "staffIds": {
                     "type": "array",
                     "items": {
@@ -161931,6 +162915,13 @@
                         "requiredSkill": {
                           "type": "boolean"
                         },
+                        "bookBy": {
+                          "type": "string",
+                          "enum": [
+                            "staff",
+                            "resource"
+                          ]
+                        },
                         "staffIds": {
                           "type": "array",
                           "items": {
@@ -161981,6 +162972,7 @@
                         "followupMode",
                         "resourceType",
                         "requiredSkill",
+                        "bookBy",
                         "staffIds",
                         "color",
                         "onlineBookable",
@@ -162467,6 +163459,13 @@
                         "requiredSkill": {
                           "type": "boolean"
                         },
+                        "bookBy": {
+                          "type": "string",
+                          "enum": [
+                            "staff",
+                            "resource"
+                          ]
+                        },
                         "staffIds": {
                           "type": "array",
                           "items": {
@@ -162517,6 +163516,7 @@
                         "followupMode",
                         "resourceType",
                         "requiredSkill",
+                        "bookBy",
                         "staffIds",
                         "color",
                         "onlineBookable",
