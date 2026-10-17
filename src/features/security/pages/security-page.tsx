@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
+import { PasswordInput } from '@/components/password-input';
 import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -218,9 +219,8 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
             }}
           >
             <Label htmlFor="setup-password">{t('setup.password')}</Label>
-            <Input
+            <PasswordInput
               id="setup-password"
-              type="password"
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -261,9 +261,8 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
           ) : (
             <div className="grid gap-1.5">
               <Label htmlFor="confirm-password">{t('setup.password')}</Label>
-              <Input
+              <PasswordInput
                 id="confirm-password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoFocus

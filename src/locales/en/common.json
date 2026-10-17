@@ -34,5 +34,7 @@
     "moduleDisabled": "This part is not turned on for this shop. The owner can contact CoreUp or change plan to use it.",
     "forbidden": "This account can't view this. Ask the owner or a manager to add the permission.",
     "notFound": "This may have been deleted or moved. Go back and open it again."
-  }
+  },
+  "showPassword": "Show password",
+  "hidePassword": "Hide password"
 }
