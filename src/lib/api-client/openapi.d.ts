@@ -3456,9 +3456,7 @@ export interface paths {
                         name?: string;
                         /** @enum {string} */
                         type?: "room" | "bed" | "chair" | "station" | "table" | "court" | "other";
-                        /** @default 1 */
                         capacity?: number;
-                        /** @default true */
                         active?: boolean;
                     };
                 };
@@ -7409,6 +7407,7 @@ export interface paths {
                                 demo: {
                                     enabled: boolean;
                                     flagged: boolean;
+                                    bookByResource: boolean;
                                     lastRun: {
                                         at: string;
                                         daysBack: number;
@@ -7618,6 +7617,7 @@ export interface paths {
                                 demo: {
                                     enabled: boolean;
                                     flagged: boolean;
+                                    bookByResource: boolean;
                                     lastRun: {
                                         at: string;
                                         daysBack: number;
@@ -7836,6 +7836,7 @@ export interface paths {
                                 demo: {
                                     enabled: boolean;
                                     flagged: boolean;
+                                    bookByResource: boolean;
                                     lastRun: {
                                         at: string;
                                         daysBack: number;
@@ -75258,7 +75259,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Open a new shop (14-day trial) from an industry template; the caller becomes its owner
+         * Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner
          * @description Requires an authenticated session.
          */
         post: {

@@ -754,6 +754,7 @@
     "cleared": "Sample data cleared",
     "lastRun": "Last filled {{at}} · {{customers}} customers · {{appointments}} appointments · {{bills}} bills · sales {{paid}}",
     "never": "No demo data yet (the shop needs a branch, services, staff who serve customers and a payment method first)",
-    "nothingToClear": "No demo data was generated yet, nothing to delete"
+    "nothingToClear": "No demo data was generated yet, nothing to delete",
+    "resourceShop": "Cannot fill sample data: this shop books by table / court / room, which the generator does not support"
   }
 }

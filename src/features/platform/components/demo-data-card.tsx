@@ -93,7 +93,11 @@ export function DemoDataCard({ d }: { d: TenantDetail }) {
               </Field>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button onClick={() => setConfirm('fill')} disabled={fill.isPending || clear.isPending}>
+              <Button
+                onClick={() => setConfirm('fill')}
+                disabled={fill.isPending || clear.isPending}
+                blockedReason={d.demo.bookByResource && t('demo.resourceShop')}
+              >
                 {t('demo.fill')}
               </Button>
               <Button
@@ -105,6 +109,9 @@ export function DemoDataCard({ d }: { d: TenantDetail }) {
                 {t('demo.clear')}
               </Button>
             </div>
+            {d.demo.bookByResource ? (
+              <p className="text-sm text-muted-foreground">{t('demo.resourceShop')}</p>
+            ) : null}
             <p className="text-sm text-muted-foreground">
               {last
                 ? t('demo.lastRun', {

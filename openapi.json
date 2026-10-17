@@ -5596,12 +5596,10 @@
                   "capacity": {
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 100,
-                    "default": 1
+                    "maximum": 100
                   },
                   "active": {
-                    "type": "boolean",
-                    "default": true
+                    "type": "boolean"
                   }
                 }
               }
@@ -12501,6 +12499,9 @@
                             "flagged": {
                               "type": "boolean"
                             },
+                            "bookByResource": {
+                              "type": "boolean"
+                            },
                             "lastRun": {
                               "type": [
                                 "object",
@@ -12568,6 +12569,7 @@
                           "required": [
                             "enabled",
                             "flagged",
+                            "bookByResource",
                             "lastRun"
                           ]
                         },
@@ -13140,6 +13142,9 @@
                             "flagged": {
                               "type": "boolean"
                             },
+                            "bookByResource": {
+                              "type": "boolean"
+                            },
                             "lastRun": {
                               "type": [
                                 "object",
@@ -13207,6 +13212,7 @@
                           "required": [
                             "enabled",
                             "flagged",
+                            "bookByResource",
                             "lastRun"
                           ]
                         },
@@ -13810,6 +13816,9 @@
                             "flagged": {
                               "type": "boolean"
                             },
+                            "bookByResource": {
+                              "type": "boolean"
+                            },
                             "lastRun": {
                               "type": [
                                 "object",
@@ -13877,6 +13886,7 @@
                           "required": [
                             "enabled",
                             "flagged",
+                            "bookByResource",
                             "lastRun"
                           ]
                         },
@@ -84006,7 +84016,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
@@ -84159,7 +84169,7 @@
                             "string",
                             "null"
                           ],
-                          "maxLength": 80
+                          "maxLength": 200
                         },
                         "templateKey": {
                           "type": "string",
@@ -84214,7 +84224,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
@@ -152112,7 +152122,7 @@
         "tags": [
           "onboarding"
         ],
-        "summary": "Open a new shop (14-day trial) from an industry template; the caller becomes its owner",
+        "summary": "Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner",
         "description": "Requires an authenticated session.",
         "security": [
           {
@@ -161695,7 +161705,7 @@
                                     "string",
                                     "null"
                                   ],
-                                  "maxLength": 80
+                                  "maxLength": 200
                                 },
                                 "templateKey": {
                                   "type": "string",
@@ -162007,7 +162017,7 @@
                             "string",
                             "null"
                           ],
-                          "maxLength": 80
+                          "maxLength": 200
                         },
                         "templateKey": {
                           "type": "string",
@@ -162170,7 +162180,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
@@ -162448,7 +162458,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
@@ -162735,7 +162745,7 @@
                             "string",
                             "null"
                           ],
-                          "maxLength": 80
+                          "maxLength": 200
                         },
                         "templateKey": {
                           "type": "string",
@@ -162886,7 +162896,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
@@ -163430,7 +163440,7 @@
                                   "string",
                                   "null"
                                 ],
-                                "maxLength": 80
+                                "maxLength": 200
                               },
                               "templateKey": {
                                 "type": "string",
