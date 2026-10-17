@@ -65105,6 +65105,10 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
@@ -65136,6 +65140,10 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
@@ -65393,6 +65401,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -65537,6 +65549,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -65680,6 +65696,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -66411,7 +66431,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Staff a customer may pick for this service (online-bookable people only)
+         * Staff a customer may pick for this visit (online-bookable people able to do every chosen service)
          * @description Public endpoint (no authentication).
          */
         get: {
@@ -66419,6 +66439,7 @@ export interface paths {
                 query: {
                     branchId: string;
                     serviceId: string;
+                    extraServiceIds?: string;
                 };
                 header?: never;
                 path: {
@@ -66538,6 +66559,7 @@ export interface paths {
                     serviceId: string;
                     memberId?: string;
                     date: string;
+                    extraServiceIds?: string;
                     partySize?: number;
                 };
                 header?: never;
@@ -66661,6 +66683,7 @@ export interface paths {
                     branchId: string;
                     serviceId: string;
                     memberId?: string;
+                    extraServiceIds?: string;
                     partySize?: number;
                     month: string;
                 };
@@ -66896,6 +66919,7 @@ export interface paths {
                         serviceId: string;
                         memberId: string | null;
                         startAt: string;
+                        extraServiceIds?: string[];
                         partySize?: number;
                         note?: string;
                         name?: string;
@@ -66923,6 +66947,10 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
@@ -67092,6 +67120,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -67359,6 +67391,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -67483,6 +67519,7 @@ export interface paths {
                         branchId: string;
                         serviceId: string;
                         memberId: string | null;
+                        extraServiceIds?: string[];
                         startAt: string;
                         partySize?: number;
                         note?: string;
@@ -67511,6 +67548,10 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                     serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
@@ -67650,6 +67691,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -67797,6 +67842,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
@@ -68068,6 +68117,10 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
                                 serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
