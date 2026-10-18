@@ -308,6 +308,44 @@
     "checklistsDone": "Checklists",
     "customers": "Customers"
   },
+  "usageReport": {
+    "title": "Usage report",
+    "description": "Who really uses the system, for what, and which shops are not set up yet. Counts run up to now (today included).",
+    "days": "{{count}} days",
+    "hideDemo": "Hide team demo shops",
+    "empty": "No shops match this filter",
+    "demo": "Team demo shop",
+    "selfServe": "Self sign-up",
+    "trialLeft": "Trial: {{count}} day(s) left",
+    "trialEnded": "Trial ended {{count}} day(s) ago",
+    "neverUsed": "Never used",
+    "idle": "Not used for {{count}} day(s)",
+    "bySource": "Staff {{staff}} · Online {{online}}",
+    "totals": "Total: {{count}} shop(s)",
+    "activeShops": "{{count}} used in this period",
+    "col": {
+      "shop": "Shop",
+      "lastActive": "Last used",
+      "activeUsers": "People",
+      "logins": "Sign-ins",
+      "appointments": "Appts created",
+      "completed": "Completed",
+      "noShows": "No-shows",
+      "bills": "Paid bills",
+      "revenue": "Sales",
+      "newCustomers": "New customers",
+      "messages": "Messages sent",
+      "setup": "Set up"
+    },
+    "setup": {
+      "services": "Services",
+      "staff": "Staff",
+      "line": "LINE",
+      "onlineBooking": "Online booking",
+      "ok": "ready",
+      "missing": "missing"
+    }
+  },
   "access": {
     "when": "When",
     "who": "Who",

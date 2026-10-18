@@ -1,4 +1,5 @@
 import {
+  Activity,
   Briefcase,
   ClipboardCheck,
   KanbanSquare,
@@ -30,6 +31,14 @@ export const navItems: NavItem[] = [
     permission: 'platform:read',
     module: 'platform',
     order: 20,
+  },
+  {
+    to: '/platform/usage',
+    labelKey: 'nav:usageReport',
+    icon: Activity,
+    permission: 'platform:read',
+    module: 'platform',
+    order: 25,
   },
   {
     to: '/platform/leads',

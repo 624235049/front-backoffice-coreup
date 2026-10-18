@@ -26,6 +26,7 @@
   },
   "dashboard": "ภาพรวม",
   "tenants": "ร้านลูกค้า",
+  "usageReport": "รายงานการใช้งาน",
   "leads": "Lead",
   "newCount": "Lead ใหม่ {{count}}",
   "engagements": "งานที่ปรึกษา",

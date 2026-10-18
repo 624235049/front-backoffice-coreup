@@ -26,6 +26,7 @@
   },
   "dashboard": "Overview",
   "tenants": "Shops",
+  "usageReport": "Usage report",
   "leads": "Leads",
   "newCount": "{{count}} new leads",
   "engagements": "Engagements",

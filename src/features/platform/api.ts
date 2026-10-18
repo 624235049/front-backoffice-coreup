@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 import { useReasonMessage } from '@/features/reason-errors';
 import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } from '@/lib/api';
+import type { paths } from '@/lib/api-client';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
 
 /* Types come from the OpenAPI document only (never hand-written). */
@@ -25,6 +26,9 @@ export type TeamMember = ListItem<ApiData<'/v1/platform/team'>>;
 export type Assignment = ListItem<ApiData<'/v1/platform/assignments'>>;
 export type TenantBranch = ListItem<ApiData<'/v1/platform/tenants/{id}/branches'>>;
 export type AccessLogRow = ListItem<ApiData<'/v1/platform/tenants/{id}/access-log'>>;
+export type UsageReport = ApiItem<'/v1/platform/usage-report'>;
+export type UsageReportRow = UsageReport['rows'][number];
+export type UsageReportQuery = NonNullable<paths['/v1/platform/usage-report']['get']['parameters']['query']>;
 
 const part = 'platform';
 
@@ -36,6 +40,12 @@ export const useTenants = (query: TenantsQuery) =>
   useTenantQuery(
     [part, 'tenants', query],
     async () => (await unwrap(api.GET('/v1/platform/tenants', { params: { query } }))).data,
+  );
+
+export const useUsageReport = (query: UsageReportQuery) =>
+  useTenantQuery(
+    [part, 'usageReport', query],
+    async () => (await unwrap(api.GET('/v1/platform/usage-report', { params: { query } }))).data,
   );
 
 export const useTenant = (id: string) =>

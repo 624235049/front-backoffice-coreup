@@ -2931,6 +2931,206 @@
         }
       }
     },
+    "/v1/tenant/shifts": {
+      "put": {
+        "tags": [
+          "tenant"
+        ],
+        "summary": "Switch the weekly roster (module shifts) on / off for any package (an add-on; 409 shifts_in_plan when the plan includes it). Returns the modules",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "modules": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "enum": [
+                                  "core",
+                                  "crm",
+                                  "messaging",
+                                  "booking",
+                                  "shifts",
+                                  "checklists",
+                                  "sop",
+                                  "surveys",
+                                  "reports",
+                                  "approvals",
+                                  "payouts",
+                                  "checkout",
+                                  "inventory",
+                                  "clinical",
+                                  "kpi",
+                                  "audit",
+                                  "ai",
+                                  "platform",
+                                  "lite"
+                                ]
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "plan",
+                                  "addon",
+                                  "trial",
+                                  "consultant"
+                                ]
+                              },
+                              "enabledUntil": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "source",
+                              "enabledUntil"
+                            ]
+                          }
+                        },
+                        "limits": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "required": [
+                        "modules",
+                        "limits"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/tenant/business-types": {
       "get": {
         "tags": [
@@ -7945,6 +8145,28 @@
                           "bookable": {
                             "type": "boolean"
                           },
+                          "weeklyHours": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "additionalProperties": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  }
+                                ]
+                              }
+                            }
+                          },
                           "customFields": {
                             "type": "object",
                             "additionalProperties": {}
@@ -7970,6 +8192,7 @@
                           "roles",
                           "branchIds",
                           "bookable",
+                          "weeklyHours",
                           "customFields",
                           "createdAt",
                           "updatedAt"
@@ -8091,7 +8314,7 @@
           "members"
         ],
         "summary": "Add a staff member by name (no login); bookable straight away",
-        "description": "Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -8259,6 +8482,28 @@
                         "bookable": {
                           "type": "boolean"
                         },
+                        "weeklyHours": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              ]
+                            }
+                          }
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8284,6 +8529,7 @@
                         "roles",
                         "branchIds",
                         "bookable",
+                        "weeklyHours",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -8486,6 +8732,28 @@
                         "bookable": {
                           "type": "boolean"
                         },
+                        "weeklyHours": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              ]
+                            }
+                          }
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8511,6 +8779,7 @@
                         "roles",
                         "branchIds",
                         "bookable",
+                        "weeklyHours",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -8698,6 +8967,28 @@
                   "customFields": {
                     "type": "object",
                     "additionalProperties": {}
+                  },
+                  "weeklyHours": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "additionalProperties": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "prefixItems": [
+                          {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                          }
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -8797,6 +9088,28 @@
                         "bookable": {
                           "type": "boolean"
                         },
+                        "weeklyHours": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              ]
+                            }
+                          }
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -8822,6 +9135,7 @@
                         "roles",
                         "branchIds",
                         "bookable",
+                        "weeklyHours",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -9036,6 +9350,28 @@
                         "bookable": {
                           "type": "boolean"
                         },
+                        "weeklyHours": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              ]
+                            }
+                          }
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
@@ -9061,6 +9397,7 @@
                         "roles",
                         "branchIds",
                         "bookable",
+                        "weeklyHours",
                         "customFields",
                         "createdAt",
                         "updatedAt"
@@ -12205,6 +12542,378 @@
                         "ownerUserId",
                         "branchIds",
                         "passwordResetSent"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/usage-report": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Usage report: per visible shop, live activity of the last 7 / 30 days (people, bookings by source, bills, customers, messages) and setup state",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "7",
+                "30"
+              ],
+              "default": "7"
+            },
+            "required": false,
+            "name": "days",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "trial",
+                "active",
+                "paused",
+                "closed"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "required": false,
+            "name": "demo",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "days": {
+                          "type": "integer"
+                        },
+                        "from": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "to": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "rows": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "activeUsers": {
+                                "type": "integer"
+                              },
+                              "logins": {
+                                "type": "integer"
+                              },
+                              "appointmentsCreated": {
+                                "type": "integer"
+                              },
+                              "staffCreated": {
+                                "type": "integer"
+                              },
+                              "onlineCreated": {
+                                "type": "integer"
+                              },
+                              "appointmentsCompleted": {
+                                "type": "integer"
+                              },
+                              "noShows": {
+                                "type": "integer"
+                              },
+                              "billsPaid": {
+                                "type": "integer"
+                              },
+                              "revenueMinor": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              },
+                              "newCustomers": {
+                                "type": "integer"
+                              },
+                              "messagesSent": {
+                                "type": "integer"
+                              },
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "trial",
+                                  "active",
+                                  "paused",
+                                  "closed"
+                                ]
+                              },
+                              "planCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "planName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "trialEndsOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "demo": {
+                                "type": "boolean"
+                              },
+                              "selfServe": {
+                                "type": "boolean"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "lastActiveAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "setup": {
+                                "type": "object",
+                                "properties": {
+                                  "services": {
+                                    "type": "integer"
+                                  },
+                                  "staff": {
+                                    "type": "integer"
+                                  },
+                                  "lineConnected": {
+                                    "type": "boolean"
+                                  },
+                                  "onlineBookingReady": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "services",
+                                  "staff",
+                                  "lineConnected",
+                                  "onlineBookingReady"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "activeUsers",
+                              "logins",
+                              "appointmentsCreated",
+                              "staffCreated",
+                              "onlineCreated",
+                              "appointmentsCompleted",
+                              "noShows",
+                              "billsPaid",
+                              "revenueMinor",
+                              "newCustomers",
+                              "messagesSent",
+                              "id",
+                              "slug",
+                              "name",
+                              "status",
+                              "planCode",
+                              "planName",
+                              "trialEndsOn",
+                              "demo",
+                              "selfServe",
+                              "createdAt",
+                              "lastActiveAt",
+                              "setup"
+                            ]
+                          }
+                        },
+                        "totals": {
+                          "type": "object",
+                          "properties": {
+                            "activeUsers": {
+                              "type": "integer"
+                            },
+                            "logins": {
+                              "type": "integer"
+                            },
+                            "appointmentsCreated": {
+                              "type": "integer"
+                            },
+                            "staffCreated": {
+                              "type": "integer"
+                            },
+                            "onlineCreated": {
+                              "type": "integer"
+                            },
+                            "appointmentsCompleted": {
+                              "type": "integer"
+                            },
+                            "noShows": {
+                              "type": "integer"
+                            },
+                            "billsPaid": {
+                              "type": "integer"
+                            },
+                            "revenueMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "newCustomers": {
+                              "type": "integer"
+                            },
+                            "messagesSent": {
+                              "type": "integer"
+                            },
+                            "shops": {
+                              "type": "integer"
+                            },
+                            "activeShops": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "activeUsers",
+                            "logins",
+                            "appointmentsCreated",
+                            "staffCreated",
+                            "onlineCreated",
+                            "appointmentsCompleted",
+                            "noShows",
+                            "billsPaid",
+                            "revenueMinor",
+                            "newCustomers",
+                            "messagesSent",
+                            "shops",
+                            "activeShops"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "days",
+                        "from",
+                        "to",
+                        "rows",
+                        "totals"
                       ]
                     }
                   },
@@ -133725,6 +134434,25 @@
                               "serviceName": {
                                 "type": "string"
                               },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
                               "branchName": {
                                 "type": "string"
                               },
@@ -133797,6 +134525,33 @@
                                       "accountName"
                                     ]
                                   },
+                                  "bank": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bankName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "accountNumber": {
+                                        "type": "string",
+                                        "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                      },
+                                      "accountName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      }
+                                    },
+                                    "required": [
+                                      "bankName",
+                                      "accountNumber",
+                                      "accountName"
+                                    ]
+                                  },
                                   "slipSubmittedAt": {
                                     "type": [
                                       "string",
@@ -133814,6 +134569,7 @@
                                   "status",
                                   "amountMinor",
                                   "promptpay",
+                                  "bank",
                                   "slipSubmittedAt",
                                   "rejectReason"
                                 ]
@@ -133839,6 +134595,7 @@
                               "endAt",
                               "status",
                               "serviceName",
+                              "extraServices",
                               "branchName",
                               "branchMapUrl",
                               "practitionerName",
@@ -133891,6 +134648,25 @@
                               "serviceName": {
                                 "type": "string"
                               },
+                              "extraServices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name"
+                                  ]
+                                }
+                              },
                               "branchName": {
                                 "type": "string"
                               },
@@ -133963,6 +134739,33 @@
                                       "accountName"
                                     ]
                                   },
+                                  "bank": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bankName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "accountNumber": {
+                                        "type": "string",
+                                        "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                      },
+                                      "accountName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      }
+                                    },
+                                    "required": [
+                                      "bankName",
+                                      "accountNumber",
+                                      "accountName"
+                                    ]
+                                  },
                                   "slipSubmittedAt": {
                                     "type": [
                                       "string",
@@ -133980,6 +134783,7 @@
                                   "status",
                                   "amountMinor",
                                   "promptpay",
+                                  "bank",
                                   "slipSubmittedAt",
                                   "rejectReason"
                                 ]
@@ -134005,6 +134809,7 @@
                               "endAt",
                               "status",
                               "serviceName",
+                              "extraServices",
                               "branchName",
                               "branchMapUrl",
                               "practitionerName",
@@ -134340,6 +135145,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -134412,6 +135236,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -134429,6 +135280,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -134454,6 +135306,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -134640,6 +135493,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -134712,6 +135584,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -134729,6 +135628,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -134754,6 +135654,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -134937,6 +135838,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -135009,6 +135929,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -135026,6 +135973,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -135051,6 +135999,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -136237,7 +137186,7 @@
         "tags": [
           "liff-booking"
         ],
-        "summary": "Staff a customer may pick for this service (online-bookable people only)",
+        "summary": "Staff a customer may pick for this visit (online-bookable people able to do every chosen service)",
         "description": "Public endpoint (no authentication).",
         "security": [],
         "parameters": [
@@ -136268,6 +137217,15 @@
             },
             "required": true,
             "name": "serviceId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "required": false,
+            "name": "extraServiceIds",
             "in": "query"
           }
         ],
@@ -136459,6 +137417,15 @@
             },
             "required": true,
             "name": "date",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "required": false,
+            "name": "extraServiceIds",
             "in": "query"
           },
           {
@@ -136673,6 +137640,15 @@
             },
             "required": false,
             "name": "memberId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "required": false,
+            "name": "extraServiceIds",
             "in": "query"
           },
           {
@@ -136975,6 +137951,14 @@
                   "startAt": {
                     "type": "string"
                   },
+                  "extraServiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 7
+                  },
                   "partySize": {
                     "type": "integer",
                     "minimum": 1,
@@ -137061,6 +138045,25 @@
                             "serviceName": {
                               "type": "string"
                             },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
                             "branchName": {
                               "type": "string"
                             },
@@ -137133,6 +138136,33 @@
                                     "accountName"
                                   ]
                                 },
+                                "bank": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "bankName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "accountNumber": {
+                                      "type": "string",
+                                      "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                    },
+                                    "accountName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    }
+                                  },
+                                  "required": [
+                                    "bankName",
+                                    "accountNumber",
+                                    "accountName"
+                                  ]
+                                },
                                 "slipSubmittedAt": {
                                   "type": [
                                     "string",
@@ -137150,6 +138180,7 @@
                                 "status",
                                 "amountMinor",
                                 "promptpay",
+                                "bank",
                                 "slipSubmittedAt",
                                 "rejectReason"
                               ]
@@ -137175,6 +138206,7 @@
                             "endAt",
                             "status",
                             "serviceName",
+                            "extraServices",
                             "branchName",
                             "branchMapUrl",
                             "practitionerName",
@@ -137284,6 +138316,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -137301,6 +138360,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -137494,6 +138554,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -137566,6 +138645,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -137583,6 +138689,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -137608,6 +138715,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -137977,6 +139085,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -138049,6 +139176,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -138066,6 +139220,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -138091,6 +139246,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -138227,6 +139383,14 @@
                     ],
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   },
+                  "extraServiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                    },
+                    "maxItems": 7
+                  },
                   "startAt": {
                     "type": "string"
                   },
@@ -138320,6 +139484,25 @@
                             "serviceName": {
                               "type": "string"
                             },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
                             "branchName": {
                               "type": "string"
                             },
@@ -138392,6 +139575,33 @@
                                     "accountName"
                                   ]
                                 },
+                                "bank": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "bankName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "accountNumber": {
+                                      "type": "string",
+                                      "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                    },
+                                    "accountName": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100
+                                    }
+                                  },
+                                  "required": [
+                                    "bankName",
+                                    "accountNumber",
+                                    "accountName"
+                                  ]
+                                },
                                 "slipSubmittedAt": {
                                   "type": [
                                     "string",
@@ -138409,6 +139619,7 @@
                                 "status",
                                 "amountMinor",
                                 "promptpay",
+                                "bank",
                                 "slipSubmittedAt",
                                 "rejectReason"
                               ]
@@ -138434,6 +139645,7 @@
                             "endAt",
                             "status",
                             "serviceName",
+                            "extraServices",
                             "branchName",
                             "branchMapUrl",
                             "practitionerName",
@@ -138621,6 +139833,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -138693,6 +139924,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -138710,6 +139968,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -138735,6 +139994,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -138929,6 +140189,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -139001,6 +140280,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -139018,6 +140324,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -139043,6 +140350,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -139432,6 +140740,25 @@
                         "serviceName": {
                           "type": "string"
                         },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
                         "branchName": {
                           "type": "string"
                         },
@@ -139504,6 +140831,33 @@
                                 "accountName"
                               ]
                             },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
                             "slipSubmittedAt": {
                               "type": [
                                 "string",
@@ -139521,6 +140875,7 @@
                             "status",
                             "amountMinor",
                             "promptpay",
+                            "bank",
                             "slipSubmittedAt",
                             "rejectReason"
                           ]
@@ -139546,6 +140901,7 @@
                         "endAt",
                         "status",
                         "serviceName",
+                        "extraServices",
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
@@ -139813,13 +141169,45 @@
                               ],
                               "minimum": 1,
                               "maximum": 100
+                            },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
+                            "available": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "enabled",
                             "mode",
                             "amountMinor",
-                            "percent"
+                            "percent",
+                            "bank",
+                            "available"
                           ]
                         }
                       },
@@ -140085,6 +141473,33 @@
                         ],
                         "minimum": 1,
                         "maximum": 100
+                      },
+                      "bank": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "properties": {
+                          "bankName": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 60
+                          },
+                          "accountNumber": {
+                            "type": "string",
+                            "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                          },
+                          "accountName": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          }
+                        },
+                        "required": [
+                          "bankName",
+                          "accountNumber",
+                          "accountName"
+                        ]
                       }
                     },
                     "required": [
@@ -140271,13 +141686,45 @@
                               ],
                               "minimum": 1,
                               "maximum": 100
+                            },
+                            "bank": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bankName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "accountNumber": {
+                                  "type": "string",
+                                  "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                },
+                                "accountName": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                }
+                              },
+                              "required": [
+                                "bankName",
+                                "accountNumber",
+                                "accountName"
+                              ]
+                            },
+                            "available": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "enabled",
                             "mode",
                             "amountMinor",
-                            "percent"
+                            "percent",
+                            "bank",
+                            "available"
                           ]
                         }
                       },
@@ -140417,7 +141864,7 @@
                                   "hours_set",
                                   "line_oa_connected",
                                   "rich_menu_installed",
-                                  "deposit_promptpay"
+                                  "deposit_account"
                                 ]
                               },
                               "ok": {
@@ -142561,6 +144008,7 @@
                                     "no_services",
                                     "no_staff",
                                     "no_free_time",
+                                    "no_shifts",
                                     "liff_missing",
                                     "line_oa_missing",
                                     "walk_in_off"
@@ -149164,6 +150612,1192 @@
                         "url",
                         "filename",
                         "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/time-off": {
+      "get": {
+        "tags": [
+          "time-off"
+        ],
+        "summary": "Approved time off of the people of a branch overlapping the dates (YYYY-MM-DD, inclusive)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "branchId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "required": true,
+            "name": "to",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Time off",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "membershipId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "sick",
+                              "personal",
+                              "vacation",
+                              "other"
+                            ]
+                          },
+                          "startsAt": {
+                            "type": "string"
+                          },
+                          "endsAt": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "membershipId",
+                          "displayName",
+                          "type",
+                          "startsAt",
+                          "endsAt",
+                          "reason"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "time-off"
+        ],
+        "summary": "Record time off (approved at once; may start today). Returns the bookings it breaks with suggested substitutes",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Required; unique per logical operation"
+            },
+            "required": false,
+            "description": "Required; unique per logical operation",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "membershipId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "sick",
+                      "personal",
+                      "vacation",
+                      "other"
+                    ]
+                  },
+                  "startsAt": {
+                    "type": "string"
+                  },
+                  "endsAt": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "membershipId",
+                  "type",
+                  "startsAt",
+                  "endsAt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "timeOff": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "membershipId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "displayName": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "sick",
+                                "personal",
+                                "vacation",
+                                "other"
+                              ]
+                            },
+                            "startsAt": {
+                              "type": "string"
+                            },
+                            "endsAt": {
+                              "type": "string"
+                            },
+                            "reason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "membershipId",
+                            "displayName",
+                            "type",
+                            "startsAt",
+                            "endsAt",
+                            "reason"
+                          ]
+                        },
+                        "impact": {
+                          "type": "object",
+                          "properties": {
+                            "leaveRequestId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "affectedAppointments": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "branchId": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "startAt": {
+                                    "type": "string"
+                                  },
+                                  "endAt": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  },
+                                  "serviceId": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "serviceName": {
+                                    "type": "string"
+                                  },
+                                  "customerId": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "customerName": {
+                                    "type": "string"
+                                  },
+                                  "membershipId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "suggestions": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "membershipId": {
+                                          "type": "string",
+                                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                        },
+                                        "displayName": {
+                                          "type": "string"
+                                        },
+                                        "positionId": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ],
+                                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                        },
+                                        "skillLevel": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ],
+                                          "enum": [
+                                            "learning",
+                                            "can_do",
+                                            "can_teach",
+                                            null
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "membershipId",
+                                        "displayName",
+                                        "positionId",
+                                        "skillLevel"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "branchId",
+                                  "startAt",
+                                  "endAt",
+                                  "status",
+                                  "serviceId",
+                                  "serviceName",
+                                  "customerId",
+                                  "customerName",
+                                  "membershipId",
+                                  "suggestions"
+                                ]
+                              }
+                            },
+                            "affectedShifts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "branchId": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "date": {
+                                    "type": "string",
+                                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                                  },
+                                  "startTime": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  },
+                                  "endTime": {
+                                    "type": "string",
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "planned",
+                                      "swapped",
+                                      "absent",
+                                      "leave"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "branchId",
+                                  "date",
+                                  "startTime",
+                                  "endTime",
+                                  "status"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "leaveRequestId",
+                            "affectedAppointments",
+                            "affectedShifts"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "timeOff",
+                        "impact"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/time-off/{id}": {
+      "delete": {
+        "tags": [
+          "time-off"
+        ],
+        "summary": "Remove time off (status cancelled); the person is bookable again",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "membershipId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "sick",
+                            "personal",
+                            "vacation",
+                            "other"
+                          ]
+                        },
+                        "startsAt": {
+                          "type": "string"
+                        },
+                        "endsAt": {
+                          "type": "string"
+                        },
+                        "reason": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "membershipId",
+                        "displayName",
+                        "type",
+                        "startsAt",
+                        "endsAt",
+                        "reason"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/time-off/{id}/impact": {
+      "get": {
+        "tags": [
+          "time-off"
+        ],
+        "summary": "Bookings the time off breaks, with free skilled colleagues who could take each one",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Impact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "leaveRequestId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "affectedAppointments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "startAt": {
+                                "type": "string"
+                              },
+                              "endAt": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "serviceId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "serviceName": {
+                                "type": "string"
+                              },
+                              "customerId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerName": {
+                                "type": "string"
+                              },
+                              "membershipId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "suggestions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "membershipId": {
+                                      "type": "string",
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "displayName": {
+                                      "type": "string"
+                                    },
+                                    "positionId": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                    },
+                                    "skillLevel": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "enum": [
+                                        "learning",
+                                        "can_do",
+                                        "can_teach",
+                                        null
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "membershipId",
+                                    "displayName",
+                                    "positionId",
+                                    "skillLevel"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "branchId",
+                              "startAt",
+                              "endAt",
+                              "status",
+                              "serviceId",
+                              "serviceName",
+                              "customerId",
+                              "customerName",
+                              "membershipId",
+                              "suggestions"
+                            ]
+                          }
+                        },
+                        "affectedShifts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "branchId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "date": {
+                                "type": "string",
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "startTime": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "endTime": {
+                                "type": "string",
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "planned",
+                                  "swapped",
+                                  "absent",
+                                  "leave"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "branchId",
+                              "date",
+                              "startTime",
+                              "endTime",
+                              "status"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "leaveRequestId",
+                        "affectedAppointments",
+                        "affectedShifts"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/time-off/{id}/reassign": {
+      "post": {
+        "tags": [
+          "time-off"
+        ],
+        "summary": "Move the bookings the time off breaks to suggested colleagues. Per-booking result; one conflict does not stop the rest",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "assignments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "appointmentId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "membershipId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "notifyCustomer": {
+                          "type": "boolean",
+                          "default": false
+                        }
+                      },
+                      "required": [
+                        "appointmentId",
+                        "membershipId"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 50
+                  }
+                },
+                "required": [
+                  "assignments"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reassigned": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
+                        },
+                        "failed": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "appointmentId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "code": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "appointmentId",
+                              "code"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "reassigned",
+                        "failed"
                       ]
                     }
                   },
@@ -164533,7 +167167,7 @@
         "tags": [
           "skills"
         ],
-        "summary": "Skills matrix: active members × active services",
+        "summary": "Skills matrix: active members × active services, plus the shop-defined skills / duties",
         "description": "Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `crm`.",
         "security": [
           {
@@ -164632,12 +167266,66 @@
                               "level"
                             ]
                           }
+                        },
+                        "customSkills": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "sort": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "sort"
+                            ]
+                          }
+                        },
+                        "customLevels": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "skillId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "learning",
+                                  "can_do",
+                                  "can_teach"
+                                ]
+                              },
+                              "membershipId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              }
+                            },
+                            "required": [
+                              "skillId",
+                              "level",
+                              "membershipId"
+                            ]
+                          }
                         }
                       },
                       "required": [
                         "members",
                         "services",
-                        "skills"
+                        "skills",
+                        "customSkills",
+                        "customLevels"
                       ]
                     }
                   },
@@ -164992,6 +167680,747 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/members/{id}/custom-skills": {
+      "put": {
+        "tags": [
+          "skills"
+        ],
+        "summary": "Replace a member's levels on the shop-defined skills / duties",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skills": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "skillId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "level": {
+                          "type": "string",
+                          "enum": [
+                            "learning",
+                            "can_do",
+                            "can_teach"
+                          ],
+                          "default": "can_do"
+                        }
+                      },
+                      "required": [
+                        "skillId"
+                      ]
+                    },
+                    "maxItems": 200
+                  }
+                },
+                "required": [
+                  "skills"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Levels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "skillId": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "level": {
+                            "type": "string",
+                            "enum": [
+                              "learning",
+                              "can_do",
+                              "can_teach"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "skillId",
+                          "level"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/skills": {
+      "get": {
+        "tags": [
+          "skills"
+        ],
+        "summary": "Shop-defined skills / duties that are not services (never affect booking)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `crm`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Skills",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "sort": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "sort"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "skills"
+        ],
+        "summary": "Add a skill / duty (409 when an active one has the same name)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "sort": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "sort"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/skills/{id}": {
+      "patch": {
+        "tags": [
+          "skills"
+        ],
+        "summary": "Rename / reorder a skill / duty",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "sort": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "sort": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "sort"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "skills"
+        ],
+        "summary": "Delete a skill / duty (soft delete; everyone's level on it is removed)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
           },
           "400": {
             "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",

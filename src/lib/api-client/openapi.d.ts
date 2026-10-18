@@ -1926,6 +1926,132 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tenant/shifts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Switch the weekly roster (module shifts) on / off for any package (an add-on; 409 shifts_in_plan when the plan includes it). Returns the modules
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        enabled: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Modules */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                modules: {
+                                    /** @enum {string} */
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                    /** @enum {string} */
+                                    source: "plan" | "addon" | "trial" | "consultant";
+                                    enabledUntil: string | null;
+                                }[];
+                                limits: {
+                                    [key: string]: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tenant/business-types": {
         parameters: {
             query?: never;
@@ -4925,6 +5051,12 @@ export interface paths {
                                 roles: string[];
                                 branchIds: string[];
                                 bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5009,7 +5141,7 @@ export interface paths {
         put?: never;
         /**
          * Add a staff member by name (no login); bookable straight away
-         * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -5064,6 +5196,12 @@ export interface paths {
                                 roles: string[];
                                 branchIds: string[];
                                 bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5189,6 +5327,12 @@ export interface paths {
                                 roles: string[];
                                 branchIds: string[];
                                 bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5301,6 +5445,12 @@ export interface paths {
                         customFields?: {
                             [key: string]: unknown;
                         };
+                        weeklyHours?: {
+                            [key: string]: [
+                                string,
+                                string
+                            ][];
+                        } | null;
                     };
                 };
             };
@@ -5328,6 +5478,12 @@ export interface paths {
                                 roles: string[];
                                 branchIds: string[];
                                 bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -5456,6 +5612,12 @@ export interface paths {
                                 roles: string[];
                                 branchIds: string[];
                                 bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
@@ -7333,6 +7495,164 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/usage-report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Usage report: per visible shop, live activity of the last 7 / 30 days (people, bookings by source, bills, customers, messages) and setup state
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    days?: "7" | "30";
+                    status?: "trial" | "active" | "paused" | "closed";
+                    demo?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Report */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                days: number;
+                                from: string;
+                                to: string;
+                                rows: {
+                                    activeUsers: number;
+                                    logins: number;
+                                    appointmentsCreated: number;
+                                    staffCreated: number;
+                                    onlineCreated: number;
+                                    appointmentsCompleted: number;
+                                    noShows: number;
+                                    billsPaid: number;
+                                    revenueMinor: number | null;
+                                    newCustomers: number;
+                                    messagesSent: number;
+                                    id: string;
+                                    slug: string;
+                                    name: string;
+                                    /** @enum {string} */
+                                    status: "trial" | "active" | "paused" | "closed";
+                                    planCode: string | null;
+                                    planName: string | null;
+                                    trialEndsOn: string | null;
+                                    demo: boolean;
+                                    selfServe: boolean;
+                                    createdAt: string;
+                                    lastActiveAt: string | null;
+                                    setup: {
+                                        services: number;
+                                        staff: number;
+                                        lineConnected: boolean;
+                                        onlineBookingReady: boolean;
+                                    };
+                                }[];
+                                totals: {
+                                    activeUsers: number;
+                                    logins: number;
+                                    appointmentsCreated: number;
+                                    staffCreated: number;
+                                    onlineCreated: number;
+                                    appointmentsCompleted: number;
+                                    noShows: number;
+                                    billsPaid: number;
+                                    revenueMinor: number | null;
+                                    newCustomers: number;
+                                    messagesSent: number;
+                                    shops: number;
+                                    activeShops: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -65124,6 +65444,11 @@ export interface paths {
                                             accountHint: string;
                                             accountName: string | null;
                                         } | null;
+                                        bank: {
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -65158,6 +65483,11 @@ export interface paths {
                                             payload: string;
                                             accountHint: string;
                                             accountName: string | null;
+                                        } | null;
+                                        bank: {
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
                                         } | null;
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
@@ -65420,6 +65750,11 @@ export interface paths {
                                         accountHint: string;
                                         accountName: string | null;
                                     } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -65568,6 +65903,11 @@ export interface paths {
                                         accountHint: string;
                                         accountName: string | null;
                                     } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -65714,6 +66054,11 @@ export interface paths {
                                         payload: string;
                                         accountHint: string;
                                         accountName: string | null;
+                                    } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
                                     } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -66966,6 +67311,11 @@ export interface paths {
                                             accountHint: string;
                                             accountName: string | null;
                                         } | null;
+                                        bank: {
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -66993,6 +67343,11 @@ export interface paths {
                                         payload: string;
                                         accountHint: string;
                                         accountName: string | null;
+                                    } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
                                     } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -67138,6 +67493,11 @@ export interface paths {
                                         payload: string;
                                         accountHint: string;
                                         accountName: string | null;
+                                    } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
                                     } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -67410,6 +67770,11 @@ export interface paths {
                                         accountHint: string;
                                         accountName: string | null;
                                     } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -67567,6 +67932,11 @@ export interface paths {
                                             accountHint: string;
                                             accountName: string | null;
                                         } | null;
+                                        bank: {
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -67709,6 +68079,11 @@ export interface paths {
                                         payload: string;
                                         accountHint: string;
                                         accountName: string | null;
+                                    } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
                                     } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -67860,6 +68235,11 @@ export interface paths {
                                         payload: string;
                                         accountHint: string;
                                         accountName: string | null;
+                                    } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
                                     } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -68136,6 +68516,11 @@ export interface paths {
                                         accountHint: string;
                                         accountName: string | null;
                                     } | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -68275,6 +68660,12 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
+                                    available: boolean;
                                 };
                             };
                         };
@@ -68391,6 +68782,11 @@ export interface paths {
                             mode: "fixed" | "percent";
                             amountMinor: number | null;
                             percent: number | null;
+                            bank?: {
+                                bankName: string;
+                                accountNumber: string;
+                                accountName: string;
+                            } | null;
                         };
                     };
                 };
@@ -68434,6 +68830,12 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
+                                    bank: {
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
+                                    available: boolean;
                                 };
                             };
                         };
@@ -68543,7 +68945,7 @@ export interface paths {
                                 ready: boolean;
                                 items: {
                                     /** @enum {string} */
-                                    id: "services_online" | "staff_online" | "hours_set" | "line_oa_connected" | "rich_menu_installed" | "deposit_promptpay";
+                                    id: "services_online" | "staff_online" | "hours_set" | "line_oa_connected" | "rich_menu_installed" | "deposit_account";
                                     ok: boolean;
                                     required: boolean;
                                     count: number | null;
@@ -69956,7 +70358,7 @@ export interface paths {
                                     id: "web" | "liff" | "walk_in" | "line_link";
                                     url: string | null;
                                     ready: boolean;
-                                    problems: ("booking_off" | "no_services" | "no_staff" | "no_free_time" | "liff_missing" | "line_oa_missing" | "walk_in_off")[];
+                                    problems: ("booking_off" | "no_services" | "no_staff" | "no_free_time" | "no_shifts" | "liff_missing" | "line_oa_missing" | "walk_in_off")[];
                                 }[];
                             };
                         };
@@ -73386,6 +73788,653 @@ export interface paths {
                                 url: string | null;
                                 filename: string | null;
                                 expiresAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/time-off": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Approved time off of the people of a branch overlapping the dates (YYYY-MM-DD, inclusive)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Time off */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                membershipId: string;
+                                displayName: string;
+                                /** @enum {string} */
+                                type: "sick" | "personal" | "vacation" | "other";
+                                startsAt: string;
+                                endsAt: string;
+                                reason: string | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Record time off (approved at once; may start today). Returns the bookings it breaks with suggested substitutes
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        membershipId: string;
+                        /** @enum {string} */
+                        type: "sick" | "personal" | "vacation" | "other";
+                        startsAt: string;
+                        endsAt: string;
+                        reason?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                timeOff: {
+                                    id: string;
+                                    membershipId: string;
+                                    displayName: string;
+                                    /** @enum {string} */
+                                    type: "sick" | "personal" | "vacation" | "other";
+                                    startsAt: string;
+                                    endsAt: string;
+                                    reason: string | null;
+                                };
+                                impact: {
+                                    leaveRequestId: string;
+                                    affectedAppointments: {
+                                        id: string;
+                                        branchId: string;
+                                        startAt: string;
+                                        endAt: string;
+                                        status: string;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        membershipId: string | null;
+                                        suggestions: {
+                                            membershipId: string;
+                                            displayName: string;
+                                            positionId: string | null;
+                                            /** @enum {string|null} */
+                                            skillLevel: "learning" | "can_do" | "can_teach" | null;
+                                        }[];
+                                    }[];
+                                    affectedShifts: {
+                                        id: string;
+                                        branchId: string;
+                                        date: string;
+                                        startTime: string;
+                                        endTime: string;
+                                        /** @enum {string} */
+                                        status: "planned" | "swapped" | "absent" | "leave";
+                                    }[];
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/time-off/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove time off (status cancelled); the person is bookable again
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Cancelled */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                membershipId: string;
+                                displayName: string;
+                                /** @enum {string} */
+                                type: "sick" | "personal" | "vacation" | "other";
+                                startsAt: string;
+                                endsAt: string;
+                                reason: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/time-off/{id}/impact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Bookings the time off breaks, with free skilled colleagues who could take each one
+         * @description Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Impact */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                leaveRequestId: string;
+                                affectedAppointments: {
+                                    id: string;
+                                    branchId: string;
+                                    startAt: string;
+                                    endAt: string;
+                                    status: string;
+                                    serviceId: string;
+                                    serviceName: string;
+                                    customerId: string;
+                                    customerName: string;
+                                    membershipId: string | null;
+                                    suggestions: {
+                                        membershipId: string;
+                                        displayName: string;
+                                        positionId: string | null;
+                                        /** @enum {string|null} */
+                                        skillLevel: "learning" | "can_do" | "can_teach" | null;
+                                    }[];
+                                }[];
+                                affectedShifts: {
+                                    id: string;
+                                    branchId: string;
+                                    date: string;
+                                    startTime: string;
+                                    endTime: string;
+                                    /** @enum {string} */
+                                    status: "planned" | "swapped" | "absent" | "leave";
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/time-off/{id}/reassign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move the bookings the time off breaks to suggested colleagues. Per-booking result; one conflict does not stop the rest
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        assignments: {
+                            appointmentId: string;
+                            membershipId: string;
+                            /** @default false */
+                            notifyCustomer?: boolean;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Result */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                reassigned: string[];
+                                failed: {
+                                    appointmentId: string;
+                                    code: string;
+                                }[];
                             };
                         };
                     };
@@ -82025,7 +83074,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Skills matrix: active members × active services
+         * Skills matrix: active members × active services, plus the shop-defined skills / duties
          * @description Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `crm`.
          */
         get: {
@@ -82060,6 +83109,17 @@ export interface paths {
                                     serviceId: string;
                                     /** @enum {string} */
                                     level: "learning" | "can_do" | "can_teach";
+                                }[];
+                                customSkills: {
+                                    id: string;
+                                    name: string;
+                                    sort: number;
+                                }[];
+                                customLevels: {
+                                    skillId: string;
+                                    /** @enum {string} */
+                                    level: "learning" | "can_do" | "can_teach";
+                                    membershipId: string;
                                 }[];
                             };
                         };
@@ -82361,6 +83421,558 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/members/{id}/custom-skills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Replace a member's levels on the shop-defined skills / duties
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        skills: {
+                            skillId: string;
+                            /**
+                             * @default can_do
+                             * @enum {string}
+                             */
+                            level?: "learning" | "can_do" | "can_teach";
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Levels */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                skillId: string;
+                                /** @enum {string} */
+                                level: "learning" | "can_do" | "can_teach";
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/skills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shop-defined skills / duties that are not services (never affect booking)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Skills */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                sort: number;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Add a skill / duty (409 when an active one has the same name)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                sort: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/skills/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a skill / duty (soft delete; everyone's level on it is removed)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Rename / reorder a skill / duty
+         * @description Requires header `X-Tenant-Id`. Permission: `members:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        sort?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                sort: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/imports/preview": {

@@ -308,6 +308,44 @@
     "checklistsDone": "เช็กลิสต์เสร็จ",
     "customers": "ลูกค้า"
   },
+  "usageReport": {
+    "title": "รายงานการใช้งาน",
+    "description": "ใครใช้ระบบจริงบ้าง ใช้ทำอะไร และร้านไหนยังตั้งค่าไม่ครบ ตัวเลขนับถึงตอนนี้ (รวมวันนี้)",
+    "days": "{{count}} วัน",
+    "hideDemo": "ซ่อนร้านทดลองของทีม",
+    "empty": "ไม่มีร้านตามตัวกรองนี้",
+    "demo": "ร้านทดลองของทีม",
+    "selfServe": "สมัครเอง",
+    "trialLeft": "ทดลองเหลือ {{count}} วัน",
+    "trialEnded": "หมดทดลองมาแล้ว {{count}} วัน",
+    "neverUsed": "ยังไม่เคยใช้",
+    "idle": "ไม่ได้ใช้ {{count}} วัน",
+    "bySource": "พนักงาน {{staff}} · ออนไลน์ {{online}}",
+    "totals": "รวม {{count}} ร้าน",
+    "activeShops": "มีคนใช้ในช่วงนี้ {{count}} ร้าน",
+    "col": {
+      "shop": "ร้าน",
+      "lastActive": "ใช้ล่าสุด",
+      "activeUsers": "คนที่ใช้",
+      "logins": "เข้าระบบ",
+      "appointments": "นัดที่สร้าง",
+      "completed": "นัดที่เสร็จ",
+      "noShows": "ไม่มาตามนัด",
+      "bills": "บิลที่จ่ายแล้ว",
+      "revenue": "ยอดขาย",
+      "newCustomers": "ลูกค้าใหม่",
+      "messages": "ข้อความที่ส่ง",
+      "setup": "ตั้งค่าแล้ว"
+    },
+    "setup": {
+      "services": "บริการ",
+      "staff": "พนักงาน",
+      "line": "LINE",
+      "onlineBooking": "จองออนไลน์",
+      "ok": "พร้อม",
+      "missing": "ยังไม่มี"
+    }
+  },
   "access": {
     "when": "เมื่อ",
     "who": "ใคร",
