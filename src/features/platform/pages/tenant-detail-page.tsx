@@ -1,4 +1,4 @@
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { Eye, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -81,7 +81,6 @@ export function TenantDetailPage() {
                 {(
                   [
                     'overview',
-                    'engagements',
                     'usage',
                     'reports',
                     'finance',
@@ -97,9 +96,6 @@ export function TenantDetailPage() {
               </TabsList>
               <TabsContent value="overview">
                 <OverviewTab d={d} />
-              </TabsContent>
-              <TabsContent value="engagements">
-                <EngagementsTab d={d} />
               </TabsContent>
               <TabsContent value="usage">
                 <UsageTab id={d.id} />
@@ -275,41 +271,6 @@ function OverviewTab({ d }: { d: TenantDetail }) {
             );
         }}
       />
-    </div>
-  );
-}
-
-function EngagementsTab({ d }: { d: TenantDetail }) {
-  const { t } = useTranslation('platform');
-  const locale = useIntlLocale();
-  if (d.engagements.length === 0)
-    return <p className="text-sm text-muted-foreground">{t('detail.noEngagements')}</p>;
-  return (
-    <div className="grid gap-3">
-      {d.engagements.map((e) => (
-        <Card key={e.id}>
-          <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
-            <div>
-              <Link
-                to="/platform/engagements/$id"
-                params={{ id: e.id }}
-                className="font-medium hover:underline"
-              >
-                {t(`engagementType.${e.type}`)}
-              </Link>
-              <div className="text-xs text-muted-foreground">
-                {formatDate(e.startsOn, locale)} – {formatDate(e.endsOn, locale)}
-              </div>
-            </div>
-            <Badge variant={e.status === 'active' ? 'success' : 'secondary'}>
-              {t(`engagementStatus.${e.status}`)}
-            </Badge>
-            <div className="text-sm">
-              {t('detail.taskProgress', { done: e.tasksDone, total: e.tasksTotal })}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
     </div>
   );
 }

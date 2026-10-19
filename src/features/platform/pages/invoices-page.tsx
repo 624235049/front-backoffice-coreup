@@ -340,7 +340,7 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
   const tenants = useTenants({});
   const create = useCreateInvoice();
   const [tenantId, setTenantId] = useState('');
-  const [source, setSource] = useState<'subscription' | 'engagement'>('engagement');
+  // consulting invoices are no longer sold: new ones are always package (subscription) invoices
   const [amount, setAmount] = useState('');
   const minor = parseBahtToMinor(amount);
   return (
@@ -366,28 +366,14 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
               </SelectContent>
             </Select>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <Label>{t('invoices.col.source')}</Label>
-              <Select value={source} onValueChange={(v) => setSource(v as typeof source)}>
-                <SelectTrigger aria-label={t('invoices.col.source')}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="subscription">{t('invoiceSource.subscription')}</SelectItem>
-                  <SelectItem value="engagement">{t('invoiceSource.engagement')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="inv-amount">{t('invoices.amountExVat')}</Label>
-              <Input
-                id="inv-amount"
-                inputMode="decimal"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </div>
+          <div>
+            <Label htmlFor="inv-amount">{t('invoices.amountExVat')}</Label>
+            <Input
+              id="inv-amount"
+              inputMode="decimal"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </div>
         </div>
         <DialogFooter>
@@ -404,7 +390,7 @@ function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChan
             onClick={() => {
               if (minor === null) return;
               create.mutate(
-                { tenantId, source, amountMinor: minor, status: 'issued' },
+                { tenantId, source: 'subscription', amountMinor: minor, status: 'issued' },
                 {
                   onSuccess: () => {
                     toast.success(t('invoices.createdToast'));

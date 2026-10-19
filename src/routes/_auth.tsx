@@ -31,11 +31,11 @@ function AuthLayout() {
           </h2>
           <p className="mt-5 leading-7 text-white/80">{t('panel.line')}</p>
         </div>
-        <p className="text-sm text-white/60">© CoreUp · Business Systems &amp; Consulting</p>
+        <p className="text-sm text-white/60">© CoreUp · Booking &amp; Back Office Software</p>
       </aside>
       <main className="flex flex-col items-center justify-center gap-6 bg-canvas px-4 py-10">
         <h1 className="lg:hidden">
-          <Logo variant="full" className="h-24 w-auto" />
+          <Logo variant="wordmark" className="h-12 w-auto" />
         </h1>
         <div className="w-full max-w-md">
           <Outlet />

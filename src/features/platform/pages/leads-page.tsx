@@ -40,7 +40,7 @@ import {
   usePlans,
 } from '../api';
 import { INDUSTRY_KEYS } from '../components/common';
-import { formatDateTime, parseBahtToMinor, useIntlLocale, usePlanLabel } from '../format';
+import { formatDateTime, useIntlLocale, usePlanLabel } from '../format';
 import { defaultPlanCode } from '../plans';
 
 /** Board columns in sales order (docs/02 §6.9: new → contacted → checked → proposal → won / lost; nurture parks a lead). */
@@ -707,8 +707,6 @@ const convertSchema = z.object({
   ownerEmail: z.string().trim().toLowerCase().pipe(z.email('validation.email')),
   ownerName: z.string().trim().optional(),
   planCode: z.string().min(1, 'validation.required'),
-  engagementType: z.string().optional(),
-  fee: z.string().optional(),
 });
 
 function ConvertDialog({
@@ -731,14 +729,12 @@ function ConvertDialog({
   const convert = useConvertLead();
   const form = useForm<z.infer<typeof convertSchema>>({
     resolver: zodResolver(convertSchema),
-    defaultValues: { ownerEmail: '', ownerName: '', planCode: '', engagementType: 'none', fee: '' },
+    defaultValues: { ownerEmail: '', ownerName: '', planCode: '' },
   });
   const navigate = useNavigate();
   const invalid = useInvalidToast<z.infer<typeof convertSchema>>();
   const firstPlan = defaultPlanCode(plans.data);
   const planCode = form.watch('planCode');
-  const engagementType = form.watch('engagementType');
-  const noEngagement = !engagementType || engagementType === 'none';
   // one tap less: start from the cheapest paid package (never a ฿0 one)
   useEffect(() => {
     if (firstPlan && !planCode) form.setValue('planCode', firstPlan);
@@ -746,11 +742,6 @@ function ConvertDialog({
   const industries = useMemo(() => INDUSTRY_KEYS as readonly string[], []);
   const errors = form.formState.errors;
   const submit = form.handleSubmit(async (v) => {
-    const fee = !noEngagement && v.fee?.trim() ? parseBahtToMinor(v.fee) : 0;
-    if (fee === null) {
-      form.setError('fee', { message: 'leads.feeInvalid' });
-      return;
-    }
     const res = await convert.mutateAsync({
       id: leadId,
       body: {
@@ -758,19 +749,13 @@ function ConvertDialog({
         ownerName: v.ownerName || undefined,
         planCode: v.planCode,
         industryKey: defaultIndustry && industries.includes(defaultIndustry) ? defaultIndustry : undefined,
-        engagement: noEngagement
-          ? undefined
-          : { type: v.engagementType as 'audit', feeMinor: fee, billing: 'one_time' },
       },
     });
-    const { tenantId, engagementId } = res.data;
+    const { tenantId } = res.data;
     toast.success(t('leads.convertedToast'), {
       action: {
-        label: engagementId ? t('leads.openEngagement') : t('leads.openShop'),
-        onClick: () =>
-          void (engagementId
-            ? navigate({ to: '/platform/engagements/$id', params: { id: engagementId } })
-            : navigate({ to: '/platform/tenants/$id', params: { id: tenantId } })),
+        label: t('leads.openShop'),
+        onClick: () => void navigate({ to: '/platform/tenants/$id', params: { id: tenantId } }),
       },
     });
     onOpenChange(false);
@@ -823,40 +808,6 @@ function ConvertDialog({
                 {tc('validation.required', { defaultValue: 'Required' })}
               </p>
             ) : null}
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <Label>{t('leads.firstEngagement')}</Label>
-              <Select
-                value={form.watch('engagementType')}
-                onValueChange={(v) => form.setValue('engagementType', v)}
-              >
-                <SelectTrigger aria-label={t('leads.firstEngagement')}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">{t('leads.noEngagement')}</SelectItem>
-                  {(
-                    ['free_check', 'workshop', 'small_shop_setup', 'audit', 'reset_90', 'retainer'] as const
-                  ).map((k) => (
-                    <SelectItem key={k} value={k}>
-                      {t(`engagementType.${k}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="cv-fee">{t('engagements.fee')}</Label>
-              <Input
-                id="cv-fee"
-                inputMode="decimal"
-                placeholder="0"
-                disabled={noEngagement}
-                {...form.register('fee')}
-              />
-              {errors.fee ? <p className="mt-1 text-xs text-destructive">{t('leads.feeInvalid')}</p> : null}
-            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

@@ -5,15 +5,12 @@ const SOURCES = {
   wordmark: '/logo-wordmark-v2.png',
   /** wordmark with light letters, for the navy sidebar */
   'wordmark-light': '/logo-wordmark-light-v2.png',
-  /** wordmark + "Business systems & consulting" tagline */
-  full: '/logo-full-v2.png',
 } as const;
 
 const DEFAULT_SIZE: Record<keyof typeof SOURCES, string> = {
   mark: 'size-8 rounded-lg',
   wordmark: 'h-12 w-auto',
   'wordmark-light': 'h-12 w-auto',
-  full: 'h-28 w-auto',
 };
 
 export function Logo({

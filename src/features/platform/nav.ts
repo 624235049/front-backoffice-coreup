@@ -1,7 +1,5 @@
 import {
   Activity,
-  Briefcase,
-  ClipboardCheck,
   KanbanSquare,
   LayoutDashboard,
   Package,
@@ -49,22 +47,6 @@ export const navItems: NavItem[] = [
     module: 'platform',
     order: 30,
     useBadge: useNewLeadBadge,
-  },
-  {
-    to: '/platform/engagements',
-    labelKey: 'nav:engagements',
-    icon: Briefcase,
-    permission: 'platform:read',
-    module: 'platform',
-    order: 40,
-  },
-  {
-    to: '/platform/audits',
-    labelKey: 'nav:audits',
-    icon: ClipboardCheck,
-    permission: 'platform:audits',
-    module: 'platform',
-    order: 50,
   },
   {
     to: '/platform/invoices',

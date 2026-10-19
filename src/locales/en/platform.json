@@ -55,7 +55,7 @@
     "plan": "Plan",
     "addon": "Add-on",
     "trial": "Trial",
-    "consultant": "Consultant"
+    "consultant": "Team"
   },
   "limits": {
     "title": "Shop quotas",
@@ -201,7 +201,7 @@
   },
   "tenants": {
     "title": "Shops",
-    "description": "Every shop you look after with usage health and consulting status",
+    "description": "Every shop you look after with usage health",
     "onboard": "Onboard shop",
     "search": "Search shops",
     "status": "Status",
@@ -441,7 +441,7 @@
     "takeOver": "Take over",
     "converted": "Converted to shop",
     "convert": "Convert to shop",
-    "convertHint": "Creates the shop from the industry template, closes the deal and (optionally) opens the first engagement",
+    "convertHint": "Creates the shop from the industry template, and closes the deal",
     "convertSubmit": "Convert",
     "convertedToast": "Lead converted to a shop",
     "firstEngagement": "First engagement",
@@ -599,11 +599,11 @@
   },
   "invoices": {
     "title": "Invoices",
-    "description": "Subscription and consulting invoices, numbered INV-YYYYMM-#### (VAT added only once CoreUp is VAT-registered)",
+    "description": "Subscription invoices (legacy ones included), numbered INV-YYYYMM-#### (VAT added only once CoreUp is VAT-registered)",
     "add": "Issue invoice",
     "issue": "Issue",
     "run": "Run monthly billing",
-    "runHint": "Creates subscription invoices for every active shop and consulting invoices that are due (never duplicates)",
+    "runHint": "Creates subscription invoices for every active shop (legacy invoices that are due included, never duplicates)",
     "runSubmit": "Run",
     "runDone": "Created {{created}} invoices ({{skipped}} skipped)",
     "month": "Month",
@@ -659,7 +659,7 @@
   },
   "revenue": {
     "title": "CoreUp revenue",
-    "description": "platform_owner only: subscription and consulting revenue",
+    "description": "platform_owner only: subscription revenue (legacy included)",
     "ownerOnly": "Owner only",
     "ownerOnlyHint": "CoreUp finances are visible to platform_owner only",
     "from": "From",
@@ -769,7 +769,7 @@
     "preset": "Start from booking-only",
     "hint": "Quotas apply to every shop on the plan at once. Changed features apply to shops opened, or moved to the plan, from now on (unless you tick \"apply to existing shops\").",
     "applyToShops": "Also apply to shops already on this plan",
-    "applyToShopsHint": "Switch the existing shops' features to match this plan now. Add-ons and consultant-enabled features are left alone",
+    "applyToShopsHint": "Switch the existing shops' features to match this plan now. Add-ons and team-enabled features are left alone",
     "field": {
       "code": "Plan code",
       "codeHint": "Lowercase English letters/digits, e.g. booking-basic (cannot be changed later)",

@@ -80,9 +80,8 @@ describe('platform access', () => {
       roles: ['platform_consultant'],
       permissions: ['platform:read', 'platform:audits'],
     };
-    expect(routes(consultant)).toEqual(
-      expect.arrayContaining(['/platform', '/platform/tenants', '/platform/audits']),
-    );
+    expect(routes(consultant)).toEqual(expect.arrayContaining(['/platform', '/platform/tenants']));
+    expect(routes(consultant)).not.toContain('/platform/audits'); // consulting pages are hidden from the menu
     expect(routes(consultant)).not.toContain('/platform/leads');
     expect(routes(consultant)).not.toContain('/platform/invoices');
   });

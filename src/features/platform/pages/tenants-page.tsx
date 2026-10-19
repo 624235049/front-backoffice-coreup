@@ -151,8 +151,6 @@ export function TenantsPage() {
                     <TableRow>
                       <TableHead>{t('tenants.col.shop')}</TableHead>
                       <TableHead>{t('tenants.col.plan')}</TableHead>
-                      <TableHead>{t('tenants.col.engagement')}</TableHead>
-                      <TableHead>{t('tenants.col.consultants')}</TableHead>
                       <TableHead className="text-right">{t('tenants.col.users')}</TableHead>
                       <TableHead className="text-right">{t('tenants.col.appointments')}</TableHead>
                       <TableHead className="text-right">{t('tenants.col.health')}</TableHead>
@@ -184,19 +182,6 @@ export function TenantsPage() {
                           </div>
                         </TableCell>
                         <TableCell>{r.planName ?? '–'}</TableCell>
-                        <TableCell>
-                          {r.engagement ? (
-                            <>
-                              <div>{t(`engagementType.${r.engagement.type}`)}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {formatDate(r.engagement.endsOn, locale)}
-                              </div>
-                            </>
-                          ) : (
-                            '–'
-                          )}
-                        </TableCell>
-                        <TableCell>{r.consultants.map((c) => c.name).join(', ') || '–'}</TableCell>
                         <TableCell className="text-right">{r.activeUsers7d}</TableCell>
                         <TableCell className="text-right">{r.appointmentsThisWeek}</TableCell>
                         <TableCell className="text-right">

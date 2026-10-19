@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useOverview } from '../api';
 import { Stat } from '../components/common';
-import { formatDate, formatMoney, useIntlLocale } from '../format';
+import { formatMoney, useIntlLocale } from '../format';
 
 const STAGES = ['new', 'contacted', 'checked', 'proposal', 'won', 'lost', 'nurture'] as const;
 
@@ -66,15 +66,11 @@ export function DashboardPage() {
             </div>
 
             {o.revenue ? (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Stat
                   icon={TrendingUp}
                   label={t('dashboard.mrr')}
                   value={formatMoney(o.revenue.mrrMinor, locale)}
-                />
-                <Stat
-                  label={t('dashboard.engagementRevenue')}
-                  value={formatMoney(o.revenue.engagementThisMonthMinor, locale)}
                 />
                 <Stat
                   label={t('dashboard.invoicedMonth')}
@@ -83,7 +79,7 @@ export function DashboardPage() {
               </div>
             ) : null}
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid gap-4">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
@@ -112,34 +108,6 @@ export function DashboardPage() {
                                 ? t('dashboard.neverBooked')
                                 : t('dashboard.daysSince', { count: r.daysSinceNewAppointment })}
                             </div>
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">{t('dashboard.endingSoon')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {o.engagementsEndingSoon.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">{t('dashboard.endingSoonEmpty')}</p>
-                  ) : (
-                    <ul className="divide-y">
-                      {o.engagementsEndingSoon.map((e) => (
-                        <li key={e.id} className="flex items-center justify-between gap-3 py-2 text-sm">
-                          <Link
-                            to="/platform/engagements/$id"
-                            params={{ id: e.id }}
-                            className="font-medium hover:underline"
-                          >
-                            {e.tenantName}
-                          </Link>
-                          <span className="text-muted-foreground">
-                            {t(`engagementType.${e.type}`)} · {formatDate(e.endsOn, locale)}
                           </span>
                         </li>
                       ))}
