@@ -634,7 +634,28 @@
     "createdToast": "Invoice issued",
     "pickShopFirst": "Pick a shop first",
     "amountNeeded": "Enter an amount greater than 0",
-    "monthNeeded": "Pick a month first"
+    "monthNeeded": "Pick a month first",
+    "slipFilter": "Slip to review",
+    "slipEmpty": "No slips waiting for review",
+    "slip": {
+      "badge": "Transfer reported",
+      "review": "Review slip",
+      "title": "Review slip {{number}}",
+      "description": "Check the amount and date against the receiving account, then confirm or send it back",
+      "file": "Slip uploaded by the shop",
+      "open": "Open slip in a new tab",
+      "broken": "The slip image could not be shown. Try “Open slip in a new tab”",
+      "none": "This invoice has no slip",
+      "sentAt": "Reported at",
+      "confirm": "Confirm payment (activate the shop's package)",
+      "confirmHint": "The package is activated and renewed right away, and the owner gets a confirmation email with the receipt",
+      "confirmedToast": "Payment for {{number}} confirmed, package activated",
+      "noteLabel": "Invalid slip: tell the shop why",
+      "notePlaceholder": "e.g. amount does not match, or this is not the slip for this invoice",
+      "noteNeeded": "Write the reason first so the shop knows what to fix",
+      "reject": "Slip is not valid",
+      "rejectedToast": "Slip for {{number}} sent back to the shop"
+    }
   },
   "revenue": {
     "title": "CoreUp revenue",

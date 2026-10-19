@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -22,12 +21,18 @@ import {
   usePatchCategory,
   useSaveCompany,
 } from '../api';
+import { BankAccountsCard } from '../components/bank-accounts-card';
 import { FileField } from '../components/file-field';
 import { FormField, SwitchRow } from '../components/form-field';
+import {
+  BANK_CARD_ID,
+  type Bank,
+  bankAccountError,
+  THAI_BANKS,
+  usedForSubscriptions,
+} from '../lib/bank-accounts';
 import { isValidNumberFormat, previewDocNumber } from '../lib/doc-number';
 import { isOptionalEmailOk, isOptionalTaxIdOk, isValidThaiTaxId } from '../lib/tax-id';
-
-type Bank = Company['bankAccounts'][number];
 
 type FormState = {
   legalName: string;
@@ -72,7 +77,11 @@ const fromCompany = (c: Company): FormState => ({
   defaultDueDays: String(c.defaultDueDays),
   quotationValidDays: String(c.quotationValidDays),
   defaultNote: c.defaultNote ?? '',
-  bankAccounts: c.bankAccounts,
+  bankAccounts: c.bankAccounts.map((b) => ({
+    ...b,
+    bankCode: b.bankCode ?? null,
+    forSubscriptions: usedForSubscriptions(b),
+  })),
   issuer: c.signers.issuer ?? '',
   approver: c.signers.approver ?? '',
 });
@@ -129,7 +138,7 @@ function CompanyForm({ company }: { company: Company }) {
     prefixes: Object.values(f.prefixes).some((p) => !/^[A-Za-z0-9]{1,10}$/.test(p))
       ? t('settings.prefixInvalid')
       : undefined,
-    banks: f.bankAccounts.some((b) => b.accountNo.trim() === '') ? t('settings.bankNoRequired') : undefined,
+    banks: f.bankAccounts.map(bankAccountError).find(Boolean) ? t('settings.bankInvalid') : undefined,
   };
   const show = (e: string | undefined) => (touched ? e : undefined);
 
@@ -158,10 +167,11 @@ function CompanyForm({ company }: { company: Company }) {
       defaultNote: f.defaultNote.trim() || null,
       bankAccounts: f.bankAccounts.map((b) => ({
         ...b,
-        bankName: b.bankName?.trim() || null,
+        bankName: b.bankName?.trim() || (b.kind === 'promptpay' ? THAI_BANKS.PROMPTPAY.nameTh : null),
         accountName: b.accountName?.trim() || null,
         branch: b.branch?.trim() || null,
         accountNo: b.accountNo.trim(),
+        forSubscriptions: usedForSubscriptions(b),
       })),
       signers: { issuer: f.issuer.trim() || null, approver: f.approver.trim() || null },
     };
@@ -180,12 +190,10 @@ function CompanyForm({ company }: { company: Company }) {
           month: now.getMonth() + 1,
         })
       : '–';
-
-  const setBank = (i: number, patch: Partial<Bank>) =>
-    set(
-      'bankAccounts',
-      f.bankAccounts.map((b, idx) => (idx === i ? { ...b, ...patch } : b)),
-    );
+  // deep link from the nav ("บัญชีรับเงินบริษัท"): the card only exists once the company has loaded
+  useEffect(() => {
+    if (window.location.hash === `#${BANK_CARD_ID}`) document.getElementById(BANK_CARD_ID)?.scrollIntoView();
+  }, []);
 
   const prefixKeys = [
     ['quotation', 'quotation'],
@@ -415,98 +423,11 @@ function CompanyForm({ company }: { company: Company }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{t('settings.bankSection')}</CardTitle>
-          <CardDescription>{t('settings.bankHint')}</CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          {f.bankAccounts.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('settings.noBanks')}</p>
-          ) : null}
-          {f.bankAccounts.map((b, i) => (
-            <div
-              key={b.id}
-              className="grid gap-3 rounded-xl border p-3 sm:grid-cols-[9rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_2.75rem]"
-            >
-              <FormField label={t('settings.bankKind')}>
-                <Select value={b.kind} onValueChange={(v) => setBank(i, { kind: v as Bank['kind'] })}>
-                  <SelectTrigger aria-label={t('settings.bankKind')}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="bank">{t('settings.bank')}</SelectItem>
-                    <SelectItem value="promptpay">PromptPay</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormField>
-              <FormField label={b.kind === 'bank' ? t('settings.bankName') : t('settings.promptpayName')}>
-                <Input
-                  value={b.bankName ?? ''}
-                  aria-label={t('settings.bankName')}
-                  onChange={(e) => setBank(i, { bankName: e.target.value })}
-                />
-              </FormField>
-              <FormField label={t('settings.accountName')}>
-                <Input
-                  value={b.accountName ?? ''}
-                  aria-label={t('settings.accountName')}
-                  onChange={(e) => setBank(i, { accountName: e.target.value })}
-                />
-              </FormField>
-              <FormField
-                label={b.kind === 'bank' ? t('settings.accountNo') : t('settings.promptpayId')}
-                error={touched && b.accountNo.trim() === '' ? t('validation.required') : undefined}
-              >
-                <Input
-                  value={b.accountNo}
-                  aria-label={t('settings.accountNo')}
-                  onChange={(e) => setBank(i, { accountNo: e.target.value })}
-                />
-              </FormField>
-              <div className="flex items-end">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-destructive"
-                  aria-label={t('doc.line.remove')}
-                  onClick={() =>
-                    set(
-                      'bankAccounts',
-                      f.bankAccounts.filter((_, idx) => idx !== i),
-                    )
-                  }
-                >
-                  <Trash2 />
-                </Button>
-              </div>
-            </div>
-          ))}
-          <div>
-            <Button
-              type="button"
-              variant="outline"
-              blockedReason={f.bankAccounts.length >= 10 && t('settings.bankLimit')}
-              onClick={() =>
-                set('bankAccounts', [
-                  ...f.bankAccounts,
-                  {
-                    id: crypto.randomUUID().slice(0, 8),
-                    kind: 'bank',
-                    bankName: null,
-                    accountName: null,
-                    accountNo: '',
-                    branch: null,
-                  },
-                ])
-              }
-            >
-              <Plus /> {t('settings.addBank')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <BankAccountsCard
+        accounts={f.bankAccounts}
+        onChange={(next) => set('bankAccounts', next)}
+        showErrors={touched}
+      />
 
       <Card>
         <CardHeader>

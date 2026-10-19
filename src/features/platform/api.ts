@@ -175,10 +175,13 @@ export const useRubric = () =>
 
 export const useInvoices = (
   query: { status?: Invoice['status']; source?: Invoice['source']; tenantId?: string } = {},
+  /** Poll while mounted (the nav badge of slips waiting for review). */
+  refetchInterval?: number,
 ) =>
   useTenantQuery(
     [part, 'invoices', query],
     async () => (await unwrap(api.GET('/v1/platform/invoices', { params: { query } }))).data,
+    { refetchInterval },
   );
 
 export const useRevenue = (query: { from?: string; to?: string }, enabled = true) =>
@@ -339,6 +342,21 @@ export const useCreateInvoice = () =>
 export const usePatchInvoice = () =>
   useMut((v: { id: string; body: ApiBody<'/v1/platform/invoices/{id}', 'patch'> }) =>
     unwrap(api.PATCH('/v1/platform/invoices/{id}', { params: { path: { id: v.id } }, body: v.body })),
+  );
+
+export const useConfirmPayment = () =>
+  useMut((id: string) =>
+    unwrap(api.POST('/v1/platform/invoices/{id}/confirm-payment', { params: { path: { id } } })),
+  );
+
+export const useRejectSlip = () =>
+  useMut((v: { id: string; note: string }) =>
+    unwrap(
+      api.POST('/v1/platform/invoices/{id}/reject-slip', {
+        params: { path: { id: v.id } },
+        body: { note: v.note },
+      }),
+    ),
   );
 
 export const useGenerateInvoices = () =>

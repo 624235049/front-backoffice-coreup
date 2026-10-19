@@ -23,15 +23,38 @@ import { A4Link } from '@/features/accounting/components/a4-actions';
 import { downloadXlsx } from '@/features/accounting/lib/xlsx';
 import {
   type Invoice,
+  useConfirmPayment,
   useCreateInvoice,
   useGenerateInvoices,
   useInvoices,
   usePatchInvoice,
   useTenants,
 } from '../api';
-import { formatDate, formatMoney, parseBahtToMinor, todayBangkok, useIntlLocale } from '../format';
+import { SlipReviewSheet } from '../components/slip-review-sheet';
+import {
+  formatDate,
+  formatDateTime,
+  formatMoney,
+  parseBahtToMinor,
+  todayBangkok,
+  useIntlLocale,
+} from '../format';
+import { hasPendingSlip } from '../invoice-slip';
 
 const STATUSES = ['draft', 'issued', 'paid', 'overdue', 'void'] as const;
+const SLIP_FILTER = '__slip__';
+
+function SlipBadge({ invoice }: { invoice: Invoice }) {
+  const { t } = useTranslation('platform');
+  const locale = useIntlLocale();
+  if (!hasPendingSlip(invoice)) return null;
+  return (
+    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+      <Badge variant="warning">{t('invoices.slip.badge')}</Badge>
+      <span className="text-xs text-muted-foreground">{formatDateTime(invoice.slipUploadedAt, locale)}</span>
+    </div>
+  );
+}
 
 export function InvoiceStatusBadge({ status }: { status: Invoice['status'] }) {
   const { t } = useTranslation('platform');
@@ -53,27 +76,40 @@ export function InvoicesPage() {
   const [creating, setCreating] = useState(false);
   const [running, setRunning] = useState(false);
   const invoices = useInvoices({
-    status: status === '__all__' ? undefined : (status as Invoice['status']),
+    status: STATUSES.includes(status as Invoice['status']) ? (status as Invoice['status']) : undefined,
     source: source === '__all__' ? undefined : (source as Invoice['source']),
   });
   const patch = usePatchInvoice();
+  const confirm = useConfirmPayment();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
+  const [reviewing, setReviewing] = useState<Invoice | null>(null);
+  // "slips waiting" has no server filter: unpaid invoices that carry a slip
+  const visible = (rows: Invoice[]) => (status === SLIP_FILTER ? rows.filter(hasPendingSlip) : rows);
+
+  const markPaid = (i: Invoice) => {
+    const onSuccess = () => toast.success(t('invoices.paidToast', { number: i.number }));
+    // a package invoice must run settleInvoice (opens the plan, sets the period); PATCH only flips the status
+    if (i.source === 'subscription') confirm.mutate(i.id, { onSuccess });
+    else patch.mutate({ id: i.id, body: { status: 'paid' } }, { onSuccess });
+  };
 
   const rowActions = (i: Invoice) => (
     <>
       <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
+      {hasPendingSlip(i) ? (
+        <>
+          <Button size="sm" onClick={() => setReviewing(i)}>
+            {t('invoices.slip.review')}
+          </Button>{' '}
+        </>
+      ) : null}
       {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
         <>
           <Button
             size="sm"
             variant="outline"
-            disabled={patch.isPending}
-            onClick={() =>
-              patch.mutate(
-                { id: i.id, body: { status: 'paid' } },
-                { onSuccess: () => toast.success(t('invoices.paidToast', { number: i.number })) },
-              )
-            }
+            disabled={patch.isPending || confirm.isPending}
+            onClick={() => markPaid(i)}
           >
             {t('invoices.markPaid')}
           </Button>{' '}
@@ -163,6 +199,7 @@ export function InvoicesPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__">{t('invoices.allStatuses')}</SelectItem>
+            <SelectItem value={SLIP_FILTER}>{t('invoices.slipFilter')}</SelectItem>
             {STATUSES.map((s) => (
               <SelectItem key={s} value={s}>
                 {t(`invoiceStatus.${s}`)}
@@ -183,74 +220,84 @@ export function InvoicesPage() {
       </div>
       <QueryState
         query={invoices}
-        isEmpty={(rows) => rows.length === 0}
+        isEmpty={(all) => visible(all).length === 0}
         empty={
-          <EmptyState icon={Receipt} title={t('invoices.empty')} description={t('invoices.emptyHint')} />
+          <EmptyState
+            icon={Receipt}
+            title={status === SLIP_FILTER ? t('invoices.slipEmpty') : t('invoices.empty')}
+            description={t('invoices.emptyHint')}
+          />
         }
       >
-        {(rows) => (
-          <>
-            <ul className="grid gap-2 lg:hidden">
-              {rows.map((i) => (
-                <li key={i.id} className="rounded-lg border bg-card p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <div className="font-semibold">{i.tenantName}</div>
-                      <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
+        {(all) => {
+          const rows = visible(all);
+          return (
+            <>
+              <ul className="grid gap-2 lg:hidden">
+                {rows.map((i) => (
+                  <li key={i.id} className="rounded-lg border bg-card p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="font-semibold">{i.tenantName}</div>
+                        <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
+                      </div>
+                      <InvoiceStatusBadge status={i.status} />
                     </div>
-                    <InvoiceStatusBadge status={i.status} />
-                  </div>
-                  <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2 text-sm">
-                    <span className="text-lg font-semibold">{formatMoney(i.totalMinor, locale)}</span>
-                    <span className="text-muted-foreground">
-                      {t('invoices.col.due')} {formatDate(i.dueOn, locale)}
-                    </span>
-                  </div>
-                  <div className="mt-3 flex flex-wrap items-center gap-2">{rowActions(i)}</div>
-                </li>
-              ))}
-            </ul>
-            <div className="hidden overflow-x-auto rounded-lg border lg:block">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('invoices.col.number')}</TableHead>
-                    <TableHead>{t('invoices.col.shop')}</TableHead>
-                    <TableHead>{t('invoices.col.source')}</TableHead>
-                    <TableHead>{t('invoices.col.issued')}</TableHead>
-                    <TableHead>{t('invoices.col.due')}</TableHead>
-                    <TableHead className="text-right">{t('invoices.col.amount')}</TableHead>
-                    <TableHead className="text-right">{t('invoices.col.vat')}</TableHead>
-                    <TableHead className="text-right">{t('invoices.col.total')}</TableHead>
-                    <TableHead>{t('invoices.col.status')}</TableHead>
-                    <TableHead />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {rows.map((i) => (
-                    <TableRow key={i.id}>
-                      <TableCell className="font-mono text-xs">{i.number}</TableCell>
-                      <TableCell>{i.tenantName}</TableCell>
-                      <TableCell>{t(`invoiceSource.${i.source}`)}</TableCell>
-                      <TableCell>{formatDate(i.issuedOn, locale)}</TableCell>
-                      <TableCell>{formatDate(i.dueOn, locale)}</TableCell>
-                      <TableCell className="text-right">{formatMoney(i.amountMinor, locale)}</TableCell>
-                      <TableCell className="text-right">{formatMoney(i.vatMinor, locale)}</TableCell>
-                      <TableCell className="text-right font-medium">
-                        {formatMoney(i.totalMinor, locale)}
-                      </TableCell>
-                      <TableCell>
-                        <InvoiceStatusBadge status={i.status} />
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap text-right">{rowActions(i)}</TableCell>
+                    <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2 text-sm">
+                      <span className="text-lg font-semibold">{formatMoney(i.totalMinor, locale)}</span>
+                      <span className="text-muted-foreground">
+                        {t('invoices.col.due')} {formatDate(i.dueOn, locale)}
+                      </span>
+                    </div>
+                    <SlipBadge invoice={i} />
+                    <div className="mt-3 flex flex-wrap items-center gap-2">{rowActions(i)}</div>
+                  </li>
+                ))}
+              </ul>
+              <div className="hidden overflow-x-auto rounded-lg border lg:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('invoices.col.number')}</TableHead>
+                      <TableHead>{t('invoices.col.shop')}</TableHead>
+                      <TableHead>{t('invoices.col.source')}</TableHead>
+                      <TableHead>{t('invoices.col.issued')}</TableHead>
+                      <TableHead>{t('invoices.col.due')}</TableHead>
+                      <TableHead className="text-right">{t('invoices.col.amount')}</TableHead>
+                      <TableHead className="text-right">{t('invoices.col.vat')}</TableHead>
+                      <TableHead className="text-right">{t('invoices.col.total')}</TableHead>
+                      <TableHead>{t('invoices.col.status')}</TableHead>
+                      <TableHead />
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </>
-        )}
+                  </TableHeader>
+                  <TableBody>
+                    {rows.map((i) => (
+                      <TableRow key={i.id}>
+                        <TableCell className="font-mono text-xs">{i.number}</TableCell>
+                        <TableCell>{i.tenantName}</TableCell>
+                        <TableCell>{t(`invoiceSource.${i.source}`)}</TableCell>
+                        <TableCell>{formatDate(i.issuedOn, locale)}</TableCell>
+                        <TableCell>{formatDate(i.dueOn, locale)}</TableCell>
+                        <TableCell className="text-right">{formatMoney(i.amountMinor, locale)}</TableCell>
+                        <TableCell className="text-right">{formatMoney(i.vatMinor, locale)}</TableCell>
+                        <TableCell className="text-right font-medium">
+                          {formatMoney(i.totalMinor, locale)}
+                        </TableCell>
+                        <TableCell>
+                          <InvoiceStatusBadge status={i.status} />
+                          <SlipBadge invoice={i} />
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-right">{rowActions(i)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          );
+        }}
       </QueryState>
+      <SlipReviewSheet invoice={reviewing} onClose={() => setReviewing(null)} />
       <CreateInvoiceDialog open={creating} onOpenChange={setCreating} />
       <RunDialog open={running} onOpenChange={setRunning} />
       <Dialog open={voiding !== null} onOpenChange={(o) => !o && setVoiding(null)}>

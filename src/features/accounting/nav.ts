@@ -6,11 +6,13 @@ import {
   FileCheck2,
   FileMinus2,
   FileText,
+  Landmark,
   Package,
   ReceiptText,
   Wallet,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
+import { BANK_CARD_ID } from './lib/bank-accounts';
 
 const base = { permission: 'platform:accounting', module: 'platform', section: 'accounting' } as const;
 
@@ -25,4 +27,12 @@ export const navItems: NavItem[] = [
   { ...base, to: '/accounting/products', labelKey: 'nav:accProducts', icon: Package, order: 80 },
   { ...base, to: '/accounting/reports', labelKey: 'nav:accReports', icon: ChartColumn, order: 90 },
   { ...base, to: '/accounting/settings', labelKey: 'nav:accSettings', icon: Building2, order: 100 },
+  {
+    ...base,
+    to: '/accounting/settings',
+    hash: BANK_CARD_ID,
+    labelKey: 'nav:accBankAccounts',
+    icon: Landmark,
+    order: 105,
+  },
 ];

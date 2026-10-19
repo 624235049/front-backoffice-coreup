@@ -12,6 +12,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
+import { usePendingSlipCount } from './invoice-slip';
 import { useNewLeadBadge } from './new-lead-badge';
 
 export const navItems: NavItem[] = [
@@ -72,6 +73,8 @@ export const navItems: NavItem[] = [
     permission: 'platform:billing',
     module: 'platform',
     order: 60,
+    useBadge: usePendingSlipCount,
+    badgeLabel: 'slipCount',
   },
   {
     to: '/platform/revenue',

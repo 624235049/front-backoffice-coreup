@@ -29,6 +29,7 @@
   "usageReport": "รายงานการใช้งาน",
   "leads": "Lead",
   "newCount": "Lead ใหม่ {{count}}",
+  "slipCount": "สลิปรอตรวจ {{count}}",
   "engagements": "งานที่ปรึกษา",
   "audits": "ออดิท",
   "invoices": "ใบแจ้งหนี้",
@@ -45,6 +46,7 @@
   "accProducts": "สินค้า / บริการ",
   "accReports": "รายงานบัญชี",
   "accSettings": "ตั้งค่าบริษัท",
+  "accBankAccounts": "บัญชีรับเงินบริษัท",
   "users": "ผู้ใช้งาน",
   "plans": "แพ็กเกจ"
 }

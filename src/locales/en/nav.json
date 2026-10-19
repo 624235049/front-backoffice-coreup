@@ -29,6 +29,7 @@
   "usageReport": "Usage report",
   "leads": "Leads",
   "newCount": "{{count}} new leads",
+  "slipCount": "{{count}} slips to review",
   "engagements": "Engagements",
   "audits": "Audits",
   "invoices": "Invoices",
@@ -45,6 +46,7 @@
   "accProducts": "Products / services",
   "accReports": "Reports",
   "accSettings": "Company settings",
+  "accBankAccounts": "Company bank accounts",
   "users": "Users",
   "plans": "Plans"
 }

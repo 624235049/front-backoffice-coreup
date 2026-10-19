@@ -10,19 +10,32 @@ export function useNav() {
   return buildNav(allNavItems, m, mode);
 }
 
-function isActive(pathname: string, item: NavItem): boolean {
-  return item.exact ? pathname === item.to : pathname === item.to || pathname.startsWith(`${item.to}/`);
+function isActive(pathname: string, hash: string, item: NavItem): boolean {
+  if (item.hash) return pathname === item.to && hash === `#${item.hash}`;
+  const onPath = item.exact
+    ? pathname === item.to
+    : pathname === item.to || pathname.startsWith(`${item.to}/`);
+  // the plain entry stays inactive while a deep-link sibling of the same page owns the current hash
+  return onPath && !allNavItems.some((i) => i.to === item.to && i.hash && hash === `#${i.hash}`);
 }
 
 /** Red count on a nav item (e.g. new leads). The hook only runs while the item is visible. */
-function NavBadge({ useBadge, variant }: { useBadge: () => number; variant: 'sidebar' | 'bottom' }) {
+function NavBadge({
+  useBadge,
+  label,
+  variant,
+}: {
+  useBadge: () => number;
+  label: string;
+  variant: 'sidebar' | 'bottom';
+}) {
   const { t } = useTranslation('nav');
   const count = useBadge();
   if (count <= 0) return null;
   return (
     <span
       role="status"
-      aria-label={t('newCount', { count })}
+      aria-label={t(label, { count })}
       className={cn(
         'inline-flex min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[11px] leading-5 font-semibold text-white tabular-nums',
         variant === 'sidebar' ? 'ml-auto' : 'absolute top-1.5 left-1/2 ml-3',
@@ -44,11 +57,13 @@ export function NavLink({
 }) {
   const { t } = useTranslation();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const active = isActive(pathname, item);
+  const hash = useRouterState({ select: (s) => s.location.hash });
+  const active = isActive(pathname, hash, item);
   const Icon = item.icon;
   return (
     <Link
       to={item.to as never}
+      hash={item.hash}
       onClick={onNavigate}
       aria-current={active ? 'page' : undefined}
       className={cn(
@@ -66,7 +81,9 @@ export function NavLink({
     >
       <Icon className="size-5 shrink-0" aria-hidden />
       <span className="truncate">{t(item.labelKey)}</span>
-      {item.useBadge ? <NavBadge useBadge={item.useBadge} variant={variant} /> : null}
+      {item.useBadge ? (
+        <NavBadge useBadge={item.useBadge} label={item.badgeLabel ?? 'newCount'} variant={variant} />
+      ) : null}
     </Link>
   );
 }
@@ -85,7 +102,7 @@ export function NavList({ onNavigate }: { onNavigate?: () => void }) {
             </div>
           ) : null}
           {g.items.map((item) => (
-            <NavLink key={item.to} item={item} onNavigate={onNavigate} />
+            <NavLink key={`${item.to}#${item.hash ?? ''}`} item={item} onNavigate={onNavigate} />
           ))}
         </div>
       ))}

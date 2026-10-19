@@ -24,6 +24,9 @@
   "NETWORK": "Cannot reach the server. Check your connection and try again.",
   "UNKNOWN": "Something went wrong. Please try again.",
   "reason": {
+    "invoice_not_open": "This invoice is already paid or void. Refresh to see its latest status",
+    "no_slip": "This invoice has no slip waiting for review. Refresh the page",
+    "promptpay_id_invalid": "PromptPay ID is not valid: use a 10-digit mobile starting 06–09, or a 13-digit ID with a correct check digit",
     "plan_code_taken": "This plan code is already used. Pick another code",
     "total_must_be_positive": "The total must be more than 0. Add a priced line",
     "calc_invalid": "The amounts cannot be calculated. Check quantity, price and discount",

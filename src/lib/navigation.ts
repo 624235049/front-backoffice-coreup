@@ -33,6 +33,10 @@ export type NavItem = {
   exact?: boolean;
   /** React hook returning a count shown as a red badge on the item (hidden at 0). Only called while the item is visible. */
   useBadge?: () => number;
+  /** i18n key in the `nav` namespace for the badge's accessible label (receives `{{count}}`). Default `newCount`. */
+  badgeLabel?: string;
+  /** Deep link into a section of the page (`/accounting/settings#<hash>`): only active while that hash is open. */
+  hash?: string;
 };
 
 const modules = import.meta.glob<{ navItems?: NavItem[] }>('../features/*/nav.ts', { eager: true });
