@@ -1107,6 +1107,12 @@
                             "type": "string",
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                           },
+                          "photoUrl": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "roles": {
                             "type": "array",
                             "items": {
@@ -1144,6 +1150,7 @@
                         "required": [
                           "tenant",
                           "memberId",
+                          "photoUrl",
                           "roles",
                           "permissions",
                           "branchIds",
@@ -1317,7 +1324,8 @@
                               "appointment_soon",
                               "booking_new",
                               "booking_cancelled",
-                              "low_stock"
+                              "low_stock",
+                              "system"
                             ]
                           },
                           "title": {
@@ -8167,9 +8175,37 @@
                               }
                             }
                           },
+                          "photoFileId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "photoUrl": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "customFields": {
                             "type": "object",
                             "additionalProperties": {}
+                          },
+                          "hasLogin": {
+                            "type": "boolean"
+                          },
+                          "loginEmail": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "pendingInviteExpiresAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
                           },
                           "createdAt": {
                             "type": "string"
@@ -8193,7 +8229,12 @@
                           "branchIds",
                           "bookable",
                           "weeklyHours",
+                          "photoFileId",
+                          "photoUrl",
                           "customFields",
+                          "hasLogin",
+                          "loginEmail",
+                          "pendingInviteExpiresAt",
                           "createdAt",
                           "updatedAt"
                         ]
@@ -8504,9 +8545,37 @@
                             }
                           }
                         },
+                        "photoFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "photoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "hasLogin": {
+                          "type": "boolean"
+                        },
+                        "loginEmail": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pendingInviteExpiresAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "createdAt": {
                           "type": "string"
@@ -8530,7 +8599,12 @@
                         "branchIds",
                         "bookable",
                         "weeklyHours",
+                        "photoFileId",
+                        "photoUrl",
                         "customFields",
+                        "hasLogin",
+                        "loginEmail",
+                        "pendingInviteExpiresAt",
                         "createdAt",
                         "updatedAt"
                       ]
@@ -8754,9 +8828,37 @@
                             }
                           }
                         },
+                        "photoFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "photoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "hasLogin": {
+                          "type": "boolean"
+                        },
+                        "loginEmail": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pendingInviteExpiresAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "createdAt": {
                           "type": "string"
@@ -8780,7 +8882,12 @@
                         "branchIds",
                         "bookable",
                         "weeklyHours",
+                        "photoFileId",
+                        "photoUrl",
                         "customFields",
+                        "hasLogin",
+                        "loginEmail",
+                        "pendingInviteExpiresAt",
                         "createdAt",
                         "updatedAt"
                       ]
@@ -8989,6 +9096,13 @@
                         ]
                       }
                     }
+                  },
+                  "photoFileId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   }
                 }
               }
@@ -9110,9 +9224,37 @@
                             }
                           }
                         },
+                        "photoFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "photoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "hasLogin": {
+                          "type": "boolean"
+                        },
+                        "loginEmail": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pendingInviteExpiresAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "createdAt": {
                           "type": "string"
@@ -9136,7 +9278,320 @@
                         "branchIds",
                         "bookable",
                         "weeklyHours",
+                        "photoFileId",
+                        "photoUrl",
                         "customFields",
+                        "hasLogin",
+                        "loginEmail",
+                        "pendingInviteExpiresAt",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/photo": {
+      "put": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Set or remove my own profile photo (a `staff_photo` file; null removes it)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  }
+                },
+                "required": [
+                  "fileId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "My updated member record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "userId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "positionId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "employmentType": {
+                          "type": "string",
+                          "enum": [
+                            "full",
+                            "part",
+                            "freelance",
+                            "owner"
+                          ]
+                        },
+                        "startedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "endedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "invited",
+                            "active",
+                            "inactive"
+                          ]
+                        },
+                        "reportsToMembershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "roleIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
+                        },
+                        "roles": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "branchIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
+                        },
+                        "bookable": {
+                          "type": "boolean"
+                        },
+                        "weeklyHours": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "photoFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "photoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "customFields": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "hasLogin": {
+                          "type": "boolean"
+                        },
+                        "loginEmail": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pendingInviteExpiresAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "userId",
+                        "displayName",
+                        "positionId",
+                        "employmentType",
+                        "startedOn",
+                        "endedOn",
+                        "status",
+                        "reportsToMembershipId",
+                        "roleIds",
+                        "roles",
+                        "branchIds",
+                        "bookable",
+                        "weeklyHours",
+                        "photoFileId",
+                        "photoUrl",
+                        "customFields",
+                        "hasLogin",
+                        "loginEmail",
+                        "pendingInviteExpiresAt",
                         "createdAt",
                         "updatedAt"
                       ]
@@ -9372,9 +9827,37 @@
                             }
                           }
                         },
+                        "photoFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "photoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "customFields": {
                           "type": "object",
                           "additionalProperties": {}
+                        },
+                        "hasLogin": {
+                          "type": "boolean"
+                        },
+                        "loginEmail": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pendingInviteExpiresAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
                         "createdAt": {
                           "type": "string"
@@ -9398,7 +9881,12 @@
                         "branchIds",
                         "bookable",
                         "weeklyHours",
+                        "photoFileId",
+                        "photoUrl",
                         "customFields",
+                        "hasLogin",
+                        "loginEmail",
+                        "pendingInviteExpiresAt",
                         "createdAt",
                         "updatedAt"
                       ]
@@ -9674,6 +10162,470 @@
         }
       }
     },
+    "/v1/members/{id}/invite": {
+      "post": {
+        "tags": [
+          "invites"
+        ],
+        "summary": "Login link for a staff member added without a login (accepting attaches the user to this member)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Invite (token shown once)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "token": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/members/{id}/login": {
+      "post": {
+        "tags": [
+          "invites"
+        ],
+        "summary": "Give a staff member without a login an email + password (an email that already has an account is attached as is)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "maxLength": 254,
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Login attached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "email"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/members/{id}/password": {
+      "post": {
+        "tags": [
+          "invites"
+        ],
+        "summary": "Set a new password for a staff login (accounts of this shop only, not an owner's); signs them out everywhere",
+        "description": "Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "email"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/invites/{token}": {
       "get": {
         "tags": [
@@ -9750,6 +10702,9 @@
                         },
                         "accepted": {
                           "type": "boolean"
+                        },
+                        "existingMember": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -9758,7 +10713,8 @@
                         "positionName",
                         "roleNames",
                         "expiresAt",
-                        "accepted"
+                        "accepted",
+                        "existingMember"
                       ]
                     }
                   },
@@ -14827,6 +15783,368 @@
                         "finance",
                         "engagements"
                       ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/tenants/{id}/limits": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Shop quotas: package value, the team's override, effective value and current usage (`null` = unlimited)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string",
+                            "enum": [
+                              "branches",
+                              "members",
+                              "customers",
+                              "messages_per_month"
+                            ]
+                          },
+                          "plan": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "override": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "effective": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "used": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "plan",
+                          "override",
+                          "effective",
+                          "used"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Set one shop quota override (`value` ≥ 0, or -1 = unlimited); `null` removes it so the package value applies again",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "enum": [
+                      "branches",
+                      "members",
+                      "customers",
+                      "messages_per_month"
+                    ]
+                  },
+                  "value": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": -1
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "key": {
+                            "type": "string",
+                            "enum": [
+                              "branches",
+                              "members",
+                              "customers",
+                              "messages_per_month"
+                            ]
+                          },
+                          "plan": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "override": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "effective": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          },
+                          "used": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "plan",
+                          "override",
+                          "effective",
+                          "used"
+                        ]
+                      }
                     }
                   },
                   "required": [
@@ -134468,6 +135786,12 @@
                                   "null"
                                 ]
                               },
+                              "practitionerPhotoUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "canConfirm": {
                                 "type": "boolean"
                               },
@@ -134531,6 +135855,29 @@
                                       "null"
                                     ],
                                     "properties": {
+                                      "bankCode": {
+                                        "type": "string",
+                                        "enum": [
+                                          "KBANK",
+                                          "SCB",
+                                          "BBL",
+                                          "KTB",
+                                          "BAY",
+                                          "TTB",
+                                          "GSB",
+                                          "BAAC",
+                                          "GHB",
+                                          "KKP",
+                                          "CIMB",
+                                          "UOB",
+                                          "LHB",
+                                          "TISCO",
+                                          "ICBC",
+                                          "TCR",
+                                          "IBANK",
+                                          "PROMPTPAY"
+                                        ]
+                                      },
                                       "bankName": {
                                         "type": "string",
                                         "minLength": 1,
@@ -134599,6 +135946,7 @@
                               "branchName",
                               "branchMapUrl",
                               "practitionerName",
+                              "practitionerPhotoUrl",
                               "canConfirm",
                               "canReschedule",
                               "memberId",
@@ -134682,6 +136030,12 @@
                                   "null"
                                 ]
                               },
+                              "practitionerPhotoUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "canConfirm": {
                                 "type": "boolean"
                               },
@@ -134745,6 +136099,29 @@
                                       "null"
                                     ],
                                     "properties": {
+                                      "bankCode": {
+                                        "type": "string",
+                                        "enum": [
+                                          "KBANK",
+                                          "SCB",
+                                          "BBL",
+                                          "KTB",
+                                          "BAY",
+                                          "TTB",
+                                          "GSB",
+                                          "BAAC",
+                                          "GHB",
+                                          "KKP",
+                                          "CIMB",
+                                          "UOB",
+                                          "LHB",
+                                          "TISCO",
+                                          "ICBC",
+                                          "TCR",
+                                          "IBANK",
+                                          "PROMPTPAY"
+                                        ]
+                                      },
                                       "bankName": {
                                         "type": "string",
                                         "minLength": 1,
@@ -134813,6 +136190,7 @@
                               "branchName",
                               "branchMapUrl",
                               "practitionerName",
+                              "practitionerPhotoUrl",
                               "canConfirm",
                               "canReschedule",
                               "memberId",
@@ -135179,6 +136557,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -135242,6 +136626,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -135310,6 +136717,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -135527,6 +136935,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -135590,6 +137004,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -135658,6 +137095,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -135872,6 +137310,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -135935,6 +137379,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -136003,6 +137470,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -136719,6 +138187,37 @@
                           },
                           "maxItems": 3
                         },
+                        "appearance": {
+                          "type": "object",
+                          "properties": {
+                            "background": {
+                              "type": "string",
+                              "enum": [
+                                "default",
+                                "color",
+                                "image"
+                              ]
+                            },
+                            "backgroundColor": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^#[0-9A-Fa-f]{6}$"
+                            },
+                            "backgroundUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "background",
+                            "backgroundColor",
+                            "backgroundUrl"
+                          ]
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -136884,6 +138383,7 @@
                         "policyText",
                         "coverUrl",
                         "highlights",
+                        "appearance",
                         "autoConfirm",
                         "deposit",
                         "terms",
@@ -138079,6 +139579,12 @@
                                 "null"
                               ]
                             },
+                            "practitionerPhotoUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
                             "canConfirm": {
                               "type": "boolean"
                             },
@@ -138142,6 +139648,29 @@
                                     "null"
                                   ],
                                   "properties": {
+                                    "bankCode": {
+                                      "type": "string",
+                                      "enum": [
+                                        "KBANK",
+                                        "SCB",
+                                        "BBL",
+                                        "KTB",
+                                        "BAY",
+                                        "TTB",
+                                        "GSB",
+                                        "BAAC",
+                                        "GHB",
+                                        "KKP",
+                                        "CIMB",
+                                        "UOB",
+                                        "LHB",
+                                        "TISCO",
+                                        "ICBC",
+                                        "TCR",
+                                        "IBANK",
+                                        "PROMPTPAY"
+                                      ]
+                                    },
                                     "bankName": {
                                       "type": "string",
                                       "minLength": 1,
@@ -138210,6 +139739,7 @@
                             "branchName",
                             "branchMapUrl",
                             "practitionerName",
+                            "practitionerPhotoUrl",
                             "canConfirm",
                             "canReschedule",
                             "memberId",
@@ -138322,6 +139852,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -138588,6 +140141,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -138651,6 +140210,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -138719,6 +140301,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -139119,6 +140702,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -139182,6 +140771,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -139250,6 +140862,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -139518,6 +141131,12 @@
                                 "null"
                               ]
                             },
+                            "practitionerPhotoUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
                             "canConfirm": {
                               "type": "boolean"
                             },
@@ -139581,6 +141200,29 @@
                                     "null"
                                   ],
                                   "properties": {
+                                    "bankCode": {
+                                      "type": "string",
+                                      "enum": [
+                                        "KBANK",
+                                        "SCB",
+                                        "BBL",
+                                        "KTB",
+                                        "BAY",
+                                        "TTB",
+                                        "GSB",
+                                        "BAAC",
+                                        "GHB",
+                                        "KKP",
+                                        "CIMB",
+                                        "UOB",
+                                        "LHB",
+                                        "TISCO",
+                                        "ICBC",
+                                        "TCR",
+                                        "IBANK",
+                                        "PROMPTPAY"
+                                      ]
+                                    },
                                     "bankName": {
                                       "type": "string",
                                       "minLength": 1,
@@ -139649,6 +141291,7 @@
                             "branchName",
                             "branchMapUrl",
                             "practitionerName",
+                            "practitionerPhotoUrl",
                             "canConfirm",
                             "canReschedule",
                             "memberId",
@@ -139867,6 +141510,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -139930,6 +141579,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -139998,6 +141670,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -140223,6 +141896,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -140286,6 +141965,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -140354,6 +142056,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -140774,6 +142477,12 @@
                             "null"
                           ]
                         },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "canConfirm": {
                           "type": "boolean"
                         },
@@ -140837,6 +142546,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -140905,6 +142637,7 @@
                         "branchName",
                         "branchMapUrl",
                         "practitionerName",
+                        "practitionerPhotoUrl",
                         "canConfirm",
                         "canReschedule",
                         "memberId",
@@ -141077,6 +142810,45 @@
                           },
                           "maxItems": 3
                         },
+                        "appearance": {
+                          "type": "object",
+                          "properties": {
+                            "background": {
+                              "type": "string",
+                              "enum": [
+                                "default",
+                                "color",
+                                "image"
+                              ]
+                            },
+                            "backgroundColor": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^#[0-9A-Fa-f]{6}$"
+                            },
+                            "backgroundFileId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "backgroundUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "background",
+                            "backgroundColor",
+                            "backgroundFileId",
+                            "backgroundUrl"
+                          ]
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -141176,6 +142948,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -141196,9 +142991,6 @@
                                 "accountNumber",
                                 "accountName"
                               ]
-                            },
-                            "available": {
-                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -141206,8 +142998,7 @@
                             "mode",
                             "amountMinor",
                             "percent",
-                            "bank",
-                            "available"
+                            "bank"
                           ]
                         }
                       },
@@ -141218,6 +143009,7 @@
                         "coverFileId",
                         "coverUrl",
                         "highlights",
+                        "appearance",
                         "autoConfirm",
                         "terms",
                         "rules",
@@ -141389,6 +143181,38 @@
                     },
                     "maxItems": 3
                   },
+                  "appearance": {
+                    "type": "object",
+                    "properties": {
+                      "background": {
+                        "type": "string",
+                        "enum": [
+                          "default",
+                          "color",
+                          "image"
+                        ]
+                      },
+                      "backgroundColor": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^#[0-9A-Fa-f]{6}$"
+                      },
+                      "backgroundFileId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                      }
+                    },
+                    "required": [
+                      "background",
+                      "backgroundColor",
+                      "backgroundFileId"
+                    ]
+                  },
                   "autoConfirm": {
                     "type": "boolean"
                   },
@@ -141480,6 +143304,29 @@
                           "null"
                         ],
                         "properties": {
+                          "bankCode": {
+                            "type": "string",
+                            "enum": [
+                              "KBANK",
+                              "SCB",
+                              "BBL",
+                              "KTB",
+                              "BAY",
+                              "TTB",
+                              "GSB",
+                              "BAAC",
+                              "GHB",
+                              "KKP",
+                              "CIMB",
+                              "UOB",
+                              "LHB",
+                              "TISCO",
+                              "ICBC",
+                              "TCR",
+                              "IBANK",
+                              "PROMPTPAY"
+                            ]
+                          },
                           "bankName": {
                             "type": "string",
                             "minLength": 1,
@@ -141594,6 +143441,45 @@
                           },
                           "maxItems": 3
                         },
+                        "appearance": {
+                          "type": "object",
+                          "properties": {
+                            "background": {
+                              "type": "string",
+                              "enum": [
+                                "default",
+                                "color",
+                                "image"
+                              ]
+                            },
+                            "backgroundColor": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^#[0-9A-Fa-f]{6}$"
+                            },
+                            "backgroundFileId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "backgroundUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "background",
+                            "backgroundColor",
+                            "backgroundFileId",
+                            "backgroundUrl"
+                          ]
+                        },
                         "autoConfirm": {
                           "type": "boolean"
                         },
@@ -141693,6 +143579,29 @@
                                 "null"
                               ],
                               "properties": {
+                                "bankCode": {
+                                  "type": "string",
+                                  "enum": [
+                                    "KBANK",
+                                    "SCB",
+                                    "BBL",
+                                    "KTB",
+                                    "BAY",
+                                    "TTB",
+                                    "GSB",
+                                    "BAAC",
+                                    "GHB",
+                                    "KKP",
+                                    "CIMB",
+                                    "UOB",
+                                    "LHB",
+                                    "TISCO",
+                                    "ICBC",
+                                    "TCR",
+                                    "IBANK",
+                                    "PROMPTPAY"
+                                  ]
+                                },
                                 "bankName": {
                                   "type": "string",
                                   "minLength": 1,
@@ -141713,9 +143622,6 @@
                                 "accountNumber",
                                 "accountName"
                               ]
-                            },
-                            "available": {
-                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -141723,8 +143629,7 @@
                             "mode",
                             "amountMinor",
                             "percent",
-                            "bank",
-                            "available"
+                            "bank"
                           ]
                         }
                       },
@@ -141735,6 +143640,7 @@
                         "coverFileId",
                         "coverUrl",
                         "highlights",
+                        "appearance",
                         "autoConfirm",
                         "terms",
                         "rules",
@@ -143265,7 +145171,7 @@
           "online-booking"
         ],
         "summary": "Deposits asked by LINE bookings, newest first (filter by status to get the slips to check)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `core`.",
         "security": [
           {
             "cookieAuth": []
@@ -143485,7 +145391,7 @@
           "online-booking"
         ],
         "summary": "The money arrived: record the deposit and confirm the booking",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -143724,7 +145630,7 @@
           "online-booking"
         ],
         "summary": "The slip is not right: tell the customer why; they can upload another one",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []

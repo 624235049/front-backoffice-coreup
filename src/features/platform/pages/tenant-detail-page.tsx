@@ -10,7 +10,6 @@ import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,7 +25,6 @@ import {
   usePatchTenant,
   usePlans,
   useRemoveAssignment,
-  useSetModules,
   useTeam,
   useTenant,
   useTenantReport,
@@ -36,12 +34,10 @@ import {
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
+import { LimitsCard } from '../components/limits-card';
+import { ModulesCard } from '../components/modules-card';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
-import { SHOP_MODULES } from '../plans';
-
-/** Modules a consultant can switch on per shop (`core` is always on). */
-const MODULE_KEYS = SHOP_MODULES.filter((k) => k !== 'core');
 
 export function TenantDetailPage() {
   const { id } = useParams({ from: '/_app/platform/tenants/$id' });
@@ -138,26 +134,8 @@ function OverviewTab({ d }: { d: TenantDetail }) {
   const patch = usePatchTenant(d.id);
   const plans = usePlans();
   const planLabel = usePlanLabel();
-  const setModules = useSetModules(d.id);
   const [notes, setNotes] = useState(d.notes);
   const [pendingStatus, setPendingStatus] = useState<TenantDetail['status'] | null>(null);
-  const enabled = new Set(d.modules.map((m) => m.key));
-
-  const toggleModule = (key: string, on: boolean) => {
-    const next = new Set(enabled);
-    if (on) next.add(key);
-    else next.delete(key);
-    const sources = new Map(d.modules.map((m) => [m.key, m]));
-    setModules.mutate({
-      modules: [...next]
-        .filter((k) => k !== 'core')
-        .map((k) => ({
-          key: k as (typeof MODULE_KEYS)[number],
-          source: sources.get(k)?.source ?? 'consultant',
-          enabledUntil: sources.get(k)?.enabledUntil ?? null,
-        })),
-    });
-  };
 
   return (
     <div className="grid gap-4">
@@ -234,35 +212,8 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           <Field label={t('detail.created')}>{formatDate(d.createdAt, locale)}</Field>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{t('detail.modules')}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {canWrite ? null : (
-            <p className="text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">
-              {t('detail.readOnlyHint')}
-            </p>
-          )}
-          {MODULE_KEYS.map((k) => (
-            <label key={k} htmlFor={`module-${k}`} className="flex min-h-11 items-center gap-2 text-sm">
-              <Checkbox
-                id={`module-${k}`}
-                checked={enabled.has(k)}
-                disabled={!canWrite || setModules.isPending}
-                onCheckedChange={(on) => toggleModule(k, on === true)}
-                aria-label={t(`module.${k}`)}
-              />
-              {t(`module.${k}`)}
-              {enabled.has(k) ? (
-                <Badge variant="outline">
-                  {t(`moduleSource.${d.modules.find((m) => m.key === k)?.source ?? 'plan'}`)}
-                </Badge>
-              ) : null}
-            </label>
-          ))}
-        </CardContent>
-      </Card>
+      <ModulesCard d={d} />
+      <LimitsCard id={d.id} />
       <DemoDataCard d={d} />
       <Card>
         <CardHeader>

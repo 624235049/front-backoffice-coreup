@@ -750,6 +750,7 @@ export interface paths {
                                     uiMode: "simple" | "full";
                                 };
                                 memberId: string;
+                                photoUrl: string | null;
                                 roles: string[];
                                 permissions: string[];
                                 branchIds: string[];
@@ -872,7 +873,7 @@ export interface paths {
                             data: {
                                 id: string;
                                 /** @enum {string} */
-                                kind: "appointment_soon" | "booking_new" | "booking_cancelled" | "low_stock";
+                                kind: "appointment_soon" | "booking_new" | "booking_cancelled" | "low_stock" | "system";
                                 title: string;
                                 body: string | null;
                                 url: string | null;
@@ -5057,9 +5058,14 @@ export interface paths {
                                         string
                                     ][];
                                 } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                             }[];
@@ -5202,9 +5208,14 @@ export interface paths {
                                         string
                                     ][];
                                 } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -5333,9 +5344,14 @@ export interface paths {
                                         string
                                     ][];
                                 } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -5451,6 +5467,7 @@ export interface paths {
                                 string
                             ][];
                         } | null;
+                        photoFileId?: string | null;
                     };
                 };
             };
@@ -5484,9 +5501,14 @@ export interface paths {
                                         string
                                     ][];
                                 } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -5560,6 +5582,153 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/me/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set or remove my own profile photo (a `staff_photo` file; null removes it)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description My updated member record */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                userId: string | null;
+                                displayName: string;
+                                positionId: string | null;
+                                /** @enum {string} */
+                                employmentType: "full" | "part" | "freelance" | "owner";
+                                startedOn: string | null;
+                                endedOn: string | null;
+                                /** @enum {string} */
+                                status: "invited" | "active" | "inactive";
+                                reportsToMembershipId: string | null;
+                                roleIds: string[];
+                                roles: string[];
+                                branchIds: string[];
+                                bookable: boolean;
+                                weeklyHours: {
+                                    [key: string]: [
+                                        string,
+                                        string
+                                    ][];
+                                } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
+                                customFields: {
+                                    [key: string]: unknown;
+                                };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
+                                createdAt: string;
+                                updatedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/members/{id}/deactivate": {
         parameters: {
             query?: never;
@@ -5618,9 +5787,14 @@ export interface paths {
                                         string
                                     ][];
                                 } | null;
+                                photoFileId: string | null;
+                                photoUrl: string | null;
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                hasLogin: boolean;
+                                loginEmail: string | null;
+                                pendingInviteExpiresAt: string | null;
                                 createdAt: string;
                                 updatedAt: string;
                             };
@@ -5824,6 +5998,362 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/members/{id}/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Login link for a staff member added without a login (accepting attaches the user to this member)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Invite (token shown once) */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                token: string;
+                                url: string;
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/members/{id}/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Give a staff member without a login an email + password (an email that already has an account is attached as is)
+         * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: email */
+                        email: string;
+                        password: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Login attached */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                email: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/members/{id}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set a new password for a staff login (accounts of this shop only, not an owner's); signs them out everywhere
+         * @description Requires header `X-Tenant-Id`. Permission: `members:invite`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        password: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Password set */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                email: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/invites/{token}": {
         parameters: {
             query?: never;
@@ -5864,6 +6394,7 @@ export interface paths {
                                 roleNames: string[];
                                 expiresAt: string;
                                 accepted: boolean;
+                                existingMember: boolean;
                             };
                         };
                     };
@@ -8216,6 +8747,229 @@ export interface paths {
                                     tasksDone: number;
                                 }[];
                             };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shop quotas: package value, the team's override, effective value and current usage (`null` = unlimited)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Limits */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                key: "branches" | "members" | "customers" | "messages_per_month";
+                                plan: number | null;
+                                override: number | null;
+                                effective: number | null;
+                                used: number | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Set one shop quota override (`value` ≥ 0, or -1 = unlimited); `null` removes it so the package value applies again
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        key: "branches" | "members" | "customers" | "messages_per_month";
+                        value: number | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                key: "branches" | "members" | "customers" | "messages_per_month";
+                                plan: number | null;
+                                override: number | null;
+                                effective: number | null;
+                                used: number | null;
+                            }[];
                         };
                     };
                 };
@@ -65432,6 +66186,7 @@ export interface paths {
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
+                                    practitionerPhotoUrl: string | null;
                                     canConfirm: boolean;
                                     canReschedule: boolean;
                                     memberId: string | null;
@@ -65445,6 +66200,8 @@ export interface paths {
                                             accountName: string | null;
                                         } | null;
                                         bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                             bankName: string;
                                             accountNumber: string;
                                             accountName: string;
@@ -65472,6 +66229,7 @@ export interface paths {
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
+                                    practitionerPhotoUrl: string | null;
                                     canConfirm: boolean;
                                     canReschedule: boolean;
                                     memberId: string | null;
@@ -65485,6 +66243,8 @@ export interface paths {
                                             accountName: string | null;
                                         } | null;
                                         bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                             bankName: string;
                                             accountNumber: string;
                                             accountName: string;
@@ -65738,6 +66498,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -65751,6 +66512,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -65891,6 +66654,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -65904,6 +66668,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -66043,6 +66809,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -66056,6 +66823,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -66532,6 +67301,12 @@ export interface paths {
                                     icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
                                     label: string;
                                 }[];
+                                appearance: {
+                                    /** @enum {string} */
+                                    background: "default" | "color" | "image";
+                                    backgroundColor: string | null;
+                                    backgroundUrl: string | null;
+                                };
                                 autoConfirm: boolean;
                                 deposit: {
                                     /** @enum {string} */
@@ -67299,6 +68074,7 @@ export interface paths {
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
+                                    practitionerPhotoUrl: string | null;
                                     canConfirm: boolean;
                                     canReschedule: boolean;
                                     memberId: string | null;
@@ -67312,6 +68088,8 @@ export interface paths {
                                             accountName: string | null;
                                         } | null;
                                         bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                             bankName: string;
                                             accountNumber: string;
                                             accountName: string;
@@ -67345,6 +68123,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -67482,6 +68262,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -67495,6 +68276,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -67758,6 +68541,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -67771,6 +68555,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -67920,6 +68706,7 @@ export interface paths {
                                     branchName: string;
                                     branchMapUrl: string | null;
                                     practitionerName: string | null;
+                                    practitionerPhotoUrl: string | null;
                                     canConfirm: boolean;
                                     canReschedule: boolean;
                                     memberId: string | null;
@@ -67933,6 +68720,8 @@ export interface paths {
                                             accountName: string | null;
                                         } | null;
                                         bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                             bankName: string;
                                             accountNumber: string;
                                             accountName: string;
@@ -68068,6 +68857,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -68081,6 +68871,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -68224,6 +69016,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -68237,6 +69030,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -68504,6 +69299,7 @@ export interface paths {
                                 branchName: string;
                                 branchMapUrl: string | null;
                                 practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
                                 canConfirm: boolean;
                                 canReschedule: boolean;
                                 memberId: string | null;
@@ -68517,6 +69313,8 @@ export interface paths {
                                         accountName: string | null;
                                     } | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
@@ -68640,6 +69438,13 @@ export interface paths {
                                     icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
                                     label: string;
                                 }[];
+                                appearance: {
+                                    /** @enum {string} */
+                                    background: "default" | "color" | "image";
+                                    backgroundColor: string | null;
+                                    backgroundFileId: string | null;
+                                    backgroundUrl: string | null;
+                                };
                                 autoConfirm: boolean;
                                 terms: {
                                     required: boolean;
@@ -68661,11 +69466,12 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
                                     } | null;
-                                    available: boolean;
                                 };
                             };
                         };
@@ -68764,6 +69570,12 @@ export interface paths {
                             icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
                             label: string;
                         }[];
+                        appearance?: {
+                            /** @enum {string} */
+                            background: "default" | "color" | "image";
+                            backgroundColor: string | null;
+                            backgroundFileId: string | null;
+                        };
                         autoConfirm: boolean;
                         terms: {
                             required: boolean;
@@ -68783,6 +69595,8 @@ export interface paths {
                             amountMinor: number | null;
                             percent: number | null;
                             bank?: {
+                                /** @enum {string} */
+                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                 bankName: string;
                                 accountNumber: string;
                                 accountName: string;
@@ -68810,6 +69624,13 @@ export interface paths {
                                     icon: "leaf" | "sparkles" | "heart" | "star" | "shield-check" | "clock" | "award" | "smile";
                                     label: string;
                                 }[];
+                                appearance: {
+                                    /** @enum {string} */
+                                    background: "default" | "color" | "image";
+                                    backgroundColor: string | null;
+                                    backgroundFileId: string | null;
+                                    backgroundUrl: string | null;
+                                };
                                 autoConfirm: boolean;
                                 terms: {
                                     required: boolean;
@@ -68831,11 +69652,12 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                     bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
                                         bankName: string;
                                         accountNumber: string;
                                         accountName: string;
                                     } | null;
-                                    available: boolean;
                                 };
                             };
                         };
@@ -69937,7 +70759,7 @@ export interface paths {
         };
         /**
          * Deposits asked by LINE bookings, newest first (filter by status to get the slips to check)
-         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -70063,7 +70885,7 @@ export interface paths {
         put?: never;
         /**
          * The money arrived: record the deposit and confirm the booking
-         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -70202,7 +71024,7 @@ export interface paths {
         put?: never;
         /**
          * The slip is not right: tell the customer why; they can upload another one
-         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */

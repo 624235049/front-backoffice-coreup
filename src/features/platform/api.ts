@@ -15,6 +15,7 @@ export type Plan = ListItem<ApiData<'/v1/platform/plans'>>;
 export type Lead = ListItem<ApiData<'/v1/platform/leads'>>;
 export type LeadDetail = ApiItem<'/v1/platform/leads/{id}'>;
 export type LeadStage = Lead['stage'];
+export type TenantLimit = ListItem<ApiData<'/v1/platform/tenants/{id}/limits'>>;
 export type Engagement = ListItem<ApiData<'/v1/platform/engagements'>>;
 export type EngagementTask = ListItem<ApiData<'/v1/platform/engagements/{id}/tasks'>>;
 export type Audit = ListItem<ApiData<'/v1/platform/audits'>>;
@@ -66,6 +67,13 @@ export const useAccessLog = (id: string) =>
     [part, 'tenant', id, 'access'],
     async () =>
       (await unwrap(api.GET('/v1/platform/tenants/{id}/access-log', { params: { path: { id } } }))).data,
+  );
+
+export const useTenantLimits = (id: string) =>
+  useTenantQuery(
+    [part, 'tenant', id, 'limits'],
+    async () =>
+      (await unwrap(api.GET('/v1/platform/tenants/{id}/limits', { params: { path: { id } } }))).data,
   );
 
 export const useTenantUsage = (id: string) =>
@@ -205,6 +213,11 @@ export const usePatchTenant = (id: string) =>
 export const useSetModules = (id: string) =>
   useMut((body: ApiBody<'/v1/platform/tenants/{id}/modules', 'put'>) =>
     unwrap(api.PUT('/v1/platform/tenants/{id}/modules', { params: { path: { id } }, body })),
+  );
+
+export const useSetTenantLimit = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/limits', 'put'>) =>
+    unwrap(api.PUT('/v1/platform/tenants/{id}/limits', { params: { path: { id } }, body })),
   );
 
 export const useFillDemoData = (id: string) =>

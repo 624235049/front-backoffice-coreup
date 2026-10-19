@@ -44,7 +44,7 @@
     "reports": "Reports",
     "approvals": "Approvals",
     "payouts": "Payouts",
-    "checkout": "Checkout",
+    "checkout": "Checkout (POS)",
     "inventory": "Products & stock",
     "kpi": "KPI",
     "core": "Core",
@@ -56,6 +56,23 @@
     "addon": "Add-on",
     "trial": "Trial",
     "consultant": "Consultant"
+  },
+  "limits": {
+    "title": "Shop quotas",
+    "hint": "Set quotas for this shop that differ from the package. Empty = follow the package",
+    "col": {
+      "name": "Item",
+      "plan": "Package",
+      "used": "Used",
+      "custom": "Custom",
+      "effective": "In effect"
+    },
+    "usePlan": "Package value",
+    "custom": "Custom quota for {{name}}",
+    "save": "Save",
+    "saved": "{{name}} quota saved",
+    "unchanged": "Quota not changed yet. Type a new number or tick “Unlimited” first",
+    "invalid": "The quota must be a whole number from 0, or empty to follow the package"
   },
   "engagementType": {
     "free_check": "Free check",
@@ -294,6 +311,15 @@
     "notesUnchanged": "Notes are unchanged",
     "statusSaved": "Shop status changed",
     "readOnlyHint": "You can only view. Ask a CoreUp owner to change modules",
+    "moduleGroup": {
+      "front": "Storefront · Booking",
+      "back": "Back office · POS",
+      "business": "Business"
+    },
+    "moduleMenus": "Menus it turns on: {{list}}",
+    "moduleNoMenu": "No back-office menu (opens the online booking page for customers)",
+    "liteTitle": "Booking-only mode",
+    "liteHint": "Hides back-office menus that are not in the booking packages (use only for shops that just take bookings)",
     "assignPick": "Pick a team member first",
     "assigned": "Assigned",
     "unassigned": "Removed"
