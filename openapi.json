@@ -28683,6 +28683,12 @@
                           "active": {
                             "type": "boolean"
                           },
+                          "selfServe": {
+                            "type": "boolean"
+                          },
+                          "tenantCount": {
+                            "type": "integer"
+                          },
                           "modules": {
                             "type": "array",
                             "items": {
@@ -28703,6 +28709,8 @@
                           "priceMinor",
                           "interval",
                           "active",
+                          "selfServe",
+                          "tenantCount",
                           "modules",
                           "limits"
                         ]
@@ -28968,6 +28976,12 @@
                         "active": {
                           "type": "boolean"
                         },
+                        "selfServe": {
+                          "type": "boolean"
+                        },
+                        "tenantCount": {
+                          "type": "integer"
+                        },
                         "modules": {
                           "type": "array",
                           "items": {
@@ -28988,6 +29002,8 @@
                         "priceMinor",
                         "interval",
                         "active",
+                        "selfServe",
+                        "tenantCount",
                         "modules",
                         "limits"
                       ]
@@ -29225,6 +29241,12 @@
                         "active": {
                           "type": "boolean"
                         },
+                        "selfServe": {
+                          "type": "boolean"
+                        },
+                        "tenantCount": {
+                          "type": "integer"
+                        },
                         "modules": {
                           "type": "array",
                           "items": {
@@ -29245,6 +29267,8 @@
                         "priceMinor",
                         "interval",
                         "active",
+                        "selfServe",
+                        "tenantCount",
                         "modules",
                         "limits"
                       ]

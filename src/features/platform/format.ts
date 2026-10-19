@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { planFrontName } from './plan-families';
 
 /** Satang → "฿1,234.50" (whole baht without decimals). Money is always integer satang (AGENTS rule 7). */
 export function formatMoney(minor: number, locale = 'th-TH'): string {
@@ -43,13 +44,15 @@ export function parseBahtToMinor(input: string): number | null {
 export const todayBangkok = (): string =>
   new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
 
-/** "Booking Basic · ฿299/เดือน" for plan dropdowns. */
+/** "Pro · รายเดือน ฿599" for plan dropdowns (front name from the pricing page, DB name for plans outside it). */
 export function usePlanLabel(): (p: {
+  code: string;
   name: string;
   priceMinor: number;
   interval: 'month' | 'year';
 }) => string {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
-  return (p) => `${p.name} · ${formatMoney(p.priceMinor, locale)}${t(`plans.per.${p.interval}`)}`;
+  return (p) =>
+    `${planFrontName(p)} · ${t(`plans.interval.${p.interval}`)} ${formatMoney(p.priceMinor, locale)}`;
 }

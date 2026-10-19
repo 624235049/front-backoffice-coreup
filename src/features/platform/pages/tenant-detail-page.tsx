@@ -10,7 +10,14 @@ import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
@@ -38,6 +45,7 @@ import { LimitsCard } from '../components/limits-card';
 import { ModulesCard } from '../components/modules-card';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
+import { orderPlans } from '../plan-families';
 
 export function TenantDetailPage() {
   const { id } = useParams({ from: '/_app/platform/tenants/$id' });
@@ -133,6 +141,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
   const canWrite = useCan('platform:write');
   const patch = usePatchTenant(d.id);
   const plans = usePlans();
+  const { sold, rest } = orderPlans((plans.data ?? []).filter((p) => p.active || p.code === d.planCode));
   const planLabel = usePlanLabel();
   const [notes, setNotes] = useState(d.notes);
   const [pendingStatus, setPendingStatus] = useState<TenantDetail['status'] | null>(null);
@@ -196,13 +205,17 @@ function OverviewTab({ d }: { d: TenantDetail }) {
                   <SelectValue placeholder="–" />
                 </SelectTrigger>
                 <SelectContent>
-                  {(plans.data ?? [])
-                    .filter((p) => p.active || p.code === d.planCode)
-                    .map((p) => (
-                      <SelectItem key={p.code} value={p.code}>
-                        {planLabel(p)}
-                      </SelectItem>
-                    ))}
+                  {sold.map((p) => (
+                    <SelectItem key={p.code} value={p.code}>
+                      {planLabel(p)}
+                    </SelectItem>
+                  ))}
+                  {sold.length > 0 && rest.length > 0 ? <SelectSeparator /> : null}
+                  {rest.map((p) => (
+                    <SelectItem key={p.code} value={p.code}>
+                      {planLabel(p)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             ) : (

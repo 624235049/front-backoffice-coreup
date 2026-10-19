@@ -1,11 +1,10 @@
-import { Copy, Package, Pencil, Plus, Printer, Send } from 'lucide-react';
+import { Copy, Package, Plus, Printer } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { EmptyState } from '@/components/empty-state';
 import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -19,11 +18,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { ApiBody } from '@/lib/api';
 import { type Plan, useCreatePlan, usePatchPlan, usePlans } from '../api';
+import { FamilyCard, PlainPlanList } from '../components/plan-cards';
 import { formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
+import { groupPlans } from '../plan-families';
 import { PLAN_LIMITS as LIMITS, SHOP_MODULES as MODULES } from '../plans';
 
 // booking-only product: small shop app; LINE reminders from the shop's own OA, capped by the plan's message quota
@@ -34,9 +33,7 @@ const CODE_RE = /^[a-z0-9][a-z0-9_-]{1,30}$/;
 /** `/platform/plans` — the team creates and edits the packages sold to shops (permission `platform:manage`). */
 export function PlansPage() {
   const { t } = useTranslation('platform');
-  const locale = useIntlLocale();
   const plans = usePlans();
-  const patch = usePatchPlan();
   // `null` = closed, `'new'` = create, a plan = edit
   const [editing, setEditing] = useState<Plan | 'new' | null>(null);
   const [offer, setOffer] = useState<Plan | null>(null);
@@ -57,88 +54,33 @@ export function PlansPage() {
         isEmpty={(rows) => rows.length === 0}
         empty={<EmptyState icon={Package} title={t('plans.empty')} />}
       >
-        {(rows: Plan[]) => (
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('plans.col.name')}</TableHead>
-                  <TableHead>{t('plans.col.price')}</TableHead>
-                  <TableHead>{t('plans.col.modules')}</TableHead>
-                  <TableHead>{t('plans.col.limits')}</TableHead>
-                  <TableHead>{t('plans.col.status')}</TableHead>
-                  <TableHead />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableCell>
-                      <div className="font-medium">{p.name}</div>
-                      <div className="font-mono text-xs text-muted-foreground">{p.code}</div>
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <div>
-                        {formatMoney(p.priceMinor, locale)}
-                        {t(`plans.per.${p.interval}`)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-xs">
-                      <div className="flex flex-wrap gap-1">
-                        {p.modules.map((m) => (
-                          <Badge key={m} variant="secondary">
-                            {t(`module.${m}`, { defaultValue: m })}
-                          </Badge>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {LIMITS.map((k) => (
-                        <div key={k}>
-                          {t(`plans.limit.${k}`)}:{' '}
-                          {p.limits[k] === undefined
-                            ? t('plans.unlimited')
-                            : p.limits[k].toLocaleString(locale)}
-                        </div>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={p.active}
-                          disabled={patch.isPending}
-                          aria-label={t('plans.toggle', { name: p.name })}
-                          onCheckedChange={(active) =>
-                            patch.mutate(
-                              { id: p.id, body: { active } },
-                              {
-                                onSuccess: () =>
-                                  toast.success(
-                                    t(active ? 'plans.activated' : 'plans.deactivated', { name: p.name }),
-                                  ),
-                              },
-                            )
-                          }
-                        />
-                        <Badge variant={p.active ? 'success' : 'secondary'}>
-                          {t(p.active ? 'plans.active' : 'plans.inactive')}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right whitespace-nowrap">
-                      <Button size="sm" variant="ghost" onClick={() => setOffer(p)}>
-                        <Send /> {t('plans.offer.button')}
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => setEditing(p)}>
-                        <Pencil /> {t('plans.edit')}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+        {(rows: Plan[]) => {
+          const { families, internal, other } = groupPlans(rows);
+          const actions = { onOffer: setOffer, onEdit: setEditing };
+          return (
+            <div className="grid gap-4">
+              {families.map((f) => (
+                <FamilyCard key={f.key} family={f} actions={actions} />
+              ))}
+              {other.length > 0 ? (
+                <section className="grid gap-2">
+                  <h2 className="text-sm font-semibold">{t('plans.other')}</h2>
+                  <PlainPlanList plans={other} actions={actions} />
+                </section>
+              ) : null}
+              {internal.length > 0 ? (
+                <details>
+                  <summary className="cursor-pointer text-sm font-semibold">
+                    {t('plans.internal.title')}
+                  </summary>
+                  <div className="mt-2">
+                    <PlainPlanList plans={internal} actions={actions} />
+                  </div>
+                </details>
+              ) : null}
+            </div>
+          );
+        }}
       </QueryState>
       <p className="mt-3 text-sm text-muted-foreground">{t('plans.hint')}</p>
       {editing ? (

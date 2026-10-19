@@ -736,7 +736,29 @@
       "year": "รายปี"
     },
     "unlimited": "ไม่จำกัด",
+    "limitLine": {
+      "members": { "value": "พนักงาน {{value}} บัญชี", "unlimited": "พนักงานไม่จำกัด" },
+      "branches": { "value": "{{value}} สาขา", "unlimited": "สาขาไม่จำกัด" },
+      "messages_per_month": {
+        "value": "แจ้งเตือน LINE {{value}} ข้อความ/เดือน",
+        "unlimited": "แจ้งเตือน LINE ไม่จำกัดข้อความ/เดือน"
+      },
+      "customers": { "value": "ลูกค้า {{value}} คน", "unlimited": "ลูกค้าไม่จำกัด" }
+    },
+    "best": "คุ้มที่สุด",
+    "sale": { "web": "ขายบนเว็บ", "team": "ทีมขายเท่านั้น" },
+    "mismatch": "รายเดือน/รายปีไม่ตรงกัน",
+    "avgMonth": "เฉลี่ย {{price}}/เดือน",
+    "paidOf12": "จ่าย {{paid}} ใช้ 12",
+    "noRow": "ยังไม่มีแพ็กเกจ{{interval}}",
+    "liteMode": "โหมดร้านจองคิว",
+    "internal": {
+      "title": "แพ็กเกจภายใน (ไม่ขาย) — ใช้กับร้านทดลองและร้านเก่า",
+      "shops": "ใช้อยู่ {{count}} ร้าน"
+    },
+    "other": "อื่น ๆ",
     "active": "เปิดขาย",
+    "on": "เปิดอยู่",
     "inactive": "ปิดอยู่",
     "toggle": "เปิด/ปิดแพ็กเกจ {{name}}",
     "activated": "เปิดแพ็กเกจ {{name}} แล้ว",

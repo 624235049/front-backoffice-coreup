@@ -97,6 +97,8 @@ describe('new-shop plan default', () => {
       priceMinor,
       interval: 'month',
       active,
+      selfServe: true,
+      tenantCount: 0,
       modules: [],
       limits: {},
     });

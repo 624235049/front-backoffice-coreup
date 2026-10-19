@@ -15438,6 +15438,8 @@ export interface paths {
                                 /** @enum {string} */
                                 interval: "month" | "year";
                                 active: boolean;
+                                selfServe: boolean;
+                                tenantCount: number;
                                 modules: string[];
                                 limits: {
                                     [key: string]: number;
@@ -15578,6 +15580,8 @@ export interface paths {
                                 /** @enum {string} */
                                 interval: "month" | "year";
                                 active: boolean;
+                                selfServe: boolean;
+                                tenantCount: number;
                                 modules: string[];
                                 limits: {
                                     [key: string]: number;
@@ -15723,6 +15727,8 @@ export interface paths {
                                 /** @enum {string} */
                                 interval: "month" | "year";
                                 active: boolean;
+                                selfServe: boolean;
+                                tenantCount: number;
                                 modules: string[];
                                 limits: {
                                     [key: string]: number;

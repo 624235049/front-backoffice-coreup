@@ -736,7 +736,29 @@
       "year": "Yearly"
     },
     "unlimited": "Unlimited",
+    "limitLine": {
+      "members": { "value": "{{value}} staff accounts", "unlimited": "Unlimited staff" },
+      "branches": { "value": "{{value}} branch(es)", "unlimited": "Unlimited branches" },
+      "messages_per_month": {
+        "value": "LINE reminders {{value}} messages/month",
+        "unlimited": "Unlimited LINE reminders"
+      },
+      "customers": { "value": "{{value}} customers", "unlimited": "Unlimited customers" }
+    },
+    "best": "Best value",
+    "sale": { "web": "Sold on the web", "team": "Sales team only" },
+    "mismatch": "Monthly / yearly differ",
+    "avgMonth": "avg {{price}}/month",
+    "paidOf12": "pay {{paid}}, use 12",
+    "noRow": "No {{interval}} plan yet",
+    "liteMode": "Booking-shop mode",
+    "internal": {
+      "title": "Internal plans (not sold) — used by trial and older shops",
+      "shops": "{{count}} shop(s) on it"
+    },
+    "other": "Other",
     "active": "On sale",
+    "on": "On",
     "inactive": "Off",
     "toggle": "Turn plan {{name}} on or off",
     "activated": "Plan {{name}} is on sale",
