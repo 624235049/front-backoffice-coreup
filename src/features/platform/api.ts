@@ -28,6 +28,11 @@ export type Assignment = ListItem<ApiData<'/v1/platform/assignments'>>;
 export type TenantBranch = ListItem<ApiData<'/v1/platform/tenants/{id}/branches'>>;
 export type AccessLogRow = ListItem<ApiData<'/v1/platform/tenants/{id}/access-log'>>;
 export type UsageReport = ApiItem<'/v1/platform/usage-report'>;
+export type TenantNotice = ListItem<ApiData<'/v1/platform/tenants/{id}/notices'>>;
+export type BusinessTypePreview = ApiItem<'/v1/platform/tenants/{id}/business-type-preview'>;
+export type TemplateSection = NonNullable<
+  ApiBody<'/v1/platform/tenants/{id}/business-type', 'post'>['sections']
+>[number];
 export type UsageReportRow = UsageReport['rows'][number];
 export type UsageReportQuery = NonNullable<paths['/v1/platform/usage-report']['get']['parameters']['query']>;
 
@@ -67,6 +72,27 @@ export const useAccessLog = (id: string) =>
     [part, 'tenant', id, 'access'],
     async () =>
       (await unwrap(api.GET('/v1/platform/tenants/{id}/access-log', { params: { path: { id } } }))).data,
+  );
+
+export const useBusinessTypePreview = (id: string, industryKey: string | null) =>
+  useTenantQuery(
+    [part, 'tenant', id, 'business-type-preview', industryKey],
+    async () =>
+      (
+        await unwrap(
+          api.GET('/v1/platform/tenants/{id}/business-type-preview', {
+            params: { path: { id }, query: { industryKey: industryKey as string } },
+          }),
+        )
+      ).data,
+    { enabled: industryKey !== null },
+  );
+
+export const useTenantNotices = (id: string) =>
+  useTenantQuery(
+    [part, 'tenant', id, 'notices'],
+    async () =>
+      (await unwrap(api.GET('/v1/platform/tenants/{id}/notices', { params: { path: { id } } }))).data,
   );
 
 export const useTenantLimits = (id: string) =>
@@ -221,6 +247,16 @@ export const useSetModules = (id: string) =>
 export const useSetTenantLimit = (id: string) =>
   useMut((body: ApiBody<'/v1/platform/tenants/{id}/limits', 'put'>) =>
     unwrap(api.PUT('/v1/platform/tenants/{id}/limits', { params: { path: { id } }, body })),
+  );
+
+export const useSwitchBusinessType = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/business-type', 'post'>) =>
+    unwrap(api.POST('/v1/platform/tenants/{id}/business-type', { params: { path: { id } }, body })),
+  );
+
+export const useSendNotice = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/notices', 'post'>) =>
+    unwrap(api.POST('/v1/platform/tenants/{id}/notices', { params: { path: { id } }, body })),
   );
 
 export const useFillDemoData = (id: string) =>

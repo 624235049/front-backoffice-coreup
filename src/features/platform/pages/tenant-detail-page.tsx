@@ -38,11 +38,13 @@ import {
   useTenantUsage,
   useUsers,
 } from '../api';
+import { BusinessTypeCard } from '../components/business-type-card';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { LimitsCard } from '../components/limits-card';
 import { ModulesCard } from '../components/modules-card';
+import { NoticesPanel } from '../components/notices-panel';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
 import { orderPlans } from '../plan-families';
@@ -86,6 +88,7 @@ export function TenantDetailPage() {
                     'finance',
                     'access',
                     'team',
+                    'notices',
                     ...(canSeeUsers ? (['users'] as const) : []),
                   ] as const
                 ).map((k) => (
@@ -111,6 +114,9 @@ export function TenantDetailPage() {
               </TabsContent>
               <TabsContent value="team">
                 <TeamTab d={d} />
+              </TabsContent>
+              <TabsContent value="notices">
+                <NoticesPanel tenantId={d.id} />
               </TabsContent>
               {canSeeUsers ? (
                 <TabsContent value="users">
@@ -222,6 +228,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
         </CardContent>
       </Card>
       <ModulesCard d={d} />
+      <BusinessTypeCard d={d} />
       <LimitsCard id={d.id} />
       <DemoDataCard d={d} />
       <Card>

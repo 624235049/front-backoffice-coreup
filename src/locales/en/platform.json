@@ -25,6 +25,7 @@
     "pet_grooming": "Pet grooming",
     "tattoo": "Tattoo studio",
     "physio": "Physiotherapy",
+    "thai_medicine": "Thai traditional medicine clinic",
     "pilates": "Pilates studio",
     "fitness": "Personal training / fitness",
     "fortune": "Fortune telling",
@@ -259,6 +260,61 @@
     "createdWithMail": "Shop created and a set-password link was sent to the owner",
     "needOneBranch": "A shop needs at least 1 branch"
   },
+  "businessType": {
+    "title": "Change business type",
+    "current": "Current business type: {{type}}",
+    "pick": "Choose a new business type",
+    "preview": "Switching to “{{type}}” adds the ticked template parts. Anything the shop already has is never edited or deleted.",
+    "counts": "{{add}} to add · {{skip}} already there",
+    "words": "{{count}} word(s) change",
+    "same": "Same as now, nothing changes",
+    "changes": "Some values change",
+    "sameType": "The shop already has this type. Pick another one.",
+    "apply": "Change business type",
+    "confirm": "Switch to “{{type}}”?",
+    "confirmHint": "Works on every plan. Only adds template parts; the shop's own data is never edited or deleted. Recorded in the audit log.",
+    "done": "Switched to “{{type}}”",
+    "pay": {
+      "add": "The shop has no pay rule yet; the template's rule is added",
+      "same": "The pay rule already matches the template",
+      "replace_default": "The shop still has the untouched default; a new version is added (history kept)",
+      "keep_custom": "The shop edited its pay rule; left alone"
+    },
+    "section": {
+      "terminology": "Words (e.g. customer → patient)",
+      "customerCode": "Customer code prefix",
+      "resources": "Rooms / beds / bays",
+      "positions": "Positions",
+      "services": "Services and packages",
+      "products": "Example products",
+      "compensation": "Pay rule",
+      "messages": "LINE messages",
+      "settings": "Defaults (calendar, cost)"
+    }
+  },
+  "notices": {
+    "title": "Send a notice to the shop",
+    "hint": "Shows in the bell of every owner of the shop (plus a push to their devices if on). Owners read the full text in the bell.",
+    "fieldTitle": "Title",
+    "fieldBody": "Message",
+    "fieldPath": "Link inside the shop app (optional)",
+    "fieldLabel": "Link button text (optional)",
+    "labelPlaceholder": "Open",
+    "email": "Also email a copy to the owners",
+    "send": "Send notice",
+    "needTitle": "Enter a title first",
+    "needBody": "Enter a message first",
+    "badPath": "The link must start with /, e.g. /settings/services",
+    "labelNeedsPath": "Enter a link first to give the button a text",
+    "confirm": "Send this notice to the owners of this shop?",
+    "confirmHint": "It cannot be recalled once sent. Check the title and message once more.",
+    "sent": "Sent to {{count}} owner(s)",
+    "empty": "No notice has been sent to this shop yet",
+    "link": "Link button",
+    "defaultLabel": "Open",
+    "recipients": "Sent to {{count}}",
+    "emailed": "{{count}} email(s)"
+  },
   "tenantTabs": {
     "overview": "Overview",
     "engagements": "Consulting",
@@ -267,6 +323,7 @@
     "finance": "Finance",
     "access": "Access log",
     "team": "Team",
+    "notices": "Shop notices",
     "users": "Users"
   },
   "detail": {

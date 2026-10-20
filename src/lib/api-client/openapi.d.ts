@@ -878,6 +878,7 @@ export interface paths {
                                 title: string;
                                 body: string | null;
                                 url: string | null;
+                                linkLabel: string | null;
                                 readAt: string | null;
                                 createdAt: string;
                             }[];
@@ -9190,6 +9191,582 @@ export interface paths {
             };
         };
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/business-type-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * What switching the shop to a business type would add, per template part (read-only)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    industryKey: string;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Preview */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                currentIndustryKey: string;
+                                industryKey: string;
+                                name: {
+                                    th: string;
+                                    en?: string;
+                                };
+                                version: number;
+                                terminology: {
+                                    key: string;
+                                    current: string;
+                                    next: string;
+                                }[];
+                                customerCode: {
+                                    current: string;
+                                    next: string;
+                                };
+                                resources: {
+                                    add: string[];
+                                    skip: string[];
+                                    branches: number;
+                                };
+                                positions: {
+                                    add: string[];
+                                    skip: string[];
+                                };
+                                services: {
+                                    categories: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    services: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    packages: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                };
+                                products: {
+                                    categories: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    products: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                };
+                                compensation: {
+                                    /** @enum {string} */
+                                    state: "add" | "same" | "replace_default" | "keep_custom";
+                                };
+                                messages: {
+                                    templates: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                    plans: {
+                                        add: string[];
+                                        skip: string[];
+                                    };
+                                };
+                                settings: {
+                                    calendarDefaultBy: {
+                                        /** @enum {string} */
+                                        current: "member" | "resource";
+                                        /** @enum {string} */
+                                        next: "member" | "resource";
+                                    };
+                                    useLabCost: {
+                                        current: boolean;
+                                        next: boolean;
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/business-type": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Switch a shop's business type and add the ticked template parts (words, code prefix, rooms, positions, services, pay rule, LINE messages), on any plan including `lite`. Additive and idempotent like the shop's own apply-template; plan modules are re-synced; audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        industryKey: string;
+                        /**
+                         * @default [
+                         *       "terminology",
+                         *       "customerCode",
+                         *       "resources",
+                         *       "positions",
+                         *       "services",
+                         *       "products",
+                         *       "compensation",
+                         *       "messages",
+                         *       "settings"
+                         *     ]
+                         */
+                        sections?: ("terminology" | "customerCode" | "resources" | "positions" | "services" | "products" | "compensation" | "messages" | "settings")[];
+                    };
+                };
+            };
+            responses: {
+                /** @description What was added */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                previousIndustryKey: string;
+                                industryKey: string;
+                                sections: ("terminology" | "customerCode" | "resources" | "positions" | "services" | "products" | "compensation" | "messages" | "settings")[];
+                                created: {
+                                    resources: number;
+                                    positions: number;
+                                    categories: number;
+                                    services: number;
+                                    packages: number;
+                                    productCategories: number;
+                                    products: number;
+                                    messageTemplates: number;
+                                    messagePlans: number;
+                                };
+                                terminologyChanged: number;
+                                customerCodeChanged: boolean;
+                                /** @enum {string} */
+                                compensation: "none" | "added" | "new_version" | "unchanged" | "kept";
+                                settingsChanged: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Notices the team sent to the shop, newest first (last 100)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Notices */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                title: string;
+                                body: string;
+                                linkPath: string | null;
+                                linkLabel: string | null;
+                                email: boolean;
+                                recipients: number;
+                                emailed: number;
+                                sentByName: string | null;
+                                createdAt: string;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Send an in-app (bell) notice to every owner of the shop (+ web push; `email: true` also mails the owners, replies go to the team inbox). Shown in the shop app with the full body and an optional link button; audited. 409 `no_owner` when the shop has no active owner
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        title: string;
+                        body: string;
+                        linkPath?: string;
+                        linkLabel?: string;
+                        /** @default false */
+                        email?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Sent */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                title: string;
+                                body: string;
+                                linkPath: string | null;
+                                linkLabel: string | null;
+                                email: boolean;
+                                recipients: number;
+                                emailed: number;
+                                sentByName: string | null;
+                                createdAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -82822,7 +83399,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner
+         * Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner. The same user opening a shop with the same name (trim, any case) within 10 minutes gets that first shop back (200) instead of a second one
          * @description Requires an authenticated session.
          */
         post: {
@@ -82844,6 +83421,22 @@ export interface paths {
                 };
             };
             responses: {
+                /** @description Already created in the last 10 minutes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                tenantId: string;
+                                slug: string;
+                                branchId: string | null;
+                                trialEndsOn: string;
+                            };
+                        };
+                    };
+                };
                 /** @description Created */
                 201: {
                     headers: {

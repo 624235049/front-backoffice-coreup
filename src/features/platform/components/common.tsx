@@ -83,6 +83,7 @@ export const INDUSTRY_KEYS = [
   'pet_grooming',
   'tattoo',
   'physio',
+  'thai_medicine',
   'pilates',
   'fitness',
   'fortune',
