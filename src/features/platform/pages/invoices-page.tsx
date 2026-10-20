@@ -21,24 +21,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { A4Link } from '@/features/accounting/components/a4-actions';
 import { downloadXlsx } from '@/features/accounting/lib/xlsx';
-import {
-  type Invoice,
-  useConfirmPayment,
-  useCreateInvoice,
-  useGenerateInvoices,
-  useInvoices,
-  usePatchInvoice,
-  useTenants,
-} from '../api';
-import { SlipReviewSheet } from '../components/slip-review-sheet';
-import {
-  formatDate,
-  formatDateTime,
-  formatMoney,
-  parseBahtToMinor,
-  todayBangkok,
-  useIntlLocale,
-} from '../format';
+import { type Invoice, useConfirmPayment, useGenerateInvoices, useInvoices, usePatchInvoice } from '../api';
+import { dmyBE } from '../billing-docs';
+import { InvoiceDetailSheet } from '../components/invoice-detail-sheet';
+import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
+import { formatDate, formatDateTime, formatMoney, todayBangkok, useIntlLocale } from '../format';
 import { hasPendingSlip } from '../invoice-slip';
 
 const STATUSES = ['draft', 'issued', 'paid', 'overdue', 'void'] as const;
@@ -71,20 +58,20 @@ export function InvoiceStatusBadge({ status }: { status: Invoice['status'] }) {
 export function InvoicesPage() {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
-  const [status, setStatus] = useState('__all__');
+  // the default view is the queue that needs the admin: transfers waiting for "confirm" / "reject"
+  const [status, setStatus] = useState(SLIP_FILTER);
   const [source, setSource] = useState('__all__');
   const [creating, setCreating] = useState(false);
   const [running, setRunning] = useState(false);
   const invoices = useInvoices({
     status: STATUSES.includes(status as Invoice['status']) ? (status as Invoice['status']) : undefined,
     source: source === '__all__' ? undefined : (source as Invoice['source']),
+    awaiting: status === SLIP_FILTER ? 'true' : undefined,
   });
   const patch = usePatchInvoice();
   const confirm = useConfirmPayment();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
   const [reviewing, setReviewing] = useState<Invoice | null>(null);
-  // "slips waiting" has no server filter: unpaid invoices that carry a slip
-  const visible = (rows: Invoice[]) => (status === SLIP_FILTER ? rows.filter(hasPendingSlip) : rows);
 
   const markPaid = (i: Invoice) => {
     const onSuccess = () => toast.success(t('invoices.paidToast', { number: i.number }));
@@ -97,12 +84,14 @@ export function InvoicesPage() {
     <>
       <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
       {hasPendingSlip(i) ? (
-        <>
-          <Button size="sm" onClick={() => setReviewing(i)}>
-            {t('invoices.slip.review')}
-          </Button>{' '}
-        </>
-      ) : null}
+        <Button size="sm" onClick={() => setReviewing(i)}>
+          {t('invoices.slip.review')}
+        </Button>
+      ) : (
+        <Button size="sm" variant="ghost" onClick={() => setReviewing(i)}>
+          {t('invoices.detail')}
+        </Button>
+      )}{' '}
       {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
         <>
           <Button
@@ -220,7 +209,7 @@ export function InvoicesPage() {
       </div>
       <QueryState
         query={invoices}
-        isEmpty={(all) => visible(all).length === 0}
+        isEmpty={(all) => all.length === 0}
         empty={
           <EmptyState
             icon={Receipt}
@@ -230,7 +219,7 @@ export function InvoicesPage() {
         }
       >
         {(all) => {
-          const rows = visible(all);
+          const rows = all;
           return (
             <>
               <ul className="grid gap-2 lg:hidden">
@@ -260,7 +249,7 @@ export function InvoicesPage() {
                     <TableRow>
                       <TableHead>{t('invoices.col.number')}</TableHead>
                       <TableHead>{t('invoices.col.shop')}</TableHead>
-                      <TableHead>{t('invoices.col.source')}</TableHead>
+                      <TableHead>{t('invoices.col.plan')}</TableHead>
                       <TableHead>{t('invoices.col.issued')}</TableHead>
                       <TableHead>{t('invoices.col.due')}</TableHead>
                       <TableHead className="text-right">{t('invoices.col.amount')}</TableHead>
@@ -273,9 +262,21 @@ export function InvoicesPage() {
                   <TableBody>
                     {rows.map((i) => (
                       <TableRow key={i.id}>
-                        <TableCell className="font-mono text-xs">{i.number}</TableCell>
+                        <TableCell className="font-mono text-xs">
+                          {i.number}
+                          {i.receiptNumber ? (
+                            <span className="block text-muted-foreground">{i.receiptNumber}</span>
+                          ) : null}
+                        </TableCell>
                         <TableCell>{i.tenantName}</TableCell>
-                        <TableCell>{t(`invoiceSource.${i.source}`)}</TableCell>
+                        <TableCell>
+                          {i.planName ?? t(`invoiceSource.${i.source}`)}
+                          {i.periodStart && i.periodEnd ? (
+                            <span className="block text-xs text-muted-foreground">
+                              {dmyBE(i.periodStart)}–{dmyBE(i.periodEnd)}
+                            </span>
+                          ) : null}
+                        </TableCell>
                         <TableCell>{formatDate(i.issuedOn, locale)}</TableCell>
                         <TableCell>{formatDate(i.dueOn, locale)}</TableCell>
                         <TableCell className="text-right">{formatMoney(i.amountMinor, locale)}</TableCell>
@@ -297,8 +298,8 @@ export function InvoicesPage() {
           );
         }}
       </QueryState>
-      <SlipReviewSheet invoice={reviewing} onClose={() => setReviewing(null)} />
-      <CreateInvoiceDialog open={creating} onOpenChange={setCreating} />
+      <InvoiceDetailSheet invoice={reviewing} onClose={() => setReviewing(null)} />
+      {creating ? <IssueInvoiceDialog open onOpenChange={setCreating} /> : null}
       <RunDialog open={running} onOpenChange={setRunning} />
       <Dialog open={voiding !== null} onOpenChange={(o) => !o && setVoiding(null)}>
         <DialogContent closeLabel={t('common.close')}>
@@ -332,81 +333,6 @@ export function InvoicesPage() {
         </DialogContent>
       </Dialog>
     </>
-  );
-}
-
-function CreateInvoiceDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
-  const { t } = useTranslation('platform');
-  const tenants = useTenants({});
-  const create = useCreateInvoice();
-  const [tenantId, setTenantId] = useState('');
-  // consulting invoices are no longer sold: new ones are always package (subscription) invoices
-  const [amount, setAmount] = useState('');
-  const minor = parseBahtToMinor(amount);
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent closeLabel={t('common.close')}>
-        <DialogHeader>
-          <DialogTitle>{t('invoices.add')}</DialogTitle>
-          <DialogDescription>{t('invoices.vatHint')}</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-3">
-          <div>
-            <Label>{t('invoices.col.shop')}</Label>
-            <Select value={tenantId} onValueChange={setTenantId}>
-              <SelectTrigger aria-label={t('invoices.col.shop')}>
-                <SelectValue placeholder={t('engagements.pickShop')} />
-              </SelectTrigger>
-              <SelectContent>
-                {(tenants.data ?? []).map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="inv-amount">{t('invoices.amountExVat')}</Label>
-            <Input
-              id="inv-amount"
-              inputMode="decimal"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('common.cancel')}
-          </Button>
-          <Button
-            disabled={create.isPending}
-            blockedReason={
-              !tenantId
-                ? t('invoices.pickShopFirst')
-                : (minor === null || minor <= 0) && t('invoices.amountNeeded')
-            }
-            onClick={() => {
-              if (minor === null) return;
-              create.mutate(
-                { tenantId, source: 'subscription', amountMinor: minor, status: 'issued' },
-                {
-                  onSuccess: () => {
-                    toast.success(t('invoices.createdToast'));
-                    onOpenChange(false);
-                    setAmount('');
-                    setTenantId('');
-                  },
-                },
-              );
-            }}
-          >
-            {t('invoices.issue')}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }
 

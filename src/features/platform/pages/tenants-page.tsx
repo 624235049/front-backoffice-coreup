@@ -15,6 +15,7 @@ import { Can } from '@/lib/permissions';
 import { type TenantRow, type TenantsQuery, useTenants } from '../api';
 import { TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { OnboardDialog } from '../components/onboard-dialog';
+import { OwnerPhone } from '../components/owner-phone';
 import { formatDate, todayBangkok, useIntlLocale } from '../format';
 
 const ALL = '__all__';
@@ -142,6 +143,14 @@ export function TenantsPage() {
                         </span>
                       </div>
                     </Link>
+                    {r.status === 'trial' ? (
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 px-1 text-sm">
+                        <OwnerPhone phone={r.ownerPhone} />
+                        <span className="text-muted-foreground">
+                          {t('ownerPhone.trialEnds')}: {formatDate(r.trialEndsOn, locale)}
+                        </span>
+                      </div>
+                    ) : null}
                   </li>
                 ))}
               </ul>
@@ -157,6 +166,7 @@ export function TenantsPage() {
                       <TableHead className="text-right">{t('tenants.col.noShow')}</TableHead>
                       <TableHead>{t('tenants.col.usage')}</TableHead>
                       <TableHead>{t('tenants.col.renewal')}</TableHead>
+                      <TableHead>{t('ownerPhone.label')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -194,6 +204,14 @@ export function TenantsPage() {
                           <UsageHealthBadge health={r.usageHealth} />
                         </TableCell>
                         <TableCell>{formatDate(r.renewalOn, locale)}</TableCell>
+                        <TableCell>
+                          <OwnerPhone phone={r.ownerPhone} />
+                          {r.status === 'trial' && r.trialEndsOn ? (
+                            <div className="text-xs text-muted-foreground">
+                              {t('ownerPhone.trialEnds')}: {formatDate(r.trialEndsOn, locale)}
+                            </div>
+                          ) : null}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -281,6 +299,7 @@ function SelfServeTrials({ rows }: { rows: TenantRow[] }) {
                 ) : r.owner ? (
                   <div className="text-xs text-muted-foreground">{t('tenants.selfServe.noEmail')}</div>
                 ) : null}
+                <OwnerPhone phone={r.ownerPhone} />
               </TableCell>
               <TableCell className="whitespace-nowrap">{formatDate(r.createdAt, locale)}</TableCell>
               <TableCell>

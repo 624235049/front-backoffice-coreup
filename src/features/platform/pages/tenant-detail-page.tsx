@@ -42,9 +42,11 @@ import { BusinessTypeCard } from '../components/business-type-card';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
+import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { LimitsCard } from '../components/limits-card';
 import { ModulesCard } from '../components/modules-card';
 import { NoticesPanel } from '../components/notices-panel';
+import { OwnerPhone } from '../components/owner-phone';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
 import { orderPlans } from '../plan-families';
@@ -147,6 +149,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
   const planLabel = usePlanLabel();
   const [notes, setNotes] = useState(d.notes);
   const [pendingStatus, setPendingStatus] = useState<TenantDetail['status'] | null>(null);
+  const [issuing, setIssuing] = useState(false);
 
   return (
     <div className="grid gap-4">
@@ -173,8 +176,13 @@ function OverviewTab({ d }: { d: TenantDetail }) {
         />
       </div>
       <Card>
-        <CardHeader>
+        <CardHeader className="flex-row flex-wrap items-center justify-between gap-2">
           <CardTitle className="text-base">{t('detail.account')}</CardTitle>
+          <Can permission="platform:billing">
+            <Button variant="outline" size="sm" data-testid="issue-invoice" onClick={() => setIssuing(true)}>
+              {t('issueInvoice.open')}
+            </Button>
+          </Can>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-3">
           <Field label={t('detail.status')}>
@@ -225,6 +233,12 @@ function OverviewTab({ d }: { d: TenantDetail }) {
             )}
           </Field>
           <Field label={t('detail.created')}>{formatDate(d.createdAt, locale)}</Field>
+          <Field label={t('ownerPhone.label')}>
+            <OwnerPhone phone={d.ownerPhone} />
+          </Field>
+          {d.trialEndsOn ? (
+            <Field label={t('ownerPhone.trialEnds')}>{formatDate(d.trialEndsOn, locale)}</Field>
+          ) : null}
         </CardContent>
       </Card>
       <ModulesCard d={d} />
@@ -258,6 +272,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           </Can>
         </CardContent>
       </Card>
+      {issuing ? <IssueInvoiceDialog open onOpenChange={setIssuing} tenant={d} /> : null}
       <ConfirmDialog
         open={pendingStatus !== null}
         onOpenChange={(o) => !o && setPendingStatus(null)}

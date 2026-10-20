@@ -32,7 +32,15 @@
     "court": "Sports courts",
     "restaurant": "Restaurant / café / bar",
     "dental": "Dental clinic",
-    "retail": "Retail shop (stock)"
+    "retail": "Retail shop (stock)",
+    "cafe": "Café / drink shop",
+    "photo_studio": "Photo studio",
+    "makeup": "Makeup & hair artist",
+    "lash_brow": "Lash & brow studio",
+    "medical_clinic": "General medical clinic",
+    "vet": "Veterinary clinic",
+    "tutoring": "Tutoring & courses",
+    "repair": "Repair shop (phone / computer / air-con)"
   },
   "module": {
     "crm": "Customers & appointments",
@@ -655,9 +663,9 @@
     "report": "PDF report"
   },
   "invoices": {
-    "title": "Invoices",
-    "description": "Subscription invoices (legacy ones included), numbered INV-YYYYMM-#### (VAT added only once CoreUp is VAT-registered)",
-    "add": "Issue invoice",
+    "title": "Payment notices",
+    "description": "Package payment notices of every shop, issued automatically before expiry. The admin's job is “Confirm payment” in the “Awaiting confirmation” queue (the receipt is issued automatically).",
+    "add": "Issue payment notice",
     "issue": "Issue",
     "run": "Run monthly billing",
     "runHint": "Creates subscription invoices for every active shop (legacy invoices that are due included, never duplicates)",
@@ -677,7 +685,10 @@
       "amount": "Subtotal",
       "vat": "VAT",
       "total": "Total",
-      "status": "Status"
+      "status": "Status",
+      "plan": "Package / period",
+      "period": "Period",
+      "receipt": "Receipt"
     },
     "markPaid": "Mark as paid",
     "paidToast": "{{number}} marked as paid",
@@ -692,8 +703,8 @@
     "pickShopFirst": "Pick a shop first",
     "amountNeeded": "Enter an amount greater than 0",
     "monthNeeded": "Pick a month first",
-    "slipFilter": "Slip to review",
-    "slipEmpty": "No slips waiting for review",
+    "slipFilter": "Awaiting confirmation",
+    "slipEmpty": "Nothing awaiting confirmation",
     "slip": {
       "badge": "Transfer reported",
       "review": "Review slip",
@@ -705,13 +716,47 @@
       "none": "This invoice has no slip",
       "sentAt": "Reported at",
       "confirm": "Confirm payment (activate the shop's package)",
-      "confirmHint": "The package is activated and renewed right away, and the owner gets a confirmation email with the receipt",
+      "confirmHint": "Renews the package, issues the receipt and sends the owner an email and an in-app notice right away.",
       "confirmedToast": "Payment for {{number}} confirmed, package activated",
       "noteLabel": "Invalid slip: tell the shop why",
       "notePlaceholder": "e.g. amount does not match, or this is not the slip for this invoice",
       "noteNeeded": "Write the reason first so the shop knows what to fix",
       "reject": "Slip is not valid",
-      "rejectedToast": "Slip for {{number}} sent back to the shop"
+      "rejectedToast": "Slip for {{number}} sent back to the shop",
+      "newToast_one": "{{count}} new slip awaiting confirmation",
+      "newToast_other": "{{count}} new slips awaiting confirmation",
+      "check": {
+        "title": "Automatic slip check",
+        "status": {
+          "passed": "Passed",
+          "failed": "Failed",
+          "error": "Could not check",
+          "skipped": "Skipped (check by hand)"
+        },
+        "reason": {
+          "amount_low": "Amount lower than the notice",
+          "wrong_receiver": "Not a CoreUp account",
+          "too_old": "Slip too old",
+          "duplicate": "Slip already used",
+          "not_found": "Could not read the slip",
+          "plan": "Package has no checks",
+          "quota": "Quota used up",
+          "platform_cap": "CoreUp's slip-check cap is used up",
+          "provider_error": "Slip checker unavailable"
+        },
+        "amount": "Slip amount {{read}} · notice {{due}}",
+        "receiver": "Receiver: {{name}}",
+        "paidAt": "Transferred {{at}}"
+      }
+    },
+    "detail": "Details",
+    "detailTitle": "Payment notice {{number}}",
+    "acceptance": {
+      "title": "Accepted the terms of service, version {{version}}",
+      "by": "By {{name}} on {{at}}",
+      "signedIn": "signed in",
+      "anonymous": "opened the link without signing in",
+      "none": "The customer has not accepted the terms yet"
     }
   },
   "revenue": {
@@ -796,16 +841,28 @@
     "unlimited": "Unlimited",
     "slipPlaceholder": "0–2,000 (never unlimited · empty = keep)",
     "limitLine": {
-      "members": { "value": "{{value}} staff accounts", "unlimited": "Unlimited staff" },
-      "branches": { "value": "{{value}} branch(es)", "unlimited": "Unlimited branches" },
+      "members": {
+        "value": "{{value}} staff accounts",
+        "unlimited": "Unlimited staff"
+      },
+      "branches": {
+        "value": "{{value}} branch(es)",
+        "unlimited": "Unlimited branches"
+      },
       "messages_per_month": {
         "value": "LINE reminders {{value}} messages/month",
         "unlimited": "Unlimited LINE reminders"
       },
-      "customers": { "value": "{{value}} customers", "unlimited": "Unlimited customers" }
+      "customers": {
+        "value": "{{value}} customers",
+        "unlimited": "Unlimited customers"
+      }
     },
     "best": "Best value",
-    "sale": { "web": "Sold on the web", "team": "Sales team only" },
+    "sale": {
+      "web": "Sold on the web",
+      "team": "Sales team only"
+    },
     "mismatch": "Monthly / yearly differ",
     "avgMonth": "avg {{price}}/month",
     "paidOf12": "pay {{paid}}, use 12",
@@ -923,5 +980,38 @@
     "never": "No demo data yet (the shop needs a branch, services, staff who serve customers and a payment method first)",
     "nothingToClear": "No demo data was generated yet, nothing to delete",
     "resourceShop": "Cannot fill sample data: this shop books by table / court / room, which the generator does not support"
+  },
+  "ownerPhone": {
+    "label": "Owner's mobile",
+    "copy": "Copy number",
+    "copied": "Number copied",
+    "copyFailed": "Could not copy. The number is {{phone}}",
+    "trialEnds": "Trial ends"
+  },
+  "issueInvoice": {
+    "open": "Issue renewal notice",
+    "title": "Issue payment notice",
+    "description": "Pick the package and cycle. The period continues from the current expiry; then copy the LINE message in one click.",
+    "package": "Package",
+    "pickPlan": "Pick a package (monthly / yearly)",
+    "period": "Period",
+    "running": "Currently on {{plan}}, paid until {{end}}",
+    "kind": "Type of notice",
+    "kinds": {
+      "renewal": "Renewal / change cycle",
+      "upgrade": "Upgrade now (pay the difference)"
+    },
+    "kindHint": {
+      "renewal": "The new cycle starts after the current expiry; once confirmed the shop moves to this package (downgrade: issue it close to expiry).",
+      "upgrade": "The new package applies from today until the current expiry. Type the difference; a pro-rated amount is suggested."
+    },
+    "amountIs": "Amount {{amount}} (before VAT)",
+    "suggest": "Use suggested {{amount}} (pro-rated difference)",
+    "voidOpen": "Void the {{count}} unpaid notice(s) issued earlier once the new one is created",
+    "submit": "Issue payment notice",
+    "issuedToast": "Payment notice {{number}} issued",
+    "copyLine": "Copy LINE message",
+    "copied": "Message copied — paste it into the customer's LINE chat",
+    "copyFailed": "Could not copy, please try again"
   }
 }

@@ -8413,11 +8413,14 @@ export interface paths {
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
                                 trialEndsOn: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
                                     email: string | null;
                                 } | null;
+                                ownerPhone: string | null;
                                 createdAt: string;
                             }[];
                             page: {
@@ -8841,11 +8844,14 @@ export interface paths {
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
                                 trialEndsOn: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
                                     email: string | null;
                                 } | null;
+                                ownerPhone: string | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;
@@ -9051,11 +9057,14 @@ export interface paths {
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
                                 trialEndsOn: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
                                     email: string | null;
                                 } | null;
+                                ownerPhone: string | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;
@@ -9270,11 +9279,14 @@ export interface paths {
                                 usageHealth: "good" | "declining" | "at_risk";
                                 renewalOn: string | null;
                                 trialEndsOn: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
                                     email: string | null;
                                 } | null;
+                                ownerPhone: string | null;
                                 createdAt: string;
                                 demo: {
                                     enabled: boolean;
@@ -15380,6 +15392,30 @@ export interface paths {
                                 slipUrl: string | null;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
                             };
                         };
                     };
@@ -15807,6 +15843,7 @@ export interface paths {
                     tenantId?: string;
                     status?: "draft" | "issued" | "paid" | "void" | "overdue";
                     source?: "subscription" | "engagement";
+                    awaiting?: "true";
                     from?: string;
                     to?: string;
                     limit?: number;
@@ -15843,6 +15880,30 @@ export interface paths {
                                 slipUrl: string | null;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -15947,6 +16008,8 @@ export interface paths {
                         vatMinor?: number;
                         issuedOn?: string;
                         dueOn?: string;
+                        periodStart?: string;
+                        periodEnd?: string;
                         /**
                          * @default issued
                          * @enum {string}
@@ -15982,6 +16045,30 @@ export interface paths {
                                 slipUrl: string | null;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
                             };
                         };
                     };
@@ -16231,6 +16318,30 @@ export interface paths {
                                 slipUrl: string | null;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
                             };
                         };
                     };
@@ -16367,6 +16478,30 @@ export interface paths {
                                 slipUrl: string | null;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
                             };
                         };
                     };
@@ -81202,403 +81337,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/billing/invoices": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Pay a package by transfer / PromptPay: issue (or reuse the open) subscription invoice
-         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
-         *
-         *     Requires header `Idempotency-Key` (replayed for 24h).
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Required; unique per logical operation */
-                    "idempotency-key"?: string;
-                };
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        planCode: string;
-                        /** @enum {string} */
-                        interval: "month" | "year";
-                    };
-                };
-            };
-            responses: {
-                /** @description Invoice to pay */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                id: string;
-                                number: string;
-                                /** @enum {string} */
-                                status: "issued" | "overdue" | "paid" | "void";
-                                amountMinor: number;
-                                dueOn: string;
-                                issuedOn: string;
-                                paidAt: string | null;
-                                planCode: string;
-                                planName: string;
-                                /** @enum {string} */
-                                interval: "month" | "year";
-                                promptPayPayload: string | null;
-                                payUrl: string;
-                                slipUploadedAt: string | null;
-                                slipNote: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/invoices/{id}/slip/upload-url": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Presigned PUT for the transfer slip (image / PDF ≤ 10 MB), then POST …/slip with the fileId
-         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
-         *
-         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
-                    "idempotency-key"?: string;
-                };
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** @enum {string} */
-                        mime: "image/jpeg" | "image/png" | "image/webp" | "application/pdf";
-                        size: number;
-                        filename?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Upload URL */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                fileId: string;
-                                uploadUrl: string;
-                                /** @enum {string} */
-                                method: "PUT";
-                                headers: {
-                                    [key: string]: string;
-                                };
-                                expiresAt: string;
-                            };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/invoices/{id}/slip": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Hand in the uploaded slip; the CoreUp team is asked to check it
-         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
-         *
-         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
-                    "idempotency-key"?: string;
-                };
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        fileId: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Invoice */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                id: string;
-                                number: string;
-                                /** @enum {string} */
-                                status: "issued" | "overdue" | "paid" | "void";
-                                amountMinor: number;
-                                dueOn: string;
-                                issuedOn: string;
-                                paidAt: string | null;
-                                planCode: string;
-                                planName: string;
-                                /** @enum {string} */
-                                interval: "month" | "year";
-                                promptPayPayload: string | null;
-                                payUrl: string;
-                                slipUploadedAt: string | null;
-                                slipNote: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/public/pay/{token}": {
         parameters: {
             query?: never;
@@ -81646,6 +81384,10 @@ export interface paths {
                                     payUrl: string;
                                     slipUploadedAt: string | null;
                                     slipNote: string | null;
+                                    periodStart: string | null;
+                                    periodEnd: string | null;
+                                    receiptNumber: string | null;
+                                    receiptUrl: string | null;
                                 };
                                 shopName: string;
                                 accounts: {
@@ -81658,6 +81400,30 @@ export interface paths {
                                     accountNo: string;
                                     branch: string | null;
                                 }[];
+                                seller: {
+                                    name: string;
+                                    legalName: string | null;
+                                    address: string | null;
+                                    phone: string | null;
+                                };
+                                buyer: {
+                                    name: string;
+                                    legalName: string | null;
+                                    address: string | null;
+                                    phone: string | null;
+                                };
+                                terms: {
+                                    version: string;
+                                    url: string;
+                                    acceptance: {
+                                        version: string;
+                                        acceptedAt: string;
+                                        name: string;
+                                        userId: string | null;
+                                        ip: string | null;
+                                        userAgent: string | null;
+                                    } | null;
+                                };
                             };
                         };
                     };
@@ -81943,6 +81709,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/pay/{token}/accept-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * The payer accepted the terms (version, name typed; time, IP, browser and signed-in user are recorded); required before a slip
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        version: string;
+                        name: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Acceptance */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                version: string;
+                                acceptedAt: string;
+                                name: string;
+                                userId: string | null;
+                                ip: string | null;
+                                userAgent: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/pay/{token}/slip/upload-url": {
         parameters: {
             query?: never;
@@ -81953,7 +81839,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Presigned PUT for the transfer slip (image / PDF ≤ 10 MB), then POST …/slip with the fileId
+         * Presigned PUT for the transfer slip (image / PDF ≤ 10 MB); 422 PAY_TERMS_REQUIRED until the terms are accepted
          * @description Public endpoint (no authentication).
          */
         post: {
@@ -82121,6 +82007,10 @@ export interface paths {
                                 payUrl: string;
                                 slipUploadedAt: string | null;
                                 slipNote: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                receiptUrl: string | null;
                             };
                         };
                     };
@@ -82204,7 +82094,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Plan, usage vs limits, plans on offer and recent invoices
+         * Plan and expiry, usage vs limits, plans (information only) and the invoices the team issued
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
          */
         get: {
@@ -82243,8 +82133,6 @@ export interface paths {
                                 trialEndsOn: string | null;
                                 periodStart: string | null;
                                 periodEnd: string | null;
-                                paymentsConfigured: boolean;
-                                omisePublicKey: string | null;
                                 plans: {
                                     code: string;
                                     name: string;
@@ -82279,35 +82167,12 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "draft" | "issued" | "paid" | "void" | "overdue";
                                     planCode: string | null;
-                                }[];
-                                paymentAccounts: {
-                                    id: string;
-                                    /** @enum {string} */
-                                    kind: "bank" | "promptpay";
-                                    bankCode: string | null;
-                                    bankName: string;
-                                    accountName: string;
-                                    accountNo: string;
-                                    branch: string | null;
-                                }[];
-                                openInvoice: {
-                                    id: string;
-                                    number: string;
-                                    /** @enum {string} */
-                                    status: "issued" | "overdue" | "paid" | "void";
-                                    amountMinor: number;
-                                    dueOn: string;
-                                    issuedOn: string;
-                                    paidAt: string | null;
-                                    planCode: string;
-                                    planName: string;
-                                    /** @enum {string} */
-                                    interval: "month" | "year";
-                                    promptPayPayload: string | null;
+                                    planName: string | null;
+                                    receiptNumber: string | null;
+                                    periodStart: string | null;
+                                    periodEnd: string | null;
                                     payUrl: string;
-                                    slipUploadedAt: string | null;
-                                    slipNote: string | null;
-                                } | null;
+                                }[];
                             };
                         };
                     };
@@ -82385,148 +82250,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/billing/checkout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Pay for a plan with PromptPay or card (Omise). 503 PAYMENTS_NOT_CONFIGURED without keys
-         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
-         *
-         *     Requires header `Idempotency-Key` (replayed for 24h).
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Required; unique per logical operation */
-                    "idempotency-key"?: string;
-                };
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        planCode: string;
-                        /** @enum {string} */
-                        method: "promptpay" | "card";
-                        cardToken?: string;
-                        returnPath?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Charge */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                invoice: {
-                                    id: string;
-                                    number: string;
-                                    amountMinor: number;
-                                    vatMinor: number;
-                                    totalMinor: number;
-                                    issuedOn: string;
-                                    dueOn: string;
-                                    paidAt: string | null;
-                                    /** @enum {string} */
-                                    status: "draft" | "issued" | "paid" | "void" | "overdue";
-                                    planCode: string | null;
-                                };
-                                chargeId: string;
-                                /** @enum {string} */
-                                status: "paid" | "pending" | "requires_action" | "failed";
-                                qr: {
-                                    imageUrl: string;
-                                    expiresAt: string | null;
-                                } | null;
-                                authorizeUri: string | null;
-                                failureMessage: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/billing/invoices/{id}": {
         parameters: {
             query?: never;
@@ -82535,7 +82258,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * One subscription invoice (poll for `paid`)
+         * One subscription invoice the team issued to the shop
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
          */
         get: {
@@ -82568,6 +82291,11 @@ export interface paths {
                                 /** @enum {string} */
                                 status: "draft" | "issued" | "paid" | "void" | "overdue";
                                 planCode: string | null;
+                                planName: string | null;
+                                receiptNumber: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                payUrl: string;
                             };
                         };
                     };
@@ -82639,140 +82367,6 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/invoices/{id}/sync": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Re-check the charge with Omise now and settle the invoice if it was paid
-         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
-         *
-         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
-                    "idempotency-key"?: string;
-                };
-                path: {
-                    id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Charge */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                invoice: {
-                                    id: string;
-                                    number: string;
-                                    amountMinor: number;
-                                    vatMinor: number;
-                                    totalMinor: number;
-                                    issuedOn: string;
-                                    dueOn: string;
-                                    paidAt: string | null;
-                                    /** @enum {string} */
-                                    status: "draft" | "issued" | "paid" | "void" | "overdue";
-                                    planCode: string | null;
-                                };
-                                chargeId: string;
-                                /** @enum {string} */
-                                status: "paid" | "pending" | "requires_action" | "failed";
-                                qr: {
-                                    imageUrl: string;
-                                    expiresAt: string | null;
-                                } | null;
-                                authorizeUri: string | null;
-                                failureMessage: string | null;
-                            };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
         delete?: never;
         options?: never;
         head?: never;
@@ -82922,111 +82516,6 @@ export interface paths {
                                 filename: string | null;
                                 expiresAt: string | null;
                             };
-                        };
-                    };
-                };
-                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description UNAUTHENTICATED */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description NOT_FOUND */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
-                409: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description RATE_LIMITED */
-                429: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-                /** @description INTERNAL */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorBody"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/webhooks/omise": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Omise webhook (charge.complete) — HMAC-verified
-         * @description Public endpoint (no authentication).
-         */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Accepted */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @enum {boolean} */
-                            received: true;
                         };
                     };
                 };
@@ -83529,6 +83018,7 @@ export interface paths {
                                     /** @enum {string} */
                                     interval: "month" | "year";
                                 }[];
+                                defaultPlanCode: string;
                                 defaultTimezone: string;
                             };
                         };
@@ -83617,7 +83107,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner. The same user opening a shop with the same name (trim, any case) within 10 minutes gets that first shop back (200) instead of a second one
+         * Open a new shop (1-month free trial, TRIAL_DAYS, of the package in `planCode` or the default trial package) from an industry template; the caller becomes its owner. The same user opening a shop with the same name (trim, any case) within 10 minutes gets that first shop back (200) instead of a second one
          * @description Requires an authenticated session.
          */
         post: {
@@ -83635,6 +83125,8 @@ export interface paths {
                         branchName?: string;
                         /** @default Asia/Bangkok */
                         timezone?: string;
+                        planCode?: string;
+                        ownerPhone: string;
                     };
                 };
             };
@@ -83969,6 +83461,213 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/onboarding/owner-contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The owner’s mobile phone given at sign-up for CoreUp’s onboarding team (private: never on the booking page or receipts). `phone` null = never given
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Contact */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                phone: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Change the owner’s mobile phone for CoreUp’s onboarding team. 400 unless a Thai mobile (06 / 08 / 09)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        phone: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Contact */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                phone: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -91802,7 +91501,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAYMENTS_NOT_CONFIGURED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

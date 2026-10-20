@@ -200,7 +200,13 @@ export const useRubric = () =>
   });
 
 export const useInvoices = (
-  query: { status?: Invoice['status']; source?: Invoice['source']; tenantId?: string } = {},
+  query: {
+    status?: Invoice['status'];
+    source?: Invoice['source'];
+    tenantId?: string;
+    /** the "รอยืนยันรับเงิน" queue: unpaid invoices with a slip */
+    awaiting?: 'true';
+  } = {},
   /** Poll while mounted (the nav badge of slips waiting for review). */
   refetchInterval?: number,
 ) =>

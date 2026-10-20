@@ -89,5 +89,13 @@ export const INDUSTRY_KEYS = [
   'fortune',
   'court',
   'restaurant',
+  'cafe',
   'retail',
+  'photo_studio',
+  'makeup',
+  'lash_brow',
+  'medical_clinic',
+  'vet',
+  'tutoring',
+  'repair',
 ] as const;

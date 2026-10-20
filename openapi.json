@@ -75,6 +75,7 @@
                   "PROMPTPAY_NOT_CONFIGURED",
                   "TWO_FACTOR_REQUIRED",
                   "TWO_FACTOR_INVALID",
+                  "EMAIL_NOT_VERIFIED",
                   "IMPORT_INVALID",
                   "CHANNEL_NOT_CONFIGURED",
                   "CHANNEL_VERIFY_FAILED",
@@ -85,7 +86,7 @@
                   "CONSENT_REQUIRED",
                   "TERMS_NOT_ACCEPTED",
                   "TEMPLATE_INVALID",
-                  "PAYMENTS_NOT_CONFIGURED",
+                  "PAY_TERMS_REQUIRED",
                   "PAYMENT_FAILED",
                   "INTERNAL"
                 ]
@@ -182,6 +183,9 @@
                                 "lineLinked": {
                                   "type": "boolean"
                                 },
+                                "emailVerified": {
+                                  "type": "boolean"
+                                },
                                 "locale": {
                                   "type": "string",
                                   "enum": [
@@ -195,6 +199,7 @@
                                 "name",
                                 "email",
                                 "lineLinked",
+                                "emailVerified",
                                 "locale"
                               ]
                             }
@@ -380,6 +385,9 @@
                             "lineLinked": {
                               "type": "boolean"
                             },
+                            "emailVerified": {
+                              "type": "boolean"
+                            },
                             "locale": {
                               "type": "string",
                               "enum": [
@@ -393,12 +401,128 @@
                             "name",
                             "email",
                             "lineLinked",
+                            "emailVerified",
                             "locale"
                           ]
                         }
                       },
                       "required": [
                         "user"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/send-verification-email": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Email the signed-in user a new verification link (valid 24 h). 1 per 60 s and 10 per day per user (429 RATE_LIMITED). Answers 200 and sends nothing when the account needs no verification",
+        "description": "Requires an authenticated session.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "ok"
                       ]
                     }
                   },
@@ -992,6 +1116,118 @@
         }
       }
     },
+    "/v1/auth/providers": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Which social sign-in providers are configured on this server",
+        "description": "Public endpoint (no authentication).",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Providers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "line": {
+                          "type": "boolean"
+                        },
+                        "google": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "line",
+                        "google"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/me": {
       "get": {
         "tags": [
@@ -1031,6 +1267,9 @@
                         "lineLinked": {
                           "type": "boolean"
                         },
+                        "emailVerified": {
+                          "type": "boolean"
+                        },
                         "locale": {
                           "type": "string",
                           "enum": [
@@ -1044,6 +1283,7 @@
                         "name",
                         "email",
                         "lineLinked",
+                        "emailVerified",
                         "locale"
                       ]
                     },
@@ -13926,6 +14166,20 @@
                             ],
                             "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                           },
+                          "periodStart": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "periodEnd": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
                           "selfServe": {
                             "type": "boolean"
                           },
@@ -13950,6 +14204,12 @@
                               "email"
                             ]
                           },
+                          "ownerPhone": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "createdAt": {
                             "type": "string"
                           }
@@ -13972,8 +14232,11 @@
                           "usageHealth",
                           "renewalOn",
                           "trialEndsOn",
+                          "periodStart",
+                          "periodEnd",
                           "selfServe",
                           "owner",
+                          "ownerPhone",
                           "createdAt"
                         ]
                       }
@@ -14863,6 +15126,20 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "selfServe": {
                           "type": "boolean"
                         },
@@ -14885,6 +15162,12 @@
                           "required": [
                             "name",
                             "email"
+                          ]
+                        },
+                        "ownerPhone": {
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         },
                         "createdAt": {
@@ -15187,8 +15470,11 @@
                         "usageHealth",
                         "renewalOn",
                         "trialEndsOn",
+                        "periodStart",
+                        "periodEnd",
                         "selfServe",
                         "owner",
+                        "ownerPhone",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -15506,6 +15792,20 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "selfServe": {
                           "type": "boolean"
                         },
@@ -15528,6 +15828,12 @@
                           "required": [
                             "name",
                             "email"
+                          ]
+                        },
+                        "ownerPhone": {
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         },
                         "createdAt": {
@@ -15830,8 +16136,11 @@
                         "usageHealth",
                         "renewalOn",
                         "trialEndsOn",
+                        "periodStart",
+                        "periodEnd",
                         "selfServe",
                         "owner",
+                        "ownerPhone",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -16181,6 +16490,20 @@
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                         },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
                         "selfServe": {
                           "type": "boolean"
                         },
@@ -16203,6 +16526,12 @@
                           "required": [
                             "name",
                             "email"
+                          ]
+                        },
+                        "ownerPhone": {
+                          "type": [
+                            "string",
+                            "null"
                           ]
                         },
                         "createdAt": {
@@ -16505,8 +16834,11 @@
                         "usageHealth",
                         "renewalOn",
                         "trialEndsOn",
+                        "periodStart",
+                        "periodEnd",
                         "selfServe",
                         "owner",
+                        "ownerPhone",
                         "createdAt",
                         "demo",
                         "legalName",
@@ -28541,6 +28873,156 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "slipCheck": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "passed",
+                                "failed",
+                                "error",
+                                "skipped"
+                              ]
+                            },
+                            "reasons": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "amount_low",
+                                  "wrong_receiver",
+                                  "too_old",
+                                  "duplicate",
+                                  "not_found",
+                                  "plan",
+                                  "quota",
+                                  "platform_cap",
+                                  "provider_error"
+                                ]
+                              }
+                            },
+                            "amountMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "receiverName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "receiverAccountMasked": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "transRef": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paidAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "checkedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "reasons",
+                            "amountMinor",
+                            "receiverName",
+                            "receiverAccountMasked",
+                            "transRef",
+                            "paidAt",
+                            "checkedAt"
+                          ]
+                        },
+                        "planName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payUrl": {
+                          "type": "string"
+                        },
+                        "termsAcceptance": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "version": {
+                              "type": "string"
+                            },
+                            "acceptedAt": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "ip": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "userAgent": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "acceptedAt",
+                            "name",
+                            "userId",
+                            "ip",
+                            "userAgent"
+                          ]
                         }
                       },
                       "required": [
@@ -28559,7 +29041,14 @@
                         "status",
                         "slipUrl",
                         "slipUploadedAt",
-                        "slipNote"
+                        "slipNote",
+                        "slipCheck",
+                        "planName",
+                        "periodStart",
+                        "periodEnd",
+                        "receiptNumber",
+                        "payUrl",
+                        "termsAcceptance"
                       ]
                     }
                   },
@@ -29191,6 +29680,17 @@
           {
             "schema": {
               "type": "string",
+              "enum": [
+                "true"
+              ]
+            },
+            "required": false,
+            "name": "awaiting",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "required": false,
@@ -29309,6 +29809,156 @@
                               "string",
                               "null"
                             ]
+                          },
+                          "slipCheck": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "passed",
+                                  "failed",
+                                  "error",
+                                  "skipped"
+                                ]
+                              },
+                              "reasons": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "enum": [
+                                    "amount_low",
+                                    "wrong_receiver",
+                                    "too_old",
+                                    "duplicate",
+                                    "not_found",
+                                    "plan",
+                                    "quota",
+                                    "platform_cap",
+                                    "provider_error"
+                                  ]
+                                }
+                              },
+                              "amountMinor": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              },
+                              "receiverName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "receiverAccountMasked": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "transRef": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "paidAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "checkedAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "reasons",
+                              "amountMinor",
+                              "receiverName",
+                              "receiverAccountMasked",
+                              "transRef",
+                              "paidAt",
+                              "checkedAt"
+                            ]
+                          },
+                          "planName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "periodStart": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "periodEnd": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "receiptNumber": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "payUrl": {
+                            "type": "string"
+                          },
+                          "termsAcceptance": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "version": {
+                                "type": "string"
+                              },
+                              "acceptedAt": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "userId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "ip": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "userAgent": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "version",
+                              "acceptedAt",
+                              "name",
+                              "userId",
+                              "ip",
+                              "userAgent"
+                            ]
                           }
                         },
                         "required": [
@@ -29327,7 +29977,14 @@
                           "status",
                           "slipUrl",
                           "slipUploadedAt",
-                          "slipNote"
+                          "slipNote",
+                          "slipCheck",
+                          "planName",
+                          "periodStart",
+                          "periodEnd",
+                          "receiptNumber",
+                          "payUrl",
+                          "termsAcceptance"
                         ]
                       }
                     },
@@ -29504,6 +30161,14 @@
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                   },
+                  "periodStart": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "periodEnd": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
                   "status": {
                     "type": "string",
                     "enum": [
@@ -29611,6 +30276,156 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "slipCheck": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "passed",
+                                "failed",
+                                "error",
+                                "skipped"
+                              ]
+                            },
+                            "reasons": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "amount_low",
+                                  "wrong_receiver",
+                                  "too_old",
+                                  "duplicate",
+                                  "not_found",
+                                  "plan",
+                                  "quota",
+                                  "platform_cap",
+                                  "provider_error"
+                                ]
+                              }
+                            },
+                            "amountMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "receiverName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "receiverAccountMasked": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "transRef": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paidAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "checkedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "reasons",
+                            "amountMinor",
+                            "receiverName",
+                            "receiverAccountMasked",
+                            "transRef",
+                            "paidAt",
+                            "checkedAt"
+                          ]
+                        },
+                        "planName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payUrl": {
+                          "type": "string"
+                        },
+                        "termsAcceptance": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "version": {
+                              "type": "string"
+                            },
+                            "acceptedAt": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "ip": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "userAgent": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "acceptedAt",
+                            "name",
+                            "userId",
+                            "ip",
+                            "userAgent"
+                          ]
                         }
                       },
                       "required": [
@@ -29629,7 +30444,14 @@
                         "status",
                         "slipUrl",
                         "slipUploadedAt",
-                        "slipNote"
+                        "slipNote",
+                        "slipCheck",
+                        "planName",
+                        "periodStart",
+                        "periodEnd",
+                        "receiptNumber",
+                        "payUrl",
+                        "termsAcceptance"
                       ]
                     }
                   },
@@ -29987,6 +30809,156 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "slipCheck": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "passed",
+                                "failed",
+                                "error",
+                                "skipped"
+                              ]
+                            },
+                            "reasons": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "amount_low",
+                                  "wrong_receiver",
+                                  "too_old",
+                                  "duplicate",
+                                  "not_found",
+                                  "plan",
+                                  "quota",
+                                  "platform_cap",
+                                  "provider_error"
+                                ]
+                              }
+                            },
+                            "amountMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "receiverName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "receiverAccountMasked": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "transRef": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paidAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "checkedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "reasons",
+                            "amountMinor",
+                            "receiverName",
+                            "receiverAccountMasked",
+                            "transRef",
+                            "paidAt",
+                            "checkedAt"
+                          ]
+                        },
+                        "planName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payUrl": {
+                          "type": "string"
+                        },
+                        "termsAcceptance": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "version": {
+                              "type": "string"
+                            },
+                            "acceptedAt": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "ip": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "userAgent": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "acceptedAt",
+                            "name",
+                            "userId",
+                            "ip",
+                            "userAgent"
+                          ]
                         }
                       },
                       "required": [
@@ -30005,7 +30977,14 @@
                         "status",
                         "slipUrl",
                         "slipUploadedAt",
-                        "slipNote"
+                        "slipNote",
+                        "slipCheck",
+                        "planName",
+                        "periodStart",
+                        "periodEnd",
+                        "receiptNumber",
+                        "payUrl",
+                        "termsAcceptance"
                       ]
                     }
                   },
@@ -30233,6 +31212,156 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "slipCheck": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "passed",
+                                "failed",
+                                "error",
+                                "skipped"
+                              ]
+                            },
+                            "reasons": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "amount_low",
+                                  "wrong_receiver",
+                                  "too_old",
+                                  "duplicate",
+                                  "not_found",
+                                  "plan",
+                                  "quota",
+                                  "platform_cap",
+                                  "provider_error"
+                                ]
+                              }
+                            },
+                            "amountMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "receiverName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "receiverAccountMasked": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "transRef": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paidAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "checkedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "reasons",
+                            "amountMinor",
+                            "receiverName",
+                            "receiverAccountMasked",
+                            "transRef",
+                            "paidAt",
+                            "checkedAt"
+                          ]
+                        },
+                        "planName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payUrl": {
+                          "type": "string"
+                        },
+                        "termsAcceptance": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "version": {
+                              "type": "string"
+                            },
+                            "acceptedAt": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "userId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "ip": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "userAgent": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "acceptedAt",
+                            "name",
+                            "userId",
+                            "ip",
+                            "userAgent"
+                          ]
                         }
                       },
                       "required": [
@@ -30251,7 +31380,14 @@
                         "status",
                         "slipUrl",
                         "slipUploadedAt",
-                        "slipNote"
+                        "slipNote",
+                        "slipCheck",
+                        "planName",
+                        "periodStart",
+                        "periodEnd",
+                        "receiptNumber",
+                        "payUrl",
+                        "termsAcceptance"
                       ]
                     }
                   },
@@ -133107,6 +134243,9 @@
                                 "lineLinked": {
                                   "type": "boolean"
                                 },
+                                "emailVerified": {
+                                  "type": "boolean"
+                                },
                                 "locale": {
                                   "type": "string",
                                   "enum": [
@@ -133120,6 +134259,7 @@
                                 "name",
                                 "email",
                                 "lineLinked",
+                                "emailVerified",
                                 "locale"
                               ]
                             }
@@ -165550,660 +166690,6 @@
         }
       }
     },
-    "/v1/billing/invoices": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Pay a package by transfer / PromptPay: issue (or reuse the open) subscription invoice",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Required; unique per logical operation"
-            },
-            "required": false,
-            "description": "Required; unique per logical operation",
-            "name": "idempotency-key",
-            "in": "header"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "planCode": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 60
-                  },
-                  "interval": {
-                    "type": "string",
-                    "enum": [
-                      "month",
-                      "year"
-                    ]
-                  }
-                },
-                "required": [
-                  "planCode",
-                  "interval"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Invoice to pay",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                        },
-                        "number": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "issued",
-                            "overdue",
-                            "paid",
-                            "void"
-                          ]
-                        },
-                        "amountMinor": {
-                          "type": "integer"
-                        },
-                        "dueOn": {
-                          "type": "string",
-                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                        },
-                        "issuedOn": {
-                          "type": "string",
-                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                        },
-                        "paidAt": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "planCode": {
-                          "type": "string"
-                        },
-                        "planName": {
-                          "type": "string"
-                        },
-                        "interval": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "year"
-                          ]
-                        },
-                        "promptPayPayload": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "payUrl": {
-                          "type": "string"
-                        },
-                        "slipUploadedAt": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "slipNote": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "number",
-                        "status",
-                        "amountMinor",
-                        "dueOn",
-                        "issuedOn",
-                        "paidAt",
-                        "planCode",
-                        "planName",
-                        "interval",
-                        "promptPayPayload",
-                        "payUrl",
-                        "slipUploadedAt",
-                        "slipNote"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/billing/invoices/{id}/slip/upload-url": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Presigned PUT for the transfer slip (image / PDF ≤ 10 MB), then POST …/slip with the fileId",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Optional; unique per logical operation. Makes the request safe to retry"
-            },
-            "required": false,
-            "description": "Optional; unique per logical operation. Makes the request safe to retry",
-            "name": "idempotency-key",
-            "in": "header"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "mime": {
-                    "type": "string",
-                    "enum": [
-                      "image/jpeg",
-                      "image/png",
-                      "image/webp",
-                      "application/pdf"
-                    ]
-                  },
-                  "size": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 10485760
-                  },
-                  "filename": {
-                    "type": "string",
-                    "maxLength": 200
-                  }
-                },
-                "required": [
-                  "mime",
-                  "size"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Upload URL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "fileId": {
-                          "type": "string",
-                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                        },
-                        "uploadUrl": {
-                          "type": "string"
-                        },
-                        "method": {
-                          "type": "string",
-                          "enum": [
-                            "PUT"
-                          ]
-                        },
-                        "headers": {
-                          "type": "object",
-                          "additionalProperties": {
-                            "type": "string"
-                          }
-                        },
-                        "expiresAt": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "fileId",
-                        "uploadUrl",
-                        "method",
-                        "headers",
-                        "expiresAt"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/billing/invoices/{id}/slip": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Hand in the uploaded slip; the CoreUp team is asked to check it",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Optional; unique per logical operation. Makes the request safe to retry"
-            },
-            "required": false,
-            "description": "Optional; unique per logical operation. Makes the request safe to retry",
-            "name": "idempotency-key",
-            "in": "header"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "fileId": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                  }
-                },
-                "required": [
-                  "fileId"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Invoice",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                        },
-                        "number": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "issued",
-                            "overdue",
-                            "paid",
-                            "void"
-                          ]
-                        },
-                        "amountMinor": {
-                          "type": "integer"
-                        },
-                        "dueOn": {
-                          "type": "string",
-                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                        },
-                        "issuedOn": {
-                          "type": "string",
-                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                        },
-                        "paidAt": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "planCode": {
-                          "type": "string"
-                        },
-                        "planName": {
-                          "type": "string"
-                        },
-                        "interval": {
-                          "type": "string",
-                          "enum": [
-                            "month",
-                            "year"
-                          ]
-                        },
-                        "promptPayPayload": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "payUrl": {
-                          "type": "string"
-                        },
-                        "slipUploadedAt": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "slipNote": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "number",
-                        "status",
-                        "amountMinor",
-                        "dueOn",
-                        "issuedOn",
-                        "paidAt",
-                        "planCode",
-                        "planName",
-                        "interval",
-                        "promptPayPayload",
-                        "payUrl",
-                        "slipUploadedAt",
-                        "slipNote"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/public/pay/{token}": {
       "get": {
         "tags": [
@@ -166304,6 +166790,32 @@
                                 "string",
                                 "null"
                               ]
+                            },
+                            "periodStart": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "periodEnd": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "receiptNumber": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "receiptUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
                             }
                           },
                           "required": [
@@ -166320,7 +166832,11 @@
                             "promptPayPayload",
                             "payUrl",
                             "slipUploadedAt",
-                            "slipNote"
+                            "slipNote",
+                            "periodStart",
+                            "periodEnd",
+                            "receiptNumber",
+                            "receiptUrl"
                           ]
                         },
                         "shopName": {
@@ -166373,12 +166889,139 @@
                               "branch"
                             ]
                           }
+                        },
+                        "seller": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "legalName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "address": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "phone": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "legalName",
+                            "address",
+                            "phone"
+                          ]
+                        },
+                        "buyer": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "legalName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "address": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "phone": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "legalName",
+                            "address",
+                            "phone"
+                          ]
+                        },
+                        "terms": {
+                          "type": "object",
+                          "properties": {
+                            "version": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            },
+                            "acceptance": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "version": {
+                                  "type": "string"
+                                },
+                                "acceptedAt": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "userId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ip": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "userAgent": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "acceptedAt",
+                                "name",
+                                "userId",
+                                "ip",
+                                "userAgent"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "url",
+                            "acceptance"
+                          ]
                         }
                       },
                       "required": [
                         "invoice",
                         "shopName",
-                        "accounts"
+                        "accounts",
+                        "seller",
+                        "buyer",
+                        "terms"
                       ]
                     }
                   },
@@ -166670,12 +167313,188 @@
         }
       }
     },
+    "/v1/public/pay/{token}/accept-terms": {
+      "post": {
+        "tags": [
+          "billing"
+        ],
+        "summary": "The payer accepted the terms (version, name typed; time, IP, browser and signed-in user are recorded); required before a slip",
+        "description": "Public endpoint (no authentication).",
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 200
+            },
+            "required": true,
+            "name": "token",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "version",
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Acceptance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "type": "string"
+                        },
+                        "acceptedAt": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "ip": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "userAgent": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "acceptedAt",
+                        "name",
+                        "userId",
+                        "ip",
+                        "userAgent"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/public/pay/{token}/slip/upload-url": {
       "post": {
         "tags": [
           "billing"
         ],
-        "summary": "Presigned PUT for the transfer slip (image / PDF ≤ 10 MB), then POST …/slip with the fileId",
+        "summary": "Presigned PUT for the transfer slip (image / PDF ≤ 10 MB); 422 PAY_TERMS_REQUIRED until the terms are accepted",
         "description": "Public endpoint (no authentication).",
         "security": [],
         "parameters": [
@@ -166963,6 +167782,32 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "receiptUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
@@ -166979,7 +167824,11 @@
                         "promptPayPayload",
                         "payUrl",
                         "slipUploadedAt",
-                        "slipNote"
+                        "slipNote",
+                        "periodStart",
+                        "periodEnd",
+                        "receiptNumber",
+                        "receiptUrl"
                       ]
                     }
                   },
@@ -167068,7 +167917,7 @@
         "tags": [
           "billing"
         ],
-        "summary": "Plan, usage vs limits, plans on offer and recent invoices",
+        "summary": "Plan and expiry, usage vs limits, plans (information only) and the invoices the team issued",
         "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.",
         "security": [
           {
@@ -167171,15 +168020,6 @@
                             "null"
                           ],
                           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                        },
-                        "paymentsConfigured": {
-                          "type": "boolean"
-                        },
-                        "omisePublicKey": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
                         },
                         "plans": {
                           "type": "array",
@@ -167329,6 +168169,35 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "planName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "receiptNumber": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "periodStart": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "periodEnd": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "payUrl": {
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -167341,148 +168210,14 @@
                               "dueOn",
                               "paidAt",
                               "status",
-                              "planCode"
+                              "planCode",
+                              "planName",
+                              "receiptNumber",
+                              "periodStart",
+                              "periodEnd",
+                              "payUrl"
                             ]
                           }
-                        },
-                        "paymentAccounts": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              },
-                              "kind": {
-                                "type": "string",
-                                "enum": [
-                                  "bank",
-                                  "promptpay"
-                                ]
-                              },
-                              "bankCode": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "bankName": {
-                                "type": "string"
-                              },
-                              "accountName": {
-                                "type": "string"
-                              },
-                              "accountNo": {
-                                "type": "string"
-                              },
-                              "branch": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "kind",
-                              "bankCode",
-                              "bankName",
-                              "accountName",
-                              "accountNo",
-                              "branch"
-                            ]
-                          }
-                        },
-                        "openInvoice": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                            },
-                            "number": {
-                              "type": "string"
-                            },
-                            "status": {
-                              "type": "string",
-                              "enum": [
-                                "issued",
-                                "overdue",
-                                "paid",
-                                "void"
-                              ]
-                            },
-                            "amountMinor": {
-                              "type": "integer"
-                            },
-                            "dueOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "issuedOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "paidAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "planCode": {
-                              "type": "string"
-                            },
-                            "planName": {
-                              "type": "string"
-                            },
-                            "interval": {
-                              "type": "string",
-                              "enum": [
-                                "month",
-                                "year"
-                              ]
-                            },
-                            "promptPayPayload": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "payUrl": {
-                              "type": "string"
-                            },
-                            "slipUploadedAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "slipNote": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "number",
-                            "status",
-                            "amountMinor",
-                            "dueOn",
-                            "issuedOn",
-                            "paidAt",
-                            "planCode",
-                            "planName",
-                            "interval",
-                            "promptPayPayload",
-                            "payUrl",
-                            "slipUploadedAt",
-                            "slipNote"
-                          ]
                         }
                       },
                       "required": [
@@ -167491,286 +168226,9 @@
                         "trialEndsOn",
                         "periodStart",
                         "periodEnd",
-                        "paymentsConfigured",
-                        "omisePublicKey",
                         "plans",
                         "usage",
-                        "invoices",
-                        "paymentAccounts",
-                        "openInvoice"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/billing/checkout": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Pay for a plan with PromptPay or card (Omise). 503 PAYMENTS_NOT_CONFIGURED without keys",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Required; unique per logical operation"
-            },
-            "required": false,
-            "description": "Required; unique per logical operation",
-            "name": "idempotency-key",
-            "in": "header"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "planCode": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 60
-                  },
-                  "method": {
-                    "type": "string",
-                    "enum": [
-                      "promptpay",
-                      "card"
-                    ]
-                  },
-                  "cardToken": {
-                    "type": "string",
-                    "minLength": 5,
-                    "maxLength": 100
-                  },
-                  "returnPath": {
-                    "type": "string",
-                    "maxLength": 200
-                  }
-                },
-                "required": [
-                  "planCode",
-                  "method"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Charge",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "invoice": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                            },
-                            "number": {
-                              "type": "string"
-                            },
-                            "amountMinor": {
-                              "type": "integer"
-                            },
-                            "vatMinor": {
-                              "type": "integer"
-                            },
-                            "totalMinor": {
-                              "type": "integer"
-                            },
-                            "issuedOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "dueOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "paidAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "status": {
-                              "type": "string",
-                              "enum": [
-                                "draft",
-                                "issued",
-                                "paid",
-                                "void",
-                                "overdue"
-                              ]
-                            },
-                            "planCode": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "number",
-                            "amountMinor",
-                            "vatMinor",
-                            "totalMinor",
-                            "issuedOn",
-                            "dueOn",
-                            "paidAt",
-                            "status",
-                            "planCode"
-                          ]
-                        },
-                        "chargeId": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "paid",
-                            "pending",
-                            "requires_action",
-                            "failed"
-                          ]
-                        },
-                        "qr": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "properties": {
-                            "imageUrl": {
-                              "type": "string"
-                            },
-                            "expiresAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "imageUrl",
-                            "expiresAt"
-                          ]
-                        },
-                        "authorizeUri": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "failureMessage": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "invoice",
-                        "chargeId",
-                        "status",
-                        "qr",
-                        "authorizeUri",
-                        "failureMessage"
+                        "invoices"
                       ]
                     }
                   },
@@ -167859,7 +168317,7 @@
         "tags": [
           "billing"
         ],
-        "summary": "One subscription invoice (poll for `paid`)",
+        "summary": "One subscription invoice the team issued to the shop",
         "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.",
         "security": [
           {
@@ -167933,6 +168391,35 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "planName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "receiptNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "periodStart": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "periodEnd": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "payUrl": {
+                          "type": "string"
                         }
                       },
                       "required": [
@@ -167945,252 +168432,12 @@
                         "dueOn",
                         "paidAt",
                         "status",
-                        "planCode"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/billing/invoices/{id}/sync": {
-      "post": {
-        "tags": [
-          "billing"
-        ],
-        "summary": "Re-check the charge with Omise now and settle the invoice if it was paid",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
-        "security": [
-          {
-            "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-            },
-            "required": true,
-            "name": "id",
-            "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Optional; unique per logical operation. Makes the request safe to retry"
-            },
-            "required": false,
-            "description": "Optional; unique per logical operation. Makes the request safe to retry",
-            "name": "idempotency-key",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Charge",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "invoice": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
-                            },
-                            "number": {
-                              "type": "string"
-                            },
-                            "amountMinor": {
-                              "type": "integer"
-                            },
-                            "vatMinor": {
-                              "type": "integer"
-                            },
-                            "totalMinor": {
-                              "type": "integer"
-                            },
-                            "issuedOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "dueOn": {
-                              "type": "string",
-                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-                            },
-                            "paidAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "status": {
-                              "type": "string",
-                              "enum": [
-                                "draft",
-                                "issued",
-                                "paid",
-                                "void",
-                                "overdue"
-                              ]
-                            },
-                            "planCode": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "number",
-                            "amountMinor",
-                            "vatMinor",
-                            "totalMinor",
-                            "issuedOn",
-                            "dueOn",
-                            "paidAt",
-                            "status",
-                            "planCode"
-                          ]
-                        },
-                        "chargeId": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "paid",
-                            "pending",
-                            "requires_action",
-                            "failed"
-                          ]
-                        },
-                        "qr": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "properties": {
-                            "imageUrl": {
-                              "type": "string"
-                            },
-                            "expiresAt": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "imageUrl",
-                            "expiresAt"
-                          ]
-                        },
-                        "authorizeUri": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "failureMessage": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "invoice",
-                        "chargeId",
-                        "status",
-                        "qr",
-                        "authorizeUri",
-                        "failureMessage"
+                        "planCode",
+                        "planName",
+                        "receiptNumber",
+                        "periodStart",
+                        "periodEnd",
+                        "payUrl"
                       ]
                     }
                   },
@@ -168523,109 +168770,6 @@
                   },
                   "required": [
                     "data"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "UNAUTHENTICATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "NOT_FOUND",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "RATE_LIMITED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "INTERNAL",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBody"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/webhooks/omise": {
-      "post": {
-        "tags": [
-          "webhooks"
-        ],
-        "summary": "Omise webhook (charge.complete) — HMAC-verified",
-        "description": "Public endpoint (no authentication).",
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "Accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "received": {
-                      "type": "boolean",
-                      "enum": [
-                        true
-                      ]
-                    }
-                  },
-                  "required": [
-                    "received"
                   ]
                 }
               }
@@ -169367,6 +169511,9 @@
                             ]
                           }
                         },
+                        "defaultPlanCode": {
+                          "type": "string"
+                        },
                         "defaultTimezone": {
                           "type": "string"
                         }
@@ -169374,6 +169521,7 @@
                       "required": [
                         "industries",
                         "plans",
+                        "defaultPlanCode",
                         "defaultTimezone"
                       ]
                     }
@@ -169463,7 +169611,7 @@
         "tags": [
           "onboarding"
         ],
-        "summary": "Open a new shop (1-month trial, TRIAL_DAYS) from an industry template; the caller becomes its owner. The same user opening a shop with the same name (trim, any case) within 10 minutes gets that first shop back (200) instead of a second one",
+        "summary": "Open a new shop (1-month free trial, TRIAL_DAYS, of the package in `planCode` or the default trial package) from an industry template; the caller becomes its owner. The same user opening a shop with the same name (trim, any case) within 10 minutes gets that first shop back (200) instead of a second one",
         "description": "Requires an authenticated session.",
         "security": [
           {
@@ -169497,11 +169645,22 @@
                     "minLength": 1,
                     "maxLength": 60,
                     "default": "Asia/Bangkok"
+                  },
+                  "planCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "ownerPhone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30
                   }
                 },
                 "required": [
                   "businessName",
-                  "industryKey"
+                  "industryKey",
+                  "ownerPhone"
                 ]
               }
             }
@@ -169906,6 +170065,268 @@
                         "completed",
                         "trialEndsOn",
                         "pendingInvites"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/onboarding/owner-contact": {
+      "get": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "The owner’s mobile phone given at sign-up for CoreUp’s onboarding team (private: never on the booking page or receipts). `phone` null = never given",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "phone": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "phone"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "onboarding"
+        ],
+        "summary": "Change the owner’s mobile phone for CoreUp’s onboarding team. 400 unless a Thai mobile (06 / 08 / 09)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30
+                  }
+                },
+                "required": [
+                  "phone"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contact",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "phone": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "phone"
                       ]
                     }
                   },

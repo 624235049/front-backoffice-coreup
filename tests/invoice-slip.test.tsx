@@ -16,6 +16,7 @@ vi.mock('@/features/accounting/components/a4-actions', () => ({ A4Link: () => nu
 vi.mock('@/features/platform/api', () => ({
   useInvoices: () => ({ isPending: false, isError: false, data: h.invoices }),
   useTenants: () => ({ data: [] }),
+  usePlans: () => ({ data: [] }),
   useConfirmPayment: () => ({ mutate: h.confirm, isPending: false }),
   useRejectSlip: () => ({ mutate: h.reject, isPending: false }),
   usePatchInvoice: () => ({ mutate: h.patch, isPending: false }),
@@ -37,6 +38,13 @@ const invoice = (over: Record<string, unknown> = {}) => ({
   slipUrl: 'https://files.example/slip.png?sig=abc',
   slipUploadedAt: '2026-10-02T03:00:00.000Z',
   slipNote: null,
+  planName: 'Pro',
+  periodStart: '2026-11-02',
+  periodEnd: '2026-12-02',
+  receiptNumber: null,
+  payUrl: 'https://app.coreup.pro/pay/tok',
+  termsAcceptance: null,
+  slipCheck: null,
   ...over,
 });
 
@@ -109,5 +117,49 @@ describe('slip review sheet actions', () => {
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.reject' }));
     expect(h.reject).toHaveBeenCalledWith({ id: 'inv-1', note: 'ยอดไม่ตรง' }, expect.anything());
     expect(h.confirm).not.toHaveBeenCalled();
+  });
+});
+
+describe('invoice detail: acceptance of the terms and the automatic slip check', () => {
+  it('shows who accepted which version (IP, browser) and the slip-check verdict next to the slip', () => {
+    h.invoices = [
+      invoice({
+        receiptNumber: null,
+        termsAcceptance: {
+          version: '2026-10-21',
+          acceptedAt: '2026-10-02T02:00:00.000Z',
+          name: 'สมชาย ใจดี',
+          userId: null,
+          ip: '203.0.113.7',
+          userAgent: 'Mozilla/5.0',
+        },
+        slipCheck: {
+          status: 'failed',
+          reasons: ['amount_low'],
+          amountMinor: 50_000,
+          receiverName: 'นายสุบรรณ นกสังข์',
+          receiverAccountMasked: 'xxx-x-x5462-2',
+          transRef: 'T1',
+          paidAt: '2026-10-02T01:00:00.000Z',
+          checkedAt: '2026-10-02T03:01:00.000Z',
+        },
+      }),
+    ];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'invoices.slip.review' })[0] as HTMLElement);
+    const accepted = screen.getByTestId('terms-acceptance').textContent ?? '';
+    expect(accepted).toContain('invoices.acceptance.title');
+    expect(accepted).toContain('IP 203.0.113.7');
+    expect(accepted).toContain('Mozilla/5.0');
+    const check = screen.getByTestId('slip-check').textContent ?? '';
+    expect(check).toContain('invoices.slip.check.status.failed');
+    expect(check).toContain('invoices.slip.check.reason.amount_low');
+  });
+
+  it('says so when the customer has not accepted the terms yet, and offers the LINE message for an unpaid notice', () => {
+    h.invoices = [invoice({ slipUrl: null, slipUploadedAt: null })];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'invoices.detail' })[0] as HTMLElement);
+    expect(screen.getByTestId('terms-none')).toBeTruthy();
   });
 });
