@@ -26,12 +26,13 @@ export const SHOP_MODULES = [
   'lite',
 ] as const satisfies readonly ModuleKey[];
 
-/** The limit keys the API enforces (`PLAN_LIMIT_KEYS`); a missing key = unlimited. */
+/** The limit keys the API enforces (`PLAN_LIMIT_KEYS`); a missing key = unlimited, except `slip_checks_month` (0 – 2,000, never unlimited). */
 export const PLAN_LIMITS = [
   'branches',
   'members',
   'customers',
   'messages_per_month',
+  'slip_checks_month',
 ] as const satisfies readonly (keyof NonNullable<ApiBody<'/v1/platform/plans', 'post'>['limits']>)[];
 
 /** New-shop default: the cheapest active plan with a real price (฿0 seed plans are quoted per shop). */

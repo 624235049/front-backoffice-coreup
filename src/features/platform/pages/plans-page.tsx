@@ -113,7 +113,9 @@ function OfferDialog({ plan, onClose }: { plan: Plan; onClose: () => void }) {
     ...LIMITS.map(
       (k) =>
         `• ${t(`plans.limit.${k}`)}: ${
-          plan.limits[k] === undefined ? t('plans.offer.unlimited') : plan.limits[k].toLocaleString(locale)
+          plan.limits[k] === undefined
+            ? t(k === 'slip_checks_month' ? 'plans.offer.none' : 'plans.offer.unlimited')
+            : plan.limits[k].toLocaleString(locale)
         }`,
     ),
     '',
@@ -324,7 +326,9 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
                     id={`pl-limit-${k}`}
                     inputMode="numeric"
                     value={limits[k] ?? ''}
-                    placeholder={t('plans.unlimited')}
+                    placeholder={
+                      k === 'slip_checks_month' ? t('plans.slipPlaceholder') : t('plans.unlimited')
+                    }
                     onChange={(e) => setLimits((cur) => ({ ...cur, [k]: e.target.value }))}
                   />
                 </div>

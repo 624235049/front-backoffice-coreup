@@ -874,7 +874,7 @@ export interface paths {
                             data: {
                                 id: string;
                                 /** @enum {string} */
-                                kind: "appointment_soon" | "booking_new" | "booking_cancelled" | "low_stock" | "system";
+                                kind: "appointment_soon" | "booking_new" | "booking_cancelled" | "low_stock" | "system" | "table_order";
                                 title: string;
                                 body: string | null;
                                 url: string | null;
@@ -1813,6 +1813,375 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tenant/receiving-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The shop’s receiving accounts (bank / PromptPay, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Accounts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                accounts: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "bank" | "promptpay";
+                                    label: string | null;
+                                    bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
+                                    promptpay: {
+                                        id: string;
+                                        accountName: string;
+                                    } | null;
+                                    active: boolean;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Replace the receiving accounts (order kept). 422 on a bad bank / PromptPay id, or `in_use` when the last active account would go while a deposit or pay-first pickup needs one
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        accounts: {
+                            /** Format: uuid */
+                            id?: string;
+                            /** @enum {string} */
+                            kind: "bank" | "promptpay";
+                            label: string | null;
+                            bank: {
+                                /** @enum {string} */
+                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                bankName: string;
+                                accountNumber: string;
+                                accountName: string;
+                            } | null;
+                            promptpay: {
+                                id: string;
+                                accountName: string;
+                            } | null;
+                            active: boolean;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Accounts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                accounts: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "bank" | "promptpay";
+                                    label: string | null;
+                                    bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
+                                    promptpay: {
+                                        id: string;
+                                        accountName: string;
+                                    } | null;
+                                    active: boolean;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tenant/slip-checks/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Automatic slip checks used this month vs the package / override limit (`limit` 0 = the package has none; `enabled` false = every slip is checked by hand)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Usage */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                used: number;
+                                limit: number;
+                                enabled: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tenant/modules": {
         parameters: {
             query?: never;
@@ -1843,7 +2212,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -1970,7 +2339,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -3135,6 +3504,7 @@ export interface paths {
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
+                                orderUrl: string | null;
                             }[];
                         };
                     };
@@ -3253,6 +3623,7 @@ export interface paths {
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
+                                orderUrl: string | null;
                             };
                         };
                     };
@@ -3378,6 +3749,7 @@ export interface paths {
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
+                                orderUrl: string | null;
                             }[];
                         };
                     };
@@ -3606,6 +3978,7 @@ export interface paths {
                                 capacity: number;
                                 active: boolean;
                                 sort: number;
+                                orderUrl: string | null;
                             };
                         };
                     };
@@ -4489,7 +4862,7 @@ export interface paths {
                             data: {
                                 key: string;
                                 /** @enum {string} */
-                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                 resource: string;
                                 action: string;
                             }[];
@@ -8630,7 +9003,7 @@ export interface paths {
                     "application/json": {
                         modules: {
                             /** @enum {string} */
-                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                             /**
                              * @default consultant
                              * @enum {string}
@@ -8854,7 +9227,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -8950,7 +9323,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         /** @enum {string} */
-                        key: "branches" | "members" | "customers" | "messages_per_month";
+                        key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
                         value: number | null;
                     };
                 };
@@ -8965,7 +9338,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -11350,7 +11723,7 @@ export interface paths {
                                         /** @enum {string} */
                                         owner: "consultant" | "tenant";
                                         /** @enum {string} */
-                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     }[];
                                 }[];
                             }[];
@@ -15553,13 +15926,14 @@ export interface paths {
                          *       "core"
                          *     ]
                          */
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         /** @default {} */
                         limits?: {
                             branches?: number;
                             members?: number;
                             customers?: number;
                             messages_per_month?: number;
+                            slip_checks_month?: number;
                         };
                     };
                 };
@@ -15700,12 +16074,13 @@ export interface paths {
                         /** @enum {string} */
                         interval?: "month" | "year";
                         active?: boolean;
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         limits?: {
                             branches?: number;
                             members?: number;
                             customers?: number;
                             messages_per_month?: number;
+                            slip_checks_month?: number;
                         };
                         applyToShops?: boolean;
                     };
@@ -15802,6 +16177,115 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/v1/platform/slip-checks/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Automatic slip checks all shops used this calendar month (Asia/Bangkok) against `SLIP_VERIFY_MONTHLY_CAP` (the checks CoreUp’s EasySlip package allows; 0 = feature off) — buy a bigger package before it runs out
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Usage */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @description YYYY-MM */
+                                month: string;
+                                used: number;
+                                cap: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/platform/team": {
@@ -39623,6 +40107,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -39803,6 +40298,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -39965,6 +40471,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -40021,6 +40538,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -40077,6 +40605,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -40134,6 +40673,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -40190,6 +40740,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -40400,6 +40961,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -40572,6 +41144,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -40746,6 +41329,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -41117,6 +41711,7 @@ export interface paths {
                         assistantIds?: string[];
                         /** @default [] */
                         items?: {
+                            id?: string;
                             /** @enum {string} */
                             kind: "service" | "product" | "package_sale" | "package_use";
                             refId?: string | null;
@@ -41203,6 +41798,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -41560,6 +42166,17 @@ export interface paths {
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                         depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -45689,6 +46306,7 @@ export interface paths {
                         appointmentIds?: string[];
                         /** @default [] */
                         items?: {
+                            id?: string;
                             /** @enum {string} */
                             kind: "service" | "product" | "package_sale" | "package_use";
                             refId?: string | null;
@@ -45775,6 +46393,7 @@ export interface paths {
                                 version: number;
                                 createdAt: string;
                                 items: {
+                                    id: string;
                                     /** @enum {string} */
                                     kind: "service" | "product" | "package_sale" | "package_use";
                                     refId: string | null;
@@ -45788,10 +46407,19 @@ export interface paths {
                                     /** @description integer satang */
                                     labCostMinor: number;
                                     labVendor: string | null;
-                                    id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                 }[];
                                 payments: {
                                     id: string;
@@ -45993,6 +46621,7 @@ export interface paths {
                                 version: number;
                                 createdAt: string;
                                 items: {
+                                    id: string;
                                     /** @enum {string} */
                                     kind: "service" | "product" | "package_sale" | "package_use";
                                     refId: string | null;
@@ -46006,10 +46635,19 @@ export interface paths {
                                     /** @description integer satang */
                                     labCostMinor: number;
                                     labVendor: string | null;
-                                    id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                 }[];
                                 payments: {
                                     id: string;
@@ -46156,6 +46794,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         items?: {
+                            id?: string;
                             /** @enum {string} */
                             kind: "service" | "product" | "package_sale" | "package_use";
                             refId?: string | null;
@@ -46240,6 +46879,7 @@ export interface paths {
                                 version: number;
                                 createdAt: string;
                                 items: {
+                                    id: string;
                                     /** @enum {string} */
                                     kind: "service" | "product" | "package_sale" | "package_use";
                                     refId: string | null;
@@ -46253,10 +46893,19 @@ export interface paths {
                                     /** @description integer satang */
                                     labCostMinor: number;
                                     labVendor: string | null;
-                                    id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                 }[];
                                 payments: {
                                     id: string;
@@ -46476,6 +47125,7 @@ export interface paths {
                                 version: number;
                                 createdAt: string;
                                 items: {
+                                    id: string;
                                     /** @enum {string} */
                                     kind: "service" | "product" | "package_sale" | "package_use";
                                     refId: string | null;
@@ -46489,10 +47139,19 @@ export interface paths {
                                     /** @description integer satang */
                                     labCostMinor: number;
                                     labVendor: string | null;
-                                    id: string;
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                 }[];
                                 payments: {
                                     id: string;
@@ -46707,6 +47366,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -46720,10 +47380,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -47071,6 +47740,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -47084,10 +47754,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -47311,6 +47990,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -47324,10 +48004,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -47554,6 +48243,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -47567,10 +48257,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -47803,6 +48502,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -47816,10 +48516,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -48196,6 +48905,7 @@ export interface paths {
                                     version: number;
                                     createdAt: string;
                                     items: {
+                                        id: string;
                                         /** @enum {string} */
                                         kind: "service" | "product" | "package_sale" | "package_use";
                                         refId: string | null;
@@ -48209,10 +48919,19 @@ export interface paths {
                                         /** @description integer satang */
                                         labCostMinor: number;
                                         labVendor: string | null;
-                                        id: string;
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number | null;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
                                     }[];
                                     payments: {
                                         id: string;
@@ -55244,7 +55963,7 @@ export interface paths {
         };
         /**
          * Products with on-hand (of one branch, or all the caller may see); `code` = exact barcode / SKU for a scanner
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory|table_ordering`.
          */
         get: {
             parameters: {
@@ -55258,6 +55977,7 @@ export interface paths {
                     categoryId?: string;
                     active?: "true" | "false";
                     branchId?: string;
+                    kind?: "item" | "ingredient";
                 };
                 header?: never;
                 path?: never;
@@ -55274,6 +55994,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                /** @enum {string} */
+                                kind: "item" | "ingredient";
                                 sku: string | null;
                                 barcode: string | null;
                                 name: string;
@@ -55288,6 +56010,20 @@ export interface paths {
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
+                                soldOut: boolean;
+                                description: string | null;
                                 onHand: number;
                                 avgCostMinor: number | null;
                                 lowStock: boolean;
@@ -55370,7 +56106,7 @@ export interface paths {
         put?: never;
         /**
          * Create a product (optional opening stock at a branch). Duplicate SKU / barcode → 409 PRODUCT_CODE_TAKEN
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
          */
@@ -55387,6 +56123,11 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        /**
+                         * @default item
+                         * @enum {string}
+                         */
+                        kind?: "item" | "ingredient";
                         name: string;
                         sku?: string | null;
                         barcode?: string | null;
@@ -55398,8 +56139,11 @@ export interface paths {
                          * @default 0
                          */
                         costMinor?: number;
-                        /** @description integer satang */
-                        priceMinor: number;
+                        /**
+                         * @description integer satang
+                         * @default 0
+                         */
+                        priceMinor?: number;
                         /**
                          * @default vat
                          * @enum {string}
@@ -55412,6 +56156,22 @@ export interface paths {
                         trackStock?: boolean;
                         /** @default true */
                         active?: boolean;
+                        /** @default [] */
+                        options?: {
+                            id: string;
+                            name: string;
+                            required: boolean;
+                            multi: boolean;
+                            choices: {
+                                id: string;
+                                name: string;
+                                /** @description integer satang */
+                                priceMinor: number;
+                            }[];
+                        }[];
+                        /** @default false */
+                        soldOut?: boolean;
+                        description?: string | null;
                         opening?: {
                             branchId: string;
                             qty: number;
@@ -55431,6 +56191,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                /** @enum {string} */
+                                kind: "item" | "ingredient";
                                 sku: string | null;
                                 barcode: string | null;
                                 name: string;
@@ -55445,6 +56207,20 @@ export interface paths {
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
+                                soldOut: boolean;
+                                description: string | null;
                                 onHand: number;
                                 avgCostMinor: number | null;
                                 lowStock: boolean;
@@ -55541,7 +56317,7 @@ export interface paths {
         };
         /**
          * One product with its stock level per branch
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory|table_ordering`.
          */
         get: {
             parameters: {
@@ -55563,6 +56339,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                /** @enum {string} */
+                                kind: "item" | "ingredient";
                                 sku: string | null;
                                 barcode: string | null;
                                 name: string;
@@ -55577,6 +56355,20 @@ export interface paths {
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
+                                soldOut: boolean;
+                                description: string | null;
                                 onHand: number;
                                 avgCostMinor: number | null;
                                 lowStock: boolean;
@@ -55662,7 +56454,7 @@ export interface paths {
         post?: never;
         /**
          * Delete a product that was never moved or billed (else 409 PRODUCT_IN_USE — deactivate it instead)
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -55756,7 +56548,7 @@ export interface paths {
         head?: never;
         /**
          * Edit a product (only the fields sent change; stock is changed with receive / adjust / count)
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -55790,6 +56582,20 @@ export interface paths {
                         minStock?: number;
                         trackStock?: boolean;
                         active?: boolean;
+                        options?: {
+                            id: string;
+                            name: string;
+                            required: boolean;
+                            multi: boolean;
+                            choices: {
+                                id: string;
+                                name: string;
+                                /** @description integer satang */
+                                priceMinor: number;
+                            }[];
+                        }[];
+                        soldOut?: boolean;
+                        description?: string | null;
                     };
                 };
             };
@@ -55803,6 +56609,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: string;
+                                /** @enum {string} */
+                                kind: "item" | "ingredient";
                                 sku: string | null;
                                 barcode: string | null;
                                 name: string;
@@ -55817,6 +56625,20 @@ export interface paths {
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
+                                soldOut: boolean;
+                                description: string | null;
                                 onHand: number;
                                 avgCostMinor: number | null;
                                 lowStock: boolean;
@@ -55900,6 +56722,239 @@ export interface paths {
         };
         trace?: never;
     };
+    "/v1/inventory/products/{id}/recipe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Recipe of a menu item: what one unit uses (base + per option choice), base cost per unit and the margin against the price
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Recipe */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                lines: {
+                                    ingredientId: string;
+                                    ingredientName: string;
+                                    unit: string;
+                                    choiceId: string | null;
+                                    qty: number;
+                                }[];
+                                costMinor: number;
+                                priceMinor: number;
+                                marginMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Replace the whole recipe (max 40 lines). Each line names an ingredient; `choiceId` null = base amount, else a delta for that option choice. Unknown choice / not an ingredient → 400
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        lines: {
+                            ingredientId: string;
+                            choiceId?: string | null;
+                            qty: number;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Recipe */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                lines: {
+                                    ingredientId: string;
+                                    ingredientName: string;
+                                    unit: string;
+                                    choiceId: string | null;
+                                    qty: number;
+                                }[];
+                                costMinor: number;
+                                priceMinor: number;
+                                marginMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/inventory/categories": {
         parameters: {
             query?: never;
@@ -55909,7 +56964,7 @@ export interface paths {
         };
         /**
          * Product categories with product counts
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory|table_ordering`.
          */
         get: {
             parameters: {
@@ -56004,7 +57059,7 @@ export interface paths {
         put?: never;
         /**
          * Add a product category
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -56125,7 +57180,7 @@ export interface paths {
         post?: never;
         /**
          * Delete a category (its products become uncategorised)
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -56219,7 +57274,7 @@ export interface paths {
         head?: never;
         /**
          * Rename / reorder a category
-         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory`.
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:write`. Module: `inventory|table_ordering`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -59332,6 +60387,242 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/inventory/reports/menu-margin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Menu items with a recipe: units sold, revenue, ingredient cost and margin over paid bills
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Report */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                rows: {
+                                    productId: string;
+                                    name: string;
+                                    qtySold: number;
+                                    revenueMinor: number;
+                                    ingredientCostMinor: number;
+                                    marginMinor: number;
+                                    marginPct: number | null;
+                                }[];
+                                totals: {
+                                    qtySold: number;
+                                    revenueMinor: number;
+                                    ingredientCostMinor: number;
+                                    marginMinor: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/inventory/low-stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Ingredients at or under their reorder point (including empty ones), emptiest first — for the order screen chip
+         * @description Requires header `X-Tenant-Id`. Permission: `inventory:read`. Module: `inventory`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Ingredients */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                productId: string;
+                                name: string;
+                                unit: string;
+                                onHand: number;
+                                minStock: number;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/inventory/reports/sales": {
         parameters: {
             query?: never;
@@ -59453,6 +60744,2737 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/table/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Table menu behind the QR: shop, table, active products by category (sold-out flagged) and the table’s open bill. Bad / replaced token → 404; shop without table ordering → 403
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Menu */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                shop: {
+                                    name: string;
+                                    logoUrl: string | null;
+                                    brandColor: string | null;
+                                };
+                                table: {
+                                    id: string;
+                                    name: string;
+                                };
+                                categories: {
+                                    id: string;
+                                    name: string;
+                                    products: {
+                                        id: string;
+                                        name: string;
+                                        priceMinor: number;
+                                        imageUrl: string | null;
+                                        description: string | null;
+                                        soldOut: boolean;
+                                        options: {
+                                            id: string;
+                                            name: string;
+                                            required: boolean;
+                                            multi: boolean;
+                                            choices: {
+                                                id: string;
+                                                name: string;
+                                                /** @description integer satang */
+                                                priceMinor: number;
+                                            }[];
+                                        }[];
+                                    }[];
+                                }[];
+                                openBill: {
+                                    id: string;
+                                    tableName: string;
+                                    totalMinor: number;
+                                    items: {
+                                        id: string;
+                                        name: string;
+                                        qty: number;
+                                        unitPriceMinor: number;
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
+                                        note: string | null;
+                                        round: number;
+                                        /** @enum {string} */
+                                        kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                    }[];
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/table/{token}/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Order from the table: opens the table’s bill when none is open, else adds the next round to it. Sold-out line → 409 CONFLICT {reason:"sold_out", productId, name}; missing / unknown option → 422
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        items: {
+                            productId: string;
+                            qty: number;
+                            /** @default [] */
+                            optionChoiceIds?: string[];
+                            note?: string;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description The table’s bill */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                tableName: string;
+                                totalMinor: number;
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/table/{token}/bill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The table’s open bill (what was ordered and its status), or null
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Bill */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                tableName: string;
+                                totalMinor: number;
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                            } | null;
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/table/{token}/images/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Picture of a menu product: redirects to a short-lived storage URL
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Redirect to the image */
+                302: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Order rounds that still have something to make (new / preparing lines), oldest first — the kitchen screen / ticket printer polls this
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:read`. Module: `table_ordering`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                    /** @description ISO timestamp */
+                    since?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rounds */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                round: number;
+                                /** @enum {string} */
+                                kind: "table" | "counter" | "pickup" | "preorder";
+                                tableName: string | null;
+                                queueNumber: string | null;
+                                customerName: string | null;
+                                note: string | null;
+                                takeaway: boolean;
+                                createdByName: string | null;
+                                /** @description ISO timestamp */
+                                pickupAt: string | null;
+                                /** @description ISO timestamp */
+                                releaseAt: string | null;
+                                /** @description ISO timestamp */
+                                appointmentStartAt: string | null;
+                                /** @description ISO timestamp */
+                                readyAt: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @description ISO timestamp */
+                                printedAt: string | null;
+                                /** @enum {string} */
+                                source: "qr" | "staff";
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/{billId}/rounds/{round}/printed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark a round’s kitchen ticket printed. Atomic: `printedNow` is true only for the caller that flipped it (print only then)
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                    round: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Result */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                printedNow: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Kitchen status of one ordered line: new → preparing → served; cancelled from new / preparing (takes it off the bill, only while the bill is open)
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    itemId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        kitchenStatus: "preparing" | "served" | "cancelled";
+                    };
+                };
+            };
+            responses: {
+                /** @description Line */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/table-orders/tables/{resourceId}/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Staff orders for a table (same rules as the QR order, round source `staff`)
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    resourceId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        items: {
+                            productId: string;
+                            qty: number;
+                            /** @default [] */
+                            optionChoiceIds?: string[];
+                            note?: string;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description The table’s bill */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                tableName: string;
+                                totalMinor: number;
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tables board: free / occupied (open bill) / reserved_soon (a booking starts within 60 minutes and no open bill)
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:read`. Module: `table_ordering`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Tables */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                resourceId: string;
+                                name: string;
+                                capacity: number;
+                                /** @enum {string} */
+                                state: "free" | "occupied" | "reserved_soon";
+                                orderUrl: string | null;
+                                openBill: {
+                                    id: string;
+                                    totalMinor: number;
+                                    /** @description ISO timestamp */
+                                    openedAt: string;
+                                    unserved: number;
+                                } | null;
+                                nextBooking: {
+                                    appointmentId: string;
+                                    /** @description ISO timestamp */
+                                    startAt: string;
+                                    customerName: string;
+                                    partySize: number;
+                                } | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/tables/{resourceId}/token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate or replace the table’s QR secret (a replaced one makes every printed QR stop working)
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    resourceId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Token + link */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                token: string;
+                                url: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/counter": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Counter order (no table): bill with the next daily queue number `A1`, `A2` … (resets at the shop’s local midnight), round 1 straight to the kitchen. Pay at the counter
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        items: {
+                            productId: string;
+                            qty: number;
+                            /** @default [] */
+                            optionChoiceIds?: string[];
+                            note?: string;
+                        }[];
+                        branchId: string;
+                        customerName?: string;
+                        /** @default false */
+                        takeaway?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Bill + queue number */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                queueNumber: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/{billId}/ready": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ready to serve / collect: every line still being made becomes served and the bill is marked ready (the pickup customer’s status shows `ready`). Same call twice is a no-op
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Ready */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                /** @description ISO timestamp */
+                                readyAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/prepay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Pay-first pickup orders waiting for their money: `slip_review` (slip handed in, with a short-lived `slipUrl` and the automatic `slipCheck` verdict), `awaiting_slip` (nothing handed in yet) and `rejected`; oldest first. Not in the kitchen queue until confirmed
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `table_ordering`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Orders */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                queueNumber: string | null;
+                                customerName: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @enum {string} */
+                                state: "awaiting_slip" | "slip_review" | "confirmed" | "rejected";
+                                amountMinor: number;
+                                note: string | null;
+                                slipUrl: string | null;
+                                items: {
+                                    name: string;
+                                    qty: number;
+                                }[];
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                } | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/{billId}/prepay/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * The money checked out: records a `transfer` payment on the bill (reference "สลิปออนไลน์", the slip attached) so the bill is paid, state `confirmed`, and the round goes to the kitchen (queue + auto-print + bell). Only from `slip_review`, else 409 {reason:"not_in_review"}
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Confirmed */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                /** @enum {string} */
+                                state: "awaiting_slip" | "slip_review" | "confirmed" | "rejected";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/{billId}/prepay/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * The slip is not right: state `rejected` with a note the customer sees; they can upload another slip (back to `slip_review`). Only from `slip_review`, else 409 {reason:"not_in_review"}
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        note: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Rejected */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                /** @enum {string} */
+                                state: "awaiting_slip" | "slip_review" | "confirmed" | "rejected";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/shops/{slug}/ordering": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The shop link’s order page: shop look, first button (`linkPrimary`), pickup times left today, and the menu (only when pickup or pre-order is on)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Ordering */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                shop: {
+                                    name: string;
+                                    logoUrl: string | null;
+                                    coverUrl: string | null;
+                                    brandColor: string | null;
+                                    timezone: string;
+                                };
+                                /** @enum {string} */
+                                linkPrimary: "order" | "book";
+                                branchId: string | null;
+                                pickup: {
+                                    enabled: boolean;
+                                    leadMin: number;
+                                    slots: string[];
+                                };
+                                preorderEnabled: boolean;
+                                bookingEnabled: boolean;
+                                pickupPrepay: boolean;
+                                categories: {
+                                    id: string;
+                                    name: string;
+                                    products: {
+                                        id: string;
+                                        name: string;
+                                        priceMinor: number;
+                                        imageUrl: string | null;
+                                        description: string | null;
+                                        soldOut: boolean;
+                                        options: {
+                                            id: string;
+                                            name: string;
+                                            required: boolean;
+                                            multi: boolean;
+                                            choices: {
+                                                id: string;
+                                                name: string;
+                                                /** @description integer satang */
+                                                priceMinor: number;
+                                            }[];
+                                        }[];
+                                    }[];
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/shops/{slug}/ordering/images/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Picture of a menu product on the order page: redirects to a short-lived storage URL
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Redirect to the image */
+                302: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/shops/{slug}/pickup-orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pickup order from the shop link (name + phone + pickup time + Turnstile): next daily queue number `P1`, `P2` …; pay at the counter. Pickup off / module off → 403; time not one of `pickup.slots` → 422 (path pickupAt); sold-out line → 409 CONFLICT {reason:"sold_out"}; Turnstile fail → 400 TURNSTILE_FAILED
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        items: {
+                            productId: string;
+                            qty: number;
+                            /** @default [] */
+                            optionChoiceIds?: string[];
+                            note?: string;
+                        }[];
+                        branchId?: string;
+                        name: string;
+                        phone: string;
+                        /** @description ISO timestamp */
+                        pickupAt: string;
+                        note?: string;
+                        turnstileToken: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Placed */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                queueNumber: string;
+                                statusUrl: string;
+                                token: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pickup/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Status of a pickup order from its link: received → preparing → ready → collected (paid at the counter) / cancelled, with the lines and total. A pay-first order also has `prepay` {state, amountMinor, accounts[] (with PromptPay QR), note} and, when cancelled for no slip in 30 minutes, `cancelReason` `prepay_timeout`
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                shopName: string;
+                                queueNumber: string;
+                                /** @description ISO timestamp */
+                                pickupAt: string;
+                                /** @enum {string} */
+                                status: "received" | "preparing" | "ready" | "collected" | "cancelled";
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                                totalMinor: number;
+                                prepay: {
+                                    /** @enum {string} */
+                                    state: "awaiting_slip" | "slip_review" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
+                                    note: string | null;
+                                } | null;
+                                /** @enum {string|null} */
+                                cancelReason: "prepay_timeout" | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pickup/{token}/slip/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pay-first pickup order: presigned PUT for the transfer slip image (jpeg / png / webp, ≤ 5 MB), then POST …/slip with the fileId. Order cancelled / already paid → 409; slip already in review → 409 {reason:"slip_in_review"}
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                /** @description ISO timestamp */
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pickup/{token}/slip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Hand in the uploaded slip: the order moves to `prepay.state` `slip_review` and the shop is asked to check it (bell + push). Nothing is made before the shop confirms. Returns the order status
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    token: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                shopName: string;
+                                queueNumber: string;
+                                /** @description ISO timestamp */
+                                pickupAt: string;
+                                /** @enum {string} */
+                                status: "received" | "preparing" | "ready" | "collected" | "cancelled";
+                                items: {
+                                    id: string;
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                                totalMinor: number;
+                                prepay: {
+                                    /** @enum {string} */
+                                    state: "awaiting_slip" | "slip_review" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
+                                    note: string | null;
+                                } | null;
+                                /** @enum {string|null} */
+                                cancelReason: "prepay_timeout" | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -66615,18 +70637,25 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                         amountMinor: number;
-                                        promptpay: {
-                                            payload: string;
-                                            accountHint: string;
-                                            accountName: string | null;
-                                        } | null;
-                                        bank: {
+                                        accounts: {
+                                            /** Format: uuid */
+                                            id: string;
                                             /** @enum {string} */
-                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                            bankName: string;
-                                            accountNumber: string;
-                                            accountName: string;
-                                        } | null;
+                                            kind: "bank" | "promptpay";
+                                            label: string | null;
+                                            bank: {
+                                                /** @enum {string} */
+                                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                                bankName: string;
+                                                accountNumber: string;
+                                                accountName: string;
+                                            } | null;
+                                            promptpay: {
+                                                accountName: string;
+                                                accountHint: string;
+                                            } | null;
+                                            qrPayload: string | null;
+                                        }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -66658,18 +70687,25 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                         amountMinor: number;
-                                        promptpay: {
-                                            payload: string;
-                                            accountHint: string;
-                                            accountName: string | null;
-                                        } | null;
-                                        bank: {
+                                        accounts: {
+                                            /** Format: uuid */
+                                            id: string;
                                             /** @enum {string} */
-                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                            bankName: string;
-                                            accountNumber: string;
-                                            accountName: string;
-                                        } | null;
+                                            kind: "bank" | "promptpay";
+                                            label: string | null;
+                                            bank: {
+                                                /** @enum {string} */
+                                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                                bankName: string;
+                                                accountNumber: string;
+                                                accountName: string;
+                                            } | null;
+                                            promptpay: {
+                                                accountName: string;
+                                                accountHint: string;
+                                            } | null;
+                                            qrPayload: string | null;
+                                        }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -66927,18 +70963,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -67083,18 +71126,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -67238,18 +71288,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -67740,7 +71797,6 @@ export interface paths {
                                     text: string;
                                     version: string;
                                 };
-                                promptpayConfigured: boolean;
                                 lineBasicId: string | null;
                                 branches: {
                                     id: string;
@@ -68467,6 +72523,15 @@ export interface paths {
                         phone?: string;
                         consent: boolean;
                         termsVersion?: string;
+                        preorder?: {
+                            items: {
+                                productId: string;
+                                qty: number;
+                                /** @default [] */
+                                optionChoiceIds?: string[];
+                                note?: string;
+                            }[];
+                        };
                     };
                 };
             };
@@ -68503,18 +72568,25 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                         amountMinor: number;
-                                        promptpay: {
-                                            payload: string;
-                                            accountHint: string;
-                                            accountName: string | null;
-                                        } | null;
-                                        bank: {
+                                        accounts: {
+                                            /** Format: uuid */
+                                            id: string;
                                             /** @enum {string} */
-                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                            bankName: string;
-                                            accountNumber: string;
-                                            accountName: string;
-                                        } | null;
+                                            kind: "bank" | "promptpay";
+                                            label: string | null;
+                                            bank: {
+                                                /** @enum {string} */
+                                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                                bankName: string;
+                                                accountNumber: string;
+                                                accountName: string;
+                                            } | null;
+                                            promptpay: {
+                                                accountName: string;
+                                                accountHint: string;
+                                            } | null;
+                                            qrPayload: string | null;
+                                        }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -68538,18 +72610,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -68691,18 +72770,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -68970,18 +73056,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -69098,6 +73191,15 @@ export interface paths {
                         name: string;
                         phone: string;
                         termsVersion?: string;
+                        preorder?: {
+                            items: {
+                                productId: string;
+                                qty: number;
+                                /** @default [] */
+                                optionChoiceIds?: string[];
+                                note?: string;
+                            }[];
+                        };
                         turnstileToken: string;
                     };
                 };
@@ -69135,18 +73237,25 @@ export interface paths {
                                         /** @enum {string} */
                                         status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                         amountMinor: number;
-                                        promptpay: {
-                                            payload: string;
-                                            accountHint: string;
-                                            accountName: string | null;
-                                        } | null;
-                                        bank: {
+                                        accounts: {
+                                            /** Format: uuid */
+                                            id: string;
                                             /** @enum {string} */
-                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                            bankName: string;
-                                            accountNumber: string;
-                                            accountName: string;
-                                        } | null;
+                                            kind: "bank" | "promptpay";
+                                            label: string | null;
+                                            bank: {
+                                                /** @enum {string} */
+                                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                                bankName: string;
+                                                accountNumber: string;
+                                                accountName: string;
+                                            } | null;
+                                            promptpay: {
+                                                accountName: string;
+                                                accountHint: string;
+                                            } | null;
+                                            qrPayload: string | null;
+                                        }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
                                     } | null;
@@ -69286,18 +73395,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -69445,18 +73561,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -69728,18 +73851,25 @@ export interface paths {
                                     /** @enum {string} */
                                     status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                                     amountMinor: number;
-                                    promptpay: {
-                                        payload: string;
-                                        accountHint: string;
-                                        accountName: string | null;
-                                    } | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                    }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                 } | null;
@@ -69886,13 +74016,25 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            id: string;
+                                            accountName: string;
+                                        } | null;
+                                        active: boolean;
+                                    }[];
                                 };
                             };
                         };
@@ -70015,13 +74157,6 @@ export interface paths {
                             mode: "fixed" | "percent";
                             amountMinor: number | null;
                             percent: number | null;
-                            bank?: {
-                                /** @enum {string} */
-                                bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                bankName: string;
-                                accountNumber: string;
-                                accountName: string;
-                            } | null;
                         };
                     };
                 };
@@ -70072,13 +74207,25 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
-                                    bank: {
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
                                         /** @enum {string} */
-                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
-                                        bankName: string;
-                                        accountNumber: string;
-                                        accountName: string;
-                                    } | null;
+                                        kind: "bank" | "promptpay";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            id: string;
+                                            accountName: string;
+                                        } | null;
+                                        active: boolean;
+                                    }[];
                                 };
                             };
                         };
@@ -71217,6 +75364,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 };
                             }[];
                         };
@@ -71358,6 +75516,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 };
                             };
                         };
@@ -71492,6 +75661,17 @@ export interface paths {
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
                                     depositId: string | null;
+                                    slipCheck: {
+                                        /** @enum {string} */
+                                        status: "passed" | "failed" | "error" | "skipped";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        amountMinor: number | null;
+                                        receiverName: string | null;
+                                        receiverAccountMasked: string | null;
+                                        transRef: string | null;
+                                        paidAt: string | null;
+                                        checkedAt: string;
+                                    } | null;
                                 };
                             };
                         };
@@ -71598,10 +75778,10 @@ export interface paths {
                             data: {
                                 links: {
                                     /** @enum {string} */
-                                    id: "web" | "liff" | "walk_in" | "line_link";
+                                    id: "web" | "liff" | "walk_in" | "line_link" | "pickup";
                                     url: string | null;
                                     ready: boolean;
-                                    problems: ("booking_off" | "no_services" | "no_staff" | "no_free_time" | "no_shifts" | "liff_missing" | "line_oa_missing" | "walk_in_off")[];
+                                    problems: ("booking_off" | "no_services" | "no_staff" | "no_resource" | "no_free_time" | "no_shifts" | "liff_missing" | "line_oa_missing" | "walk_in_off")[];
                                 }[];
                             };
                         };

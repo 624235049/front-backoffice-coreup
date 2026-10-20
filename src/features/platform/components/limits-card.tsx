@@ -65,11 +65,16 @@ function LimitRow({ tenantId, row }: { tenantId: string; row: TenantLimit }) {
   const locale = useIntlLocale();
   const canWrite = useCan('platform:write');
   const save = useSetTenantLimit(tenantId);
-  const [unlimited, setUnlimited] = useState(row.override === UNLIMITED_OVERRIDE);
+  const [unlimited, setUnlimited] = useState(
+    row.override === UNLIMITED_OVERRIDE && row.key !== 'slip_checks_month',
+  );
   const [draft, setDraft] = useState(
     row.override === null || row.override === UNLIMITED_OVERRIDE ? '' : String(row.override),
   );
-  const value = limitValue(draft, unlimited);
+  // automatic slip checks cost CoreUp money per check: never unlimited, at most 2,000 a shop
+  const capped = row.key === 'slip_checks_month';
+  const raw = limitValue(draft, unlimited && !capped);
+  const value = capped && typeof raw === 'number' && raw > 2000 ? undefined : raw;
   const name = t(`plans.limit.${row.key}`, { defaultValue: row.key });
   const show = (n: number | null) => (n === null ? t('plans.offer.unlimited') : n.toLocaleString(locale));
 
@@ -89,15 +94,20 @@ function LimitRow({ tenantId, row }: { tenantId: string; row: TenantLimit }) {
             aria-label={t('limits.custom', { name })}
             onChange={(e) => setDraft(e.target.value)}
           />
-          <label htmlFor={`limit-${row.key}-unlimited`} className="flex min-h-11 items-center gap-2 text-sm">
-            <Checkbox
-              id={`limit-${row.key}-unlimited`}
-              checked={unlimited}
-              disabled={!canWrite}
-              onCheckedChange={(on) => setUnlimited(on === true)}
-            />
-            {t('plans.offer.unlimited')}
-          </label>
+          {capped ? null : (
+            <label
+              htmlFor={`limit-${row.key}-unlimited`}
+              className="flex min-h-11 items-center gap-2 text-sm"
+            >
+              <Checkbox
+                id={`limit-${row.key}-unlimited`}
+                checked={unlimited}
+                disabled={!canWrite}
+                onCheckedChange={(on) => setUnlimited(on === true)}
+              />
+              {t('plans.offer.unlimited')}
+            </label>
+          )}
         </div>
       </TableCell>
       <TableCell className="font-medium">{show(row.effective)}</TableCell>

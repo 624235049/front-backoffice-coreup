@@ -691,6 +691,7 @@
       "gets": "What the shop gets",
       "limits": "Quotas",
       "unlimited": "Unlimited",
+      "none": "None",
       "footer": "Interested or have questions? Contact the CoreUp team",
       "zeroPrice": "This plan costs 0 baht, so the shop cannot pay for it. Set a real price before sending it",
       "inactive": "This plan is off sale. Turn it on before sending it",
@@ -736,6 +737,7 @@
       "year": "Yearly"
     },
     "unlimited": "Unlimited",
+    "slipPlaceholder": "0–2,000 (never unlimited · empty = keep)",
     "limitLine": {
       "members": { "value": "{{value}} staff accounts", "unlimited": "Unlimited staff" },
       "branches": { "value": "{{value}} branch(es)", "unlimited": "Unlimited branches" },
@@ -786,7 +788,8 @@
       "branches": "Branches",
       "members": "Staff",
       "customers": "Customers",
-      "messages_per_month": "LINE messages per month"
+      "messages_per_month": "LINE messages per month",
+      "slip_checks_month": "Automatic slip checks (per month)"
     },
     "err": {
       "code": "Plan code: lowercase English letters, digits, - and _ only, 2-31 characters, e.g. booking-basic",
