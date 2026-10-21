@@ -158,6 +158,7 @@ export interface paths {
                         /** Format: email */
                         email: string;
                         password: string;
+                        phone?: string;
                     };
                 };
             };
@@ -17734,6 +17735,7 @@ export interface paths {
                                 email: string | null;
                                 emailVerified: boolean;
                                 lineLinked: boolean;
+                                phone: string | null;
                                 twoFactorEnabled: boolean;
                                 hasPassword: boolean;
                                 emailIsPlaceholder: boolean;
@@ -17870,6 +17872,7 @@ export interface paths {
                                 email: string | null;
                                 emailVerified: boolean;
                                 lineLinked: boolean;
+                                phone: string | null;
                                 twoFactorEnabled: boolean;
                                 hasPassword: boolean;
                                 emailIsPlaceholder: boolean;
@@ -82984,7 +82987,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Industries and plans to choose from when opening a shop
+         * Industries and plans to choose from when opening a shop; `ownerPhone` = the signed-in user's own mobile given at sign-up (prefill), null when none
          * @description Requires an authenticated session.
          */
         get: {
@@ -83020,6 +83023,7 @@ export interface paths {
                                 }[];
                                 defaultPlanCode: string;
                                 defaultTimezone: string;
+                                ownerPhone: string | null;
                             };
                         };
                     };

@@ -344,6 +344,10 @@
                     "type": "string",
                     "minLength": 8,
                     "maxLength": 128
+                  },
+                  "phone": {
+                    "type": "string",
+                    "maxLength": 30
                   }
                 },
                 "required": [
@@ -33384,6 +33388,12 @@
                           "lineLinked": {
                             "type": "boolean"
                           },
+                          "phone": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "twoFactorEnabled": {
                             "type": "boolean"
                           },
@@ -33460,6 +33470,7 @@
                           "email",
                           "emailVerified",
                           "lineLinked",
+                          "phone",
                           "twoFactorEnabled",
                           "hasPassword",
                           "emailIsPlaceholder",
@@ -33635,6 +33646,12 @@
                         "lineLinked": {
                           "type": "boolean"
                         },
+                        "phone": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "twoFactorEnabled": {
                           "type": "boolean"
                         },
@@ -33780,6 +33797,7 @@
                         "email",
                         "emailVerified",
                         "lineLinked",
+                        "phone",
                         "twoFactorEnabled",
                         "hasPassword",
                         "emailIsPlaceholder",
@@ -169433,7 +169451,7 @@
         "tags": [
           "onboarding"
         ],
-        "summary": "Industries and plans to choose from when opening a shop",
+        "summary": "Industries and plans to choose from when opening a shop; `ownerPhone` = the signed-in user's own mobile given at sign-up (prefill), null when none",
         "description": "Requires an authenticated session.",
         "security": [
           {
@@ -169516,13 +169534,20 @@
                         },
                         "defaultTimezone": {
                           "type": "string"
+                        },
+                        "ownerPhone": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
                         "industries",
                         "plans",
                         "defaultPlanCode",
-                        "defaultTimezone"
+                        "defaultTimezone",
+                        "ownerPhone"
                       ]
                     }
                   },

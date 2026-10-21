@@ -13,6 +13,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { UserRow } from '../api';
 import { formatDateTime, useIntlLocale } from '../format';
+import { OwnerPhone } from './owner-phone';
 import { CopyButton, ResetLinkDialog, ResetPasswordDialog, RevokeSessionsDialog } from './user-actions';
 import { type UserActionKind, UserDetailSheet } from './user-detail-sheet';
 import { UserBadges, UserMemberships } from './user-parts';
@@ -99,6 +100,7 @@ export function UsersPanel({
           />
         ) : null}
       </div>
+      <OwnerPhone phone={u.phone} />
     </>
   );
 

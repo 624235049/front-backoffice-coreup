@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { type UserDetail, useUser } from '../api';
 import { formatDateTime, useIntlLocale } from '../format';
 import { describeUserAgent } from '../user-helpers';
+import { OwnerPhone } from './owner-phone';
 import { CopyButton } from './user-actions';
 import { UserBadges, UserMemberships } from './user-parts';
 
@@ -56,6 +57,7 @@ export function UserDetailSheet({
                       />
                     ) : null}
                   </div>
+                  <OwnerPhone phone={u.phone} />
                   <UserBadges u={u} />
                   <dl className="grid grid-cols-2 gap-3 text-sm">
                     <div>
