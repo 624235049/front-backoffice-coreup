@@ -15415,7 +15415,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -15905,7 +15905,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -16072,7 +16072,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -16347,7 +16347,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -16509,7 +16509,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -41071,7 +41071,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -41264,7 +41264,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -41439,7 +41439,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -41508,7 +41508,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -41577,7 +41577,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -41647,7 +41647,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -41716,7 +41716,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -41939,7 +41939,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -42124,7 +42124,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -42311,7 +42311,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -42782,7 +42782,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -43152,7 +43152,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -46011,7 +46011,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46088,7 +46088,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46165,7 +46165,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46242,7 +46242,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46319,7 +46319,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46396,7 +46396,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46595,7 +46595,7 @@ export interface paths {
                                             slipCheck: {
                                                 /** @enum {string} */
                                                 status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
@@ -46804,7 +46804,7 @@ export interface paths {
                                         slipCheck: {
                                             /** @enum {string} */
                                             status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
@@ -64296,7 +64296,7 @@ export interface paths {
                                 slipCheck: {
                                     /** @enum {string} */
                                     status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
@@ -77518,7 +77518,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -77672,7 +77672,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
@@ -77819,7 +77819,7 @@ export interface paths {
                                     slipCheck: {
                                         /** @enum {string} */
                                         status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;

@@ -773,7 +773,9 @@
           "quota": "Quota used up",
           "platform_cap": "CoreUp's slip-check cap is used up",
           "provider_error": "Slip checker unavailable",
-          "no_qr": "No bank QR found on the slip. Check it in your bank app."
+          "no_qr": "No bank QR found on the slip. Check it in your bank app.",
+          "promptpay_qr": "The payer sent a PromptPay payment QR, not a transfer slip. Ask for the real slip, or check your bank app.",
+          "qr_invalid": "The QR on the slip could not be read fully or was edited (its check code does not match). Check it in your bank app."
         },
         "amount": "Slip amount {{read}} · notice {{due}}",
         "receiver": "Receiver: {{name}}",
