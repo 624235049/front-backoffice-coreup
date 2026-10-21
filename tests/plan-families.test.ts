@@ -8,6 +8,7 @@ import {
   orderPlans,
   type PlanFamily,
   planFrontName,
+  sellablePlans,
   yearlyDeal,
 } from '@/features/platform/plan-families';
 import platform from '@/locales/th/platform.json';
@@ -119,5 +120,29 @@ describe('family checks', () => {
     });
     expect(yearlyDeal(fam(plan('line-pro', 599), plan('line-pro-year', 7188)))?.paidMonths).toBeNull();
     expect(yearlyDeal(fam(plan('line-pro', 599)))).toBeNull();
+  });
+});
+
+describe('sellablePlans (what a new shop can be opened on)', () => {
+  const all = [
+    plan('growth', 0),
+    plan('multi', 0),
+    plan('line-pro-year', 5990),
+    plan('line-basic', 299),
+    plan('line-pro', 599),
+    plan('legacy-x', 1500),
+    plan('business', 1999, { active: false }),
+  ];
+
+  it('lists only the pricing-page plans (no internal ฿0 or unknown ones) and starts on Pro', () => {
+    const s = sellablePlans(all);
+    expect(s.plans.map((p) => p.code)).toEqual(['line-basic', 'line-pro', 'line-pro-year']);
+    expect(s.defaultCode).toBe('line-pro');
+  });
+
+  it('falls back to the first sold plan, and to nothing when none is sold', () => {
+    expect(sellablePlans([plan('line-basic', 299), plan('growth', 0)]).defaultCode).toBe('line-basic');
+    expect(sellablePlans([plan('growth', 0)])).toEqual({ plans: [], defaultCode: undefined });
+    expect(sellablePlans(undefined).defaultCode).toBeUndefined();
   });
 });

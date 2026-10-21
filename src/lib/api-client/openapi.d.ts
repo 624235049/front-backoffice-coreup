@@ -8509,18 +8509,13 @@ export interface paths {
         };
         put?: never;
         /**
-         * Onboard a shop from an industry template (tenant, branches, owner, services, checklists …)
+         * Onboard a shop from an industry template (tenant, branches, owner, services, checklists …); `ownerAccount: password` also returns the new owner login once
          * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
-         *
-         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
         post: {
             parameters: {
                 query?: never;
-                header?: {
-                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
-                    "idempotency-key"?: string;
-                };
+                header?: never;
                 path?: never;
                 cookie?: never;
             };
@@ -8532,6 +8527,14 @@ export interface paths {
                         industryKey: string;
                         /** Format: email */
                         ownerEmail: string;
+                        /** @description owner mobile, any country (+66 81 234 5678, 0812345678 = Thai); stored encrypted as E.164 */
+                        ownerPhone: string;
+                        /**
+                         * @description `password`: create the owner already verified with a generated password (returned once); `invite`: email a set-password link
+                         * @default password
+                         * @enum {string}
+                         */
+                        ownerAccount?: "password" | "invite";
                         ownerName?: string;
                         planCode: string;
                         /**
@@ -8561,6 +8564,14 @@ export interface paths {
                                 ownerUserId: string;
                                 branchIds: string[];
                                 passwordResetSent: boolean;
+                                /** @description only with `ownerAccount: password` for a new owner: shown once, never stored in plain text */
+                                ownerCredentials: {
+                                    email: string;
+                                    password: string;
+                                    loginUrl: string;
+                                } | null;
+                                /** @description the email already had an account: its password was left untouched */
+                                ownerExisted: boolean;
                             };
                         };
                     };
@@ -46445,14 +46456,14 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * One rental item: its live bookings and the days no piece is free, for a date window (≤ 190 days)
+         * One rental item: its live bookings and the days no piece is free, for a date window (default today + 60 days, ≤ 190 days)
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
          */
         get: {
             parameters: {
-                query: {
-                    from: string;
-                    to: string;
+                query?: {
+                    from?: string;
+                    to?: string;
                 };
                 header?: never;
                 path: {

@@ -259,13 +259,14 @@
   },
   "onboard": {
     "title": "Onboard a shop",
-    "description": "Creates the shop with branches, services, checklists and messages from the industry template, and emails the owner a set-password link",
+    "description": "Creates the shop with branches, services, checklists and messages from the industry template, plus an owner account that works right away",
     "name": "Shop name",
     "industry": "Industry",
     "plan": "Plan",
     "planPlaceholder": "Choose a plan",
     "ownerEmail": "Owner email",
     "ownerName": "Owner name",
+    "ownerPhone": "Owner mobile",
     "status": "Initial status",
     "branches": "Branches",
     "branchName": "Branch {{n}} name",
@@ -274,7 +275,27 @@
     "creating": "Creating…",
     "created": "Shop created",
     "createdWithMail": "Shop created and a set-password link was sent to the owner",
-    "needOneBranch": "A shop needs at least 1 branch"
+    "createdExisting": "Shop created. That email already had an account, so it was made the owner and its password was left unchanged",
+    "needOneBranch": "A shop needs at least 1 branch",
+    "account": {
+      "legend": "Owner account",
+      "password": "Create the account with a password (recommended)",
+      "passwordHint": "We generate the password and you can copy a ready message for the customer. No email verification needed",
+      "invite": "Send a set-password link by email",
+      "inviteHint": "The owner sets their own password from the emailed link"
+    },
+    "result": {
+      "title": "Shop is ready",
+      "description": "Send this to the owner. The account works right away",
+      "bookingLink": "Customer booking link",
+      "loginUrl": "Back office sign-in link",
+      "password": "Password",
+      "onceWarning": "The password is shown once. After you close this you cannot see it again. Suggest the customer changes it after first sign-in (Settings › Account)",
+      "copyMessage": "Copy message for the customer",
+      "copyPassword": "Copy password",
+      "copied": "Copied",
+      "goToShop": "Go to the shop"
+    }
   },
   "businessType": {
     "title": "Change business type",

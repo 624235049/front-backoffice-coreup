@@ -98,3 +98,13 @@ export function orderPlans(plans: readonly Plan[]): { sold: Plan[]; rest: Plan[]
     rest: [...g.other, ...g.internal],
   };
 }
+
+/** What a new shop can be opened on: only the plans sold on the pricing page (never internal ฿0 ones). Default = the "best" family (Pro), else the first sold plan. */
+export function sellablePlans(plans: readonly Plan[] | undefined): {
+  plans: Plan[];
+  defaultCode: string | undefined;
+} {
+  const sold = orderPlans(plans ?? []).sold.filter((p) => p.active);
+  const best = FAMILIES.find((f) => f.best)?.code;
+  return { plans: sold, defaultCode: (sold.find((p) => p.code === best) ?? sold[0])?.code };
+}

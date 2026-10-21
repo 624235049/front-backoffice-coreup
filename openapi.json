@@ -14398,25 +14398,11 @@
         "tags": [
           "platform"
         ],
-        "summary": "Onboard a shop from an industry template (tenant, branches, owner, services, checklists …)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "summary": "Onboard a shop from an industry template (tenant, branches, owner, services, checklists …); `ownerAccount: password` also returns the new owner login once",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
-          }
-        ],
-        "x-replay-safe": true,
-        "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 200,
-              "description": "Optional; unique per logical operation. Makes the request safe to retry"
-            },
-            "required": false,
-            "description": "Optional; unique per logical operation. Makes the request safe to retry",
-            "name": "idempotency-key",
-            "in": "header"
           }
         ],
         "requestBody": {
@@ -14443,6 +14429,21 @@
                   "ownerEmail": {
                     "type": "string",
                     "format": "email"
+                  },
+                  "ownerPhone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "description": "owner mobile, any country (+66 81 234 5678, 0812345678 = Thai); stored encrypted as E.164"
+                  },
+                  "ownerAccount": {
+                    "type": "string",
+                    "enum": [
+                      "password",
+                      "invite"
+                    ],
+                    "default": "password",
+                    "description": "`password`: create the owner already verified with a generated password (returned once); `invite`: email a set-password link"
                   },
                   "ownerName": {
                     "type": "string",
@@ -14493,6 +14494,7 @@
                   "name",
                   "industryKey",
                   "ownerEmail",
+                  "ownerPhone",
                   "planCode",
                   "branches"
                 ]
@@ -14531,6 +14533,33 @@
                         },
                         "passwordResetSent": {
                           "type": "boolean"
+                        },
+                        "ownerCredentials": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "email": {
+                              "type": "string"
+                            },
+                            "password": {
+                              "type": "string"
+                            },
+                            "loginUrl": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "email",
+                            "password",
+                            "loginUrl"
+                          ],
+                          "description": "only with `ownerAccount: password` for a new owner: shown once, never stored in plain text"
+                        },
+                        "ownerExisted": {
+                          "type": "boolean",
+                          "description": "the email already had an account: its password was left untouched"
                         }
                       },
                       "required": [
@@ -14538,7 +14567,9 @@
                         "slug",
                         "ownerUserId",
                         "branchIds",
-                        "passwordResetSent"
+                        "passwordResetSent",
+                        "ownerCredentials",
+                        "ownerExisted"
                       ]
                     }
                   },
@@ -96671,7 +96702,7 @@
         "tags": [
           "rentals"
         ],
-        "summary": "One rental item: its live bookings and the days no piece is free, for a date window (≤ 190 days)",
+        "summary": "One rental item: its live bookings and the days no piece is free, for a date window (default today + 60 days, ≤ 190 days)",
         "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.",
         "security": [
           {
@@ -96693,7 +96724,7 @@
               "type": "string",
               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
-            "required": true,
+            "required": false,
             "name": "from",
             "in": "query"
           },
@@ -96702,7 +96733,7 @@
               "type": "string",
               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
-            "required": true,
+            "required": false,
             "name": "to",
             "in": "query"
           }

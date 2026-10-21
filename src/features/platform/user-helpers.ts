@@ -45,6 +45,29 @@ export function buildResetLinkMessage(v: { email: string; url: string; expiresAt
   ].join('\n');
 }
 
+/** The public booking page of a shop (what its customers book from). */
+export const bookingUrlFor = (slug: string): string => `https://www.coreup.pro/b/${slug}`;
+
+/** Ready-to-paste LINE message for a freshly opened shop (always Thai: it goes to the owner). The trial line only for trial shops. */
+export function buildNewShopMessage(v: {
+  shop: string;
+  slug: string;
+  email: string;
+  password: string;
+  loginUrl: string;
+  trial: boolean;
+}): string {
+  return [
+    `สวัสดีค่ะ 😊 ร้าน ${v.shop} พร้อมใช้งานแล้วค่ะ`,
+    `🔗 ลิงก์ให้ลูกค้าจอง: ${bookingUrlFor(v.slug)}`,
+    `💻 เข้าหลังร้าน: ${v.loginUrl}`,
+    `อีเมล: ${v.email}`,
+    `รหัสผ่าน: ${v.password}`,
+    'แนะนำเปลี่ยนรหัสผ่านหลังเข้าใช้ครั้งแรกที่ ตั้งค่า › บัญชี ค่ะ',
+    `${v.trial ? 'ทดลองฟรี 1 เดือน ' : ''}มีอะไรสงสัยทักแอดมินทาง LINE ได้เลยค่ะ: lin.ee/YOZXXvW`,
+  ].join('\n');
+}
+
 /** "Chrome · macOS" from a User-Agent string; null when it says nothing useful. */
 export function describeUserAgent(ua: string | null | undefined): string | null {
   if (!ua) return null;

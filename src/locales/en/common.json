@@ -36,5 +36,11 @@
     "notFound": "This may have been deleted or moved. Go back and open it again."
   },
   "showPassword": "Show password",
-  "hidePassword": "Hide password"
+  "hidePassword": "Hide password",
+  "phoneInput": {
+    "country": "Country (dial code)",
+    "search": "Search country or code, e.g. Thailand, +66",
+    "noCountry": "No country found",
+    "invalid": "Invalid mobile number"
+  }
 }
