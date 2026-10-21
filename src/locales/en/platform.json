@@ -26,8 +26,8 @@
     "tattoo": "Tattoo studio",
     "physio": "Physiotherapy",
     "thai_medicine": "Thai traditional medicine clinic",
-    "pilates": "Pilates studio",
-    "fitness": "Personal training / fitness",
+    "pilates": "Pilates & yoga studio",
+    "fitness": "Fitness / personal training / Muay Thai",
     "fortune": "Fortune telling",
     "court": "Sports courts",
     "restaurant": "Restaurant / café / bar",
@@ -40,7 +40,15 @@
     "medical_clinic": "General medical clinic",
     "vet": "Veterinary clinic",
     "tutoring": "Tutoring & courses",
-    "repair": "Repair shop (phone / computer / air-con)"
+    "repair": "Repair shop (phone / computer / air-con)",
+    "tailor": "Tailor shop",
+    "home_service": "Home services (cleaning / air-con)",
+    "auto_repair": "Auto repair garage",
+    "music_studio": "Music rehearsal studio",
+    "dress_rental": "Dress rental",
+    "equipment_rental": "Camera & equipment rental",
+    "pet_hotel": "Pet hotel",
+    "counseling": "Counseling & coaching"
   },
   "module": {
     "crm": "Customers & appointments",

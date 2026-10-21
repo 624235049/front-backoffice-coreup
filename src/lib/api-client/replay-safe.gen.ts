@@ -248,6 +248,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'POST /v1/push-subscriptions',
   'POST /v1/push-subscriptions/test',
   'POST /v1/question-bank',
+  'POST /v1/rentals',
   'POST /v1/report-runs',
   'POST /v1/risk/assign-secondary',
   'POST /v1/roles',

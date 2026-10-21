@@ -966,6 +966,14 @@ export interface paths {
                                     logoUrl: string | null;
                                     /** @enum {string} */
                                     uiMode: "simple" | "full";
+                                    rental: {
+                                        /** @enum {string} */
+                                        unit: "day" | "night";
+                                        /** @enum {string} */
+                                        pricing: "fixed" | "per_unit";
+                                        noteLabel: string | null;
+                                        noteRequired: boolean;
+                                    } | null;
                                 };
                                 memberId: string;
                                 displayName: string;
@@ -45870,6 +45878,966 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rentals/board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rental counter board: pick-ups today, returns today, overdue, out, upcoming
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    date?: string;
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                today: string;
+                                pickups: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                returns: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                overdue: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                missed: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                out: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                upcoming: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/items/{id}/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One rental item: its live bookings and the days no piece is free, for a date window (≤ 190 days)
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                availability: {
+                                    serviceId: string;
+                                    /** @enum {string} */
+                                    unit: "day" | "night";
+                                    /** @enum {string} */
+                                    pricing: "fixed" | "per_unit";
+                                    maxUnits: number;
+                                    bufferDays: number;
+                                    earliestPickup: string;
+                                    latestPickup: string;
+                                    fullDays: string[];
+                                };
+                                bookings: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    note: string | null;
+                                }[];
+                                quantity: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Take a rental at the counter
+         * @description The item must be free on every day of the range, cleaning days included, for at least one piece; checked under a per-item lock, so two bookings for the same dates cannot both succeed (the loser gets 409 `APPOINTMENT_SLOT_TAKEN`).
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        branchId: string;
+                        customerId: string;
+                        serviceId: string;
+                        pickupDate: string;
+                        returnDate: string;
+                        note?: string | null;
+                        deposit?: {
+                            amountMinor: number;
+                            /** @enum {string} */
+                            method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                            reference?: string | null;
+                            note?: string | null;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointment: {
+                                    id: string;
+                                    branchId: string;
+                                    customerId: string;
+                                    customerName: string;
+                                    customerHasCaution: boolean;
+                                    customer: {
+                                        id: string;
+                                        name: string;
+                                        code: string | null;
+                                        visitCount: number;
+                                        pendingFirstVisit: boolean;
+                                        caution: {
+                                            notes: boolean;
+                                            allergy: boolean;
+                                            chronic: boolean;
+                                        };
+                                    };
+                                    customerBirthDate: string | null;
+                                    serviceId: string;
+                                    serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
+                                    durationMin: number;
+                                    membershipId: string | null;
+                                    memberName: string | null;
+                                    resourceId: string | null;
+                                    resourceName: string | null;
+                                    startAt: string;
+                                    endAt: string;
+                                    /** @enum {string} */
+                                    status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                    /** @enum {string} */
+                                    source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                    isRequestedMember: boolean;
+                                    partySize: number;
+                                    customerPackageId: string | null;
+                                    saleMembershipId: string | null;
+                                    note: string | null;
+                                    version: number;
+                                    allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                        } | null;
+                                    } | null;
+                                    createdAt: string;
+                                    updatedAt: string;
+                                };
+                                pickupDate: string;
+                                returnDate: string;
+                                units: number;
+                                priceMinor: number;
+                                imageUrl: string | null;
+                                note: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/deposits": {
         parameters: {
             query?: never;
@@ -68832,7 +69800,7 @@ export interface paths {
                     sort?: string;
                     q?: string;
                     withTotal?: "true" | "false";
-                    trigger?: ("appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed") | "system";
+                    trigger?: ("appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed" | "rental.return_reminder") | "system";
                     key?: string;
                     locale?: "th" | "en";
                     active?: "true" | "false";
@@ -68982,7 +69950,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         key: string;
-                        trigger: ("appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed") | "system";
+                        trigger: ("appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed" | "rental.return_reminder") | "system";
                         /**
                          * @default th
                          * @enum {string}
@@ -69804,7 +70772,7 @@ export interface paths {
                             data: {
                                 id: string;
                                 /** @enum {string} */
-                                trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed";
+                                trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed" | "rental.return_reminder";
                                 offsetMinutes: number;
                                 templateKey: string;
                                 enabled: boolean;
@@ -69901,7 +70869,7 @@ export interface paths {
                         plans: {
                             id?: string;
                             /** @enum {string} */
-                            trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed";
+                            trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed" | "rental.return_reminder";
                             offsetMinutes: number;
                             templateKey: string;
                             /** @default true */
@@ -69923,7 +70891,7 @@ export interface paths {
                             data: {
                                 id: string;
                                 /** @enum {string} */
-                                trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed";
+                                trigger: "appointment.created" | "appointment.reminder" | "appointment.no_show" | "service.completed" | "rebook.due" | "package.expiring" | "customer.lapsed" | "daily_close.completed" | "rental.return_reminder";
                                 offsetMinutes: number;
                                 templateKey: string;
                                 enabled: boolean;
@@ -71595,6 +72563,10 @@ export interface paths {
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
+                                    rental: {
+                                        pickupDate: string;
+                                        returnDate: string;
+                                    } | null;
                                 }[];
                                 past: {
                                     id: string;
@@ -71645,6 +72617,10 @@ export interface paths {
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
+                                    rental: {
+                                        pickupDate: string;
+                                        returnDate: string;
+                                    } | null;
                                 }[];
                             };
                         };
@@ -71921,6 +72897,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -72084,6 +73064,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -72246,6 +73230,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -72731,6 +73719,14 @@ export interface paths {
                                     version: string;
                                 };
                                 lineBasicId: string | null;
+                                rental: {
+                                    /** @enum {string} */
+                                    unit: "day" | "night";
+                                    /** @enum {string} */
+                                    pricing: "fixed" | "per_unit";
+                                    noteLabel: string | null;
+                                    noteRequired: boolean;
+                                } | null;
                                 branches: {
                                     id: string;
                                     name: string;
@@ -72874,6 +73870,11 @@ export interface paths {
                                         depositMinor: number | null;
                                         /** @enum {string} */
                                         bookBy: "staff" | "resource";
+                                        rental: {
+                                            days: number;
+                                            size: string | null;
+                                            imageUrls: string[];
+                                        } | null;
                                     }[];
                                 }[];
                             };
@@ -73317,6 +74318,128 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/liff/{tenantSlug}/booking/rental/{serviceId}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A rental item: how long it may be kept, the first / last pick-up day and the days no piece is free (for the date-range calendar)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    serviceId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Availability */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                serviceId: string;
+                                /** @enum {string} */
+                                unit: "day" | "night";
+                                /** @enum {string} */
+                                pricing: "fixed" | "per_unit";
+                                maxUnits: number;
+                                bufferDays: number;
+                                earliestPickup: string;
+                                latestPickup: string;
+                                fullDays: string[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/liff/{tenantSlug}/booking/images/{fileId}": {
         parameters: {
             query?: never;
@@ -73448,7 +74571,9 @@ export interface paths {
                         branchId: string;
                         serviceId: string;
                         memberId: string | null;
-                        startAt: string;
+                        startAt?: string;
+                        pickupDate?: string;
+                        returnDate?: string;
                         extraServiceIds?: string[];
                         partySize?: number;
                         note?: string;
@@ -73526,6 +74651,10 @@ export interface paths {
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
+                                    rental: {
+                                        pickupDate: string;
+                                        returnDate: string;
+                                    } | null;
                                 };
                                 customer: {
                                     id: string;
@@ -73728,6 +74857,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -74014,6 +75147,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -74118,7 +75255,9 @@ export interface paths {
                         serviceId: string;
                         memberId: string | null;
                         extraServiceIds?: string[];
-                        startAt: string;
+                        startAt?: string;
+                        pickupDate?: string;
+                        returnDate?: string;
                         partySize?: number;
                         note?: string;
                         name: string;
@@ -74195,6 +75334,10 @@ export interface paths {
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
                                     cancellationWindowMin: number | null;
+                                    rental: {
+                                        pickupDate: string;
+                                        returnDate: string;
+                                    } | null;
                                 };
                                 token: string;
                             };
@@ -74353,6 +75496,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -74519,6 +75666,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -74809,6 +75960,10 @@ export interface paths {
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
                                 cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                } | null;
                             };
                         };
                     };
@@ -88553,6 +89708,11 @@ export interface paths {
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                rentalDays: number | null;
+                                rentalQuantity: number;
+                                rentalBufferDays: number;
+                                rentalSize: string | null;
+                                rentalImageFileIds: string[];
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -88696,6 +89856,14 @@ export interface paths {
                         customFields?: {
                             [key: string]: unknown;
                         };
+                        rentalDays?: number | null;
+                        /** @default 1 */
+                        rentalQuantity?: number;
+                        /** @default 1 */
+                        rentalBufferDays?: number;
+                        rentalSize?: string | null;
+                        /** @default [] */
+                        rentalImageFileIds?: string[];
                     };
                 };
             };
@@ -88743,6 +89911,11 @@ export interface paths {
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                rentalDays: number | null;
+                                rentalQuantity: number;
+                                rentalBufferDays: number;
+                                rentalSize: string | null;
+                                rentalImageFileIds: string[];
                             };
                         };
                     };
@@ -88883,6 +90056,11 @@ export interface paths {
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                rentalDays: number | null;
+                                rentalQuantity: number;
+                                rentalBufferDays: number;
+                                rentalSize: string | null;
+                                rentalImageFileIds: string[];
                             };
                         };
                     };
@@ -89101,6 +90279,11 @@ export interface paths {
                         customFields?: {
                             [key: string]: unknown;
                         };
+                        rentalDays?: number | null;
+                        rentalQuantity?: number;
+                        rentalBufferDays?: number;
+                        rentalSize?: string | null;
+                        rentalImageFileIds?: string[];
                     };
                 };
             };
@@ -89148,6 +90331,11 @@ export interface paths {
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                rentalDays: number | null;
+                                rentalQuantity: number;
+                                rentalBufferDays: number;
+                                rentalSize: string | null;
+                                rentalImageFileIds: string[];
                             };
                         };
                     };
@@ -89408,6 +90596,11 @@ export interface paths {
                                 customFields: {
                                     [key: string]: unknown;
                                 };
+                                rentalDays: number | null;
+                                rentalQuantity: number;
+                                rentalBufferDays: number;
+                                rentalSize: string | null;
+                                rentalImageFileIds: string[];
                             };
                         };
                     };

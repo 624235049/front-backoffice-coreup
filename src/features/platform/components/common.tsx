@@ -98,4 +98,12 @@ export const INDUSTRY_KEYS = [
   'vet',
   'tutoring',
   'repair',
+  'tailor',
+  'home_service',
+  'auto_repair',
+  'music_studio',
+  'counseling',
+  'dress_rental',
+  'equipment_rental',
+  'pet_hotel',
 ] as const;
