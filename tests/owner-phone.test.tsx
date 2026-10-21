@@ -35,11 +35,13 @@ const renderPhone = (phone: string | null, onRowClick = vi.fn()) =>
 
 describe('OwnerPhone', () => {
   it('formats a 10-digit mobile and links it with tel:', () => {
-    expect(formatMobile('0812345678')).toBe('081-234-5678');
-    renderPhone('0812345678');
+    expect(formatMobile('+66812345678')).toBe('+66 81 234 5678');
+    expect(formatMobile('+8562055512345')).toBe('+856 20 55 512 345');
+    expect(formatMobile('garbage')).toBe('garbage');
+    renderPhone('+66812345678');
     const link = screen.getByTestId('owner-phone-link');
-    expect(link.getAttribute('href')).toBe('tel:0812345678');
-    expect(link.textContent).toBe('081-234-5678');
+    expect(link.getAttribute('href')).toBe('tel:+66812345678');
+    expect(link.textContent).toBe('+66 81 234 5678');
   });
 
   it('shows a dash when the shop never gave a phone', () => {
@@ -52,18 +54,18 @@ describe('OwnerPhone', () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText } });
     const row = vi.fn();
-    renderPhone('0812345678', row);
+    renderPhone('+66812345678', row);
     fireEvent.click(screen.getByTestId('owner-phone-copy'));
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith('คัดลอกเบอร์แล้ว'));
-    expect(writeText).toHaveBeenCalledWith('0812345678');
+    expect(writeText).toHaveBeenCalledWith('+66812345678');
     fireEvent.click(screen.getByTestId('owner-phone-link'));
     expect(row).not.toHaveBeenCalled();
   });
 
   it('tells the person the number when copying is blocked', async () => {
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('denied')) } });
-    renderPhone('0812345678');
+    renderPhone('+66812345678');
     fireEvent.click(screen.getByTestId('owner-phone-copy'));
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('คัดลอกไม่ได้ เบอร์คือ 0812345678'));
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('คัดลอกไม่ได้ เบอร์คือ +66812345678'));
   });
 });

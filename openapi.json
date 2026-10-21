@@ -33,6 +33,7 @@
                   "FORBIDDEN",
                   "MODULE_DISABLED",
                   "PLAN_LIMIT_REACHED",
+                  "PLAN_FEATURE_REQUIRED",
                   "TENANT_REQUIRED",
                   "TENANT_ACCESS_DENIED",
                   "NOT_FOUND",
@@ -3033,7 +3034,7 @@
           "tenant"
         ],
         "summary": "The shop’s receiving accounts (bank / PromptPay, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `checkout`.",
         "security": [
           {
             "cookieAuth": []
@@ -3249,7 +3250,7 @@
           "tenant"
         ],
         "summary": "Replace the receiving accounts (order kept). 422 on a bad bank / PromptPay id, or `in_use` when the last active account would go while a deposit or pay-first pickup needs one",
-        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `checkout`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -157166,7 +157167,7 @@
           "online-booking"
         ],
         "summary": "Deposits asked by LINE bookings, newest first (filter by status to get the slips to check)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `core`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `checkout`.",
         "security": [
           {
             "cookieAuth": []
@@ -157464,7 +157465,7 @@
           "online-booking"
         ],
         "summary": "The money arrived: record the deposit and confirm the booking",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -157781,7 +157782,7 @@
           "online-booking"
         ],
         "summary": "The slip is not right: tell the customer why; they can upload another one",
-        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -170291,7 +170292,7 @@
         "tags": [
           "onboarding"
         ],
-        "summary": "Change the owner’s mobile phone for CoreUp’s onboarding team. 400 unless a Thai mobile (06 / 08 / 09)",
+        "summary": "Change the owner’s mobile phone for CoreUp’s onboarding team. phone is E.164 (`+66812345678`, any country; legacy Thai `0812345678` read as +66); 400 `VALIDATION_FAILED` unless a valid mobile number",
         "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {

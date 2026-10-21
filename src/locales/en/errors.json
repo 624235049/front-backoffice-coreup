@@ -4,6 +4,7 @@
   "FORBIDDEN": "You do not have permission",
   "MODULE_DISABLED": "This module is not enabled",
   "PLAN_LIMIT_REACHED": "Plan limit reached",
+  "PLAN_FEATURE_REQUIRED": "Available from the Premium plan",
   "TENANT_REQUIRED": "Please select a shop first",
   "TENANT_ACCESS_DENIED": "You are not a member of this shop",
   "NOT_FOUND": "Not found",

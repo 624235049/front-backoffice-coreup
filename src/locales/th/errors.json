@@ -4,6 +4,7 @@
   "FORBIDDEN": "คุณไม่มีสิทธิ์ทำรายการนี้",
   "MODULE_DISABLED": "ร้านนี้ยังไม่ได้เปิดใช้โมดูลนี้",
   "PLAN_LIMIT_REACHED": "ถึงขีดจำกัดของแพ็กเกจแล้ว",
+  "PLAN_FEATURE_REQUIRED": "ใช้ได้ตั้งแต่แพ็กเกจ Premium",
   "TENANT_REQUIRED": "กรุณาเลือกร้านก่อน",
   "TENANT_ACCESS_DENIED": "คุณไม่ได้เป็นสมาชิกของร้านนี้",
   "NOT_FOUND": "ไม่พบข้อมูล",

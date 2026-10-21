@@ -1,15 +1,16 @@
+import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
 import { Copy, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
-/** "081-234-5678" for a 10-digit mobile; anything else as stored. */
+/** `+66812345678` → `+66 81 234 5678` (international, any country); anything that does not parse is shown as stored. */
 export function formatMobile(phone: string): string {
-  return /^\d{10}$/.test(phone) ? `${phone.slice(0, 3)}-${phone.slice(3, 6)}-${phone.slice(6)}` : phone;
+  return parsePhoneNumberFromString(phone)?.formatInternational() ?? phone;
 }
 
 /**
- * The owner's mobile as a `tel:` link with a copy button, so a salesperson can call a trial shop straight away.
+ * The owner's mobile (E.164) shown international as a `tel:` link with a copy button (copies E.164), so a salesperson can call a trial shop straight away.
  * Shops that never gave one show "—".
  */
 export function OwnerPhone({ phone, className }: { phone: string | null; className?: string }) {
