@@ -156,6 +156,29 @@ describe('invoice detail: acceptance of the terms and the automatic slip check',
     expect(check).toContain('invoices.slip.check.reason.amount_low');
   });
 
+  it('shows the free basic check with its reason and the always-visible bank-app note', () => {
+    h.invoices = [
+      invoice({
+        receiptNumber: null,
+        slipCheck: {
+          status: 'skipped',
+          reasons: ['no_qr'],
+          amountMinor: null,
+          receiverName: null,
+          receiverAccountMasked: null,
+          transRef: null,
+          paidAt: null,
+          checkedAt: '2026-10-02T03:01:00.000Z',
+          method: 'basic',
+        },
+      }),
+    ];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'invoices.slip.review' })[0] as HTMLElement);
+    expect(screen.getByTestId('slip-check').textContent).toContain('invoices.slip.check.reason.no_qr');
+    expect(screen.getByTestId('slip-check-basic-note').textContent).toBe('invoices.slip.check.basicNote');
+  });
+
   it('says so when the customer has not accepted the terms yet, and offers the LINE message for an unpaid notice', () => {
     h.invoices = [invoice({ slipUrl: null, slipUploadedAt: null })];
     render(<InvoicesPage />);

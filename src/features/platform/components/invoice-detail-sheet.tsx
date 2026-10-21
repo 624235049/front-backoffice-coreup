@@ -45,7 +45,7 @@ function SlipFile({ url }: { url: string }) {
   );
 }
 
-/** The automatic slip check (EasySlip) verdict next to the slip; the admin still decides. */
+/** The automatic slip check verdict (EasySlip, or the free basic QR + duplicate check) next to the slip; the admin still decides. */
 function SlipCheckBox({
   check,
   totalMinor,
@@ -55,7 +55,13 @@ function SlipCheckBox({
 }) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
-  const tone = { passed: 'success', failed: 'destructive', error: 'warning', skipped: 'secondary' } as const;
+  const tone = {
+    passed: 'success',
+    failed: 'destructive',
+    error: 'warning',
+    skipped: 'secondary',
+    basic_ok: 'secondary',
+  } as const;
   return (
     <div className="grid gap-1.5 rounded-lg border p-3 text-sm" data-testid="slip-check">
       <div className="flex flex-wrap items-center gap-2">
@@ -78,6 +84,11 @@ function SlipCheckBox({
       {check.receiverName ? <p>{t('invoices.slip.check.receiver', { name: check.receiverName })}</p> : null}
       {check.paidAt ? (
         <p>{t('invoices.slip.check.paidAt', { at: formatDateTime(check.paidAt, locale) })}</p>
+      ) : null}
+      {check.method === 'basic' ? (
+        <p className="text-xs text-muted-foreground" data-testid="slip-check-basic-note">
+          {t('invoices.slip.check.basicNote')}
+        </p>
       ) : null}
     </div>
   );

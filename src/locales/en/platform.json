@@ -760,7 +760,8 @@
           "passed": "Passed",
           "failed": "Failed",
           "error": "Could not check",
-          "skipped": "Skipped (check by hand)"
+          "skipped": "Skipped (check by hand)",
+          "basic_ok": "Basic check passed (bank QR found, not a duplicate)"
         },
         "reason": {
           "amount_low": "Amount lower than the notice",
@@ -771,11 +772,13 @@
           "plan": "Package has no checks",
           "quota": "Quota used up",
           "platform_cap": "CoreUp's slip-check cap is used up",
-          "provider_error": "Slip checker unavailable"
+          "provider_error": "Slip checker unavailable",
+          "no_qr": "No bank QR found on the slip. Check it in your bank app."
         },
         "amount": "Slip amount {{read}} · notice {{due}}",
         "receiver": "Receiver: {{name}}",
-        "paidAt": "Transferred {{at}}"
+        "paidAt": "Transferred {{at}}",
+        "basicNote": "Basic check: duplicate slip and bank QR only. You still need to see the money in your bank app before confirming."
       }
     },
     "detail": "Details",

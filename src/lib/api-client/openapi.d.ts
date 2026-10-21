@@ -15414,14 +15414,16 @@ export interface paths {
                                 slipNote: string | null;
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                                 planName: string | null;
                                 periodStart: string | null;
@@ -15902,14 +15904,16 @@ export interface paths {
                                 slipNote: string | null;
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                                 planName: string | null;
                                 periodStart: string | null;
@@ -16067,14 +16071,16 @@ export interface paths {
                                 slipNote: string | null;
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                                 planName: string | null;
                                 periodStart: string | null;
@@ -16340,14 +16346,16 @@ export interface paths {
                                 slipNote: string | null;
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                                 planName: string | null;
                                 periodStart: string | null;
@@ -16500,14 +16508,16 @@ export interface paths {
                                 slipNote: string | null;
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                                 planName: string | null;
                                 periodStart: string | null;
@@ -41060,14 +41070,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 } | null;
                                 createdAt: string;
@@ -41251,14 +41263,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 } | null;
                                 createdAt: string;
@@ -41424,14 +41438,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -41491,14 +41507,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -41558,14 +41576,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -41626,14 +41646,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -41693,14 +41715,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -41914,14 +41938,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 } | null;
                                 createdAt: string;
@@ -42097,14 +42123,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 } | null;
                                 createdAt: string;
@@ -42282,14 +42310,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 } | null;
                                 createdAt: string;
@@ -42751,14 +42781,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -43119,14 +43151,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -45976,14 +46010,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46051,14 +46087,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46126,14 +46164,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46201,14 +46241,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46276,14 +46318,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46351,14 +46395,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46548,14 +46594,16 @@ export interface paths {
                                             depositId: string | null;
                                             slipCheck: {
                                                 /** @enum {string} */
-                                                status: "passed" | "failed" | "error" | "skipped";
-                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                                 amountMinor: number | null;
                                                 receiverName: string | null;
                                                 receiverAccountMasked: string | null;
                                                 transRef: string | null;
                                                 paidAt: string | null;
                                                 checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
                                             } | null;
                                         } | null;
                                         createdAt: string;
@@ -46755,14 +46803,16 @@ export interface paths {
                                         depositId: string | null;
                                         slipCheck: {
                                             /** @enum {string} */
-                                            status: "passed" | "failed" | "error" | "skipped";
-                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                             amountMinor: number | null;
                                             receiverName: string | null;
                                             receiverAccountMasked: string | null;
                                             transRef: string | null;
                                             paidAt: string | null;
                                             checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
                                         } | null;
                                     } | null;
                                     createdAt: string;
@@ -64245,14 +64295,16 @@ export interface paths {
                                 }[];
                                 slipCheck: {
                                     /** @enum {string} */
-                                    status: "passed" | "failed" | "error" | "skipped";
-                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                     amountMinor: number | null;
                                     receiverName: string | null;
                                     receiverAccountMasked: string | null;
                                     transRef: string | null;
                                     paidAt: string | null;
                                     checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
                                 } | null;
                             }[];
                         };
@@ -77465,14 +77517,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 };
                             }[];
@@ -77617,14 +77671,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 };
                             };
@@ -77762,14 +77818,16 @@ export interface paths {
                                     depositId: string | null;
                                     slipCheck: {
                                         /** @enum {string} */
-                                        status: "passed" | "failed" | "error" | "skipped";
-                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error")[];
+                                        status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                        reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr")[];
                                         amountMinor: number | null;
                                         receiverName: string | null;
                                         receiverAccountMasked: string | null;
                                         transRef: string | null;
                                         paidAt: string | null;
                                         checkedAt: string;
+                                        /** @enum {string} */
+                                        method?: "basic";
                                     } | null;
                                 };
                             };
