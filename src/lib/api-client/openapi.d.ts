@@ -2048,7 +2048,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * The shop’s receiving accounts (bank / PromptPay, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order
+         * The shop’s receiving accounts (bank / PromptPay / own QR image, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order
          * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `checkout`.
          */
         get: {
@@ -2072,7 +2072,7 @@ export interface paths {
                                     /** Format: uuid */
                                     id: string;
                                     /** @enum {string} */
-                                    kind: "bank" | "promptpay";
+                                    kind: "bank" | "promptpay" | "qr";
                                     label: string | null;
                                     bank: {
                                         /** @enum {string} */
@@ -2084,6 +2084,12 @@ export interface paths {
                                     promptpay: {
                                         id: string;
                                         accountName: string;
+                                    } | null;
+                                    qr: {
+                                        /** Format: uuid */
+                                        fileId: string;
+                                        accountName: string | null;
+                                        imageUrl: string;
                                     } | null;
                                     active: boolean;
                                 }[];
@@ -2179,7 +2185,7 @@ export interface paths {
                             /** Format: uuid */
                             id?: string;
                             /** @enum {string} */
-                            kind: "bank" | "promptpay";
+                            kind: "bank" | "promptpay" | "qr";
                             label: string | null;
                             bank: {
                                 /** @enum {string} */
@@ -2191,6 +2197,12 @@ export interface paths {
                             promptpay: {
                                 id: string;
                                 accountName: string;
+                            } | null;
+                            /** @default null */
+                            qr?: {
+                                /** Format: uuid */
+                                fileId: string;
+                                accountName: string | null;
                             } | null;
                             active: boolean;
                         }[];
@@ -2210,7 +2222,7 @@ export interface paths {
                                     /** Format: uuid */
                                     id: string;
                                     /** @enum {string} */
-                                    kind: "bank" | "promptpay";
+                                    kind: "bank" | "promptpay" | "qr";
                                     label: string | null;
                                     bank: {
                                         /** @enum {string} */
@@ -2222,6 +2234,12 @@ export interface paths {
                                     promptpay: {
                                         id: string;
                                         accountName: string;
+                                    } | null;
+                                    qr: {
+                                        /** Format: uuid */
+                                        fileId: string;
+                                        accountName: string | null;
+                                        imageUrl: string;
                                     } | null;
                                     active: boolean;
                                 }[];
@@ -2294,6 +2312,113 @@ export interface paths {
                 };
             };
         };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/tenants/{tenantId}/receiving-qr/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to an active `qr` receiving account. `?download=1` sends it as an attachment
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    download?: "1";
+                };
+                header?: never;
+                path: {
+                    tenantId: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Image bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "image/*": string;
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -7602,7 +7727,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "staff_photo" | "clinical_attachment" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -65061,7 +65186,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -65075,6 +65200,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     note: string | null;
                                 } | null;
@@ -65350,7 +65479,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -65364,6 +65493,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     note: string | null;
                                 } | null;
@@ -72605,7 +72738,7 @@ export interface paths {
                                             /** Format: uuid */
                                             id: string;
                                             /** @enum {string} */
-                                            kind: "bank" | "promptpay";
+                                            kind: "bank" | "promptpay" | "qr";
                                             label: string | null;
                                             bank: {
                                                 /** @enum {string} */
@@ -72619,6 +72752,10 @@ export interface paths {
                                                 accountHint: string;
                                             } | null;
                                             qrPayload: string | null;
+                                            qr: {
+                                                imageUrl: string;
+                                                accountName: string | null;
+                                            } | null;
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
@@ -72659,7 +72796,7 @@ export interface paths {
                                             /** Format: uuid */
                                             id: string;
                                             /** @enum {string} */
-                                            kind: "bank" | "promptpay";
+                                            kind: "bank" | "promptpay" | "qr";
                                             label: string | null;
                                             bank: {
                                                 /** @enum {string} */
@@ -72673,6 +72810,10 @@ export interface paths {
                                                 accountHint: string;
                                             } | null;
                                             qrPayload: string | null;
+                                            qr: {
+                                                imageUrl: string;
+                                                accountName: string | null;
+                                            } | null;
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
@@ -72939,7 +73080,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -72953,6 +73094,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -73106,7 +73251,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -73120,6 +73265,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -73272,7 +73421,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -73286,6 +73435,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -74693,7 +74846,7 @@ export interface paths {
                                             /** Format: uuid */
                                             id: string;
                                             /** @enum {string} */
-                                            kind: "bank" | "promptpay";
+                                            kind: "bank" | "promptpay" | "qr";
                                             label: string | null;
                                             bank: {
                                                 /** @enum {string} */
@@ -74707,6 +74860,10 @@ export interface paths {
                                                 accountHint: string;
                                             } | null;
                                             qrPayload: string | null;
+                                            qr: {
+                                                imageUrl: string;
+                                                accountName: string | null;
+                                            } | null;
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
@@ -74739,7 +74896,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -74753,6 +74910,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -74899,7 +75060,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -74913,6 +75074,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -75189,7 +75354,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -75203,6 +75368,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -75376,7 +75545,7 @@ export interface paths {
                                             /** Format: uuid */
                                             id: string;
                                             /** @enum {string} */
-                                            kind: "bank" | "promptpay";
+                                            kind: "bank" | "promptpay" | "qr";
                                             label: string | null;
                                             bank: {
                                                 /** @enum {string} */
@@ -75390,6 +75559,10 @@ export interface paths {
                                                 accountHint: string;
                                             } | null;
                                             qrPayload: string | null;
+                                            qr: {
+                                                imageUrl: string;
+                                                accountName: string | null;
+                                            } | null;
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
@@ -75538,7 +75711,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -75552,6 +75725,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -75708,7 +75885,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -75722,6 +75899,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -76002,7 +76183,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -76016,6 +76197,10 @@ export interface paths {
                                             accountHint: string;
                                         } | null;
                                         qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
@@ -76171,7 +76356,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -76183,6 +76368,12 @@ export interface paths {
                                         promptpay: {
                                             id: string;
                                             accountName: string;
+                                        } | null;
+                                        qr: {
+                                            /** Format: uuid */
+                                            fileId: string;
+                                            accountName: string | null;
+                                            imageUrl: string;
                                         } | null;
                                         active: boolean;
                                     }[];
@@ -76362,7 +76553,7 @@ export interface paths {
                                         /** Format: uuid */
                                         id: string;
                                         /** @enum {string} */
-                                        kind: "bank" | "promptpay";
+                                        kind: "bank" | "promptpay" | "qr";
                                         label: string | null;
                                         bank: {
                                             /** @enum {string} */
@@ -76374,6 +76565,12 @@ export interface paths {
                                         promptpay: {
                                             id: string;
                                             accountName: string;
+                                        } | null;
+                                        qr: {
+                                            /** Format: uuid */
+                                            fileId: string;
+                                            accountName: string | null;
+                                            imageUrl: string;
                                         } | null;
                                         active: boolean;
                                     }[];

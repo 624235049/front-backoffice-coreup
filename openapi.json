@@ -3071,7 +3071,7 @@
         "tags": [
           "tenant"
         ],
-        "summary": "The shop’s receiving accounts (bank / PromptPay, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order",
+        "summary": "The shop’s receiving accounts (bank / PromptPay / own QR image, ≤ 10, display order): what customers see when they pay a booking deposit or a pay-first pickup order",
         "description": "Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `checkout`.",
         "security": [
           {
@@ -3102,7 +3102,8 @@
                                 "type": "string",
                                 "enum": [
                                   "bank",
-                                  "promptpay"
+                                  "promptpay",
+                                  "qr"
                                 ]
                               },
                               "label": {
@@ -3184,6 +3185,33 @@
                                   "accountName"
                                 ]
                               },
+                              "qr": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "fileId": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "accountName": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "maxLength": 100
+                                  },
+                                  "imageUrl": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "fileId",
+                                  "accountName",
+                                  "imageUrl"
+                                ]
+                              },
                               "active": {
                                 "type": "boolean"
                               }
@@ -3194,6 +3222,7 @@
                               "label",
                               "bank",
                               "promptpay",
+                              "qr",
                               "active"
                             ]
                           }
@@ -3328,7 +3357,8 @@
                           "type": "string",
                           "enum": [
                             "bank",
-                            "promptpay"
+                            "promptpay",
+                            "qr"
                           ]
                         },
                         "label": {
@@ -3410,6 +3440,30 @@
                             "accountName"
                           ]
                         },
+                        "qr": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "fileId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "accountName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "maxLength": 100
+                            }
+                          },
+                          "default": null,
+                          "required": [
+                            "fileId",
+                            "accountName"
+                          ]
+                        },
                         "active": {
                           "type": "boolean"
                         }
@@ -3456,7 +3510,8 @@
                                 "type": "string",
                                 "enum": [
                                   "bank",
-                                  "promptpay"
+                                  "promptpay",
+                                  "qr"
                                 ]
                               },
                               "label": {
@@ -3538,6 +3593,33 @@
                                   "accountName"
                                 ]
                               },
+                              "qr": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "fileId": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "accountName": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "maxLength": 100
+                                  },
+                                  "imageUrl": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "fileId",
+                                  "accountName",
+                                  "imageUrl"
+                                ]
+                              },
                               "active": {
                                 "type": "boolean"
                               }
@@ -3548,6 +3630,7 @@
                               "label",
                               "bank",
                               "promptpay",
+                              "qr",
                               "active"
                             ]
                           }
@@ -3561,6 +3644,129 @@
                   "required": [
                     "data"
                   ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/tenants/{tenantId}/receiving-qr/{fileId}": {
+      "get": {
+        "tags": [
+          "tenant"
+        ],
+        "summary": "The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to an active `qr` receiving account. `?download=1` sends it as an attachment",
+        "description": "Public endpoint (no authentication).",
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "tenantId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "fileId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            },
+            "required": false,
+            "name": "download",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image bytes",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -12742,6 +12948,7 @@
                 "booking_cover",
                 "service_image",
                 "product_image",
+                "receiving_qr",
                 "staff_photo",
                 "clinical_attachment",
                 "other"
@@ -28960,7 +29167,8 @@
                                 "passed",
                                 "failed",
                                 "error",
-                                "skipped"
+                                "skipped",
+                                "basic_ok"
                               ]
                             },
                             "reasons": {
@@ -28976,7 +29184,10 @@
                                   "plan",
                                   "quota",
                                   "platform_cap",
-                                  "provider_error"
+                                  "provider_error",
+                                  "no_qr",
+                                  "promptpay_qr",
+                                  "qr_invalid"
                                 ]
                               }
                             },
@@ -29012,6 +29223,12 @@
                             },
                             "checkedAt": {
                               "type": "string"
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "basic"
+                              ]
                             }
                           },
                           "required": [
@@ -29896,7 +30113,8 @@
                                   "passed",
                                   "failed",
                                   "error",
-                                  "skipped"
+                                  "skipped",
+                                  "basic_ok"
                                 ]
                               },
                               "reasons": {
@@ -29912,7 +30130,10 @@
                                     "plan",
                                     "quota",
                                     "platform_cap",
-                                    "provider_error"
+                                    "provider_error",
+                                    "no_qr",
+                                    "promptpay_qr",
+                                    "qr_invalid"
                                   ]
                                 }
                               },
@@ -29948,6 +30169,12 @@
                               },
                               "checkedAt": {
                                 "type": "string"
+                              },
+                              "method": {
+                                "type": "string",
+                                "enum": [
+                                  "basic"
+                                ]
                               }
                             },
                             "required": [
@@ -30363,7 +30590,8 @@
                                 "passed",
                                 "failed",
                                 "error",
-                                "skipped"
+                                "skipped",
+                                "basic_ok"
                               ]
                             },
                             "reasons": {
@@ -30379,7 +30607,10 @@
                                   "plan",
                                   "quota",
                                   "platform_cap",
-                                  "provider_error"
+                                  "provider_error",
+                                  "no_qr",
+                                  "promptpay_qr",
+                                  "qr_invalid"
                                 ]
                               }
                             },
@@ -30415,6 +30646,12 @@
                             },
                             "checkedAt": {
                               "type": "string"
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "basic"
+                              ]
                             }
                           },
                           "required": [
@@ -30896,7 +31133,8 @@
                                 "passed",
                                 "failed",
                                 "error",
-                                "skipped"
+                                "skipped",
+                                "basic_ok"
                               ]
                             },
                             "reasons": {
@@ -30912,7 +31150,10 @@
                                   "plan",
                                   "quota",
                                   "platform_cap",
-                                  "provider_error"
+                                  "provider_error",
+                                  "no_qr",
+                                  "promptpay_qr",
+                                  "qr_invalid"
                                 ]
                               }
                             },
@@ -30948,6 +31189,12 @@
                             },
                             "checkedAt": {
                               "type": "string"
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "basic"
+                              ]
                             }
                           },
                           "required": [
@@ -31299,7 +31546,8 @@
                                 "passed",
                                 "failed",
                                 "error",
-                                "skipped"
+                                "skipped",
+                                "basic_ok"
                               ]
                             },
                             "reasons": {
@@ -31315,7 +31563,10 @@
                                   "plan",
                                   "quota",
                                   "platform_cap",
-                                  "provider_error"
+                                  "provider_error",
+                                  "no_qr",
+                                  "promptpay_qr",
+                                  "qr_invalid"
                                 ]
                               }
                             },
@@ -31351,6 +31602,12 @@
                             },
                             "checkedAt": {
                               "type": "string"
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "basic"
+                              ]
                             }
                           },
                           "required": [
@@ -82228,7 +82485,8 @@
                                       "passed",
                                       "failed",
                                       "error",
-                                      "skipped"
+                                      "skipped",
+                                      "basic_ok"
                                     ]
                                   },
                                   "reasons": {
@@ -82244,7 +82502,10 @@
                                         "plan",
                                         "quota",
                                         "platform_cap",
-                                        "provider_error"
+                                        "provider_error",
+                                        "no_qr",
+                                        "promptpay_qr",
+                                        "qr_invalid"
                                       ]
                                     }
                                   },
@@ -82280,6 +82541,12 @@
                                   },
                                   "checkedAt": {
                                     "type": "string"
+                                  },
+                                  "method": {
+                                    "type": "string",
+                                    "enum": [
+                                      "basic"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -82877,7 +83144,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -82893,7 +83161,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -82929,6 +83200,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
@@ -83390,7 +83667,8 @@
                                           "passed",
                                           "failed",
                                           "error",
-                                          "skipped"
+                                          "skipped",
+                                          "basic_ok"
                                         ]
                                       },
                                       "reasons": {
@@ -83406,7 +83684,10 @@
                                             "plan",
                                             "quota",
                                             "platform_cap",
-                                            "provider_error"
+                                            "provider_error",
+                                            "no_qr",
+                                            "promptpay_qr",
+                                            "qr_invalid"
                                           ]
                                         }
                                       },
@@ -83442,6 +83723,12 @@
                                       },
                                       "checkedAt": {
                                         "type": "string"
+                                      },
+                                      "method": {
+                                        "type": "string",
+                                        "enum": [
+                                          "basic"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -83782,7 +84069,8 @@
                                           "passed",
                                           "failed",
                                           "error",
-                                          "skipped"
+                                          "skipped",
+                                          "basic_ok"
                                         ]
                                       },
                                       "reasons": {
@@ -83798,7 +84086,10 @@
                                             "plan",
                                             "quota",
                                             "platform_cap",
-                                            "provider_error"
+                                            "provider_error",
+                                            "no_qr",
+                                            "promptpay_qr",
+                                            "qr_invalid"
                                           ]
                                         }
                                       },
@@ -83834,6 +84125,12 @@
                                       },
                                       "checkedAt": {
                                         "type": "string"
+                                      },
+                                      "method": {
+                                        "type": "string",
+                                        "enum": [
+                                          "basic"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -84174,7 +84471,8 @@
                                           "passed",
                                           "failed",
                                           "error",
-                                          "skipped"
+                                          "skipped",
+                                          "basic_ok"
                                         ]
                                       },
                                       "reasons": {
@@ -84190,7 +84488,10 @@
                                             "plan",
                                             "quota",
                                             "platform_cap",
-                                            "provider_error"
+                                            "provider_error",
+                                            "no_qr",
+                                            "promptpay_qr",
+                                            "qr_invalid"
                                           ]
                                         }
                                       },
@@ -84226,6 +84527,12 @@
                                       },
                                       "checkedAt": {
                                         "type": "string"
+                                      },
+                                      "method": {
+                                        "type": "string",
+                                        "enum": [
+                                          "basic"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -84570,7 +84877,8 @@
                                           "passed",
                                           "failed",
                                           "error",
-                                          "skipped"
+                                          "skipped",
+                                          "basic_ok"
                                         ]
                                       },
                                       "reasons": {
@@ -84586,7 +84894,10 @@
                                             "plan",
                                             "quota",
                                             "platform_cap",
-                                            "provider_error"
+                                            "provider_error",
+                                            "no_qr",
+                                            "promptpay_qr",
+                                            "qr_invalid"
                                           ]
                                         }
                                       },
@@ -84622,6 +84933,12 @@
                                       },
                                       "checkedAt": {
                                         "type": "string"
+                                      },
+                                      "method": {
+                                        "type": "string",
+                                        "enum": [
+                                          "basic"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -84963,7 +85280,8 @@
                                         "passed",
                                         "failed",
                                         "error",
-                                        "skipped"
+                                        "skipped",
+                                        "basic_ok"
                                       ]
                                     },
                                     "reasons": {
@@ -84979,7 +85297,10 @@
                                           "plan",
                                           "quota",
                                           "platform_cap",
-                                          "provider_error"
+                                          "provider_error",
+                                          "no_qr",
+                                          "promptpay_qr",
+                                          "qr_invalid"
                                         ]
                                       }
                                     },
@@ -85015,6 +85336,12 @@
                                     },
                                     "checkedAt": {
                                       "type": "string"
+                                    },
+                                    "method": {
+                                      "type": "string",
+                                      "enum": [
+                                        "basic"
+                                      ]
                                     }
                                   },
                                   "required": [
@@ -85732,7 +86059,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -85748,7 +86076,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -85784,6 +86115,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
@@ -86319,7 +86656,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -86335,7 +86673,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -86371,6 +86712,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
@@ -86874,7 +87221,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -86890,7 +87238,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -86926,6 +87277,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
@@ -88033,7 +88390,8 @@
                                         "passed",
                                         "failed",
                                         "error",
-                                        "skipped"
+                                        "skipped",
+                                        "basic_ok"
                                       ]
                                     },
                                     "reasons": {
@@ -88049,7 +88407,10 @@
                                           "plan",
                                           "quota",
                                           "platform_cap",
-                                          "provider_error"
+                                          "provider_error",
+                                          "no_qr",
+                                          "promptpay_qr",
+                                          "qr_invalid"
                                         ]
                                       }
                                     },
@@ -88085,6 +88446,12 @@
                                     },
                                     "checkedAt": {
                                       "type": "string"
+                                    },
+                                    "method": {
+                                      "type": "string",
+                                      "enum": [
+                                        "basic"
+                                      ]
                                     }
                                   },
                                   "required": [
@@ -89206,7 +89573,8 @@
                                           "passed",
                                           "failed",
                                           "error",
-                                          "skipped"
+                                          "skipped",
+                                          "basic_ok"
                                         ]
                                       },
                                       "reasons": {
@@ -89222,7 +89590,10 @@
                                             "plan",
                                             "quota",
                                             "platform_cap",
-                                            "provider_error"
+                                            "provider_error",
+                                            "no_qr",
+                                            "promptpay_qr",
+                                            "qr_invalid"
                                           ]
                                         }
                                       },
@@ -89258,6 +89629,12 @@
                                       },
                                       "checkedAt": {
                                         "type": "string"
+                                      },
+                                      "method": {
+                                        "type": "string",
+                                        "enum": [
+                                          "basic"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -94291,7 +94668,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -94307,7 +94685,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -94343,6 +94724,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -94723,7 +95110,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -94739,7 +95127,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -94775,6 +95166,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -95155,7 +95552,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -95171,7 +95569,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -95207,6 +95608,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -95587,7 +95994,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -95603,7 +96011,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -95639,6 +96050,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -96019,7 +96436,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -96035,7 +96453,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -96071,6 +96492,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -96451,7 +96878,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -96467,7 +96895,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -96503,6 +96934,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -97081,7 +97518,8 @@
                                               "passed",
                                               "failed",
                                               "error",
-                                              "skipped"
+                                              "skipped",
+                                              "basic_ok"
                                             ]
                                           },
                                           "reasons": {
@@ -97097,7 +97535,10 @@
                                                 "plan",
                                                 "quota",
                                                 "platform_cap",
-                                                "provider_error"
+                                                "provider_error",
+                                                "no_qr",
+                                                "promptpay_qr",
+                                                "qr_invalid"
                                               ]
                                             }
                                           },
@@ -97133,6 +97574,12 @@
                                           },
                                           "checkedAt": {
                                             "type": "string"
+                                          },
+                                          "method": {
+                                            "type": "string",
+                                            "enum": [
+                                              "basic"
+                                            ]
                                           }
                                         },
                                         "required": [
@@ -97720,7 +98167,8 @@
                                         "passed",
                                         "failed",
                                         "error",
-                                        "skipped"
+                                        "skipped",
+                                        "basic_ok"
                                       ]
                                     },
                                     "reasons": {
@@ -97736,7 +98184,10 @@
                                           "plan",
                                           "quota",
                                           "platform_cap",
-                                          "provider_error"
+                                          "provider_error",
+                                          "no_qr",
+                                          "promptpay_qr",
+                                          "qr_invalid"
                                         ]
                                       }
                                     },
@@ -97772,6 +98223,12 @@
                                     },
                                     "checkedAt": {
                                       "type": "string"
+                                    },
+                                    "method": {
+                                      "type": "string",
+                                      "enum": [
+                                        "basic"
+                                      ]
                                     }
                                   },
                                   "required": [
@@ -135756,7 +136213,8 @@
                                   "passed",
                                   "failed",
                                   "error",
-                                  "skipped"
+                                  "skipped",
+                                  "basic_ok"
                                 ]
                               },
                               "reasons": {
@@ -135772,7 +136230,10 @@
                                     "plan",
                                     "quota",
                                     "platform_cap",
-                                    "provider_error"
+                                    "provider_error",
+                                    "no_qr",
+                                    "promptpay_qr",
+                                    "qr_invalid"
                                   ]
                                 }
                               },
@@ -135808,6 +136269,12 @@
                               },
                               "checkedAt": {
                                 "type": "string"
+                              },
+                              "method": {
+                                "type": "string",
+                                "enum": [
+                                  "basic"
+                                ]
                               }
                             },
                             "required": [
@@ -137042,7 +137509,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -137124,6 +137592,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -137132,7 +137621,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -137608,7 +138098,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -137690,6 +138181,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -137698,7 +138210,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -151340,7 +151853,8 @@
                                           "type": "string",
                                           "enum": [
                                             "bank",
-                                            "promptpay"
+                                            "promptpay",
+                                            "qr"
                                           ]
                                         },
                                         "label": {
@@ -151422,6 +151936,27 @@
                                             "string",
                                             "null"
                                           ]
+                                        },
+                                        "qr": {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ],
+                                          "properties": {
+                                            "imageUrl": {
+                                              "type": "string"
+                                            },
+                                            "accountName": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "imageUrl",
+                                            "accountName"
+                                          ]
                                         }
                                       },
                                       "required": [
@@ -151430,7 +151965,8 @@
                                         "label",
                                         "bank",
                                         "promptpay",
-                                        "qrPayload"
+                                        "qrPayload",
+                                        "qr"
                                       ]
                                     }
                                   },
@@ -151636,7 +152172,8 @@
                                           "type": "string",
                                           "enum": [
                                             "bank",
-                                            "promptpay"
+                                            "promptpay",
+                                            "qr"
                                           ]
                                         },
                                         "label": {
@@ -151718,6 +152255,27 @@
                                             "string",
                                             "null"
                                           ]
+                                        },
+                                        "qr": {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ],
+                                          "properties": {
+                                            "imageUrl": {
+                                              "type": "string"
+                                            },
+                                            "accountName": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "imageUrl",
+                                            "accountName"
+                                          ]
                                         }
                                       },
                                       "required": [
@@ -151726,7 +152284,8 @@
                                         "label",
                                         "bank",
                                         "promptpay",
-                                        "qrPayload"
+                                        "qrPayload",
+                                        "qr"
                                       ]
                                     }
                                   },
@@ -152215,7 +152774,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -152297,6 +152857,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -152305,7 +152886,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -152645,7 +153227,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -152727,6 +153310,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -152735,7 +153339,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -153072,7 +153677,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -153154,6 +153760,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -153162,7 +153789,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -155707,7 +156335,8 @@
                                         "type": "string",
                                         "enum": [
                                           "bank",
-                                          "promptpay"
+                                          "promptpay",
+                                          "qr"
                                         ]
                                       },
                                       "label": {
@@ -155789,6 +156418,27 @@
                                           "string",
                                           "null"
                                         ]
+                                      },
+                                      "qr": {
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ],
+                                        "properties": {
+                                          "imageUrl": {
+                                            "type": "string"
+                                          },
+                                          "accountName": {
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "imageUrl",
+                                          "accountName"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -155797,7 +156447,8 @@
                                       "label",
                                       "bank",
                                       "promptpay",
-                                      "qrPayload"
+                                      "qrPayload",
+                                      "qr"
                                     ]
                                   }
                                 },
@@ -155963,7 +156614,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -156045,6 +156697,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -156053,7 +156726,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -156352,7 +157026,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -156434,6 +157109,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -156442,7 +157138,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -156965,7 +157662,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -157047,6 +157745,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -157055,7 +157774,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -157497,7 +158217,8 @@
                                         "type": "string",
                                         "enum": [
                                           "bank",
-                                          "promptpay"
+                                          "promptpay",
+                                          "qr"
                                         ]
                                       },
                                       "label": {
@@ -157579,6 +158300,27 @@
                                           "string",
                                           "null"
                                         ]
+                                      },
+                                      "qr": {
+                                        "type": [
+                                          "object",
+                                          "null"
+                                        ],
+                                        "properties": {
+                                          "imageUrl": {
+                                            "type": "string"
+                                          },
+                                          "accountName": {
+                                            "type": [
+                                              "string",
+                                              "null"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "imageUrl",
+                                          "accountName"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -157587,7 +158329,8 @@
                                       "label",
                                       "bank",
                                       "promptpay",
-                                      "qrPayload"
+                                      "qrPayload",
+                                      "qr"
                                     ]
                                   }
                                 },
@@ -157928,7 +158671,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -158010,6 +158754,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -158018,7 +158783,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -158366,7 +159132,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -158448,6 +159215,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -158456,7 +159244,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -158999,7 +159788,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -159081,6 +159871,27 @@
                                       "string",
                                       "null"
                                     ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -159089,7 +159900,8 @@
                                   "label",
                                   "bank",
                                   "promptpay",
-                                  "qrPayload"
+                                  "qrPayload",
+                                  "qr"
                                 ]
                               }
                             },
@@ -159478,7 +160290,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -159560,6 +160373,33 @@
                                       "accountName"
                                     ]
                                   },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "fileId": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "maxLength": 100
+                                      },
+                                      "imageUrl": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "fileId",
+                                      "accountName",
+                                      "imageUrl"
+                                    ]
+                                  },
                                   "active": {
                                     "type": "boolean"
                                   }
@@ -159570,6 +160410,7 @@
                                   "label",
                                   "bank",
                                   "promptpay",
+                                  "qr",
                                   "active"
                                 ]
                               }
@@ -160118,7 +160959,8 @@
                                     "type": "string",
                                     "enum": [
                                       "bank",
-                                      "promptpay"
+                                      "promptpay",
+                                      "qr"
                                     ]
                                   },
                                   "label": {
@@ -160200,6 +161042,33 @@
                                       "accountName"
                                     ]
                                   },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "fileId": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "maxLength": 100
+                                      },
+                                      "imageUrl": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "fileId",
+                                      "accountName",
+                                      "imageUrl"
+                                    ]
+                                  },
                                   "active": {
                                     "type": "boolean"
                                   }
@@ -160210,6 +161079,7 @@
                                   "label",
                                   "bank",
                                   "promptpay",
+                                  "qr",
                                   "active"
                                 ]
                               }
@@ -161884,7 +162754,8 @@
                                       "passed",
                                       "failed",
                                       "error",
-                                      "skipped"
+                                      "skipped",
+                                      "basic_ok"
                                     ]
                                   },
                                   "reasons": {
@@ -161900,7 +162771,10 @@
                                         "plan",
                                         "quota",
                                         "platform_cap",
-                                        "provider_error"
+                                        "provider_error",
+                                        "no_qr",
+                                        "promptpay_qr",
+                                        "qr_invalid"
                                       ]
                                     }
                                   },
@@ -161936,6 +162810,12 @@
                                   },
                                   "checkedAt": {
                                     "type": "string"
+                                  },
+                                  "method": {
+                                    "type": "string",
+                                    "enum": [
+                                      "basic"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -162202,7 +163082,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -162218,7 +163099,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -162254,6 +163138,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
@@ -162515,7 +163405,8 @@
                                     "passed",
                                     "failed",
                                     "error",
-                                    "skipped"
+                                    "skipped",
+                                    "basic_ok"
                                   ]
                                 },
                                 "reasons": {
@@ -162531,7 +163422,10 @@
                                       "plan",
                                       "quota",
                                       "platform_cap",
-                                      "provider_error"
+                                      "provider_error",
+                                      "no_qr",
+                                      "promptpay_qr",
+                                      "qr_invalid"
                                     ]
                                   }
                                 },
@@ -162567,6 +163461,12 @@
                                 },
                                 "checkedAt": {
                                   "type": "string"
+                                },
+                                "method": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic"
+                                  ]
                                 }
                               },
                               "required": [
