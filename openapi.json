@@ -83741,6 +83741,9 @@
                           "null"
                         ],
                         "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                      },
+                      "confirmAdditional": {
+                        "type": "boolean"
                       }
                     },
                     "required": [
@@ -98767,6 +98770,9 @@
                           "null"
                         ],
                         "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                      },
+                      "confirmAdditional": {
+                        "type": "boolean"
                       }
                     },
                     "required": [
@@ -161268,6 +161274,13 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 20160
+                            },
+                            "lastStartTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                             }
                           },
                           "required": [
@@ -161275,7 +161288,8 @@
                             "maxAdvanceDays",
                             "slotStepMin",
                             "allowChooseStaff",
-                            "cancellationWindowMin"
+                            "cancellationWindowMin",
+                            "lastStartTime"
                           ]
                         },
                         "deposit": {
@@ -161712,6 +161726,13 @@
                         "type": "integer",
                         "minimum": 0,
                         "maximum": 20160
+                      },
+                      "lastStartTime": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                       }
                     },
                     "required": [
@@ -161937,6 +161958,13 @@
                               "type": "integer",
                               "minimum": 0,
                               "maximum": 20160
+                            },
+                            "lastStartTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                             }
                           },
                           "required": [
@@ -161944,7 +161972,8 @@
                             "maxAdvanceDays",
                             "slotStepMin",
                             "allowChooseStaff",
-                            "cancellationWindowMin"
+                            "cancellationWindowMin",
+                            "lastStartTime"
                           ]
                         },
                         "deposit": {

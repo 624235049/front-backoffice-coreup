@@ -41811,6 +41811,7 @@ export interface paths {
                             reference?: string | null;
                             note?: string | null;
                             slipFileId?: string | null;
+                            confirmAdditional?: boolean;
                         };
                     };
                 };
@@ -47351,6 +47352,7 @@ export interface paths {
                             reference?: string | null;
                             note?: string | null;
                             slipFileId?: string | null;
+                            confirmAdditional?: boolean;
                         };
                     };
                 };
@@ -76856,6 +76858,7 @@ export interface paths {
                                     slotStepMin: number;
                                     allowChooseStaff: boolean;
                                     cancellationWindowMin: number;
+                                    lastStartTime: string | null;
                                 };
                                 deposit: {
                                     enabled: boolean;
@@ -77003,6 +77006,7 @@ export interface paths {
                             slotStepMin: number;
                             allowChooseStaff: boolean;
                             cancellationWindowMin: number;
+                            lastStartTime?: string | null;
                         };
                         deposit: {
                             enabled: boolean;
@@ -77053,6 +77057,7 @@ export interface paths {
                                     slotStepMin: number;
                                     allowChooseStaff: boolean;
                                     cancellationWindowMin: number;
+                                    lastStartTime: string | null;
                                 };
                                 deposit: {
                                     enabled: boolean;
