@@ -2092,6 +2092,8 @@ export interface paths {
                                         imageUrl: string;
                                     } | null;
                                     active: boolean;
+                                    /** @default false */
+                                    useAtCheckout: boolean;
                                 }[];
                             };
                         };
@@ -2205,6 +2207,8 @@ export interface paths {
                                 accountName: string | null;
                             } | null;
                             active: boolean;
+                            /** @default false */
+                            useAtCheckout?: boolean;
                         }[];
                     };
                 };
@@ -2242,6 +2246,8 @@ export interface paths {
                                         imageUrl: string;
                                     } | null;
                                     active: boolean;
+                                    /** @default false */
+                                    useAtCheckout: boolean;
                                 }[];
                             };
                         };
@@ -2327,7 +2333,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to an active `qr` receiving account. `?download=1` sends it as an attachment
+         * The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to a `qr` receiving account that is active (online deposits) or used at checkout. `?download=1` sends it as an attachment
          * @description Public endpoint (no authentication).
          */
         get: {
@@ -43580,6 +43586,7 @@ export interface paths {
                                     endAt: string;
                                     memberIds: string[];
                                     resourceIds: string[];
+                                    fromPreviousDay: boolean;
                                 }[];
                                 /** @enum {string|null} */
                                 emptyReason: "branch_closed" | "no_staff" | "no_shifts" | "no_resource" | "all_booked" | "day_over" | null;
@@ -49009,6 +49016,7 @@ export interface paths {
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    byResource: boolean;
                                     options: {
                                         choiceId?: string;
                                         groupName: string;
@@ -49237,6 +49245,7 @@ export interface paths {
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    byResource: boolean;
                                     options: {
                                         choiceId?: string;
                                         groupName: string;
@@ -49495,6 +49504,7 @@ export interface paths {
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    byResource: boolean;
                                     options: {
                                         choiceId?: string;
                                         groupName: string;
@@ -49741,6 +49751,7 @@ export interface paths {
                                     /** @description integer satang */
                                     discountMinor: number;
                                     custom: boolean;
+                                    byResource: boolean;
                                     options: {
                                         choiceId?: string;
                                         groupName: string;
@@ -49982,6 +49993,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -50356,6 +50368,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -50606,6 +50619,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -50859,6 +50873,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -51118,6 +51133,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -51521,6 +51537,7 @@ export interface paths {
                                         /** @description integer satang */
                                         discountMinor: number;
                                         custom: boolean;
+                                        byResource: boolean;
                                         options: {
                                             choiceId?: string;
                                             groupName: string;
@@ -74846,6 +74863,7 @@ export interface paths {
                                     time: string;
                                     resourceId: string | null;
                                     resourceName: string | null;
+                                    afterMidnight: boolean;
                                 }[];
                                 /** @enum {string|null} */
                                 emptyReason: "closed" | "full" | "too_soon" | "too_far" | null;
@@ -76890,6 +76908,8 @@ export interface paths {
                                             imageUrl: string;
                                         } | null;
                                         active: boolean;
+                                        /** @default false */
+                                        useAtCheckout: boolean;
                                     }[];
                                 };
                             };
@@ -77089,6 +77109,8 @@ export interface paths {
                                             imageUrl: string;
                                         } | null;
                                         active: boolean;
+                                        /** @default false */
+                                        useAtCheckout: boolean;
                                     }[];
                                 };
                             };

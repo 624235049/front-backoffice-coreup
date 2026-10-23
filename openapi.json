@@ -3215,6 +3215,10 @@
                               },
                               "active": {
                                 "type": "boolean"
+                              },
+                              "useAtCheckout": {
+                                "type": "boolean",
+                                "default": false
                               }
                             },
                             "required": [
@@ -3467,6 +3471,10 @@
                         },
                         "active": {
                           "type": "boolean"
+                        },
+                        "useAtCheckout": {
+                          "type": "boolean",
+                          "default": false
                         }
                       },
                       "required": [
@@ -3623,6 +3631,10 @@
                               },
                               "active": {
                                 "type": "boolean"
+                              },
+                              "useAtCheckout": {
+                                "type": "boolean",
+                                "default": false
                               }
                             },
                             "required": [
@@ -3727,7 +3739,7 @@
         "tags": [
           "tenant"
         ],
-        "summary": "The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to an active `qr` receiving account. `?download=1` sends it as an attachment",
+        "summary": "The shop’s payment QR image (`publicReceivingAccount.qr.imageUrl`); 404 unless it belongs to a `qr` receiving account that is active (online deposits) or used at checkout. `?download=1` sends it as an attachment",
         "description": "Public endpoint (no authentication).",
         "security": [],
         "parameters": [
@@ -89923,13 +89935,17 @@
                                   "type": "string",
                                   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                                 }
+                              },
+                              "fromPreviousDay": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
                               "startAt",
                               "endAt",
                               "memberIds",
-                              "resourceIds"
+                              "resourceIds",
+                              "fromPreviousDay"
                             ]
                           }
                         },
@@ -102514,6 +102530,9 @@
                               "custom": {
                                 "type": "boolean"
                               },
+                              "byResource": {
+                                "type": "boolean"
+                              },
                               "options": {
                                 "type": "array",
                                 "items": {
@@ -102575,6 +102594,7 @@
                               "labVendor",
                               "discountMinor",
                               "custom",
+                              "byResource",
                               "options",
                               "note",
                               "round",
@@ -103230,6 +103250,9 @@
                               "custom": {
                                 "type": "boolean"
                               },
+                              "byResource": {
+                                "type": "boolean"
+                              },
                               "options": {
                                 "type": "array",
                                 "items": {
@@ -103291,6 +103314,7 @@
                               "labVendor",
                               "discountMinor",
                               "custom",
+                              "byResource",
                               "options",
                               "note",
                               "round",
@@ -104106,6 +104130,9 @@
                               "custom": {
                                 "type": "boolean"
                               },
+                              "byResource": {
+                                "type": "boolean"
+                              },
                               "options": {
                                 "type": "array",
                                 "items": {
@@ -104167,6 +104194,7 @@
                               "labVendor",
                               "discountMinor",
                               "custom",
+                              "byResource",
                               "options",
                               "note",
                               "round",
@@ -104881,6 +104909,9 @@
                               "custom": {
                                 "type": "boolean"
                               },
+                              "byResource": {
+                                "type": "boolean"
+                              },
                               "options": {
                                 "type": "array",
                                 "items": {
@@ -104942,6 +104973,7 @@
                               "labVendor",
                               "discountMinor",
                               "custom",
+                              "byResource",
                               "options",
                               "note",
                               "round",
@@ -105638,6 +105670,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -105699,6 +105734,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -106638,6 +106674,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -106699,6 +106738,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -107415,6 +107455,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -107476,6 +107519,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -108222,6 +108266,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -108283,6 +108330,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -109044,6 +109092,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -109105,6 +109156,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -110155,6 +110207,9 @@
                                   "custom": {
                                     "type": "boolean"
                                   },
+                                  "byResource": {
+                                    "type": "boolean"
+                                  },
                                   "options": {
                                     "type": "array",
                                     "items": {
@@ -110216,6 +110271,7 @@
                                   "labVendor",
                                   "discountMinor",
                                   "custom",
+                                  "byResource",
                                   "options",
                                   "note",
                                   "round",
@@ -156471,6 +156527,9 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "afterMidnight": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -156478,7 +156537,8 @@
                               "endAt",
                               "time",
                               "resourceId",
-                              "resourceName"
+                              "resourceName",
+                              "afterMidnight"
                             ]
                           }
                         },
@@ -161445,6 +161505,10 @@
                                   },
                                   "active": {
                                     "type": "boolean"
+                                  },
+                                  "useAtCheckout": {
+                                    "type": "boolean",
+                                    "default": false
                                   }
                                 },
                                 "required": [
@@ -162129,6 +162193,10 @@
                                   },
                                   "active": {
                                     "type": "boolean"
+                                  },
+                                  "useAtCheckout": {
+                                    "type": "boolean",
+                                    "default": false
                                   }
                                 },
                                 "required": [
