@@ -4,14 +4,21 @@ import {
   LayoutDashboard,
   Package,
   Receipt,
+  Rocket,
   Store,
   TrendingUp,
   UserRoundSearch,
   Users,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
+import { useOnboardingSummary } from './api';
 import { usePendingSlipCount } from './invoice-slip';
 import { useNewLeadBadge } from './new-lead-badge';
+
+/** Red badge on "New shops": self-serve shops the team should contact today. */
+function useDueOnboardingCount(): number {
+  return useOnboardingSummary().data?.dueCount ?? 0;
+}
 
 export const navItems: NavItem[] = [
   {
@@ -38,6 +45,16 @@ export const navItems: NavItem[] = [
     permission: 'platform:read',
     module: 'platform',
     order: 25,
+  },
+  {
+    to: '/platform/onboarding',
+    labelKey: 'nav:onboarding',
+    icon: Rocket,
+    permission: 'platform:read',
+    module: 'platform',
+    order: 27,
+    useBadge: useDueOnboardingCount,
+    badgeLabel: 'dueCount',
   },
   {
     to: '/platform/leads',

@@ -12634,6 +12634,491 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/onboarding": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * New-shop follow-up board: self-serve shops signed up in the last 7 / 14 / 30 / 60 days, progress to a first booking, contact log, due today
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    days?: "7" | "14" | "30" | "60";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Board */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                rows: {
+                                    id: string;
+                                    slug: string;
+                                    name: string;
+                                    industryKey: string | null;
+                                    /** @enum {string} */
+                                    status: "trial" | "active" | "paused" | "closed";
+                                    planCode: string | null;
+                                    createdAt: string;
+                                    trialEndsOn: string | null;
+                                    ownerName: string | null;
+                                    ownerEmail: string | null;
+                                    ownerPhone: string | null;
+                                    lastActiveAt: string | null;
+                                    milestones: {
+                                        servicesSet: boolean;
+                                        hoursSet: boolean;
+                                        firstBooking: boolean;
+                                        onlineBooking: boolean;
+                                        lineConnected: boolean;
+                                    };
+                                    appointments: number;
+                                    nudges: {
+                                        /** @enum {string} */
+                                        key: "d1" | "d3" | "d7";
+                                        at: string;
+                                    }[];
+                                    lastContact: {
+                                        /** @enum {string} */
+                                        type: "call" | "line" | "chat" | "visit" | "meeting" | "note";
+                                        note: string | null;
+                                        at: string;
+                                        byName: string | null;
+                                    } | null;
+                                    nextFollowUpOn: string | null;
+                                    due: boolean;
+                                    /** @enum {string|null} */
+                                    dueReason: "new" | "scheduled" | "stuck" | null;
+                                }[];
+                                dueCount: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/onboarding/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * How many new shops the team should contact today (last 30 days): nav badge
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Summary */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                dueCount: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/followups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The team's contact log for a shop, newest first
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Contacts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                type: "call" | "line" | "chat" | "visit" | "meeting" | "note";
+                                note: string | null;
+                                /** @enum {string|null} */
+                                result: "reached" | "no_answer" | "callback" | "not_interested" | null;
+                                nextFollowUpOn: string | null;
+                                at: string;
+                                byName: string | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Log a call / LINE / note against a shop, with the next follow-up date
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        type: "call" | "line" | "chat" | "visit" | "meeting" | "note";
+                        note?: string;
+                        /** @enum {string|null} */
+                        result?: "reached" | "no_answer" | "callback" | "not_interested" | null;
+                        nextFollowUpOn?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Logged */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                type: "call" | "line" | "chat" | "visit" | "meeting" | "note";
+                                note: string | null;
+                                /** @enum {string|null} */
+                                result: "reached" | "no_answer" | "callback" | "not_interested" | null;
+                                nextFollowUpOn: string | null;
+                                at: string;
+                                byName: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/platform/playbooks": {
         parameters: {
             query?: never;
@@ -31302,6 +31787,9 @@ export interface paths {
                                 signedMinor: number;
                                 balanceAfterMinor: number;
                                 note: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string|null} */
+                                source: "shop" | "booking" | "online" | "import" | null;
                                 estimated: boolean;
                             }[];
                             summary: {
@@ -41322,6 +41810,7 @@ export interface paths {
                             method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
                             reference?: string | null;
                             note?: string | null;
+                            slipFileId?: string | null;
                         };
                     };
                 };
@@ -46861,6 +47350,7 @@ export interface paths {
                             method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
                             reference?: string | null;
                             note?: string | null;
+                            slipFileId?: string | null;
                         };
                     };
                 };
@@ -47086,6 +47576,9 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 takenAt: string;
                                 takenBy: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string} */
+                                source: "shop" | "booking" | "online" | "import";
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -47190,6 +47683,8 @@ export interface paths {
                         method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
                         reference?: string | null;
                         note?: string | null;
+                        slipFileId?: string | null;
+                        confirmAdditional?: boolean;
                     };
                 };
             };
@@ -47227,6 +47722,9 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 takenAt: string;
                                 takenBy: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string} */
+                                source: "shop" | "booking" | "online" | "import";
                             };
                         };
                     };
@@ -47357,6 +47855,9 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 takenAt: string;
                                 takenBy: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string} */
+                                source: "shop" | "booking" | "online" | "import";
                             };
                         };
                     };
@@ -47484,6 +47985,7 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 /** @description integer satang */
                                 remainingMinor: number;
+                                slipFileId: string | null;
                             };
                         };
                     };
@@ -47632,6 +48134,9 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 takenAt: string;
                                 takenBy: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string} */
+                                source: "shop" | "booking" | "online" | "import";
                             };
                         };
                     };
@@ -47776,6 +48281,9 @@ export interface paths {
                                 status: "held" | "applied" | "refunded" | "forfeited";
                                 takenAt: string;
                                 takenBy: string | null;
+                                slipFileId: string | null;
+                                /** @enum {string} */
+                                source: "shop" | "booking" | "online" | "import";
                             };
                         };
                     };
@@ -47910,6 +48418,9 @@ export interface paths {
                                     status: "held" | "applied" | "refunded" | "forfeited";
                                     takenAt: string;
                                     takenBy: string | null;
+                                    slipFileId: string | null;
+                                    /** @enum {string} */
+                                    source: "shop" | "booking" | "online" | "import";
                                 }[];
                             };
                         };
@@ -77839,6 +78350,7 @@ export interface paths {
                          */
                         method?: "promptpay" | "transfer";
                         reference?: string;
+                        confirmAdditional?: boolean;
                     };
                 };
             };
@@ -92964,7 +93476,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

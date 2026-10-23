@@ -26,6 +26,7 @@ import { Route as AppAccountingSettingsRouteImport } from './routes/_app/account
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
 import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.invoices'
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
+import { Route as AppPlatformOnboardingRouteImport } from './routes/_app/platform.onboarding'
 import { Route as AppPlatformPlansRouteImport } from './routes/_app/platform.plans'
 import { Route as AppPlatformRevenueRouteImport } from './routes/_app/platform.revenue'
 import { Route as AppPlatformTeamRouteImport } from './routes/_app/platform.team'
@@ -137,6 +138,11 @@ const AppPlatformInvoicesRoute = AppPlatformInvoicesRouteImport.update({
 const AppPlatformLeadsRoute = AppPlatformLeadsRouteImport.update({
   id: '/platform/leads',
   path: '/platform/leads',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformOnboardingRoute = AppPlatformOnboardingRouteImport.update({
+  id: '/platform/onboarding',
+  path: '/platform/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlatformPlansRoute = AppPlatformPlansRouteImport.update({
@@ -313,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
+  '/platform/onboarding': typeof AppPlatformOnboardingRoute
   '/platform/plans': typeof AppPlatformPlansRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
@@ -359,6 +366,7 @@ export interface FileRoutesByTo {
   '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
+  '/platform/onboarding': typeof AppPlatformOnboardingRoute
   '/platform/plans': typeof AppPlatformPlansRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/team': typeof AppPlatformTeamRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/_app/accounting/settings': typeof AppAccountingSettingsRoute
   '/_app/platform/invoices': typeof AppPlatformInvoicesRoute
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
+  '/_app/platform/onboarding': typeof AppPlatformOnboardingRoute
   '/_app/platform/plans': typeof AppPlatformPlansRoute
   '/_app/platform/revenue': typeof AppPlatformRevenueRoute
   '/_app/platform/team': typeof AppPlatformTeamRoute
@@ -456,6 +465,7 @@ export interface FileRouteTypes {
     | '/accounting/settings'
     | '/platform/invoices'
     | '/platform/leads'
+    | '/platform/onboarding'
     | '/platform/plans'
     | '/platform/revenue'
     | '/platform/team'
@@ -502,6 +512,7 @@ export interface FileRouteTypes {
     | '/accounting/settings'
     | '/platform/invoices'
     | '/platform/leads'
+    | '/platform/onboarding'
     | '/platform/plans'
     | '/platform/revenue'
     | '/platform/team'
@@ -550,6 +561,7 @@ export interface FileRouteTypes {
     | '/_app/accounting/settings'
     | '/_app/platform/invoices'
     | '/_app/platform/leads'
+    | '/_app/platform/onboarding'
     | '/_app/platform/plans'
     | '/_app/platform/revenue'
     | '/_app/platform/team'
@@ -708,6 +720,13 @@ declare module '@tanstack/react-router' {
       path: '/platform/leads'
       fullPath: '/platform/leads'
       preLoaderRoute: typeof AppPlatformLeadsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/onboarding': {
+      id: '/_app/platform/onboarding'
+      path: '/platform/onboarding'
+      fullPath: '/platform/onboarding'
+      preLoaderRoute: typeof AppPlatformOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/plans': {
@@ -926,6 +945,7 @@ interface AppRouteChildren {
   AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
   AppPlatformInvoicesRoute: typeof AppPlatformInvoicesRoute
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
+  AppPlatformOnboardingRoute: typeof AppPlatformOnboardingRoute
   AppPlatformPlansRoute: typeof AppPlatformPlansRoute
   AppPlatformRevenueRoute: typeof AppPlatformRevenueRoute
   AppPlatformTeamRoute: typeof AppPlatformTeamRoute
@@ -969,6 +989,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingSettingsRoute: AppAccountingSettingsRoute,
   AppPlatformInvoicesRoute: AppPlatformInvoicesRoute,
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
+  AppPlatformOnboardingRoute: AppPlatformOnboardingRoute,
   AppPlatformPlansRoute: AppPlatformPlansRoute,
   AppPlatformRevenueRoute: AppPlatformRevenueRoute,
   AppPlatformTeamRoute: AppPlatformTeamRoute,

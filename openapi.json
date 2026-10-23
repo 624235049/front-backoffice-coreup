@@ -71,6 +71,7 @@
                   "CLINICAL_RECORD_LOCKED",
                   "CASH_SESSION_REQUIRED",
                   "CASH_SESSION_OPEN",
+                  "DEPOSIT_ALREADY_TAKEN",
                   "NOT_A_DEMO_TENANT",
                   "DEMO_PREREQUISITE_MISSING",
                   "PROMPTPAY_NOT_CONFIGURED",
@@ -22712,6 +22713,872 @@
                         "tenantId",
                         "engagementId",
                         "passwordResetSent"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/onboarding": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "New-shop follow-up board: self-serve shops signed up in the last 7 / 14 / 30 / 60 days, progress to a first booking, contact log, due today",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "7",
+                "14",
+                "30",
+                "60"
+              ],
+              "default": "30"
+            },
+            "required": false,
+            "name": "days",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "rows": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "industryKey": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "trial",
+                                  "active",
+                                  "paused",
+                                  "closed"
+                                ]
+                              },
+                              "planCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "trialEndsOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "ownerName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "ownerEmail": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "ownerPhone": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "lastActiveAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "milestones": {
+                                "type": "object",
+                                "properties": {
+                                  "servicesSet": {
+                                    "type": "boolean"
+                                  },
+                                  "hoursSet": {
+                                    "type": "boolean"
+                                  },
+                                  "firstBooking": {
+                                    "type": "boolean"
+                                  },
+                                  "onlineBooking": {
+                                    "type": "boolean"
+                                  },
+                                  "lineConnected": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "servicesSet",
+                                  "hoursSet",
+                                  "firstBooking",
+                                  "onlineBooking",
+                                  "lineConnected"
+                                ]
+                              },
+                              "appointments": {
+                                "type": "integer"
+                              },
+                              "nudges": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "key": {
+                                      "type": "string",
+                                      "enum": [
+                                        "d1",
+                                        "d3",
+                                        "d7"
+                                      ]
+                                    },
+                                    "at": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "key",
+                                    "at"
+                                  ]
+                                }
+                              },
+                              "lastContact": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "call",
+                                      "line",
+                                      "chat",
+                                      "visit",
+                                      "meeting",
+                                      "note"
+                                    ]
+                                  },
+                                  "note": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "at": {
+                                    "type": "string"
+                                  },
+                                  "byName": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "note",
+                                  "at",
+                                  "byName"
+                                ]
+                              },
+                              "nextFollowUpOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "due": {
+                                "type": "boolean"
+                              },
+                              "dueReason": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "new",
+                                  "scheduled",
+                                  "stuck",
+                                  null
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "name",
+                              "industryKey",
+                              "status",
+                              "planCode",
+                              "createdAt",
+                              "trialEndsOn",
+                              "ownerName",
+                              "ownerEmail",
+                              "ownerPhone",
+                              "lastActiveAt",
+                              "milestones",
+                              "appointments",
+                              "nudges",
+                              "lastContact",
+                              "nextFollowUpOn",
+                              "due",
+                              "dueReason"
+                            ]
+                          }
+                        },
+                        "dueCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "rows",
+                        "dueCount"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/onboarding/summary": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "How many new shops the team should contact today (last 30 days): nav badge",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "dueCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "dueCount"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/tenants/{id}/followups": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "The team's contact log for a shop, newest first",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "call",
+                              "line",
+                              "chat",
+                              "visit",
+                              "meeting",
+                              "note"
+                            ]
+                          },
+                          "note": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "result": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "enum": [
+                              "reached",
+                              "no_answer",
+                              "callback",
+                              "not_interested",
+                              null
+                            ]
+                          },
+                          "nextFollowUpOn": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                          },
+                          "at": {
+                            "type": "string"
+                          },
+                          "byName": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "note",
+                          "result",
+                          "nextFollowUpOn",
+                          "at",
+                          "byName"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Log a call / LINE / note against a shop, with the next follow-up date",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "call",
+                      "line",
+                      "chat",
+                      "visit",
+                      "meeting",
+                      "note"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "result": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "reached",
+                      "no_answer",
+                      "callback",
+                      "not_interested",
+                      null
+                    ]
+                  },
+                  "nextFollowUpOn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "call",
+                            "line",
+                            "chat",
+                            "visit",
+                            "meeting",
+                            "note"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "result": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "reached",
+                            "no_answer",
+                            "callback",
+                            "not_interested",
+                            null
+                          ]
+                        },
+                        "nextFollowUpOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "at": {
+                          "type": "string"
+                        },
+                        "byName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "type",
+                        "note",
+                        "result",
+                        "nextFollowUpOn",
+                        "at",
+                        "byName"
                       ]
                     }
                   },
@@ -62947,6 +63814,26 @@
                               "null"
                             ]
                           },
+                          "slipFileId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "source": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "enum": [
+                              "shop",
+                              "booking",
+                              "online",
+                              "import",
+                              null
+                            ]
+                          },
                           "estimated": {
                             "type": "boolean"
                           }
@@ -62965,6 +63852,8 @@
                           "signedMinor",
                           "balanceAfterMinor",
                           "note",
+                          "slipFileId",
+                          "source",
                           "estimated"
                         ]
                       }
@@ -82845,6 +83734,13 @@
                           "null"
                         ],
                         "maxLength": 300
+                      },
+                      "slipFileId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                       }
                     },
                     "required": [
@@ -97864,6 +98760,13 @@
                           "null"
                         ],
                         "maxLength": 300
+                      },
+                      "slipFileId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                       }
                     },
                     "required": [
@@ -98615,6 +99518,22 @@
                               "null"
                             ],
                             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "slipFileId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "source": {
+                            "type": "string",
+                            "enum": [
+                              "shop",
+                              "booking",
+                              "online",
+                              "import"
+                            ]
                           }
                         },
                         "required": [
@@ -98635,7 +99554,9 @@
                           "note",
                           "status",
                           "takenAt",
-                          "takenBy"
+                          "takenBy",
+                          "slipFileId",
+                          "source"
                         ]
                       }
                     },
@@ -98824,6 +99745,16 @@
                       "null"
                     ],
                     "maxLength": 300
+                  },
+                  "slipFileId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "confirmAdditional": {
+                    "type": "boolean"
                   }
                 },
                 "required": [
@@ -98945,6 +99876,22 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "slipFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "shop",
+                            "booking",
+                            "online",
+                            "import"
+                          ]
                         }
                       },
                       "required": [
@@ -98965,7 +99912,9 @@
                         "note",
                         "status",
                         "takenAt",
-                        "takenBy"
+                        "takenBy",
+                        "slipFileId",
+                        "source"
                       ]
                     }
                   },
@@ -99182,6 +100131,22 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "slipFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "shop",
+                            "booking",
+                            "online",
+                            "import"
+                          ]
                         }
                       },
                       "required": [
@@ -99202,7 +100167,9 @@
                         "note",
                         "status",
                         "takenAt",
-                        "takenBy"
+                        "takenBy",
+                        "slipFileId",
+                        "source"
                       ]
                     }
                   },
@@ -99402,6 +100369,13 @@
                           "type": "integer",
                           "minimum": 0,
                           "description": "integer satang"
+                        },
+                        "slipFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                         }
                       },
                       "required": [
@@ -99420,7 +100394,8 @@
                         "reference",
                         "note",
                         "status",
-                        "remainingMinor"
+                        "remainingMinor",
+                        "slipFileId"
                       ]
                     }
                   },
@@ -99683,6 +100658,22 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "slipFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "shop",
+                            "booking",
+                            "online",
+                            "import"
+                          ]
                         }
                       },
                       "required": [
@@ -99703,7 +100694,9 @@
                         "note",
                         "status",
                         "takenAt",
-                        "takenBy"
+                        "takenBy",
+                        "slipFileId",
+                        "source"
                       ]
                     }
                   },
@@ -99956,6 +100949,22 @@
                             "null"
                           ],
                           "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "slipFileId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "source": {
+                          "type": "string",
+                          "enum": [
+                            "shop",
+                            "booking",
+                            "online",
+                            "import"
+                          ]
                         }
                       },
                       "required": [
@@ -99976,7 +100985,9 @@
                         "note",
                         "status",
                         "takenAt",
-                        "takenBy"
+                        "takenBy",
+                        "slipFileId",
+                        "source"
                       ]
                     }
                   },
@@ -100207,6 +101218,22 @@
                                   "null"
                                 ],
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "slipFileId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "shop",
+                                  "booking",
+                                  "online",
+                                  "import"
+                                ]
                               }
                             },
                             "required": [
@@ -100227,7 +101254,9 @@
                               "note",
                               "status",
                               "takenAt",
-                              "takenBy"
+                              "takenBy",
+                              "slipFileId",
+                              "source"
                             ]
                           }
                         }
@@ -162987,6 +164016,9 @@
                   "reference": {
                     "type": "string",
                     "maxLength": 100
+                  },
+                  "confirmAdditional": {
+                    "type": "boolean"
                   }
                 }
               }

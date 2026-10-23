@@ -35,6 +35,10 @@ export type TemplateSection = NonNullable<
 >[number];
 export type UsageReportRow = UsageReport['rows'][number];
 export type UsageReportQuery = NonNullable<paths['/v1/platform/usage-report']['get']['parameters']['query']>;
+export type Onboarding = ApiItem<'/v1/platform/onboarding'>;
+export type OnboardingRow = Onboarding['rows'][number];
+export type OnboardingQuery = NonNullable<paths['/v1/platform/onboarding']['get']['parameters']['query']>;
+export type TenantFollowup = ListItem<ApiData<'/v1/platform/tenants/{id}/followups'>>;
 
 const part = 'platform';
 
@@ -158,6 +162,32 @@ export const useLeadAssignees = () =>
   useTenantQuery(
     [part, 'lead-assignees'],
     async () => (await unwrap(api.GET('/v1/platform/leads/assignees'))).data,
+  );
+
+export const useOnboarding = (days: OnboardingQuery['days']) =>
+  useTenantQuery(
+    [part, 'onboarding', days],
+    async () => (await unwrap(api.GET('/v1/platform/onboarding', { params: { query: { days } } }))).data,
+  );
+
+/** Shops to follow up today; polled so the nav badge stays current. */
+export const useOnboardingSummary = (enabled = true) =>
+  useTenantQuery(
+    [part, 'onboarding-summary'],
+    async () => (await unwrap(api.GET('/v1/platform/onboarding/summary'))).data,
+    { enabled, refetchInterval: 60_000 },
+  );
+
+export const useTenantFollowups = (id: string | null) =>
+  useTenantQuery(
+    [part, 'tenant', id, 'followups'],
+    async () =>
+      (
+        await unwrap(
+          api.GET('/v1/platform/tenants/{id}/followups', { params: { path: { id: id as string } } }),
+        )
+      ).data,
+    { enabled: id !== null },
   );
 
 export const useEngagements = (query: { tenantId?: string; status?: Engagement['status'] } = {}) =>
@@ -316,6 +346,12 @@ export const usePatchLead = () =>
 export const useAddLeadActivity = () =>
   useMut((v: { id: string; body: ApiBody<'/v1/platform/leads/{id}/activities', 'post'> }) =>
     unwrap(api.POST('/v1/platform/leads/{id}/activities', { params: { path: { id: v.id } }, body: v.body })),
+  );
+
+/** Logging a contact refreshes the board, the badge and the shop's timeline (all under the `platform` key). */
+export const useAddTenantFollowup = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/followups', 'post'>) =>
+    unwrap(api.POST('/v1/platform/tenants/{id}/followups', { params: { path: { id } }, body })),
   );
 
 export const useConvertLead = () =>

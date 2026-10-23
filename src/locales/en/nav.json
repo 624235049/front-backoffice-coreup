@@ -27,6 +27,8 @@
   "dashboard": "Overview",
   "tenants": "Shops",
   "usageReport": "Usage report",
+  "onboarding": "New shops",
+  "dueCount": "{{count}} new shops to contact",
   "leads": "Leads",
   "newCount": "{{count}} new leads",
   "slipCount": "{{count}} slips to review",

@@ -428,6 +428,83 @@
     "checklistsDone": "Checklists",
     "customers": "Customers"
   },
+  "onboarding": {
+    "title": "New shops (self sign-up)",
+    "description": "Shops that signed up themselves during the trial: how close each is to a first booking, and who to contact today",
+    "days": "{{count}} days",
+    "empty": "No new shops in this period",
+    "emptyHint": "Shops that sign up on their own appear here with their progress and when to follow up",
+    "dueSection": "Contact today ({{count}})",
+    "restSection": "Other shops ({{count}})",
+    "noneDue": "No shop needs contact today",
+    "col": {
+      "shop": "Shop",
+      "owner": "Owner",
+      "progress": "Progress",
+      "activity": "Usage",
+      "contact": "Contact"
+    },
+    "signedUp": "Signed up {{count}} day(s) ago",
+    "signedUpToday": "Signed up today",
+    "trialEnds": "Trial until {{date}}",
+    "dueReason": {
+      "new": "New shop, not contacted yet",
+      "scheduled": "Follow-up date reached",
+      "stuck": "No bookings · not opened for 3 days"
+    },
+    "progress": "Done {{done}}/{{total}}",
+    "done": "Done",
+    "notDone": "Not done",
+    "step": {
+      "servicesSet": "Services set",
+      "hoursSet": "Opening hours set",
+      "firstBooking": "First booking",
+      "onlineBooking": "Online booking",
+      "lineConnected": "LINE connected"
+    },
+    "lastActive": "Last active",
+    "neverUsed": "Never used",
+    "today": "Today",
+    "ago": "{{count}} day(s) ago",
+    "appointments": "Bookings in total: {{count}}",
+    "nudges": "Automatic messages",
+    "nudge": {
+      "d1": "Booking link",
+      "d3": "Setup help offer",
+      "d7": "Connect LINE tip"
+    },
+    "neverContacted": "Not contacted yet",
+    "nextFollowUp": "Follow up on {{date}}",
+    "logContact": "Log contact",
+    "sheetHint": "Record that you contacted this shop and set the next follow-up date",
+    "contactType": "Channel",
+    "contactResult": "Result",
+    "noResult": "No result",
+    "note": "Details",
+    "nextDate": "Next follow-up date",
+    "quick": {
+      "1": "Tomorrow",
+      "3": "In 3 days",
+      "7": "In 7 days"
+    },
+    "save": "Save",
+    "savedToast": "Contact logged",
+    "noHistory": "No contact history yet",
+    "type": {
+      "call": "Call",
+      "line": "LINE",
+      "chat": "Chat",
+      "visit": "Visit",
+      "meeting": "Meeting",
+      "note": "Note"
+    },
+    "result": {
+      "reached": "Reached",
+      "no_answer": "No answer",
+      "callback": "Asked to call back",
+      "not_interested": "Not interested"
+    }
+  },
   "usageReport": {
     "title": "Usage report",
     "description": "Who really uses the system, for what, and which shops are not set up yet. Counts run up to now (today included).",
