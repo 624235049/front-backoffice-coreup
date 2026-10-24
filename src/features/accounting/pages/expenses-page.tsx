@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate, useIntlLocale } from '@/features/platform/format';
 import { type ExpenseRow, useExpenseCategories, useExpenses } from '../api';
+import { CategoriesCard } from '../components/categories-card';
 import { DataTable, DtCell, DtHead, DtRow, DtTh, DtTotalCell, DtTotals } from '../components/data-table';
 import { DateRangeFilter, FilterBar, SearchBox, StatusFilter } from '../components/filter-bar';
 import { formatAmount } from '../lib/format';
@@ -263,6 +264,9 @@ export function ExpensesPage() {
           ) : null}
         </>
       )}
+      <div className="mt-8">
+        <CategoriesCard />
+      </div>
     </>
   );
 }

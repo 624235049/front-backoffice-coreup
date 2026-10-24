@@ -3255,6 +3255,7 @@ export interface paths {
                                 lat: number | null;
                                 lng: number | null;
                                 phone: string | null;
+                                mapUrl: string | null;
                                 openingHours: {
                                     [key: string]: [
                                         string,
@@ -3367,6 +3368,7 @@ export interface paths {
                         lat?: number | null;
                         lng?: number | null;
                         phone?: string | null;
+                        mapUrl?: string | null;
                         openingHours?: {
                             [key: string]: [
                                 string,
@@ -3392,6 +3394,7 @@ export interface paths {
                                 lat: number | null;
                                 lng: number | null;
                                 phone: string | null;
+                                mapUrl: string | null;
                                 openingHours: {
                                     [key: string]: [
                                         string,
@@ -3514,6 +3517,7 @@ export interface paths {
                                 lat: number | null;
                                 lng: number | null;
                                 phone: string | null;
+                                mapUrl: string | null;
                                 openingHours: {
                                     [key: string]: [
                                         string,
@@ -3716,6 +3720,7 @@ export interface paths {
                         lat?: number | null;
                         lng?: number | null;
                         phone?: string | null;
+                        mapUrl?: string | null;
                         openingHours?: {
                             [key: string]: [
                                 string,
@@ -3743,6 +3748,7 @@ export interface paths {
                                 lat: number | null;
                                 lng: number | null;
                                 phone: string | null;
+                                mapUrl: string | null;
                                 openingHours: {
                                     [key: string]: [
                                         string,
@@ -9054,7 +9060,7 @@ export interface paths {
                                     invoicedMinor: number;
                                     paidMinor: number;
                                     outstandingMinor: number;
-                                };
+                                } | null;
                                 engagements: {
                                     id: string;
                                     /** @enum {string} */
@@ -9267,7 +9273,7 @@ export interface paths {
                                     invoicedMinor: number;
                                     paidMinor: number;
                                     outstandingMinor: number;
-                                };
+                                } | null;
                                 engagements: {
                                     id: string;
                                     /** @enum {string} */
@@ -9489,7 +9495,7 @@ export interface paths {
                                     invoicedMinor: number;
                                     paidMinor: number;
                                     outstandingMinor: number;
-                                };
+                                } | null;
                                 engagements: {
                                     id: string;
                                     /** @enum {string} */
@@ -19339,7 +19345,7 @@ export interface paths {
         };
         /**
          * Contacts (customers / vendors)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -19459,7 +19465,7 @@ export interface paths {
         put?: never;
         /**
          * Create a contact
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -19600,7 +19606,7 @@ export interface paths {
         };
         /**
          * Pre-fill a contact from a CoreUp shop
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -19713,7 +19719,7 @@ export interface paths {
         };
         /**
          * Contact
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -19822,7 +19828,7 @@ export interface paths {
         post?: never;
         /**
          * Delete a contact nothing refers to (409 otherwise — archive instead)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -19916,7 +19922,7 @@ export interface paths {
         head?: never;
         /**
          * Update / archive a contact
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -20525,7 +20531,7 @@ export interface paths {
         };
         /**
          * Expense categories (seeded on first use, editable)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -20621,7 +20627,7 @@ export interface paths {
         put?: never;
         /**
          * Add an expense category
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -20744,7 +20750,7 @@ export interface paths {
         post?: never;
         /**
          * Delete an unused expense category (409 when expenses use it)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -20838,7 +20844,7 @@ export interface paths {
         head?: never;
         /**
          * Rename / reorder / archive an expense category
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -23927,7 +23933,7 @@ export interface paths {
         };
         /**
          * Expenses with a totals row
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -24070,7 +24076,7 @@ export interface paths {
         put?: never;
         /**
          * Record an expense (lines, input VAT, WHT we deducted, payment, receipt file)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -24262,7 +24268,7 @@ export interface paths {
         };
         /**
          * Expense
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -24396,7 +24402,7 @@ export interface paths {
         };
         /**
          * Replace an expense
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -24578,7 +24584,7 @@ export interface paths {
         post?: never;
         /**
          * Delete an expense (audited)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -70310,6 +70316,10 @@ export interface paths {
                                     limit: number | null;
                                     checkedAt: string;
                                 } | null;
+                                bot: {
+                                    name: string | null;
+                                    basicId: string;
+                                } | null;
                             };
                         };
                     };
@@ -89255,6 +89265,7 @@ export interface paths {
                                 lineConfigured: boolean;
                                 liffConfigured: boolean;
                                 url: string | null;
+                                lineBasicId: string | null;
                             };
                         };
                     };

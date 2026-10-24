@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { navItems as accountingNav } from '@/features/accounting/nav';
 import type { Plan } from '@/features/platform/api';
 import { formatMoney, parseBahtToMinor } from '@/features/platform/format';
 import { navItems } from '@/features/platform/nav';
@@ -84,6 +85,45 @@ describe('platform access', () => {
     expect(routes(consultant)).not.toContain('/platform/audits'); // consulting pages are hidden from the menu
     expect(routes(consultant)).not.toContain('/platform/leads');
     expect(routes(consultant)).not.toContain('/platform/invoices');
+  });
+
+  it('gives sales shops, leads, expenses and contacts but no company revenue, billing or accounting reports', () => {
+    const sales = membership({
+      tenant: { ...membership().tenant, slug: 'coreup' },
+      modules: ['platform'],
+      roles: ['platform_sales'],
+      permissions: [
+        'platform:read',
+        'platform:write',
+        'platform:impersonate',
+        'platform:leads',
+        'platform:audits',
+        'platform:expenses',
+      ],
+    });
+    const routes = buildNav([...accountingNav, ...navItems], sales, 'full').flatMap((g) =>
+      g.items.map((i) => i.to),
+    );
+    expect(routes).toEqual(
+      expect.arrayContaining([
+        '/platform/tenants',
+        '/platform/leads',
+        '/accounting/expenses',
+        '/accounting/contacts',
+      ]),
+    );
+    for (const hidden of [
+      '/accounting',
+      '/accounting/invoices',
+      '/accounting/reports',
+      '/accounting/settings',
+      '/accounting/products',
+      '/platform/invoices',
+      '/platform/revenue',
+      '/platform/team',
+      '/platform/plans',
+    ])
+      expect(routes).not.toContain(hidden);
   });
 });
 

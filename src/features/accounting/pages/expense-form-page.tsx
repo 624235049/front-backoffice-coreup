@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { todayBangkok } from '@/features/platform/format';
+import { useMembership } from '@/lib/membership';
 import {
   type Company,
   type Expense,
@@ -48,6 +49,9 @@ import { formatBp } from '../lib/format';
 
 const WHT_OPTIONS: readonly WhtBp[] = [0, 100, 200, 300, 500];
 
+type VatInfo = Pick<Company, 'vatRegistered' | 'vatRateBp'>;
+const NO_COMPANY: VatInfo = { vatRegistered: false, vatRateBp: 0 };
+
 type FormState = {
   contactId: string | null;
   contactName: string;
@@ -71,7 +75,7 @@ type FormState = {
   note: string;
 };
 
-function initial(company: Company, expense?: Expense): FormState {
+function initial(company: VatInfo, expense?: Expense): FormState {
   if (expense) {
     return {
       contactId: expense.contactId,
@@ -127,7 +131,7 @@ function initial(company: Company, expense?: Expense): FormState {
   };
 }
 
-function ExpenseForm({ company, expense }: { company: Company; expense?: Expense }) {
+function ExpenseForm({ company, expense }: { company: VatInfo; expense?: Expense }) {
   const { t } = useTranslation('accounting');
   const navigate = useNavigate();
   const categories = useExpenseCategories();
@@ -586,19 +590,25 @@ function ExpenseForm({ company, expense }: { company: Company; expense?: Expense
 }
 
 export function ExpenseFormPage({ id }: { id?: string }) {
-  const company = useCompany();
+  const m = useMembership();
+  // GET /company is accounting-only: expenses-only staff (sales) get no VAT switch; the server computes VAT on save.
+  const hasCompany = m.roles.includes('platform_owner') || m.permissions.includes('platform:accounting');
+  const company = useCompany(hasCompany);
   const expense = useExpense(id);
-  return (
-    <QueryState query={company}>
-      {(c) =>
-        id ? (
-          <QueryState query={expense}>
-            {(e) => <ExpenseForm key={`${e.id}:${e.updatedAt}`} company={c} expense={e} />}
-          </QueryState>
-        ) : (
-          <ExpenseForm company={c} />
-        )
-      }
-    </QueryState>
-  );
+  const form = (c: VatInfo) =>
+    id ? (
+      <QueryState query={expense}>
+        {(e) => (
+          <ExpenseForm
+            key={`${e.id}:${e.updatedAt}`}
+            // shortcut: preview-only 7% when the company profile is unreadable, upgrade if the VAT rate changes
+            company={hasCompany || e.vatMode === 'none' ? c : { vatRegistered: true, vatRateBp: 700 }}
+            expense={e}
+          />
+        )}
+      </QueryState>
+    ) : (
+      <ExpenseForm company={c} />
+    );
+  return hasCompany ? <QueryState query={company}>{form}</QueryState> : form(NO_COMPANY);
 }

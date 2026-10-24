@@ -48,8 +48,8 @@ const part = 'accounting';
 export const PAGE_SIZE = 100;
 
 /* ---------------- queries ---------------- */
-export const useCompany = () =>
-  useTenantQuery([part, 'company'], async () => (await unwrap(api.GET(`${B}/company`))).data);
+export const useCompany = (enabled = true) =>
+  useTenantQuery([part, 'company'], async () => (await unwrap(api.GET(`${B}/company`))).data, { enabled });
 
 /** The API takes booleans in the query string as "true" | "false". */
 const flag = (v: boolean | undefined) =>

@@ -5337,6 +5337,12 @@
                               "null"
                             ]
                           },
+                          "mapUrl": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
                           "openingHours": {
                             "type": "object",
                             "additionalProperties": {
@@ -5378,6 +5384,7 @@
                           "lat",
                           "lng",
                           "phone",
+                          "mapUrl",
                           "openingHours",
                           "status",
                           "createdAt",
@@ -5570,6 +5577,13 @@
                     ],
                     "maxLength": 30
                   },
+                  "mapUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  },
                   "openingHours": {
                     "type": "object",
                     "additionalProperties": {
@@ -5645,6 +5659,12 @@
                             "null"
                           ]
                         },
+                        "mapUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "openingHours": {
                           "type": "object",
                           "additionalProperties": {
@@ -5686,6 +5706,7 @@
                         "lat",
                         "lng",
                         "phone",
+                        "mapUrl",
                         "openingHours",
                         "status",
                         "createdAt",
@@ -5844,6 +5865,12 @@
                             "null"
                           ]
                         },
+                        "mapUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "openingHours": {
                           "type": "object",
                           "additionalProperties": {
@@ -5885,6 +5912,7 @@
                         "lat",
                         "lng",
                         "phone",
+                        "mapUrl",
                         "openingHours",
                         "status",
                         "createdAt",
@@ -6055,6 +6083,13 @@
                     ],
                     "maxLength": 30
                   },
+                  "mapUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  },
                   "openingHours": {
                     "type": "object",
                     "additionalProperties": {
@@ -6134,6 +6169,12 @@
                             "null"
                           ]
                         },
+                        "mapUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "openingHours": {
                           "type": "object",
                           "additionalProperties": {
@@ -6175,6 +6216,7 @@
                         "lat",
                         "lng",
                         "phone",
+                        "mapUrl",
                         "openingHours",
                         "status",
                         "createdAt",
@@ -15666,7 +15708,10 @@
                           ]
                         },
                         "finance": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "invoicedMinor": {
                               "type": "integer"
@@ -16332,7 +16377,10 @@
                           ]
                         },
                         "finance": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "invoicedMinor": {
                               "type": "integer"
@@ -17030,7 +17078,10 @@
                           ]
                         },
                         "finance": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "invoicedMinor": {
                               "type": "integer"
@@ -36546,7 +36597,7 @@
           "accounting"
         ],
         "summary": "Contacts (customers / vendors)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -36831,7 +36882,7 @@
           "accounting"
         ],
         "summary": "Create a contact",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -37131,7 +37182,7 @@
           "accounting"
         ],
         "summary": "Pre-fill a contact from a CoreUp shop",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -37288,7 +37339,7 @@
           "accounting"
         ],
         "summary": "Contact",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -37495,7 +37546,7 @@
           "accounting"
         ],
         "summary": "Update / archive a contact",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -37797,7 +37848,7 @@
           "accounting"
         ],
         "summary": "Delete a contact nothing refers to (409 otherwise — archive instead)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -38720,7 +38771,7 @@
           "accounting"
         ],
         "summary": "Expense categories (seeded on first use, editable)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -38850,7 +38901,7 @@
           "accounting"
         ],
         "summary": "Add an expense category",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -39018,7 +39069,7 @@
           "accounting"
         ],
         "summary": "Rename / reorder / archive an expense category",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -39193,7 +39244,7 @@
           "accounting"
         ],
         "summary": "Delete an unused expense category (409 when expenses use it)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -47813,7 +47864,7 @@
           "accounting"
         ],
         "summary": "Expenses with a totals row",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -48204,7 +48255,7 @@
           "accounting"
         ],
         "summary": "Record an expense (lines, input VAT, WHT we deducted, payment, receipt file)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -48736,7 +48787,7 @@
           "accounting"
         ],
         "summary": "Expense",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -49061,7 +49112,7 @@
           "accounting"
         ],
         "summary": "Replace an expense",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -49600,7 +49651,7 @@
           "accounting"
         ],
         "summary": "Delete an expense (audited)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:expenses`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -147127,12 +147178,34 @@
                             "limit",
                             "checkedAt"
                           ]
+                        },
+                        "bot": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "basicId": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "basicId"
+                          ]
                         }
                       },
                       "required": [
                         "ok",
                         "error",
-                        "quota"
+                        "quota",
+                        "bot"
                       ]
                     }
                   },
@@ -184062,12 +184135,19 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "lineBasicId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
                         "lineConfigured",
                         "liffConfigured",
-                        "url"
+                        "url",
+                        "lineBasicId"
                       ]
                     }
                   },

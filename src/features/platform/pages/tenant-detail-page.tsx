@@ -87,7 +87,7 @@ export function TenantDetailPage() {
                     'overview',
                     'usage',
                     'reports',
-                    'finance',
+                    ...(d.finance ? (['finance'] as const) : []),
                     'access',
                     'team',
                     'notices',
@@ -108,9 +108,11 @@ export function TenantDetailPage() {
               <TabsContent value="reports">
                 <ReportsTab id={d.id} />
               </TabsContent>
-              <TabsContent value="finance">
-                <FinanceTab d={d} />
-              </TabsContent>
+              {d.finance ? (
+                <TabsContent value="finance">
+                  <FinanceTab finance={d.finance} />
+                </TabsContent>
+              ) : null}
               <TabsContent value="access">
                 <AccessTab id={d.id} />
               </TabsContent>
@@ -399,17 +401,17 @@ function ReportsTab({ id }: { id: string }) {
   );
 }
 
-function FinanceTab({ d }: { d: TenantDetail }) {
+function FinanceTab({ finance }: { finance: NonNullable<TenantDetail['finance']> }) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <Stat label={t('detail.invoiced')} value={formatMoney(d.finance.invoicedMinor, locale)} />
-      <Stat label={t('detail.paid')} value={formatMoney(d.finance.paidMinor, locale)} />
+      <Stat label={t('detail.invoiced')} value={formatMoney(finance.invoicedMinor, locale)} />
+      <Stat label={t('detail.paid')} value={formatMoney(finance.paidMinor, locale)} />
       <Stat
         label={t('detail.outstanding')}
-        value={formatMoney(d.finance.outstandingMinor, locale)}
-        tone={d.finance.outstandingMinor > 0 ? 'warning' : 'default'}
+        value={formatMoney(finance.outstandingMinor, locale)}
+        tone={finance.outstandingMinor > 0 ? 'warning' : 'default'}
       />
     </div>
   );

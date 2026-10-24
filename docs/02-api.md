@@ -743,10 +743,10 @@ Module `messaging` (permissions `messages:read|send|templates`, channel accounts
 | POST | `/liff/:slug/session` · `/link` · `/appointments/:id/confirm` · `/reschedule-request` · `/cancel` · PATCH `/me/consent` | link = phone + matching name token (no SMS OTP provider yet) |
 | GET/POST | `/liff/feedback/:token` | HMAC token from the thank-you message; rating ≤ 3 opens a follow-up |
 
-### 12.1 จองคิวผ่าน LINE (LIFF กลาง) — endpoints as built
+### 12.1 จองคิวผ่าน LINE (LIFF ของร้าน) — endpoints as built
 
-ทุกร้านใช้ LIFF app กลางของ CoreUp (env `LIFF_ID`, Endpoint `<WEB_URL>/liff`): `https://liff.line.me/<LIFF_ID>/<slug>/book` (ถ้าไม่มี LIFF id ใช้ `<WEB_URL>/liff/<slug>/book`) — `liffId` ของ LINE OA ร้านเป็นแค่ตัวเลือก override `profile.liffId` ตกกลับไปใช้ `LIFF_ID` ร้านที่ไม่มี OA จองผ่านลิงก์/QR ได้ ข้อความยืนยันส่งทาง LINE เฉพาะลูกค้าที่ผูกกับ OA
-> ข้อควรระวัง: LINE userId ผูกกับ Provider ของ Login channel — การส่งข้อความหาลูกค้าด้วย OA ของร้านทำงานได้เมื่อ OA และ Login channel กลางอยู่ Provider เดียวกัน
+LIFF เป็นของร้านเท่านั้น (`channel_accounts.liff_id` ที่ร้านใส่เอง, Endpoint `<WEB_URL>/liff`): `https://liff.line.me/<liffId ของร้าน>/<slug>/book` — ไม่มี LIFF กลางของ CoreUp ร้านที่ไม่มี liffId: `profile.liffId` เป็น null, ลิงก์ในข้อความ/ปุ่มชี้หน้าเว็บ `<WEB_URL>/liff/<slug>/...` ที่ใช้ได้โดยไม่ล็อกอิน LINE, ลิงก์แชร์จองเป็น `<WEB_URL>/b/<slug>`, `GET /customer-line-link` ตอบ `liffConfigured:false, url:null` (ไม่มี QR; เชิญรายคนยังได้รหัสพิมพ์ในแชตร้าน), `POST /liff/:slug/session` ด้วย id token จริงตอบ 409 `liff_not_configured`, rich menu ติดตั้งไม่ได้ (409 `liff_not_configured`) ร้านที่ไม่มี OA จองผ่านลิงก์/QR ได้ ข้อความยืนยันส่งทาง LINE เฉพาะลูกค้าที่ผูกกับ OA
+> ข้อควรระวัง: LINE userId ผูกกับ Provider ของ Login channel — ร้านต้องสร้าง LIFF ใต้ Provider เดียวกับ OA ของร้านเอง (ห้ามใช้ Login channel กลางของ CoreUp)
 
 หน้าลูกค้า (ใต้ `/v1/liff/:slug/booking`, public, limit ต่อ IP+ร้าน: อ่าน 120/นาที รูป 300/นาที จอง/เลื่อน/สลิป 20/ชม. และ 10/ชม. ต่อ LINE user; slug ต้องเป็น `[a-z0-9-]`):
 
