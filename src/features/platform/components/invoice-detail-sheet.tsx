@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { type Invoice, useConfirmPayment, usePlans, useRejectSlip } from '../api';
 import { dmyBE } from '../billing-docs';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
-import { hasPendingSlip } from '../invoice-slip';
+import { hasPendingSlip, slipCheckTone } from '../invoice-slip';
 import { copyLineMessage } from './issue-invoice-dialog';
 
 /** A slip is a photo or a PDF; the URL is presigned, so look at the file name in the path, not the query string. */
@@ -55,18 +55,11 @@ function SlipCheckBox({
 }) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
-  const tone = {
-    passed: 'success',
-    failed: 'destructive',
-    error: 'warning',
-    skipped: 'secondary',
-    basic_ok: 'secondary',
-  } as const;
   return (
     <div className="grid gap-1.5 rounded-lg border p-3 text-sm" data-testid="slip-check">
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-medium">{t('invoices.slip.check.title')}</span>
-        <Badge variant={tone[check.status]}>{t(`invoices.slip.check.status.${check.status}`)}</Badge>
+        <Badge variant={slipCheckTone[check.status]}>{t(`invoices.slip.check.status.${check.status}`)}</Badge>
       </div>
       {check.reasons.length > 0 ? (
         <p className="text-muted-foreground">

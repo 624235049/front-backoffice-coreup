@@ -244,6 +244,7 @@ export function IssueInvoiceDialog({
                   key={k}
                   type="button"
                   variant={kind === k ? 'default' : 'outline'}
+                  className="h-auto min-h-11 min-w-0 whitespace-normal px-2 py-2 text-center leading-snug"
                   role="radio"
                   aria-checked={kind === k}
                   disabled={k === 'upgrade' && !running}

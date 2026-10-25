@@ -25,7 +25,7 @@ export function ModulesCard({ d }: { d: TenantDetail }) {
         .filter((k) => k !== 'core')
         .map((k) => ({
           // the API accepts `branch_insights`; this app's openapi copy does not list it yet (see plans.ts)
-          key: k as Exclude<ShopModule, 'branch_insights'>,
+          key: k as Exclude<ShopModule, 'branch_insights' | 'expenses'>,
           source: sources.get(k)?.source ?? 'consultant',
           enabledUntil: sources.get(k)?.enabledUntil ?? null,
         })),

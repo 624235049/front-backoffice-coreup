@@ -26,7 +26,7 @@ import { dmyBE } from '../billing-docs';
 import { InvoiceDetailSheet } from '../components/invoice-detail-sheet';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { formatDate, formatDateTime, formatMoney, todayBangkok, useIntlLocale } from '../format';
-import { hasPendingSlip } from '../invoice-slip';
+import { hasPendingSlip, slipCheckTone } from '../invoice-slip';
 
 const STATUSES = ['draft', 'issued', 'paid', 'overdue', 'void'] as const;
 const SLIP_FILTER = '__slip__';
@@ -35,10 +35,26 @@ function SlipBadge({ invoice }: { invoice: Invoice }) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   if (!hasPendingSlip(invoice)) return null;
+  const check = invoice.slipCheck;
+  // what the check found: the first reason ("ยอดน้อยกว่าใบแจ้งชำระ"), else its verdict
+  const what = check
+    ? t(
+        check.reasons[0]
+          ? `invoices.slip.check.reason.${check.reasons[0]}`
+          : `invoices.slip.check.status.${check.status}`,
+      )
+    : '';
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1.5">
       <Badge variant="warning">{t('invoices.slip.badge')}</Badge>
       <span className="text-xs text-muted-foreground">{formatDateTime(invoice.slipUploadedAt, locale)}</span>
+      {check ? (
+        <Badge variant={slipCheckTone[check.status]} data-testid="slip-check-badge">
+          {t(check.method === 'basic' ? 'invoices.slip.check.badgeBasic' : 'invoices.slip.check.badge', {
+            what,
+          })}
+        </Badge>
+      ) : null}
     </div>
   );
 }

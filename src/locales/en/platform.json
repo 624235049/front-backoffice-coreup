@@ -64,6 +64,7 @@
     "checkout": "Checkout (POS)",
     "inventory": "Products & stock",
     "kpi": "KPI",
+    "expenses": "Income, expenses and net profit (Business)",
     "branch_insights": "Multi-branch chain data (Enterprise)",
     "core": "Core",
     "clinical": "Clinical",
@@ -854,6 +855,8 @@
       "newToast_other": "{{count}} new slips awaiting confirmation",
       "check": {
         "title": "Automatic slip check",
+        "badge": "Slip check: {{what}}",
+        "badgeBasic": "Basic check: {{what}}",
         "status": {
           "passed": "Passed",
           "failed": "Failed",
@@ -948,6 +951,7 @@
         "approvals": "Approval inbox, e.g. discounts or voided bills need a manager's approval",
         "clinical": "Treatment records and treatment plans for clinics (added automatically to clinic-type shops on Premium and up; not on Basic)",
         "kpi": "Team KPIs and targets",
+        "expenses": "Record expenses and other income; income, expenses and net profit by month and year (Business package and above)",
         "branch_insights": "Branch comparison, nightly summary, unusual-activity alerts, PIN approval, goals, ratings per branch (Enterprise package)",
         "lite": "A simple app with a short menu, ready to use; the shop's LINE OA can be connected later"
       }
@@ -1060,6 +1064,7 @@
       "approvals": "Approvals inbox",
       "clinical": "Treatment records and plans",
       "kpi": "Team indicators and targets",
+      "expenses": "Income, expenses and net profit by month and year, record expenses",
       "branch_insights": "Branch comparison, nightly summary, alerts, goals, ratings (multi-branch chain data)",
       "lite": "The shop sees the booking-only app (short menu); unticked = the full system"
     }
@@ -1147,5 +1152,31 @@
     "copyLine": "Copy LINE message",
     "copied": "Message copied — paste it into the customer's LINE chat",
     "copyFailed": "Could not copy, please try again"
+  },
+  "aiChat": {
+    "title": "AI chat on LINE OA",
+    "hint": "Add-on at 490 baht a month with 1,000 messages; top-up 1,000 messages for 290 baht. Any plan; the shop must have LINE OA connected. Charges appear on the next invoice automatically.",
+    "noKey": "No Anthropic key (ANTHROPIC_API_KEY) is set, so the feature is off. The shop app says it is not switched on yet until a key exists.",
+    "active": "Switch AI chat on for this shop",
+    "activeHint": "The shop gets the AI chats menu and its own on/off switch. The next invoice gets an \"AI chat on LINE OA 490 baht\" line.",
+    "shopOn": "Shop switched on",
+    "shopOff": "Shop switch is off",
+    "enabledToast": "Add-on switched on.",
+    "disabledToast": "Add-on switched off.",
+    "quota": "Monthly message quota",
+    "save": "Save quota",
+    "saved": "Quota saved.",
+    "used": "Used in {{month}} / quota",
+    "topups": "Top-up messages this month",
+    "tokens": "Tokens in / out this month",
+    "cost": "Estimated cost",
+    "noPrice": "No model price set",
+    "topupAction": "Add +1,000 messages (290 baht)",
+    "requested": "Shop asked for a top-up",
+    "pendingTopups": "{{count}} top-up(s) not on an invoice yet",
+    "topupConfirmTitle": "Add 1,000 messages this month?",
+    "topupConfirmBody": "The quota grows by 1,000 now and 290 baht appears on the shop's next invoice.",
+    "topupConfirm": "Add messages",
+    "topupDone": "Messages added."
   }
 }

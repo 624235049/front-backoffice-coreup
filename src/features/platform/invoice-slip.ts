@@ -7,6 +7,15 @@ import { type Invoice, useInvoices } from './api';
 export const hasPendingSlip = (i: Pick<Invoice, 'status' | 'slipUploadedAt'>): boolean =>
   (i.status === 'issued' || i.status === 'overdue') && i.slipUploadedAt !== null;
 
+/** Badge colour of each automatic slip-check status (list badge and detail box). */
+export const slipCheckTone = {
+  passed: 'success',
+  failed: 'destructive',
+  error: 'warning',
+  skipped: 'secondary',
+  basic_ok: 'secondary',
+} as const;
+
 /**
  * Red badge on the "ใบแจ้งหนี้" nav item: the "รอยืนยันรับเงิน" queue (unpaid invoices with a slip). Polled, and a toast
  * appears when a new slip arrives while the console is open (the admin's "bell"; the email goes out as well).

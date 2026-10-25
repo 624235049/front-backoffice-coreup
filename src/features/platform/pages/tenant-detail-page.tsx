@@ -39,6 +39,7 @@ import {
   useTenantUsage,
   useUsers,
 } from '../api';
+import { AiChatCard } from '../components/ai-chat-card';
 import { BusinessTypeCard } from '../components/business-type-card';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
@@ -256,6 +257,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
       <ModulesCard d={d} />
       <BusinessTypeCard d={d} />
       <LimitsCard id={d.id} />
+      <AiChatCard id={d.id} />
       <DemoDataCard d={d} />
       <Card>
         <CardHeader>
