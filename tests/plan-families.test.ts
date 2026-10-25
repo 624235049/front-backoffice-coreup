@@ -87,11 +87,11 @@ describe('groupPlans', () => {
 
 describe('limitsLine', () => {
   it('words limits like the pricing page, a missing limit = unlimited', () => {
-    expect(limitsLine({ members: 8, branches: 1, messages_per_month: 3000 }, t, 'th-TH')).toBe(
-      'พนักงาน 8 บัญชี · 1 สาขา · แจ้งเตือน LINE 3,000 ข้อความ/เดือน · ลูกค้าไม่จำกัด',
+    expect(limitsLine({ members: 6, branches: 1, messages_per_month: 3000 }, t, 'th-TH')).toBe(
+      '6 บัญชี · 1 สาขา · แจ้งเตือน LINE 3,000 ข้อความ/เดือน · ลูกค้าไม่จำกัด',
     );
     expect(limitsLine({}, t, 'th-TH')).toBe(
-      'พนักงานไม่จำกัด · สาขาไม่จำกัด · แจ้งเตือน LINE ไม่จำกัดข้อความ/เดือน · ลูกค้าไม่จำกัด',
+      'บัญชีไม่จำกัด · สาขาไม่จำกัด · แจ้งเตือน LINE ไม่จำกัดข้อความ/เดือน · ลูกค้าไม่จำกัด',
     );
   });
 });

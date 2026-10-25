@@ -1,7 +1,8 @@
 import type { ApiBody } from '@/lib/api';
 import type { Plan } from './api';
 
-type ModuleKey = NonNullable<ApiBody<'/v1/platform/plans', 'post'>['modules']>[number];
+// `branch_insights` (Enterprise) is newer than this app's openapi copy: drop the extra member after the next `pnpm gen:api`
+type ModuleKey = NonNullable<ApiBody<'/v1/platform/plans', 'post'>['modules']>[number] | 'branch_insights';
 
 /**
  * Shop modules the team can sell in a plan or switch on per shop (the API's `moduleKey` minus the internal
@@ -23,6 +24,7 @@ export const SHOP_MODULES = [
   'approvals',
   'clinical',
   'kpi',
+  'branch_insights',
   'lite',
 ] as const satisfies readonly ModuleKey[];
 

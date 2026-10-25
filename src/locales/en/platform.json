@@ -64,6 +64,7 @@
     "checkout": "Checkout (POS)",
     "inventory": "Products & stock",
     "kpi": "KPI",
+    "branch_insights": "Multi-branch chain data (Enterprise)",
     "core": "Core",
     "clinical": "Clinical",
     "lite": "Booking-only shop"
@@ -257,6 +258,22 @@
       "noEmail": "No email (signs in with LINE)"
     }
   },
+  "planPicker": {
+    "title": "Help choose a plan (3 questions)",
+    "q1": "1. How many branches?",
+    "q2": "2. Does the shop need stock control or a staff roster?",
+    "q3": "3. How many staff (owner included)?",
+    "branches": { "1": "1 branch", "2-3": "2-3 branches", "4+": "4 or more" },
+    "big": { "no": "No", "yes": "Yes" },
+    "staff": {
+      "solo": "Just the owner",
+      "soloPay": "Just the owner, but wants deposits and receipts",
+      "2-3": "2-3 people",
+      "4-6": "4-6 people",
+      "7+": "7 or more"
+    },
+    "result": "{{plan}} fits. It is selected below, you can change it"
+  },
   "onboard": {
     "title": "Onboard a shop",
     "description": "Creates the shop with branches, services, checklists and messages from the industry template, plus an owner account that works right away",
@@ -380,6 +397,9 @@
     "notes": "Team notes",
     "saveNotes": "Save notes",
     "statusConfirm": "Change status to “{{status}}”?",
+    "planConfirm": "Change the plan to {{plan}}?",
+    "planOverWarning": "The shop uses more than the new plan allows: {{list}}. Nothing existing is removed, but nothing new can be added until it drops. For a special deal, just confirm.",
+    "planOver": { "members": "accounts {{used}} of {{limit}}", "branches": "branches {{used}} of {{limit}}" },
     "statusClosedWarning": "A closed shop can no longer sign in.",
     "noEngagements": "No engagements yet",
     "taskProgress": "{{done}}/{{total}} tasks",
@@ -408,7 +428,8 @@
     "moduleGroup": {
       "front": "Storefront · Booking",
       "back": "Back office · POS",
-      "business": "Business"
+      "business": "Business",
+      "enterprise": "Enterprise"
     },
     "moduleMenus": "Menus it turns on: {{list}}",
     "moduleNoMenu": "No back-office menu (opens the online booking page for customers)",
@@ -927,6 +948,7 @@
         "approvals": "Approval inbox, e.g. discounts or voided bills need a manager's approval",
         "clinical": "Treatment records and treatment plans for clinics (added automatically to clinic-type shops on Premium and up; not on Basic)",
         "kpi": "Team KPIs and targets",
+        "branch_insights": "Branch comparison, nightly summary, unusual-activity alerts, PIN approval, goals, ratings per branch (Enterprise package)",
         "lite": "A simple app with a short menu, ready to use; the shop's LINE OA can be connected later"
       }
     },
@@ -969,7 +991,7 @@
         "unlimited": "Unlimited customers"
       }
     },
-    "best": "Best value",
+    "best": "Recommended",
     "sale": {
       "web": "Sold on the web",
       "team": "Sales team only"
@@ -1011,7 +1033,7 @@
     },
     "limit": {
       "branches": "Branches",
-      "members": "Staff",
+      "members": "User accounts",
       "customers": "Customers",
       "messages_per_month": "LINE messages per month",
       "slip_checks_month": "Automatic slip checks (per month)"
@@ -1038,6 +1060,7 @@
       "approvals": "Approvals inbox",
       "clinical": "Treatment records and plans",
       "kpi": "Team indicators and targets",
+      "branch_insights": "Branch comparison, nightly summary, alerts, goals, ratings (multi-branch chain data)",
       "lite": "The shop sees the booking-only app (short menu); unticked = the full system"
     }
   },

@@ -34,6 +34,7 @@ import {
   useRemoveAssignment,
   useTeam,
   useTenant,
+  useTenantLimits,
   useTenantReport,
   useTenantUsage,
   useUsers,
@@ -49,7 +50,7 @@ import { NoticesPanel } from '../components/notices-panel';
 import { OwnerPhone } from '../components/owner-phone';
 import { UsersPanel } from '../components/users-panel';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale, usePlanLabel } from '../format';
-import { orderPlans } from '../plan-families';
+import { orderPlans, planFrontName } from '../plan-families';
 
 export function TenantDetailPage() {
   const { id } = useParams({ from: '/_app/platform/tenants/$id' });
@@ -151,6 +152,17 @@ function OverviewTab({ d }: { d: TenantDetail }) {
   const planLabel = usePlanLabel();
   const [notes, setNotes] = useState(d.notes);
   const [pendingStatus, setPendingStatus] = useState<TenantDetail['status'] | null>(null);
+  const [pendingPlan, setPendingPlan] = useState<string | null>(null);
+  const usage = useTenantLimits(d.id).data;
+  const targetPlan = (plans.data ?? []).find((p) => p.code === pendingPlan);
+  // sales deals may go below what the shop uses today: say so with the counts before saving
+  const over = (['members', 'branches'] as const).flatMap((k) => {
+    const limit = targetPlan?.limits[k];
+    const used = usage?.find((r) => r.key === k)?.used;
+    return limit !== undefined && used != null && used > limit
+      ? [t(`detail.planOver.${k}`, { used, limit })]
+      : [];
+  });
   const [issuing, setIssuing] = useState(false);
 
   return (
@@ -209,9 +221,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
             {canWrite ? (
               <Select
                 value={d.planCode ?? undefined}
-                onValueChange={(code) =>
-                  patch.mutate({ planCode: code }, { onSuccess: () => toast.success(t('detail.planSaved')) })
-                }
+                onValueChange={(code) => code !== d.planCode && setPendingPlan(code)}
               >
                 <SelectTrigger className="w-64" aria-label={t('detail.plan')}>
                   <SelectValue placeholder="–" />
@@ -290,6 +300,25 @@ function OverviewTab({ d }: { d: TenantDetail }) {
                 onSuccess: () => {
                   setPendingStatus(null);
                   toast.success(t('detail.statusSaved'));
+                },
+              },
+            );
+        }}
+      />
+      <ConfirmDialog
+        open={pendingPlan !== null}
+        onOpenChange={(o) => !o && setPendingPlan(null)}
+        title={t('detail.planConfirm', { plan: targetPlan ? planFrontName(targetPlan) : '' })}
+        description={over.length > 0 ? t('detail.planOverWarning', { list: over.join(' · ') }) : undefined}
+        pending={patch.isPending}
+        onConfirm={() => {
+          if (pendingPlan)
+            patch.mutate(
+              { planCode: pendingPlan },
+              {
+                onSuccess: () => {
+                  setPendingPlan(null);
+                  toast.success(t('detail.planSaved'));
                 },
               },
             );

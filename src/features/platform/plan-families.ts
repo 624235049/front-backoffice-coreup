@@ -62,7 +62,7 @@ const LIMIT_ORDER = [
   'customers',
 ] as const satisfies readonly (typeof PLAN_LIMITS)[number][];
 
-/** "พนักงาน 8 บัญชี · 1 สาขา · แจ้งเตือน LINE 3,000 ข้อความ/เดือน · ลูกค้าไม่จำกัด" */
+/** "6 บัญชี · 1 สาขา · แจ้งเตือน LINE 3,000 ข้อความ/เดือน · ลูกค้าไม่จำกัด" */
 export function limitsLine(limits: Plan['limits'], t: TFunction<'platform'>, locale: string): string {
   return LIMIT_ORDER.map((k) => {
     const v = limits[k];

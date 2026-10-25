@@ -10,6 +10,7 @@ export const MODULE_GROUPS = [
     key: 'business',
     modules: ['inventory', 'shifts', 'kpi', 'checklists', 'sop', 'surveys', 'approvals', 'clinical'],
   },
+  { key: 'enterprise', modules: ['branch_insights'] },
 ] as const satisfies readonly { key: string; modules: readonly FeatureModule[] }[];
 
 /**
@@ -39,6 +40,7 @@ export const MODULE_MENUS: Record<FeatureModule, readonly string[]> = {
   inventory: ['ขายหน้าร้าน', 'สินค้า', 'สต็อก', 'นับสต็อก', 'รายงานสต็อก', 'ตั้งค่า › สินค้าและสต็อก'],
   shifts: ['ตารางเวร', 'เวรของฉัน'],
   kpi: ['ตัวเลขร้าน'],
+  branch_insights: ['เทียบสาขา'],
   checklists: ['เช็กลิสต์', 'เช็กลิสต์ของฉัน'],
   sop: ['คู่มือ', 'คู่มือที่ต้องอ่าน'],
   surveys: ['สุขภาพองค์กร', 'แบบสอบถาม'],

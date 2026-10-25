@@ -27,6 +27,7 @@ import { sellablePlans } from '../plan-families';
 import { bookingUrlFor, buildNewShopMessage } from '../user-helpers';
 import { INDUSTRY_KEYS } from './common';
 import { ImpersonateDialog } from './impersonate-dialog';
+import { PlanPicker } from './plan-picker';
 import { CopyButton } from './user-actions';
 
 const schema = z.object({
@@ -270,6 +271,13 @@ export function OnboardDialog({
               {err(errors.planCode?.message)}
             </div>
           </div>
+          <PlanPicker
+            onPick={(code) => {
+              if (sellable.plans.some((p) => p.code === code)) {
+                form.setValue('planCode', code, { shouldValidate: true });
+              }
+            }}
+          />
           <div>
             <Label htmlFor="ob-owner">{t('onboard.ownerName')}</Label>
             <Input id="ob-owner" autoComplete="off" {...form.register('ownerName')} />
