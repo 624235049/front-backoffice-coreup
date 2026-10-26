@@ -1,5 +1,5 @@
 import { Download, Plus, Receipt } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { EmptyState } from '@/components/empty-state';
@@ -88,6 +88,12 @@ export function InvoicesPage() {
   const confirm = useConfirmPayment();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
   const [reviewing, setReviewing] = useState<Invoice | null>(null);
+  // the owner's LINE alert "💰 <shop> แจ้งโอน" links here with ?invoice=<id>: open that invoice to confirm the money
+  const wanted = new URLSearchParams(window.location.search).get('invoice');
+  useEffect(() => {
+    const hit = (invoices.data ?? []).find((i) => i.id === wanted);
+    if (hit) setReviewing(hit);
+  }, [wanted, invoices.data]);
 
   const markPaid = (i: Invoice) => {
     const onSuccess = () => toast.success(t('invoices.paidToast', { number: i.number }));

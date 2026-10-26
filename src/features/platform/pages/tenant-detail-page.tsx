@@ -46,6 +46,7 @@ import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { LimitsCard } from '../components/limits-card';
+import { MetaChannelsCard } from '../components/meta-channels-card';
 import { ModulesCard } from '../components/modules-card';
 import { NoticesPanel } from '../components/notices-panel';
 import { OwnerPhone } from '../components/owner-phone';
@@ -258,6 +259,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
       <BusinessTypeCard d={d} />
       <LimitsCard id={d.id} />
       <AiChatCard id={d.id} />
+      <MetaChannelsCard id={d.id} />
       <DemoDataCard d={d} />
       <Card>
         <CardHeader>

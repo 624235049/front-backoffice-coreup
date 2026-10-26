@@ -1,6 +1,7 @@
 import {
   Activity,
   Bot,
+  Headset,
   KanbanSquare,
   LayoutDashboard,
   Package,
@@ -54,6 +55,14 @@ export const navItems: NavItem[] = [
     permission: 'platform:manage',
     module: 'platform',
     order: 26,
+  },
+  {
+    to: '/platform/sales',
+    labelKey: 'nav:aiSales',
+    icon: Headset,
+    permission: 'platform:leads',
+    module: 'platform',
+    order: 28,
   },
   {
     to: '/platform/onboarding',

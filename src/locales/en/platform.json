@@ -1378,6 +1378,22 @@
       "added": "Sample shop added",
       "pageTitle": "CoreUp AI demo LINE",
       "pageHint": "Choose the sample shops people can play through CoreUp's LINE, who may talk to it (testers → everyone) and the cost"
+    },
+    "freeTrial": "Free trial messages (whole trial)",
+    "trialUntil": "trial until {{date}}",
+    "trialOver": "trial is over",
+    "paidQuota": "Paid add-on quota (month + top-ups)",
+    "allowance": {
+      "addon": "counts against the add-on",
+      "trial": "counts against the free messages",
+      "none": "AI silent (no add-on)"
     }
+  },
+  "metaChannels": {
+    "title": "Connect Facebook/IG",
+    "hint": "A shop with this switch on can connect its Facebook Page and Instagram to the AI chat itself. Other shops see the coming-soon page with the guide. The AI chat add-on must also be on for the shop.",
+    "active": "Let this shop connect Facebook/IG",
+    "enabledToast": "This shop can now connect Facebook/IG",
+    "disabledToast": "Facebook/IG connection switched off for this shop"
   }
 }

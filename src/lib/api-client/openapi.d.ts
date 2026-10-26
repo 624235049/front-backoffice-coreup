@@ -2572,7 +2572,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -2699,7 +2699,7 @@ export interface paths {
                             data: {
                                 modules: {
                                     /** @enum {string} */
-                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                    key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     /** @enum {string} */
                                     source: "plan" | "addon" | "trial" | "consultant";
                                     enabledUntil: string | null;
@@ -5228,7 +5228,7 @@ export interface paths {
                             data: {
                                 key: string;
                                 /** @enum {string} */
-                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                module: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                 resource: string;
                                 action: string;
                             }[];
@@ -9581,7 +9581,7 @@ export interface paths {
                     "application/json": {
                         modules: {
                             /** @enum {string} */
-                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                            key: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                             /**
                              * @default consultant
                              * @enum {string}
@@ -11817,6 +11817,12 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
+                                freeTrialQuota: number;
+                                freeTrialUsed: number;
+                                inTrial: boolean;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -11969,6 +11975,12 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
+                                freeTrialQuota: number;
+                                freeTrialUsed: number;
+                                inTrial: boolean;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -12109,6 +12121,12 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
+                                freeTrialQuota: number;
+                                freeTrialUsed: number;
+                                inTrial: boolean;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -12447,6 +12465,217 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/meta-channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Whether this shop may connect Facebook / Instagram
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Switch */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Let this shop connect Facebook / Instagram (or take it away); audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        active: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Switch */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/platform/leads": {
@@ -14041,7 +14270,7 @@ export interface paths {
                                         /** @enum {string} */
                                         owner: "consultant" | "tenant";
                                         /** @enum {string} */
-                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
+                                        moduleToEnable?: "core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite";
                                     }[];
                                 }[];
                             }[];
@@ -15059,6 +15288,2205 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/board": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * AI sales leads: the board (leads, per-stage counts, stuck reasons, 🔥 count, open callback requests soonest first)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    stage?: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Board */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                leads: {
+                                    id: string;
+                                    ref: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    businessType: string | null;
+                                    industryKey: string | null;
+                                    staffCount: number | null;
+                                    branchCount: number | null;
+                                    pain: string | null;
+                                    recommendedPlan: string | null;
+                                    objections: string[];
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                                    /** @enum {string|null} */
+                                    stuckReason: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                                    stuckNote: string | null;
+                                    buySignal: boolean;
+                                    nextFollowUpAt: string | null;
+                                    followUpCount: number;
+                                    lastContactAt: string | null;
+                                    aiPausedUntil: string | null;
+                                    handoffAt: string | null;
+                                    callbackPhone: string | null;
+                                    callbackWindow: string | null;
+                                    callbackAt: string | null;
+                                    callbackRequestedAt: string | null;
+                                    /** @enum {string|null} */
+                                    callbackOutcome: "talked" | "no_answer" | "reschedule" | null;
+                                    callbackDoneAt: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    createdAt: string;
+                                }[];
+                                counts: {
+                                    [key: string]: number;
+                                };
+                                stuck: {
+                                    [key: string]: number;
+                                };
+                                hot: number;
+                                callbacks: {
+                                    id: string;
+                                    ref: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    businessType: string | null;
+                                    industryKey: string | null;
+                                    staffCount: number | null;
+                                    branchCount: number | null;
+                                    pain: string | null;
+                                    recommendedPlan: string | null;
+                                    objections: string[];
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                                    /** @enum {string|null} */
+                                    stuckReason: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                                    stuckNote: string | null;
+                                    buySignal: boolean;
+                                    nextFollowUpAt: string | null;
+                                    followUpCount: number;
+                                    lastContactAt: string | null;
+                                    aiPausedUntil: string | null;
+                                    handoffAt: string | null;
+                                    callbackPhone: string | null;
+                                    callbackWindow: string | null;
+                                    callbackAt: string | null;
+                                    callbackRequestedAt: string | null;
+                                    /** @enum {string|null} */
+                                    callbackOutcome: "talked" | "no_answer" | "reschedule" | null;
+                                    callbackDoneAt: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    createdAt: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/leads/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One lead: the chat as kept (30 days), events and the AI answers with their guard verdicts
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lead */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                ref: string;
+                                /** @enum {string} */
+                                channel: "line" | "instagram" | "messenger";
+                                name: string | null;
+                                businessType: string | null;
+                                industryKey: string | null;
+                                staffCount: number | null;
+                                branchCount: number | null;
+                                pain: string | null;
+                                recommendedPlan: string | null;
+                                objections: string[];
+                                /** @enum {string} */
+                                stage: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                                /** @enum {string|null} */
+                                stuckReason: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                                stuckNote: string | null;
+                                buySignal: boolean;
+                                nextFollowUpAt: string | null;
+                                followUpCount: number;
+                                lastContactAt: string | null;
+                                aiPausedUntil: string | null;
+                                handoffAt: string | null;
+                                callbackPhone: string | null;
+                                callbackWindow: string | null;
+                                callbackAt: string | null;
+                                callbackRequestedAt: string | null;
+                                /** @enum {string|null} */
+                                callbackOutcome: "talked" | "no_answer" | "reschedule" | null;
+                                callbackDoneAt: string | null;
+                                tenantId: string | null;
+                                tenantName: string | null;
+                                createdAt: string;
+                                replies: {
+                                    id: string;
+                                    leadId: string;
+                                    leadName: string | null;
+                                    at: string;
+                                    intent: string;
+                                    /** @enum {string} */
+                                    source: "template" | "model" | "floor" | "holding";
+                                    guard: string | null;
+                                    userText: string;
+                                    replyText: string;
+                                    flagged: boolean;
+                                }[];
+                                events: {
+                                    at: string;
+                                    /** @enum {string} */
+                                    kind: "stage" | "followup" | "buy_signal" | "alert" | "handoff" | "paused" | "note" | "broadcast" | "callback" | "feature_request";
+                                    detail: string | null;
+                                }[];
+                                transcript: {
+                                    /** @enum {string} */
+                                    role: "user" | "assistant";
+                                    content: string;
+                                    at: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * "ฉันรับต่อเอง" (aiPaused true = AI silent 24 h, false = hand back), mark paid / lost / not interested, stuck reason + note, next follow-up, and a call’s outcome (schedules the next AI follow-up)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        aiPaused?: boolean;
+                        /** @enum {string} */
+                        stage?: "paid" | "lost" | "not_interested" | "talking";
+                        /** @enum {string|null} */
+                        stuckReason?: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                        stuckNote?: string | null;
+                        /** Format: date-time */
+                        nextFollowUpAt?: string | null;
+                        /** @enum {string} */
+                        callbackOutcome?: "talked" | "no_answer" | "reschedule";
+                        /** Format: date-time */
+                        callbackAt?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Lead */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                ref: string;
+                                /** @enum {string} */
+                                channel: "line" | "instagram" | "messenger";
+                                name: string | null;
+                                businessType: string | null;
+                                industryKey: string | null;
+                                staffCount: number | null;
+                                branchCount: number | null;
+                                pain: string | null;
+                                recommendedPlan: string | null;
+                                objections: string[];
+                                /** @enum {string} */
+                                stage: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                                /** @enum {string|null} */
+                                stuckReason: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                                stuckNote: string | null;
+                                buySignal: boolean;
+                                nextFollowUpAt: string | null;
+                                followUpCount: number;
+                                lastContactAt: string | null;
+                                aiPausedUntil: string | null;
+                                handoffAt: string | null;
+                                callbackPhone: string | null;
+                                callbackWindow: string | null;
+                                callbackAt: string | null;
+                                callbackRequestedAt: string | null;
+                                /** @enum {string|null} */
+                                callbackOutcome: "talked" | "no_answer" | "reschedule" | null;
+                                callbackDoneAt: string | null;
+                                tenantId: string | null;
+                                tenantName: string | null;
+                                createdAt: string;
+                                replies: {
+                                    id: string;
+                                    leadId: string;
+                                    leadName: string | null;
+                                    at: string;
+                                    intent: string;
+                                    /** @enum {string} */
+                                    source: "template" | "model" | "floor" | "holding";
+                                    guard: string | null;
+                                    userText: string;
+                                    replyText: string;
+                                    flagged: boolean;
+                                }[];
+                                events: {
+                                    at: string;
+                                    /** @enum {string} */
+                                    kind: "stage" | "followup" | "buy_signal" | "alert" | "handoff" | "paused" | "note" | "broadcast" | "callback" | "feature_request";
+                                    detail: string | null;
+                                }[];
+                                transcript: {
+                                    /** @enum {string} */
+                                    role: "user" | "assistant";
+                                    content: string;
+                                    at: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * AI salesperson settings (FAQ, never-say list, tone examples, video, alert recipients, caps), the accounts it may run on, today’s push usage
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Config */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                config: {
+                                    /** @default [] */
+                                    channels: {
+                                        channelAccountId: string;
+                                        /** @enum {string} */
+                                        mode: "off" | "testers" | "everyone";
+                                    }[];
+                                    /** @default [] */
+                                    testers: {
+                                        channelAccountId: string;
+                                        externalUserId: string;
+                                        label: string;
+                                    }[];
+                                    /**
+                                     * @default [
+                                     *       {
+                                     *         "q": "ทดลองฟรีคือยังไง ต้องสมัครก่อนไหม",
+                                     *         "a": "ต้องสมัครก่อนค่ะ กดลิงก์ แล้วกรอกชื่อร้าน ก็เริ่มใช้ได้ทันที ไม่ต้องผูกบัตร"
+                                     *       },
+                                     *       {
+                                     *         "q": "ลูกค้าต้องโหลดแอปไหม ทำเป็นแอปได้ไหม",
+                                     *         "a": "ลูกค้าไม่ต้องโหลดแอปค่ะ กดจองจาก LINE ได้เลย ส่วนร้านใช้ผ่านเว็บ เพิ่มไอคอนไว้หน้าจอมือถือให้เปิดเหมือนแอปได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "เชื่อม LINE ยังไง",
+                                     *         "a": "แอดมินช่วยเชื่อมให้ฟรีค่ะ ใช้เวลาประมาณ 15 นาที ร้านเชิญแอดมินเข้า LINE OA ตามคู่มือ หรือให้แอดมินโทรพากดทีละขั้นก็ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีระบบมัดจำไหม",
+                                     *         "a": "มีค่ะ ตั้งแต่แพ็กเกจ Premium ลูกค้าโอนมัดจำแนบสลิปตอนจอง ร้านเช็กยอดแล้วกดยืนยัน ช่วยลดลูกค้าเทนัด"
+                                     *       },
+                                     *       {
+                                     *         "q": "ลูกค้า walk-in ลงคิวยังไง",
+                                     *         "a": "ร้านเพิ่มคิว walk-in ในตารางได้เองค่ะ เวลานั้นจะไม่ว่างให้คนอื่นจองทับอัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีเตือนลูกค้าก่อนวันนัดไหม",
+                                     *         "a": "มีค่ะ ระบบส่งเตือนทาง LINE ให้ลูกค้าก่อนวันนัดอัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "เก็บรายชื่อลูกค้าได้ไหม",
+                                     *         "a": "ได้ค่ะ ทุกคนที่จองจะถูกเก็บเป็นรายชื่อลูกค้า ดูประวัติการมารับบริการย้อนหลังได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "พนักงานเข้าระบบยังไง",
+                                     *         "a": "เจ้าของเพิ่มพนักงานที่ ตั้งค่า > พนักงาน แล้วพนักงานเข้าที่เว็บเดียวกันค่ะ ถ้าต้องการ แอดมินนัดวิดีโอคอลสอนให้ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีคู่มือไหม",
+                                     *         "a": "มีคู่มืออยู่ในเมนูตั้งค่าของระบบค่ะ และมีคลิปเชื่อม LINE ให้ ถ้าติดตรงไหนส่งภาพหน้าจอมาได้เลย"
+                                     *       },
+                                     *       {
+                                     *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
+                                     *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                     *       },
+                                     *       {
+                                     *         "q": "ร้านเช่าชุดใช้ได้ไหม",
+                                     *         "a": "ใช้ได้ค่ะ ลูกค้าเลือกวันใช้งานเอง ระบบกันชุดไม่ให้จองซ้ำ และเผื่อวันส่งไป-ส่งคืนให้อัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีตัวอย่างร้านให้ดูไหม",
+                                     *         "a": "มีค่ะ ดูร้านตัวอย่างที่ใช้งานจริงได้ บอกประเภทร้านแล้วแอดมินส่งตัวอย่างที่ตรงกับร้านให้"
+                                     *       },
+                                     *       {
+                                     *         "q": "อยากให้โทรอธิบาย",
+                                     *         "a": "ได้เลยค่ะ ฝากเบอร์และเวลาที่สะดวกไว้ แอดมินโทรกลับให้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มี AI ตอบแชทไหม",
+                                     *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                     *       },
+                                     *       {
+                                     *         "q": "ตรวจสลิปได้ไหม",
+                                     *         "a": "ระบบช่วยตรวจสลิปเบื้องต้น (สลิปจริง ไม่ถูกแก้ ไม่ใช้ซ้ำ) ร้านเช็กยอดแล้วกดยืนยันเอง"
+                                     *       }
+                                     *     ]
+                                     */
+                                    faq: {
+                                        q: string;
+                                        a: string;
+                                    }[];
+                                    /**
+                                     * @default {
+                                     *       "nail": "https://www.coreup.pro/b/petal-nail",
+                                     *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                                     *     }
+                                     */
+                                    demoLinks: {
+                                        [key: string]: string;
+                                    };
+                                    /**
+                                     * @default [
+                                     *       "แชท Messenger / Instagram สำหรับร้านค้า (ยังไม่เปิดให้ใช้)",
+                                     *       "ตรวจสลิปอัตโนมัติเต็มรูปแบบ"
+                                     *     ]
+                                     */
+                                    forbidden: string[];
+                                    /** @default  */
+                                    toneExamples: string;
+                                    /** @default  */
+                                    videoUrl: string;
+                                    /** @default  */
+                                    signupUrl: string;
+                                    /** @default  */
+                                    trainingBookingUrl: string;
+                                    /** @default  */
+                                    manualUrl: string;
+                                    /** @default  */
+                                    businessPhone: string;
+                                    /** @default false */
+                                    lineCallEnabled: boolean;
+                                    /**
+                                     * @default [
+                                     *       {
+                                     *         "label": "Boat",
+                                     *         "lineUserId": "Ub272dde96cffdf53c5fefe4f4f0a2b24",
+                                     *         "channelAccountId": null
+                                     *       }
+                                     *     ]
+                                     */
+                                    alertRecipients: {
+                                        label: string;
+                                        lineUserId: string;
+                                        channelAccountId: string | null;
+                                    }[];
+                                    /** @default 40 */
+                                    alertDailyCap: number;
+                                    /** @default 30 */
+                                    lineDailyPushCap: number;
+                                    /**
+                                     * Format: email
+                                     * @default coreup.pro@gmail.com
+                                     */
+                                    summaryEmail: string;
+                                };
+                                accounts: {
+                                    id: string;
+                                    provider: string;
+                                    name: string;
+                                }[];
+                                usage: {
+                                    day: string;
+                                    followUpPushes: number;
+                                    alertPushes: number;
+                                    pushCap: number;
+                                    alertCap: number;
+                                };
+                                modelReady: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Save the AI salesperson settings; it needs at least one CoreUp account before it can be switched on
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @default [] */
+                        channels?: {
+                            channelAccountId: string;
+                            /** @enum {string} */
+                            mode: "off" | "testers" | "everyone";
+                        }[];
+                        /** @default [] */
+                        testers?: {
+                            channelAccountId: string;
+                            externalUserId: string;
+                            label: string;
+                        }[];
+                        /**
+                         * @default [
+                         *       {
+                         *         "q": "ทดลองฟรีคือยังไง ต้องสมัครก่อนไหม",
+                         *         "a": "ต้องสมัครก่อนค่ะ กดลิงก์ แล้วกรอกชื่อร้าน ก็เริ่มใช้ได้ทันที ไม่ต้องผูกบัตร"
+                         *       },
+                         *       {
+                         *         "q": "ลูกค้าต้องโหลดแอปไหม ทำเป็นแอปได้ไหม",
+                         *         "a": "ลูกค้าไม่ต้องโหลดแอปค่ะ กดจองจาก LINE ได้เลย ส่วนร้านใช้ผ่านเว็บ เพิ่มไอคอนไว้หน้าจอมือถือให้เปิดเหมือนแอปได้"
+                         *       },
+                         *       {
+                         *         "q": "เชื่อม LINE ยังไง",
+                         *         "a": "แอดมินช่วยเชื่อมให้ฟรีค่ะ ใช้เวลาประมาณ 15 นาที ร้านเชิญแอดมินเข้า LINE OA ตามคู่มือ หรือให้แอดมินโทรพากดทีละขั้นก็ได้"
+                         *       },
+                         *       {
+                         *         "q": "มีระบบมัดจำไหม",
+                         *         "a": "มีค่ะ ตั้งแต่แพ็กเกจ Premium ลูกค้าโอนมัดจำแนบสลิปตอนจอง ร้านเช็กยอดแล้วกดยืนยัน ช่วยลดลูกค้าเทนัด"
+                         *       },
+                         *       {
+                         *         "q": "ลูกค้า walk-in ลงคิวยังไง",
+                         *         "a": "ร้านเพิ่มคิว walk-in ในตารางได้เองค่ะ เวลานั้นจะไม่ว่างให้คนอื่นจองทับอัตโนมัติ"
+                         *       },
+                         *       {
+                         *         "q": "มีเตือนลูกค้าก่อนวันนัดไหม",
+                         *         "a": "มีค่ะ ระบบส่งเตือนทาง LINE ให้ลูกค้าก่อนวันนัดอัตโนมัติ"
+                         *       },
+                         *       {
+                         *         "q": "เก็บรายชื่อลูกค้าได้ไหม",
+                         *         "a": "ได้ค่ะ ทุกคนที่จองจะถูกเก็บเป็นรายชื่อลูกค้า ดูประวัติการมารับบริการย้อนหลังได้"
+                         *       },
+                         *       {
+                         *         "q": "พนักงานเข้าระบบยังไง",
+                         *         "a": "เจ้าของเพิ่มพนักงานที่ ตั้งค่า > พนักงาน แล้วพนักงานเข้าที่เว็บเดียวกันค่ะ ถ้าต้องการ แอดมินนัดวิดีโอคอลสอนให้ได้"
+                         *       },
+                         *       {
+                         *         "q": "มีคู่มือไหม",
+                         *         "a": "มีคู่มืออยู่ในเมนูตั้งค่าของระบบค่ะ และมีคลิปเชื่อม LINE ให้ ถ้าติดตรงไหนส่งภาพหน้าจอมาได้เลย"
+                         *       },
+                         *       {
+                         *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
+                         *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                         *       },
+                         *       {
+                         *         "q": "ร้านเช่าชุดใช้ได้ไหม",
+                         *         "a": "ใช้ได้ค่ะ ลูกค้าเลือกวันใช้งานเอง ระบบกันชุดไม่ให้จองซ้ำ และเผื่อวันส่งไป-ส่งคืนให้อัตโนมัติ"
+                         *       },
+                         *       {
+                         *         "q": "มีตัวอย่างร้านให้ดูไหม",
+                         *         "a": "มีค่ะ ดูร้านตัวอย่างที่ใช้งานจริงได้ บอกประเภทร้านแล้วแอดมินส่งตัวอย่างที่ตรงกับร้านให้"
+                         *       },
+                         *       {
+                         *         "q": "อยากให้โทรอธิบาย",
+                         *         "a": "ได้เลยค่ะ ฝากเบอร์และเวลาที่สะดวกไว้ แอดมินโทรกลับให้"
+                         *       },
+                         *       {
+                         *         "q": "มี AI ตอบแชทไหม",
+                         *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                         *       },
+                         *       {
+                         *         "q": "ตรวจสลิปได้ไหม",
+                         *         "a": "ระบบช่วยตรวจสลิปเบื้องต้น (สลิปจริง ไม่ถูกแก้ ไม่ใช้ซ้ำ) ร้านเช็กยอดแล้วกดยืนยันเอง"
+                         *       }
+                         *     ]
+                         */
+                        faq?: {
+                            q: string;
+                            a: string;
+                        }[];
+                        /**
+                         * @default {
+                         *       "nail": "https://www.coreup.pro/b/petal-nail",
+                         *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                         *     }
+                         */
+                        demoLinks?: {
+                            [key: string]: string;
+                        };
+                        /**
+                         * @default [
+                         *       "แชท Messenger / Instagram สำหรับร้านค้า (ยังไม่เปิดให้ใช้)",
+                         *       "ตรวจสลิปอัตโนมัติเต็มรูปแบบ"
+                         *     ]
+                         */
+                        forbidden?: string[];
+                        /** @default  */
+                        toneExamples?: string;
+                        /** @default  */
+                        videoUrl?: string;
+                        /** @default  */
+                        signupUrl?: string;
+                        /** @default  */
+                        trainingBookingUrl?: string;
+                        /** @default  */
+                        manualUrl?: string;
+                        /** @default  */
+                        businessPhone?: string;
+                        /** @default false */
+                        lineCallEnabled?: boolean;
+                        /**
+                         * @default [
+                         *       {
+                         *         "label": "Boat",
+                         *         "lineUserId": "Ub272dde96cffdf53c5fefe4f4f0a2b24",
+                         *         "channelAccountId": null
+                         *       }
+                         *     ]
+                         */
+                        alertRecipients?: {
+                            label: string;
+                            lineUserId: string;
+                            channelAccountId: string | null;
+                        }[];
+                        /** @default 40 */
+                        alertDailyCap?: number;
+                        /** @default 30 */
+                        lineDailyPushCap?: number;
+                        /**
+                         * Format: email
+                         * @default coreup.pro@gmail.com
+                         */
+                        summaryEmail?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Config */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                config: {
+                                    /** @default [] */
+                                    channels: {
+                                        channelAccountId: string;
+                                        /** @enum {string} */
+                                        mode: "off" | "testers" | "everyone";
+                                    }[];
+                                    /** @default [] */
+                                    testers: {
+                                        channelAccountId: string;
+                                        externalUserId: string;
+                                        label: string;
+                                    }[];
+                                    /**
+                                     * @default [
+                                     *       {
+                                     *         "q": "ทดลองฟรีคือยังไง ต้องสมัครก่อนไหม",
+                                     *         "a": "ต้องสมัครก่อนค่ะ กดลิงก์ แล้วกรอกชื่อร้าน ก็เริ่มใช้ได้ทันที ไม่ต้องผูกบัตร"
+                                     *       },
+                                     *       {
+                                     *         "q": "ลูกค้าต้องโหลดแอปไหม ทำเป็นแอปได้ไหม",
+                                     *         "a": "ลูกค้าไม่ต้องโหลดแอปค่ะ กดจองจาก LINE ได้เลย ส่วนร้านใช้ผ่านเว็บ เพิ่มไอคอนไว้หน้าจอมือถือให้เปิดเหมือนแอปได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "เชื่อม LINE ยังไง",
+                                     *         "a": "แอดมินช่วยเชื่อมให้ฟรีค่ะ ใช้เวลาประมาณ 15 นาที ร้านเชิญแอดมินเข้า LINE OA ตามคู่มือ หรือให้แอดมินโทรพากดทีละขั้นก็ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีระบบมัดจำไหม",
+                                     *         "a": "มีค่ะ ตั้งแต่แพ็กเกจ Premium ลูกค้าโอนมัดจำแนบสลิปตอนจอง ร้านเช็กยอดแล้วกดยืนยัน ช่วยลดลูกค้าเทนัด"
+                                     *       },
+                                     *       {
+                                     *         "q": "ลูกค้า walk-in ลงคิวยังไง",
+                                     *         "a": "ร้านเพิ่มคิว walk-in ในตารางได้เองค่ะ เวลานั้นจะไม่ว่างให้คนอื่นจองทับอัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีเตือนลูกค้าก่อนวันนัดไหม",
+                                     *         "a": "มีค่ะ ระบบส่งเตือนทาง LINE ให้ลูกค้าก่อนวันนัดอัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "เก็บรายชื่อลูกค้าได้ไหม",
+                                     *         "a": "ได้ค่ะ ทุกคนที่จองจะถูกเก็บเป็นรายชื่อลูกค้า ดูประวัติการมารับบริการย้อนหลังได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "พนักงานเข้าระบบยังไง",
+                                     *         "a": "เจ้าของเพิ่มพนักงานที่ ตั้งค่า > พนักงาน แล้วพนักงานเข้าที่เว็บเดียวกันค่ะ ถ้าต้องการ แอดมินนัดวิดีโอคอลสอนให้ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีคู่มือไหม",
+                                     *         "a": "มีคู่มืออยู่ในเมนูตั้งค่าของระบบค่ะ และมีคลิปเชื่อม LINE ให้ ถ้าติดตรงไหนส่งภาพหน้าจอมาได้เลย"
+                                     *       },
+                                     *       {
+                                     *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
+                                     *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                     *       },
+                                     *       {
+                                     *         "q": "ร้านเช่าชุดใช้ได้ไหม",
+                                     *         "a": "ใช้ได้ค่ะ ลูกค้าเลือกวันใช้งานเอง ระบบกันชุดไม่ให้จองซ้ำ และเผื่อวันส่งไป-ส่งคืนให้อัตโนมัติ"
+                                     *       },
+                                     *       {
+                                     *         "q": "มีตัวอย่างร้านให้ดูไหม",
+                                     *         "a": "มีค่ะ ดูร้านตัวอย่างที่ใช้งานจริงได้ บอกประเภทร้านแล้วแอดมินส่งตัวอย่างที่ตรงกับร้านให้"
+                                     *       },
+                                     *       {
+                                     *         "q": "อยากให้โทรอธิบาย",
+                                     *         "a": "ได้เลยค่ะ ฝากเบอร์และเวลาที่สะดวกไว้ แอดมินโทรกลับให้"
+                                     *       },
+                                     *       {
+                                     *         "q": "มี AI ตอบแชทไหม",
+                                     *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                     *       },
+                                     *       {
+                                     *         "q": "ตรวจสลิปได้ไหม",
+                                     *         "a": "ระบบช่วยตรวจสลิปเบื้องต้น (สลิปจริง ไม่ถูกแก้ ไม่ใช้ซ้ำ) ร้านเช็กยอดแล้วกดยืนยันเอง"
+                                     *       }
+                                     *     ]
+                                     */
+                                    faq: {
+                                        q: string;
+                                        a: string;
+                                    }[];
+                                    /**
+                                     * @default {
+                                     *       "nail": "https://www.coreup.pro/b/petal-nail",
+                                     *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                                     *     }
+                                     */
+                                    demoLinks: {
+                                        [key: string]: string;
+                                    };
+                                    /**
+                                     * @default [
+                                     *       "แชท Messenger / Instagram สำหรับร้านค้า (ยังไม่เปิดให้ใช้)",
+                                     *       "ตรวจสลิปอัตโนมัติเต็มรูปแบบ"
+                                     *     ]
+                                     */
+                                    forbidden: string[];
+                                    /** @default  */
+                                    toneExamples: string;
+                                    /** @default  */
+                                    videoUrl: string;
+                                    /** @default  */
+                                    signupUrl: string;
+                                    /** @default  */
+                                    trainingBookingUrl: string;
+                                    /** @default  */
+                                    manualUrl: string;
+                                    /** @default  */
+                                    businessPhone: string;
+                                    /** @default false */
+                                    lineCallEnabled: boolean;
+                                    /**
+                                     * @default [
+                                     *       {
+                                     *         "label": "Boat",
+                                     *         "lineUserId": "Ub272dde96cffdf53c5fefe4f4f0a2b24",
+                                     *         "channelAccountId": null
+                                     *       }
+                                     *     ]
+                                     */
+                                    alertRecipients: {
+                                        label: string;
+                                        lineUserId: string;
+                                        channelAccountId: string | null;
+                                    }[];
+                                    /** @default 40 */
+                                    alertDailyCap: number;
+                                    /** @default 30 */
+                                    lineDailyPushCap: number;
+                                    /**
+                                     * Format: email
+                                     * @default coreup.pro@gmail.com
+                                     */
+                                    summaryEmail: string;
+                                };
+                                accounts: {
+                                    id: string;
+                                    provider: string;
+                                    name: string;
+                                }[];
+                                usage: {
+                                    day: string;
+                                    followUpPushes: number;
+                                    alertPushes: number;
+                                    pushCap: number;
+                                    alertCap: number;
+                                };
+                                modelReady: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/feature-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * What customers asked for that CoreUp does not do today, grouped (fits the scope / outside it), with counts
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Groups */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                fit: "fits" | "outside";
+                                text: string;
+                                count: number;
+                                latestAt: string;
+                                businessTypes: string[];
+                                leadId: string | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * People who wrote to one CoreUp account (name + id, searchable): the testers picker
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    accountId: string;
+                    q?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Contacts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                externalUserId: string;
+                                label: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ลองคุยกับ AI ขาย: the real salesperson on the real plans for a pretend prospect. Sends nothing, saves nothing, alerts nobody; audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        lead?: {
+                            name?: string | null;
+                            businessType?: string | null;
+                            industryKey?: string | null;
+                            staffCount?: number | null;
+                            branchCount?: number | null;
+                            pain?: string | null;
+                            recommendedPlan?: string | null;
+                            objections?: string[];
+                            /** @enum {string} */
+                            stage?: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                            /** @enum {string|null} */
+                            stuckReason?: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                            buySignal?: boolean;
+                            followUpCount?: number;
+                            milestones?: {
+                                [key: string]: string;
+                            };
+                            callbackPhone?: string | null;
+                            callbackWindow?: string | null;
+                            callbackOpen?: boolean;
+                        };
+                        messages: {
+                            /** @enum {string} */
+                            role: "user" | "assistant";
+                            content: string;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description The answer and what the AI learned */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                bubbles: string[];
+                                /** @enum {string} */
+                                source: "template" | "model";
+                                lead: {
+                                    name?: string | null;
+                                    businessType?: string | null;
+                                    industryKey?: string | null;
+                                    staffCount?: number | null;
+                                    branchCount?: number | null;
+                                    pain?: string | null;
+                                    recommendedPlan?: string | null;
+                                    objections?: string[];
+                                    /** @enum {string} */
+                                    stage?: "new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost";
+                                    /** @enum {string|null} */
+                                    stuckReason?: "price" | "not_understood" | "line_connect" | "no_time" | "partner" | "not_needed" | "other" | null;
+                                    buySignal?: boolean;
+                                    followUpCount?: number;
+                                    milestones?: {
+                                        [key: string]: string;
+                                    };
+                                    callbackPhone?: string | null;
+                                    callbackWindow?: string | null;
+                                    callbackOpen?: boolean;
+                                };
+                                /** @enum {string|null} */
+                                alert: "buy_signal" | "callback" | "training" | "handoff" | "question" | null;
+                                guard: string | null;
+                                key: string;
+                                buySignal: boolean;
+                                handoff: boolean;
+                                costMinor: number | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/replies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * AI answers to review: blocked by the guard, replaced by the holding line, or flagged 👎 (`all` = every answer)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    filter?: "review" | "flagged" | "all";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Replies */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                leadId: string;
+                                leadName: string | null;
+                                at: string;
+                                intent: string;
+                                /** @enum {string} */
+                                source: "template" | "model" | "floor" | "holding";
+                                guard: string | null;
+                                userText: string;
+                                replyText: string;
+                                flagged: boolean;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/replies/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 👎 on an AI answer (or undo): the case joins the regression set (`pnpm sales-regression:export`)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        flagged: boolean;
+                        note?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Reply */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                leadId: string;
+                                leadName: string | null;
+                                at: string;
+                                intent: string;
+                                /** @enum {string} */
+                                source: "template" | "model" | "floor" | "holding";
+                                guard: string | null;
+                                userText: string;
+                                replyText: string;
+                                flagged: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/broadcast/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * How many LINE pushes a broadcast would send and who is left out (Meta contacts, got one in the last 7 days, said stop, closed), and today’s pushes left
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        audience: {
+                            stages?: ("new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost")[];
+                            industryKey?: string;
+                            silentDays?: number;
+                            signedUp?: boolean;
+                        };
+                        message: {
+                            text: string;
+                            /** Format: uri */
+                            linkUrl?: string;
+                            /** Format: uri */
+                            imageUrl?: string;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Preview */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                recipients: number;
+                                skipped: {
+                                    meta: number;
+                                    cap: number;
+                                    optOut: number;
+                                    closed: number;
+                                    noAccount: number;
+                                };
+                                pushesLeftToday: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/broadcast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a broadcast (LINE push by the worker). Refused when nobody is eligible or it would pass today’s push cap; audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        audience: {
+                            stages?: ("new" | "talking" | "trial_link_sent" | "signed_up" | "setup_stuck" | "ready_to_pay" | "paid" | "not_interested" | "lost")[];
+                            industryKey?: string;
+                            silentDays?: number;
+                            signedUp?: boolean;
+                        };
+                        message: {
+                            text: string;
+                            /** Format: uri */
+                            linkUrl?: string;
+                            /** Format: uri */
+                            imageUrl?: string;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Queued */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                recipients: number;
+                                skipped: {
+                                    meta: number;
+                                    cap: number;
+                                    optOut: number;
+                                    closed: number;
+                                    noAccount: number;
+                                };
+                                pushesLeftToday: number;
+                                sent: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/sales-ai/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Broadcasts sent so far (newest first) with how many got them
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Broadcasts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                createdAt: string;
+                                message: string;
+                                sentCount: number;
+                                skipped: {
+                                    [key: string]: number;
+                                };
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/platform/rubric": {
@@ -18402,7 +20830,7 @@ export interface paths {
                          *       "core"
                          *     ]
                          */
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         /** @default {} */
                         limits?: {
                             branches?: number;
@@ -18752,7 +21180,7 @@ export interface paths {
                         /** @enum {string} */
                         interval?: "month" | "year";
                         active?: boolean;
-                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
+                        modules?: ("core" | "crm" | "messaging" | "booking" | "shifts" | "checklists" | "sop" | "surveys" | "reports" | "approvals" | "payouts" | "checkout" | "inventory" | "table_ordering" | "branch_insights" | "expenses" | "ai_chat" | "meta_channels" | "clinical" | "kpi" | "audit" | "ai" | "platform" | "lite")[];
                         limits?: {
                             branches?: number;
                             members?: number;
@@ -50771,7 +53199,7 @@ export interface paths {
         };
         /**
          * AI chat: on/off, extra knowledge, this month’s usage and whether CoreUp has switched the model on
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -50804,6 +53232,9 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
                                 topupRequested: boolean;
                             };
                         };
@@ -50881,7 +53312,7 @@ export interface paths {
         head?: never;
         /**
          * Switch the AI on/off and set the extra knowledge text (≤ 3,000 characters)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -50931,6 +53362,9 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
                                 topupRequested: boolean;
                             };
                         };
@@ -51014,7 +53448,7 @@ export interface paths {
         put?: never;
         /**
          * Ask the CoreUp team for more AI messages (once a month; the team adds the top-up)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -51052,6 +53486,9 @@ export interface paths {
                                 topupMessages: number;
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
+                                /** @enum {string} */
+                                allowance: "addon" | "trial" | "none";
+                                trialEndsOn: string | null;
                                 topupRequested: boolean;
                             };
                         };
@@ -51137,7 +53574,7 @@ export interface paths {
         };
         /**
          * Latest AI conversations (newest first, up to 50)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -51263,7 +53700,7 @@ export interface paths {
         };
         /**
          * The last messages of one AI conversation (30-day history)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -51289,6 +53726,11 @@ export interface paths {
                                 role: "user" | "assistant";
                                 content: string;
                                 createdAt: string;
+                                intent: string | null;
+                                /** @enum {string|null} */
+                                verdict: "ok" | "repaired" | "floor" | "handoff" | "hold" | null;
+                                guardCode: string | null;
+                                flagged: boolean;
                             }[];
                         };
                     };
@@ -51366,6 +53808,239 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ai-chat/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * คำตอบที่ถูกบล็อก/ส่งต่อ: AI replies the output guard repaired or replaced, hand-overs, holding lines and replies staff marked 👎 (newest 50)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Replies to review */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                at: string;
+                                customerText: string | null;
+                                reply: string;
+                                intent: string | null;
+                                /** @enum {string|null} */
+                                verdict: "ok" | "repaired" | "floor" | "handoff" | "hold" | null;
+                                guardCode: string | null;
+                                flagged: boolean;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/messages/{id}/flag": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 👎 on one AI reply (or take it back): the case is kept for the regression set the CoreUp team runs before each deploy
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        flagged: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Saved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                flagged: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/ai-chat/customers/{customerId}": {
         parameters: {
             query?: never;
@@ -51375,7 +54050,7 @@ export interface paths {
         };
         /**
          * AI state of one customer: linked to LINE, and the conversation (paused or not) if the AI ever talked to them
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
          */
         get: {
             parameters: {
@@ -51501,7 +54176,7 @@ export interface paths {
         put?: never;
         /**
          * Stop the AI for one customer for 24 hours (`paused: true`) or let it answer again (`paused: false`)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -51631,7 +54306,7 @@ export interface paths {
         };
         /**
          * LINE followers of the shop (name + picture, newest first, up to 30) to pick AI testers from; `q` searches the name
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `core`.
          */
         get: {
             parameters: {
@@ -75596,7 +78271,7 @@ export interface paths {
         };
         put?: never;
         /**
-         * Connect a LINE OA (secret + token are stored encrypted)
+         * Connect a LINE OA (secret + token are stored encrypted); CoreUp also sets and tests the OA webhook itself
          * @description Requires header `X-Tenant-Id`. Permission: `channels:manage`. Module: `messaging`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -75619,7 +78294,7 @@ export interface paths {
                          * @enum {string}
                          */
                         provider?: "line";
-                        name: string;
+                        name?: string;
                         externalId: string;
                         channelSecret: string;
                         accessToken?: string;
@@ -75659,6 +78334,13 @@ export interface paths {
                                 lastTestSentAt: string | null;
                                 welcomeEnabled: boolean;
                                 createdAt: string;
+                                webhook: {
+                                    webhookSet: boolean;
+                                    webhookActive: boolean | null;
+                                    testOk: boolean | null;
+                                    error: string | null;
+                                    settingsUrl: string | null;
+                                };
                             };
                         };
                     };
@@ -76135,6 +78817,123 @@ export interface paths {
                                     name: string | null;
                                     basicId: string;
                                 } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/channel-accounts/{id}/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set the OA webhook to CoreUp again, test it, and report whether "Use webhook" is on
+         * @description Requires header `X-Tenant-Id`. Permission: `channels:manage`. Module: `messaging`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Result */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                webhookSet: boolean;
+                                webhookActive: boolean | null;
+                                testOk: boolean | null;
+                                error: string | null;
+                                settingsUrl: string | null;
                             };
                         };
                     };
@@ -80385,7 +83184,7 @@ export interface paths {
         };
         /**
          * Connected Instagram accounts and Facebook Pages (and whether CoreUp has set the Meta app up)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          */
         get: {
             parameters: {
@@ -80503,7 +83302,7 @@ export interface paths {
         put?: never;
         /**
          * Start "เชื่อม Instagram": the URL to open to log in at Instagram (state bound to this shop and user)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -80614,7 +83413,7 @@ export interface paths {
         put?: never;
         /**
          * Start "เชื่อม Facebook Page": the URL to open to log in at Facebook (state bound to this shop and user)
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -80723,7 +83522,7 @@ export interface paths {
         };
         /**
          * The Facebook Pages the person granted (pick one to connect); needs the ticket from the login redirect
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          */
         get: {
             parameters: {
@@ -80836,7 +83635,7 @@ export interface paths {
         put?: never;
         /**
          * Connect the chosen Facebook Page: stores its Page token and subscribes it to the webhook
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -80965,7 +83764,7 @@ export interface paths {
         post?: never;
         /**
          * Disconnect an Instagram account / Facebook Page: the webhook subscription ends and the token is deleted
-         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `meta_channels`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -93153,6 +95952,7 @@ export interface paths {
                         timezone?: string;
                         planCode?: string;
                         ownerPhone: string;
+                        leadRef?: string;
                     };
                 };
             };

@@ -137,10 +137,26 @@ function Body({ id, d, demo }: { id: string; d: AiChatAdmin; demo: boolean }) {
           </div>
 
           <dl className="grid gap-2 text-sm sm:grid-cols-2" data-testid="ai-chat-usage">
+            <Row label={t('aiChat.freeTrial')}>
+              <span
+                className={
+                  d.inTrial && d.freeTrialUsed >= d.freeTrialQuota ? 'font-semibold text-destructive' : ''
+                }
+              >
+                {n(d.freeTrialUsed)} / {n(d.freeTrialQuota)}
+              </span>{' '}
+              <span className="text-xs text-muted-foreground">
+                {d.inTrial ? t('aiChat.trialUntil', { date: d.trialEndsOn }) : t('aiChat.trialOver')}
+              </span>
+            </Row>
             <Row label={t('aiChat.used', { month: d.month })}>
               <span className={d.state === 'ok' ? '' : 'font-semibold text-destructive'}>
                 {n(d.used)} / {n(d.quota)}
-              </span>
+              </span>{' '}
+              <span className="text-xs text-muted-foreground">{t(`aiChat.allowance.${d.allowance}`)}</span>
+            </Row>
+            <Row label={t('aiChat.paidQuota')}>
+              {d.active ? `${n(d.monthlyQuota)} + ${n(d.topupMessages)}` : '-'}
             </Row>
             <Row label={t('aiChat.topups')}>{n(d.topupMessages)}</Row>
             <Row label={t('aiChat.tokens')}>
