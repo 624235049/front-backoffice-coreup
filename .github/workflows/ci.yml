@@ -7,8 +7,8 @@ name: CI
 on:
   pull_request:
   push:
-    # ci/** = run the full suite in the cloud before merging (Railway deploys only main / production / tags)
-    branches: [main, production, "ci/**"]
+    # ci/** or ci-* = run the full suite in the cloud before merging (Railway deploys only main / production / tags)
+    branches: [main, production, "ci/**", "ci-*"]
     tags: ["v*"]
 
 concurrency:
