@@ -20,6 +20,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ApiBody } from '@/lib/api';
 import { type Plan, useCreatePlan, usePatchPlan, usePlans } from '../api';
+import { AddonsCard } from '../components/addons-card';
+import {
+  cleanMarketing,
+  type Marketing,
+  MarketingSection,
+  marketingNameMissing,
+} from '../components/marketing-section';
 import { FamilyCard, PlainPlanList } from '../components/plan-cards';
 import { formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
 import { groupPlans } from '../plan-families';
@@ -68,6 +75,7 @@ export function PlansPage() {
                   <PlainPlanList plans={other} actions={actions} />
                 </section>
               ) : null}
+              <AddonsCard />
               {internal.length > 0 ? (
                 <details>
                   <summary className="cursor-pointer text-sm font-semibold">
@@ -190,6 +198,9 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
     Object.fromEntries(Object.entries(plan?.limits ?? {}).map(([k, v]) => [k, String(v)])),
   );
   const [applyToShops, setApplyToShops] = useState(false);
+  // sales copy: monthly plans only (a yearly plan reuses its monthly plan's copy)
+  const [marketing, setMarketing] = useState<Marketing | null>(plan?.marketing ?? null);
+  const yearly = plan ? plan.code.endsWith('-year') : false;
 
   const priceMinor = parseBahtToMinor(price);
   const badLimit = LIMITS.find(
@@ -199,7 +210,8 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
     (!plan && !CODE_RE.test(code) && t('plans.err.code')) ||
     (name.trim().length === 0 || name.trim().length > 80 ? t('plans.err.name') : false) ||
     (priceMinor === null && t('plans.err.price')) ||
-    (badLimit ? t('plans.err.limit', { name: t(`plans.limit.${badLimit}`) }) : false);
+    (badLimit ? t('plans.err.limit', { name: t(`plans.limit.${badLimit}`) }) : false) ||
+    (marketing && marketingNameMissing(marketing) ? t('plans.err.marketingName') : false);
 
   const save = () => {
     // empty field = unlimited = no key
@@ -220,7 +232,17 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
     });
     if (plan)
       patch.mutate(
-        { id: plan.id, body: { ...body, applyToShops } },
+        {
+          id: plan.id,
+          body: {
+            ...body,
+            applyToShops,
+            // only a changed copy is sent: it has its own audit row
+            ...(marketing && JSON.stringify(cleanMarketing(marketing)) !== JSON.stringify(plan.marketing)
+              ? { marketing: cleanMarketing(marketing) }
+              : {}),
+          },
+        },
         done(t('plans.saved', { name: body.name })),
       );
     else create.mutate({ ...body, code }, done(t('plans.created', { name: body.name })));
@@ -335,6 +357,26 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
               ))}
             </div>
           </div>
+          <section className="grid gap-2" aria-label={t('plans.marketing.title')}>
+            <h3 className="text-sm font-semibold">{t('plans.marketing.title')}</h3>
+            {!plan ? (
+              <p className="text-sm text-muted-foreground">{t('plans.marketing.saveFirst')}</p>
+            ) : yearly ? (
+              <p className="text-sm text-muted-foreground">{t('plans.marketing.yearly')}</p>
+            ) : (
+              <MarketingSection
+                planCode={plan.code}
+                value={marketing}
+                onChange={setMarketing}
+                priceMinor={priceMinor}
+                limits={Object.fromEntries(
+                  LIMITS.flatMap((k) =>
+                    /^\d+$/.test((limits[k] ?? '').trim()) ? [[k, Number(limits[k])]] : [],
+                  ),
+                )}
+              />
+            )}
+          </section>
           {plan ? (
             <Label className="flex items-start gap-2 font-normal">
               <Checkbox

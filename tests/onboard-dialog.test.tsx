@@ -28,7 +28,28 @@ vi.mock('@/features/platform/api', () => {
     tenantCount: 0,
     modules: ['core'],
     limits: {},
+    // sold plans carry sales copy (the admin's data); the internal ฿0 plan does not. Pro has the card badge = the default
+    marketing:
+      priceMinor === 0
+        ? null
+        : {
+            sort: code === 'line-pro' ? 30 : 10,
+            setupFeeMinor: 0,
+            extraBranchMinor: 0,
+            th: { ...copy, displayName: name, badge: code === 'line-pro' ? 'แนะนำ' : '' },
+            en: { ...copy, displayName: name, badge: '' },
+          },
   });
+  const copy = {
+    displayName: '',
+    pitch: '',
+    worth: '',
+    highlights: [],
+    moveUpWhen: '',
+    badge: '',
+    setupFee: '',
+    footnotes: [],
+  };
   const plans = [
     plan('multi', 'Multi-branch', 0),
     plan('line-basic', 'Basic', 29_900),

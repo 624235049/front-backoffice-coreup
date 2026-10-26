@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { dmyBE, prorateDifference, renewalLineMessage } from '@/features/platform/billing-docs';
+import { rememberPlanNames } from '@/features/platform/plan-families';
 
 describe('prorateDifference (suggested amount for an upgrade paid mid-cycle)', () => {
   const base = {
@@ -26,6 +27,14 @@ describe('prorateDifference (suggested amount for an upgrade paid mid-cycle)', (
 });
 
 describe('renewalLineMessage', () => {
+  // the package name comes from the sales names the plan list loaded (a yearly plan uses its monthly plan's name)
+  rememberPlanNames([
+    {
+      code: 'line-pro',
+      name: 'x',
+      marketing: { th: { displayName: 'Pro' } },
+    } as unknown as Parameters<typeof rememberPlanNames>[0][number],
+  ]);
   const msg = renewalLineMessage({
     shopName: 'ร้านสวย',
     plan: { code: 'line-pro-year', name: 'ระบบจองคิว Pro รายปี', interval: 'year' },

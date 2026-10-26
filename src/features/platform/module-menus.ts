@@ -8,7 +8,17 @@ export const MODULE_GROUPS = [
   { key: 'back', modules: ['checkout', 'payouts', 'reports'] },
   {
     key: 'business',
-    modules: ['inventory', 'shifts', 'kpi', 'checklists', 'sop', 'surveys', 'approvals', 'clinical', 'expenses'],
+    modules: [
+      'inventory',
+      'shifts',
+      'kpi',
+      'checklists',
+      'sop',
+      'surveys',
+      'approvals',
+      'clinical',
+      'expenses',
+    ],
   },
   { key: 'enterprise', modules: ['branch_insights'] },
 ] as const satisfies readonly { key: string; modules: readonly FeatureModule[] }[];

@@ -3,6 +3,7 @@ import { useReasonMessage } from '@/features/reason-errors';
 import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } from '@/lib/api';
 import type { paths } from '@/lib/api-client';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
+import { rememberPlanNames } from './plan-families';
 
 /* Types come from the OpenAPI document only (never hand-written). */
 export type Overview = ApiItem<'/v1/platform/overview'>;
@@ -125,7 +126,27 @@ export const useTenantReport = (id: string, key: string) =>
   );
 
 export const usePlans = () =>
-  useTenantQuery([part, 'plans'], async () => (await unwrap(api.GET('/v1/platform/plans'))).data);
+  useTenantQuery([part, 'plans'], async () => {
+    const plans = (await unwrap(api.GET('/v1/platform/plans'))).data;
+    rememberPlanNames(plans);
+    return plans;
+  });
+
+export type Addons = ApiItem<'/v1/platform/addons'>;
+export type MarketingBody = ApiBody<'/v1/platform/plans/marketing-preview', 'post'>;
+export type MarketingView = ApiItem<'/v1/platform/plans/marketing-preview', 'post'>;
+
+export const useAddons = () =>
+  useTenantQuery([part, 'addons'], async () => (await unwrap(api.GET('/v1/platform/addons'))).data);
+
+/** The draft sales copy rendered by the API with the plan's own limits and price: exactly what customers will read. */
+export const usePlanPreview = (body: MarketingBody | null) =>
+  useTenantQuery(
+    [part, 'plan-preview', body],
+    async () =>
+      (await unwrap(api.POST('/v1/platform/plans/marketing-preview', { body: body as MarketingBody }))).data,
+    { enabled: body !== null, placeholderData: (prev) => prev },
+  );
 
 export const useAssignments = (tenantId?: string) =>
   useTenantQuery(
@@ -333,6 +354,9 @@ export const usePatchPlan = () =>
   useMut((v: { id: string; body: ApiBody<'/v1/platform/plans/{id}', 'patch'> }) =>
     unwrap(api.PATCH('/v1/platform/plans/{id}', { params: { path: { id: v.id } }, body: v.body })),
   );
+
+export const useSaveAddons = () =>
+  useMut((body: ApiBody<'/v1/platform/addons', 'put'>) => unwrap(api.PUT('/v1/platform/addons', { body })));
 
 export const useCreateLead = () =>
   useMut((body: ApiBody<'/v1/platform/leads', 'post'>) => unwrap(api.POST('/v1/platform/leads', { body })));

@@ -10,17 +10,33 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { useCan } from '@/lib/permissions';
 import { type AiChatAdmin, useAiChatAdmin, useAiChatTopup, usePatchAiChatAdmin } from '../ai-chat-api';
+import { useAddons } from '../api';
 import { formatMoney, useIntlLocale } from '../format';
 
 /** Tenant detail › "AI ตอบแชท": switch the add-on on a shop, set its quota, add a ฿290 top-up, see usage and cost. */
+/** Add-on prices as the admin edited them, formatted for the card texts. */
+export function useAddonParams() {
+  const locale = useIntlLocale();
+  const ai = useAddons().data?.settings.aiChat;
+  return ai
+    ? {
+        monthly: formatMoney(ai.monthlyMinor, locale),
+        included: ai.includedMessages.toLocaleString(locale),
+        topup: formatMoney(ai.topupMinor, locale),
+        topupMessages: ai.topupMessages.toLocaleString(locale),
+      }
+    : { monthly: '', included: '', topup: '', topupMessages: '' };
+}
+
 export function AiChatCard({ id }: { id: string }) {
   const { t } = useTranslation('platform');
+  const price = useAddonParams();
   const q = useAiChatAdmin(id);
   return (
     <Card data-testid="ai-chat-card">
       <CardHeader>
         <CardTitle className="text-base">{t('aiChat.title')}</CardTitle>
-        <p className="text-sm text-muted-foreground">{t('aiChat.hint')}</p>
+        <p className="text-sm text-muted-foreground">{t('aiChat.hint', price)}</p>
       </CardHeader>
       <CardContent className="grid gap-4">
         <QueryState query={q}>{(d) => <Body id={id} d={d} />}</QueryState>
@@ -31,6 +47,7 @@ export function AiChatCard({ id }: { id: string }) {
 
 function Body({ id, d }: { id: string; d: AiChatAdmin }) {
   const { t } = useTranslation('platform');
+  const price = useAddonParams();
   const locale = useIntlLocale();
   const canWrite = useCan('platform:write');
   const patch = usePatchAiChatAdmin(id);
@@ -71,7 +88,7 @@ function Body({ id, d }: { id: string; d: AiChatAdmin }) {
               <Badge variant="outline">{d.shopEnabled ? t('aiChat.shopOn') : t('aiChat.shopOff')}</Badge>
             ) : null}
           </span>
-          <span className="text-xs text-muted-foreground">{t('aiChat.activeHint')}</span>
+          <span className="text-xs text-muted-foreground">{t('aiChat.activeHint', price)}</span>
         </span>
       </label>
 
@@ -125,7 +142,7 @@ function Body({ id, d }: { id: string; d: AiChatAdmin }) {
               disabled={!canWrite || topup.isPending}
               onClick={() => setConfirmTopup(true)}
             >
-              {t('aiChat.topupAction')}
+              {t('aiChat.topupAction', price)}
             </Button>
             {d.topupRequested ? <Badge>{t('aiChat.requested')}</Badge> : null}
             {d.pendingTopups > 0 ? (
@@ -137,8 +154,8 @@ function Body({ id, d }: { id: string; d: AiChatAdmin }) {
           <ConfirmDialog
             open={confirmTopup}
             onOpenChange={setConfirmTopup}
-            title={t('aiChat.topupConfirmTitle')}
-            description={t('aiChat.topupConfirmBody')}
+            title={t('aiChat.topupConfirmTitle', price)}
+            description={t('aiChat.topupConfirmBody', price)}
             confirmLabel={t('aiChat.topupConfirm')}
             pending={topup.isPending}
             onConfirm={() =>

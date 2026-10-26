@@ -140,6 +140,7 @@ describe('new-shop plan default', () => {
       tenantCount: 0,
       modules: [],
       limits: {},
+      marketing: null,
     });
     expect(
       defaultPlanCode([

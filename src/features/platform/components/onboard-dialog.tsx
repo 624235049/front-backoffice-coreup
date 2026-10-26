@@ -272,6 +272,7 @@ export function OnboardDialog({
             </div>
           </div>
           <PlanPicker
+            plans={plans.data ?? []}
             onPick={(code) => {
               if (sellable.plans.some((p) => p.code === code)) {
                 form.setValue('planCode', code, { shouldValidate: true });

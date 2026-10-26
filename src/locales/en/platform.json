@@ -264,8 +264,15 @@
     "q1": "1. How many branches?",
     "q2": "2. Does the shop need stock control or a staff roster?",
     "q3": "3. How many staff (owner included)?",
-    "branches": { "1": "1 branch", "2-3": "2-3 branches", "4+": "4 or more" },
-    "big": { "no": "No", "yes": "Yes" },
+    "branches": {
+      "1": "1 branch",
+      "2-3": "2-3 branches",
+      "4+": "4 or more"
+    },
+    "big": {
+      "no": "No",
+      "yes": "Yes"
+    },
     "staff": {
       "solo": "Just the owner",
       "soloPay": "Just the owner, but wants deposits and receipts",
@@ -400,7 +407,10 @@
     "statusConfirm": "Change status to “{{status}}”?",
     "planConfirm": "Change the plan to {{plan}}?",
     "planOverWarning": "The shop uses more than the new plan allows: {{list}}. Nothing existing is removed, but nothing new can be added until it drops. For a special deal, just confirm.",
-    "planOver": { "members": "accounts {{used}} of {{limit}}", "branches": "branches {{used}} of {{limit}}" },
+    "planOver": {
+      "members": "accounts {{used}} of {{limit}}",
+      "branches": "branches {{used}} of {{limit}}"
+    },
     "statusClosedWarning": "A closed shop can no longer sign in.",
     "noEngagements": "No engagements yet",
     "taskProgress": "{{done}}/{{total}} tasks",
@@ -1046,7 +1056,8 @@
       "code": "Plan code: lowercase English letters, digits, - and _ only, 2-31 characters, e.g. booking-basic",
       "name": "Enter a plan name first (up to 80 characters)",
       "price": "Enter a valid price in baht first, e.g. 299 (0 is allowed)",
-      "limit": "Quota for {{name}} must be a whole number, or empty for unlimited"
+      "limit": "Quota for {{name}} must be a whole number, or empty for unlimited",
+      "marketingName": "Enter the customer-facing name in Thai and English in the sales copy first"
     },
     "moduleHint": {
       "core": "Core system, always on for every shop",
@@ -1067,6 +1078,103 @@
       "expenses": "Income, expenses and net profit by month and year, record expenses",
       "branch_insights": "Branch comparison, nightly summary, alerts, goals, ratings (multi-branch chain data)",
       "lite": "The shop sees the booking-only app (short menu); unticked = the full system"
+    },
+    "marketing": {
+      "title": "Sales copy",
+      "saveFirst": "Save the plan first, then open it again to add sales copy",
+      "yearly": "A yearly plan uses the sales copy of its monthly plan. Edit it on the monthly plan only",
+      "none": "This plan has no sales copy, so it is not shown on the pricing page, website or shop app",
+      "start": "Add sales copy",
+      "up": "Move up",
+      "down": "Move down",
+      "remove": "Remove",
+      "add": "Add line",
+      "field": {
+        "displayName": "Name customers see",
+        "badge": "Card badge",
+        "pitch": "Pitch",
+        "worth": "Worth line",
+        "highlights": "What it adds over the previous plan",
+        "moveUpWhen": "Move up when",
+        "setupFee": "Start-up fee text",
+        "footnotes": "Footnotes",
+        "sort": "Order",
+        "setupFeeMinor": "Start-up fee (baht)",
+        "extraBranchMinor": "Extra branch (baht/month)"
+      },
+      "hint": {
+        "displayName": "For example Basic (the internal plan name stays)",
+        "badge": "Leave empty for no badge, e.g. Recommended",
+        "pitch": "One sentence sales can say aloud",
+        "worth": "Compared with what the owner already pays",
+        "moveUpWhen": "Finishes \"Move up when …\"",
+        "setupFee": "Put {fee} where the start-up fee amount should appear; empty = none",
+        "sort": "Smaller first, e.g. 10 20 30",
+        "setupFeeMinor": "0 = none",
+        "extraBranchMinor": "0 = not sold",
+        "numbers": "Do not type accounts, branches or the per-day price in the copy. They are rendered from the plan limits and price"
+      },
+      "lang": {
+        "th": "Thai",
+        "en": "English"
+      },
+      "preview": {
+        "title": "Card as customers see it",
+        "hint": "Same card as the shop app and the website; numbers come from the limits and price above",
+        "blocked": "Enter the name (Thai and English) and a valid price to see the preview",
+        "chrome": {
+          "th": {
+            "perMonth": "/ เดือน",
+            "accounts": "บัญชีผู้ใช้",
+            "branches": "สาขา",
+            "base": "ที่ได้ในแพ็กเกจนี้",
+            "addedFrom": "เพิ่มจาก {{plan}}",
+            "moveUp": "ขยับขึ้นเมื่อ{{when}}"
+          },
+          "en": {
+            "perMonth": "/ month",
+            "accounts": "User accounts",
+            "branches": "Branches",
+            "base": "What you get",
+            "addedFrom": "Added to {{plan}}",
+            "moveUp": "Move up when {{when}}"
+          }
+        }
+      }
+    },
+    "addons": {
+      "title": "Add-ons",
+      "editTitle": "Edit add-ons",
+      "editHint": "Prices and copy of the add-ons shown on the website. AI chat prices apply to invoices and the next top-up at once",
+      "aiChat": "AI chat replies on LINE OA",
+      "setupService": "Full shop set-up by the team",
+      "migration": "Customer list migration",
+      "field": {
+        "monthly": "Monthly price (baht)",
+        "included": "Messages included per month",
+        "topup": "Top-up price (baht)",
+        "topupMessages": "Messages per top-up",
+        "setup": "One-time set-up (baht)",
+        "price": "Price (baht)",
+        "from": "Starting price (baht)"
+      },
+      "hint": {
+        "setupYearly": "Free when paid yearly"
+      },
+      "name": {
+        "th": "Name (Thai)",
+        "en": "Name (English)"
+      },
+      "text": {
+        "th": "Description (Thai)",
+        "en": "Description (English)"
+      },
+      "err": {
+        "name": "Enter the add-on names in Thai and English"
+      },
+      "saved": "Add-ons saved",
+      "aiLine": "{{monthly}}/month · {{included}} messages included · top-up {{topup}} per {{topupMessages}} messages · set-up {{setup}}",
+      "from": "from {{price}}"
     }
   },
   "team": {
@@ -1155,10 +1263,10 @@
   },
   "aiChat": {
     "title": "AI chat on LINE OA",
-    "hint": "Add-on at 490 baht a month with 1,000 messages; top-up 1,000 messages for 290 baht. Any plan; the shop must have LINE OA connected. Charges appear on the next invoice automatically.",
+    "hint": "Add-on at {{monthly}} a month with {{included}} messages; top-up {{topupMessages}} messages for {{topup}}. Any plan; the shop must have LINE OA connected. Charges appear on the next invoice automatically.",
     "noKey": "No Anthropic key (ANTHROPIC_API_KEY) is set, so the feature is off. The shop app says it is not switched on yet until a key exists.",
     "active": "Switch AI chat on for this shop",
-    "activeHint": "The shop gets the AI chats menu and its own on/off switch. The next invoice gets an \"AI chat on LINE OA 490 baht\" line.",
+    "activeHint": "The shop gets the AI chats menu and its own on/off switch. The next invoice gets an \"AI chat on LINE OA {{monthly}}\" line.",
     "shopOn": "Shop switched on",
     "shopOff": "Shop switch is off",
     "enabledToast": "Add-on switched on.",
@@ -1171,11 +1279,11 @@
     "tokens": "Tokens in / out this month",
     "cost": "Estimated cost",
     "noPrice": "No model price set",
-    "topupAction": "Add +1,000 messages (290 baht)",
+    "topupAction": "Add +{{topupMessages}} messages ({{topup}})",
     "requested": "Shop asked for a top-up",
     "pendingTopups": "{{count}} top-up(s) not on an invoice yet",
-    "topupConfirmTitle": "Add 1,000 messages this month?",
-    "topupConfirmBody": "The quota grows by 1,000 now and 290 baht appears on the shop's next invoice.",
+    "topupConfirmTitle": "Add {{topupMessages}} messages this month?",
+    "topupConfirmBody": "The quota grows by {{topupMessages}} now and {{topup}} appears on the shop's next invoice.",
     "topupConfirm": "Add messages",
     "topupDone": "Messages added."
   }

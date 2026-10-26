@@ -2,19 +2,14 @@ import type { TFunction } from 'i18next';
 import type { Plan } from './api';
 import { PLAN_LIMITS } from './plans';
 
-/** The packages sold on the public pricing page (coreup.pro/queue), in that order. `code` = monthly plan, yearly = `<code>-year`. */
-export const FAMILIES: readonly { key: string; name: string; code: string; best?: boolean }[] = [
-  { key: 'basic', name: 'Basic', code: 'line-basic' },
-  { key: 'premium', name: 'Premium', code: 'line-premium' },
-  { key: 'pro', name: 'Pro', code: 'line-pro', best: true },
-  { key: 'business', name: 'Business', code: 'business' },
-  { key: 'enterprise', name: 'Enterprise', code: 'enterprise' },
-];
+/** `line-pro-year` → `pro`: the ladder step the picker answers ("basic" … "enterprise"). */
+export const keyOf = (code: string): string => code.replace(/^line-/, '').replace(/-year$/, '');
 
 export interface PlanFamily {
   key: string;
-  /** the name the public pricing page uses */
+  /** the name the pricing page and the shop app use (`marketing.th.displayName`) */
   name: string;
+  /** carries a card badge ("แนะนำ"): the plan new shops default to */
   best: boolean;
   month?: Plan;
   year?: Plan;
@@ -28,18 +23,23 @@ export interface GroupedPlans {
   other: Plan[];
 }
 
+/**
+ * The packages sold (monthly plans with sales copy, in `marketing.sort` order) paired with their `-year` plan by code;
+ * the rest are ฿0 internal plans (trial shops, old shops) and priced plans nobody lists.
+ */
 export function groupPlans(plans: readonly Plan[]): GroupedPlans {
   const byCode = new Map(plans.map((p) => [p.code, p]));
-  const used = new Set<string>();
-  const families: PlanFamily[] = [];
-  for (const f of FAMILIES) {
-    const month = byCode.get(f.code);
-    const year = byCode.get(`${f.code}-year`);
-    if (!month && !year) continue;
-    families.push({ key: f.key, name: f.name, best: !!f.best, month, year });
-    used.add(f.code);
-    used.add(`${f.code}-year`);
-  }
+  const sold = plans
+    .filter((p) => p.marketing && !p.code.endsWith('-year'))
+    .sort((a, b) => (a.marketing?.sort ?? 0) - (b.marketing?.sort ?? 0) || a.priceMinor - b.priceMinor);
+  const families = sold.map((month) => ({
+    key: keyOf(month.code),
+    name: month.marketing?.th.displayName ?? month.name,
+    best: !!month.marketing?.th.badge,
+    month,
+    year: byCode.get(`${month.code}-year`),
+  }));
+  const used = new Set(families.flatMap((f) => [f.month.code, f.year?.code]));
   const rest = plans.filter((p) => !used.has(p.code));
   return {
     families,
@@ -48,10 +48,16 @@ export function groupPlans(plans: readonly Plan[]): GroupedPlans {
   };
 }
 
-/** Front name for a plan code ("line-pro-year" → "Pro"); the DB name when the code is in no family. */
+// Names of the sold plans by monthly code, filled whenever the plan list loads: invoice texts and dropdown labels
+// receive only a plan row (yearly rows carry no copy), so they look the name up here.
+let names = new Map<string, string>();
+export function rememberPlanNames(plans: readonly Plan[]): void {
+  names = new Map(plans.flatMap((p) => (p.marketing ? [[p.code, p.marketing.th.displayName] as const] : [])));
+}
+
+/** Front name for a plan code ("line-pro-year" → "Pro"); the DB name when the code is not a sold plan. */
 export function planFrontName(p: Pick<Plan, 'code' | 'name'>): string {
-  const f = FAMILIES.find((x) => p.code === x.code || p.code === `${x.code}-year`);
-  return f?.name ?? p.name;
+  return names.get(p.code.replace(/-year$/, '')) ?? p.name;
 }
 
 /** Same order as the pricing page words them; a missing limit = unlimited. */
@@ -94,17 +100,17 @@ export function yearlyDeal(f: PlanFamily): { avgMinor: number; paidMonths: numbe
 export function orderPlans(plans: readonly Plan[]): { sold: Plan[]; rest: Plan[] } {
   const g = groupPlans(plans);
   return {
-    sold: g.families.flatMap((f) => [f.month, f.year]).filter((p) => !!p),
+    sold: g.families.flatMap((f) => [f.month, f.year]).filter((p): p is Plan => !!p),
     rest: [...g.other, ...g.internal],
   };
 }
 
-/** What a new shop can be opened on: only the plans sold on the pricing page (never internal ฿0 ones). Default = the "best" family (Pro), else the first sold plan. */
+/** What a new shop can be opened on: only the plans sold on the pricing page (never internal ฿0 ones). Default = the plan with a card badge, else the first sold plan. */
 export function sellablePlans(plans: readonly Plan[] | undefined): {
   plans: Plan[];
   defaultCode: string | undefined;
 } {
   const sold = orderPlans(plans ?? []).sold.filter((p) => p.active);
-  const best = FAMILIES.find((f) => f.best)?.code;
+  const best = groupPlans(plans ?? []).families.find((f) => f.best)?.month?.code;
   return { plans: sold, defaultCode: (sold.find((p) => p.code === best) ?? sold[0])?.code };
 }

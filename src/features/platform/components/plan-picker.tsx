@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { FAMILIES } from '../plan-families';
+import type { Plan } from '../api';
+import { groupPlans } from '../plan-families';
 import {
   BRANCH_CHOICES,
   type Branches,
@@ -28,12 +29,20 @@ function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; c
 }
 
 /** 3 questions → a package; `onPick` gets the monthly plan code (sales can still change the dropdown afterwards). */
-export function PlanPicker({ onPick }: { onPick: (monthlyCode: string) => void }) {
+export function PlanPicker({
+  plans,
+  onPick,
+}: {
+  plans: readonly Plan[];
+  onPick: (monthlyCode: string) => void;
+}) {
   const { t } = useTranslation('platform');
   const [a, setA] = useState<Partial<PickAnswers>>({});
   const done = a.branches !== undefined && a.big !== undefined && a.staff !== undefined;
-  const family = done ? FAMILIES.find((f) => f.key === recommendPlan(a as PickAnswers)) : undefined;
-  const code = family?.code;
+  const family = done
+    ? groupPlans(plans).families.find((f) => f.key === recommendPlan(a as PickAnswers))
+    : undefined;
+  const code = family?.month?.code;
   // the parent may pass a new function each render: only a new answer should preselect
   const pick = useRef(onPick);
   pick.current = onPick;

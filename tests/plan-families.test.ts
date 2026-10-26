@@ -8,6 +8,7 @@ import {
   orderPlans,
   type PlanFamily,
   planFrontName,
+  rememberPlanNames,
   sellablePlans,
   yearlyDeal,
 } from '@/features/platform/plan-families';
@@ -23,6 +24,28 @@ await i18n.init({
 });
 const t = i18n.getFixedT('th', 'platform');
 
+// sales copy lives in the data: only these monthly plans carry it (names and order are the admin's, not code's)
+const COPY: Record<string, [name: string, sort: number, badge: string]> = {
+  'line-basic': ['Basic', 10, ''],
+  'line-pro': ['Pro', 30, 'แนะนำ'],
+  business: ['Business', 40, ''],
+  enterprise: ['Enterprise', 50, ''],
+};
+const marketingOf = (code: string): Plan['marketing'] => {
+  const c = COPY[code];
+  if (!c) return null;
+  const text = {
+    displayName: c[0],
+    pitch: '',
+    worth: '',
+    highlights: [],
+    moveUpWhen: '',
+    badge: c[2],
+    setupFee: '',
+    footnotes: [],
+  };
+  return { sort: c[1], setupFeeMinor: 0, extraBranchMinor: 0, th: text, en: text };
+};
 const plan = (code: string, price: number, over: Partial<Plan> = {}): Plan => ({
   id: code,
   code,
@@ -34,6 +57,7 @@ const plan = (code: string, price: number, over: Partial<Plan> = {}): Plan => ({
   tenantCount: 0,
   modules: ['core', 'crm'],
   limits: {},
+  marketing: marketingOf(code),
   ...over,
 });
 
@@ -49,7 +73,7 @@ describe('groupPlans', () => {
     plan('line-basic-year', 2990),
   ];
 
-  it('orders families like the pricing page and pairs monthly with yearly by code', () => {
+  it('orders families by the admin sort and pairs monthly with yearly by code', () => {
     const g = groupPlans(all);
     expect(g.families.map((f) => f.name)).toEqual(['Basic', 'Pro', 'Enterprise']);
     expect(g.families[1]).toMatchObject({
@@ -79,8 +103,9 @@ describe('groupPlans', () => {
   });
 
   it('names a plan by its front name, or the DB name outside the families', () => {
+    rememberPlanNames(all);
     expect(planFrontName(plan('line-pro-year', 5990))).toBe('Pro');
-    expect(planFrontName(plan('business', 1299))).toBe('Business');
+    expect(planFrontName(plan('enterprise', 7990))).toBe('Enterprise');
     expect(planFrontName(plan('growth', 0))).toBe('DB growth');
   });
 });
