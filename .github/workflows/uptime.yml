@@ -1,0 +1,46 @@
+# External uptime check: runs on GitHub (not Railway), so it still alerts when Railway itself is down.
+# A red run = something is down; GitHub emails the account that owns this workflow about failed scheduled runs
+# (github.com → Settings → Notifications → Actions: "Only notify for failed workflows", Email on).
+# Lives in this repo because it is public: scheduled Actions minutes are free and unlimited here.
+name: Uptime
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # GitHub may delay scheduled runs by a few minutes under load
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Probe coreup.biz / coreup.pro / admin / api / worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe
+        run: |
+          fail=0
+          # url, text the body must contain; 3 tries 10 s apart so a single blip during a deploy does not alert
+          check() {
+            for _ in 1 2 3; do
+              body=$(curl -fsS -m 20 -A "coreup-uptime" "$1" 2>&1) && [[ "$body" == *"$2"* ]] && { echo "ok   $1"; return; }
+              sleep 10
+            done
+            echo "::error::DOWN $1 -> ${body:0:200}"
+            fail=1
+          }
+          check https://coreup.biz/healthz ""
+          check https://admin.coreup.biz/healthz ""
+          check https://coreup.pro/ "</html>"
+          check https://api.coreup.pro/readyz '"status":"ready"'
+          # shortcut: 404 = /healthz/worker not deployed yet (coreup-api branch ci-setup); drop this guard once it is on main
+          if [ "$(curl -s -o /dev/null -w '%{http_code}' -m 20 https://api.coreup.pro/healthz/worker)" = 404 ]; then
+            echo "::warning::/healthz/worker not deployed yet"
+          else
+            check https://api.coreup.pro/healthz/worker '"status":"ok"'
+          fi
+          exit $fail
