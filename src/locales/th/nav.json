@@ -50,5 +50,6 @@
   "accSettings": "ตั้งค่าบริษัท",
   "accBankAccounts": "บัญชีรับเงินบริษัท",
   "users": "ผู้ใช้งาน",
-  "plans": "แพ็กเกจ"
+  "plans": "แพ็กเกจ",
+  "aiDemo": "LINE เดโม AI"
 }

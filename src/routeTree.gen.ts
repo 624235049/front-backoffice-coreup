@@ -24,6 +24,7 @@ import { Route as AppAccountingProductsRouteImport } from './routes/_app/account
 import { Route as AppAccountingReportsRouteImport } from './routes/_app/accounting.reports'
 import { Route as AppAccountingSettingsRouteImport } from './routes/_app/accounting.settings'
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
+import { Route as AppPlatformAiDemoRouteImport } from './routes/_app/platform.ai-demo'
 import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.invoices'
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformOnboardingRouteImport } from './routes/_app/platform.onboarding'
@@ -128,6 +129,11 @@ const AppAccountingSettingsRoute = AppAccountingSettingsRouteImport.update({
 const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
   id: '/platform/',
   path: '/platform/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformAiDemoRoute = AppPlatformAiDemoRouteImport.update({
+  id: '/platform/ai-demo',
+  path: '/platform/ai-demo',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlatformInvoicesRoute = AppPlatformInvoicesRouteImport.update({
@@ -317,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -364,6 +371,7 @@ export interface FileRoutesByTo {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -414,6 +422,7 @@ export interface FileRoutesById {
   '/_app/accounting/products': typeof AppAccountingProductsRoute
   '/_app/accounting/reports': typeof AppAccountingReportsRoute
   '/_app/accounting/settings': typeof AppAccountingSettingsRoute
+  '/_app/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/_app/platform/invoices': typeof AppPlatformInvoicesRoute
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
   '/_app/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -463,6 +472,7 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/platform/ai-demo'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/platform/ai-demo'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
@@ -559,6 +570,7 @@ export interface FileRouteTypes {
     | '/_app/accounting/products'
     | '/_app/accounting/reports'
     | '/_app/accounting/settings'
+    | '/_app/platform/ai-demo'
     | '/_app/platform/invoices'
     | '/_app/platform/leads'
     | '/_app/platform/onboarding'
@@ -706,6 +718,13 @@ declare module '@tanstack/react-router' {
       path: '/platform'
       fullPath: '/platform/'
       preLoaderRoute: typeof AppPlatformIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/ai-demo': {
+      id: '/_app/platform/ai-demo'
+      path: '/platform/ai-demo'
+      fullPath: '/platform/ai-demo'
+      preLoaderRoute: typeof AppPlatformAiDemoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/invoices': {
@@ -943,6 +962,7 @@ interface AppRouteChildren {
   AppAccountingProductsRoute: typeof AppAccountingProductsRoute
   AppAccountingReportsRoute: typeof AppAccountingReportsRoute
   AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
+  AppPlatformAiDemoRoute: typeof AppPlatformAiDemoRoute
   AppPlatformInvoicesRoute: typeof AppPlatformInvoicesRoute
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
   AppPlatformOnboardingRoute: typeof AppPlatformOnboardingRoute
@@ -987,6 +1007,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingProductsRoute: AppAccountingProductsRoute,
   AppAccountingReportsRoute: AppAccountingReportsRoute,
   AppAccountingSettingsRoute: AppAccountingSettingsRoute,
+  AppPlatformAiDemoRoute: AppPlatformAiDemoRoute,
   AppPlatformInvoicesRoute: AppPlatformInvoicesRoute,
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
   AppPlatformOnboardingRoute: AppPlatformOnboardingRoute,

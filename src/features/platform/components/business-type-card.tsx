@@ -90,7 +90,6 @@ export function BusinessTypeCard({ d }: { d: TenantDetail }) {
                 { section: 'positions', text: counts(p.positions) },
                 { section: 'services', text: counts(p.services.services) },
                 { section: 'products', text: counts(p.products.products) },
-                { section: 'compensation', text: t(`businessType.pay.${p.compensation.state}`) },
                 { section: 'messages', text: counts(p.messages.templates) },
                 {
                   section: 'settings',

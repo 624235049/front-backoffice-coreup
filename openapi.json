@@ -87,6 +87,9 @@
                   "EMAIL_NOT_VERIFIED",
                   "IMPORT_INVALID",
                   "CHANNEL_NOT_CONFIGURED",
+                  "AI_NOT_CONFIGURED",
+                  "AI_TEST_LIMIT_REACHED",
+                  "AI_UNAVAILABLE",
                   "CHANNEL_VERIFY_FAILED",
                   "CANCELLATION_WINDOW_PASSED",
                   "LIFF_LINK_FAILED",
@@ -1379,6 +1382,20 @@
                                   "noteLabel",
                                   "noteRequired"
                                 ]
+                              },
+                              "payMethod": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "hand_fee_percent",
+                                  "per_case_fixed",
+                                  "per_class_fixed",
+                                  "salary_only",
+                                  "custom",
+                                  null
+                                ]
                               }
                             },
                             "required": [
@@ -1391,7 +1408,8 @@
                               "locale",
                               "logoUrl",
                               "uiMode",
-                              "rental"
+                              "rental",
+                              "payMethod"
                             ]
                           },
                           "memberId": {
@@ -4771,23 +4789,6 @@
                             "products"
                           ]
                         },
-                        "compensation": {
-                          "type": "object",
-                          "properties": {
-                            "state": {
-                              "type": "string",
-                              "enum": [
-                                "add",
-                                "same",
-                                "replace_default",
-                                "keep_custom"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "state"
-                          ]
-                        },
                         "messages": {
                           "type": "object",
                           "properties": {
@@ -4898,7 +4899,6 @@
                         "positions",
                         "services",
                         "products",
-                        "compensation",
                         "messages",
                         "settings"
                       ]
@@ -5033,12 +5033,11 @@
                         "positions",
                         "services",
                         "products",
-                        "compensation",
                         "messages",
                         "settings"
                       ]
                     },
-                    "maxItems": 9,
+                    "maxItems": 8,
                     "default": []
                   }
                 },
@@ -5077,7 +5076,6 @@
                               "positions",
                               "services",
                               "products",
-                              "compensation",
                               "messages",
                               "settings"
                             ]
@@ -5132,16 +5130,6 @@
                         "customerCodeChanged": {
                           "type": "boolean"
                         },
-                        "compensation": {
-                          "type": "string",
-                          "enum": [
-                            "none",
-                            "added",
-                            "new_version",
-                            "unchanged",
-                            "kept"
-                          ]
-                        },
                         "settingsChanged": {
                           "type": "boolean"
                         }
@@ -5153,7 +5141,6 @@
                         "created",
                         "terminologyChanged",
                         "customerCodeChanged",
-                        "compensation",
                         "settingsChanged"
                       ]
                     }
@@ -18128,23 +18115,6 @@
                             "products"
                           ]
                         },
-                        "compensation": {
-                          "type": "object",
-                          "properties": {
-                            "state": {
-                              "type": "string",
-                              "enum": [
-                                "add",
-                                "same",
-                                "replace_default",
-                                "keep_custom"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "state"
-                          ]
-                        },
                         "messages": {
                           "type": "object",
                           "properties": {
@@ -18255,7 +18225,6 @@
                         "positions",
                         "services",
                         "products",
-                        "compensation",
                         "messages",
                         "settings"
                       ]
@@ -18399,12 +18368,11 @@
                         "positions",
                         "services",
                         "products",
-                        "compensation",
                         "messages",
                         "settings"
                       ]
                     },
-                    "maxItems": 9,
+                    "maxItems": 8,
                     "default": [
                       "terminology",
                       "customerCode",
@@ -18412,7 +18380,6 @@
                       "positions",
                       "services",
                       "products",
-                      "compensation",
                       "messages",
                       "settings"
                     ]
@@ -18453,7 +18420,6 @@
                               "positions",
                               "services",
                               "products",
-                              "compensation",
                               "messages",
                               "settings"
                             ]
@@ -18508,16 +18474,6 @@
                         "customerCodeChanged": {
                           "type": "boolean"
                         },
-                        "compensation": {
-                          "type": "string",
-                          "enum": [
-                            "none",
-                            "added",
-                            "new_version",
-                            "unchanged",
-                            "kept"
-                          ]
-                        },
                         "settingsChanged": {
                           "type": "boolean"
                         }
@@ -18529,7 +18485,6 @@
                         "created",
                         "terminologyChanged",
                         "customerCodeChanged",
-                        "compensation",
                         "settingsChanged"
                       ]
                     }
@@ -21288,8 +21243,67 @@
                         "active": {
                           "type": "boolean"
                         },
-                        "shopEnabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
+                        },
+                        "knowledge": {
+                          "type": "string"
+                        },
+                        "demoShops": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "tenantId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 20
+                              },
+                              "name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "tenantId",
+                              "label",
+                              "name"
+                            ]
+                          }
                         },
                         "monthlyQuota": {
                           "type": "integer"
@@ -21327,6 +21341,33 @@
                             "null"
                           ]
                         },
+                        "testMessages": {
+                          "type": "integer"
+                        },
+                        "testCostEstimateMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "avgCostPerReplyMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformCostMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformBudgetMinor": {
+                          "type": "integer"
+                        },
+                        "budgetReached": {
+                          "type": "boolean"
+                        },
                         "topupRequested": {
                           "type": "boolean"
                         },
@@ -21337,7 +21378,10 @@
                       "required": [
                         "available",
                         "active",
-                        "shopEnabled",
+                        "mode",
+                        "testers",
+                        "knowledge",
+                        "demoShops",
                         "monthlyQuota",
                         "month",
                         "used",
@@ -21347,6 +21391,12 @@
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
+                        "testMessages",
+                        "testCostEstimateMinor",
+                        "avgCostPerReplyMinor",
+                        "platformCostMinor",
+                        "platformBudgetMinor",
+                        "budgetReached",
                         "topupRequested",
                         "pendingTopups"
                       ]
@@ -21475,6 +21525,63 @@
                   "active": {
                     "type": "boolean"
                   },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "off",
+                      "testers",
+                      "everyone"
+                    ]
+                  },
+                  "testers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lineUserId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        }
+                      },
+                      "required": [
+                        "lineUserId",
+                        "label"
+                      ]
+                    },
+                    "maxItems": 10
+                  },
+                  "demoShops": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tenantId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20
+                        }
+                      },
+                      "required": [
+                        "tenantId",
+                        "label"
+                      ]
+                    },
+                    "maxItems": 8
+                  },
+                  "knowledge": {
+                    "type": "string",
+                    "maxLength": 3000
+                  },
                   "monthlyQuota": {
                     "type": "integer",
                     "minimum": 0,
@@ -21502,8 +21609,67 @@
                         "active": {
                           "type": "boolean"
                         },
-                        "shopEnabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
+                        },
+                        "knowledge": {
+                          "type": "string"
+                        },
+                        "demoShops": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "tenantId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 20
+                              },
+                              "name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "tenantId",
+                              "label",
+                              "name"
+                            ]
+                          }
                         },
                         "monthlyQuota": {
                           "type": "integer"
@@ -21541,6 +21707,33 @@
                             "null"
                           ]
                         },
+                        "testMessages": {
+                          "type": "integer"
+                        },
+                        "testCostEstimateMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "avgCostPerReplyMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformCostMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformBudgetMinor": {
+                          "type": "integer"
+                        },
+                        "budgetReached": {
+                          "type": "boolean"
+                        },
                         "topupRequested": {
                           "type": "boolean"
                         },
@@ -21551,7 +21744,10 @@
                       "required": [
                         "available",
                         "active",
-                        "shopEnabled",
+                        "mode",
+                        "testers",
+                        "knowledge",
+                        "demoShops",
                         "monthlyQuota",
                         "month",
                         "used",
@@ -21561,6 +21757,12 @@
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
+                        "testMessages",
+                        "testCostEstimateMinor",
+                        "avgCostPerReplyMinor",
+                        "platformCostMinor",
+                        "platformBudgetMinor",
+                        "budgetReached",
                         "topupRequested",
                         "pendingTopups"
                       ]
@@ -21698,8 +21900,67 @@
                         "active": {
                           "type": "boolean"
                         },
-                        "shopEnabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
+                        },
+                        "knowledge": {
+                          "type": "string"
+                        },
+                        "demoShops": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "tenantId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 20
+                              },
+                              "name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "tenantId",
+                              "label",
+                              "name"
+                            ]
+                          }
                         },
                         "monthlyQuota": {
                           "type": "integer"
@@ -21737,6 +21998,33 @@
                             "null"
                           ]
                         },
+                        "testMessages": {
+                          "type": "integer"
+                        },
+                        "testCostEstimateMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "avgCostPerReplyMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformCostMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "platformBudgetMinor": {
+                          "type": "integer"
+                        },
+                        "budgetReached": {
+                          "type": "boolean"
+                        },
                         "topupRequested": {
                           "type": "boolean"
                         },
@@ -21747,7 +22035,10 @@
                       "required": [
                         "available",
                         "active",
-                        "shopEnabled",
+                        "mode",
+                        "testers",
+                        "knowledge",
+                        "demoShops",
                         "monthlyQuota",
                         "month",
                         "used",
@@ -21757,8 +22048,417 @@
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
+                        "testMessages",
+                        "testCostEstimateMinor",
+                        "avgCostPerReplyMinor",
+                        "platformCostMinor",
+                        "platformBudgetMinor",
+                        "budgetReached",
                         "topupRequested",
                         "pendingTopups"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/tenants/{id}/ai-chat/followers": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "LINE followers of the shop (name + picture) to pick AI testers from; `q` searches the name",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Followers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "lineUserId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "pictureUrl": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "followedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "lineUserId",
+                          "name",
+                          "pictureUrl",
+                          "followedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/tenants/{id}/ai-chat/test": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "ลองคุยกับ AI on the shop's own data (works before the add-on is on). Sends nothing on LINE, saves no history, no quota; 200 tries a day per shop; audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "user",
+                            "assistant"
+                          ]
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1000
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "text"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 12
+                  },
+                  "knowledgeOverride": {
+                    "type": "string",
+                    "maxLength": 3000
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The AI answer and what it looked up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reply": {
+                          "type": "string"
+                        },
+                        "handoff": {
+                          "type": "boolean"
+                        },
+                        "noReply": {
+                          "type": "boolean"
+                        },
+                        "blocked": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "toolCalls": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "resultSummary": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "input",
+                              "resultSummary"
+                            ]
+                          }
+                        },
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "input": {
+                              "type": "integer"
+                            },
+                            "output": {
+                              "type": "integer"
+                            },
+                            "cacheRead": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "input",
+                            "output",
+                            "cacheRead"
+                          ]
+                        },
+                        "costMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "remainingToday": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "reply",
+                        "handoff",
+                        "noReply",
+                        "blocked",
+                        "toolCalls",
+                        "usage",
+                        "costMinor",
+                        "remainingToday"
                       ]
                     }
                   },
@@ -70558,6 +71258,10 @@
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
+                              "customerId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
                               "startAt": {
                                 "type": "string"
                               },
@@ -70579,6 +71283,7 @@
                             },
                             "required": [
                               "id",
+                              "customerId",
                               "startAt",
                               "endAt",
                               "status",
@@ -70594,6 +71299,10 @@
                             "type": "object",
                             "properties": {
                               "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerId": {
                                 "type": "string",
                                 "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                               },
@@ -70618,6 +71327,7 @@
                             },
                             "required": [
                               "id",
+                              "customerId",
                               "type",
                               "priority",
                               "dueAt",
@@ -70625,6 +71335,122 @@
                               "note"
                             ]
                           }
+                        },
+                        "courses": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerName": {
+                                "type": "string"
+                              },
+                              "packageName": {
+                                "type": "string"
+                              },
+                              "sessionsLeft": {
+                                "type": "integer"
+                              },
+                              "expiresAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "customerId",
+                              "customerName",
+                              "packageName",
+                              "sessionsLeft",
+                              "expiresAt"
+                            ]
+                          }
+                        },
+                        "rentals": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "due": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "customerId": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ship",
+                                      "pickup",
+                                      "return",
+                                      "arrive",
+                                      "overdue"
+                                    ]
+                                  },
+                                  "customerName": {
+                                    "type": "string"
+                                  },
+                                  "itemName": {
+                                    "type": "string"
+                                  },
+                                  "dueDate": {
+                                    "type": "string",
+                                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "customerId",
+                                  "kind",
+                                  "customerName",
+                                  "itemName",
+                                  "dueDate"
+                                ]
+                              }
+                            },
+                            "cleaning": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "itemName": {
+                                    "type": "string"
+                                  },
+                                  "readyOn": {
+                                    "type": "string",
+                                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "itemName",
+                                  "readyOn"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "due",
+                            "cleaning"
+                          ]
                         },
                         "earnings": {
                           "type": [
@@ -70674,13 +71500,17 @@
                             },
                             "payouts": {
                               "type": "boolean"
+                            },
+                            "clinical": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "shifts",
                             "checklists",
                             "crm",
-                            "payouts"
+                            "payouts",
+                            "clinical"
                           ]
                         }
                       },
@@ -70693,6 +71523,8 @@
                         "checklists",
                         "appointments",
                         "followups",
+                        "courses",
+                        "rentals",
                         "earnings",
                         "modules"
                       ]
@@ -106397,8 +107229,36 @@
                         "available": {
                           "type": "boolean"
                         },
-                        "enabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
                         },
                         "knowledge": {
                           "type": "string"
@@ -106430,7 +107290,8 @@
                       },
                       "required": [
                         "available",
-                        "enabled",
+                        "mode",
+                        "testers",
                         "knowledge",
                         "month",
                         "used",
@@ -106552,8 +107413,36 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "enabled": {
-                    "type": "boolean"
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "off",
+                      "testers",
+                      "everyone"
+                    ]
+                  },
+                  "testers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lineUserId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        }
+                      },
+                      "required": [
+                        "lineUserId",
+                        "label"
+                      ]
+                    },
+                    "maxItems": 10
                   },
                   "knowledge": {
                     "type": "string",
@@ -106578,8 +107467,36 @@
                         "available": {
                           "type": "boolean"
                         },
-                        "enabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
                         },
                         "knowledge": {
                           "type": "string"
@@ -106611,7 +107528,8 @@
                       },
                       "required": [
                         "available",
-                        "enabled",
+                        "mode",
+                        "testers",
                         "knowledge",
                         "month",
                         "used",
@@ -106742,8 +107660,36 @@
                         "available": {
                           "type": "boolean"
                         },
-                        "enabled": {
-                          "type": "boolean"
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "testers",
+                            "everyone"
+                          ]
+                        },
+                        "testers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "lineUserId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              }
+                            },
+                            "required": [
+                              "lineUserId",
+                              "label"
+                            ]
+                          },
+                          "maxItems": 10
                         },
                         "knowledge": {
                           "type": "string"
@@ -106775,7 +107721,8 @@
                       },
                       "required": [
                         "available",
-                        "enabled",
+                        "mode",
+                        "testers",
                         "knowledge",
                         "month",
                         "used",
@@ -107595,6 +108542,391 @@
                         "paused",
                         "pausedUntil",
                         "pauseReason"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ai-chat/followers": {
+      "get": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "LINE followers of the shop (name + picture, newest first, up to 30) to pick AI testers from; `q` searches the name",
+        "description": "Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `ai_chat`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 60
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Followers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "lineUserId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "pictureUrl": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "followedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "lineUserId",
+                          "name",
+                          "pictureUrl",
+                          "followedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ai-chat/test": {
+      "post": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "ลองคุยกับ AI: the real AI answers on this shop's own data. Sends nothing on LINE, saves no history, does not use the quota (200 tries a day)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "user",
+                            "assistant"
+                          ]
+                        },
+                        "text": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1000
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "text"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 12
+                  },
+                  "knowledgeOverride": {
+                    "type": "string",
+                    "maxLength": 3000
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The AI answer and what it looked up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reply": {
+                          "type": "string"
+                        },
+                        "handoff": {
+                          "type": "boolean"
+                        },
+                        "noReply": {
+                          "type": "boolean"
+                        },
+                        "blocked": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "toolCalls": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "resultSummary": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "input",
+                              "resultSummary"
+                            ]
+                          }
+                        },
+                        "usage": {
+                          "type": "object",
+                          "properties": {
+                            "input": {
+                              "type": "integer"
+                            },
+                            "output": {
+                              "type": "integer"
+                            },
+                            "cacheRead": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "input",
+                            "output",
+                            "cacheRead"
+                          ]
+                        },
+                        "costMinor": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "remainingToday": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "reply",
+                        "handoff",
+                        "noReply",
+                        "blocked",
+                        "toolCalls",
+                        "usage",
+                        "costMinor",
+                        "remainingToday"
                       ]
                     }
                   },
@@ -153503,6 +154835,438 @@
         }
       }
     },
+    "/v1/rules/pay-method": {
+      "get": {
+        "tags": [
+          "rules"
+        ],
+        "summary": "How the shop pays staff in the system, the business type suggestion and the numbers in force",
+        "description": "Requires header `X-Tenant-Id`. Permission: `rules:read`. Module: `payouts`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pay method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "hand_fee_percent",
+                            "per_case_fixed",
+                            "per_class_fixed",
+                            "salary_only",
+                            "custom",
+                            null
+                          ]
+                        },
+                        "recommended": {
+                          "type": "object",
+                          "properties": {
+                            "typeName": {
+                              "type": "object",
+                              "properties": {
+                                "th": {
+                                  "type": "string"
+                                },
+                                "en": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "th",
+                                "en"
+                              ]
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "hand_fee_percent",
+                                "per_case_fixed",
+                                "per_class_fixed",
+                                "salary_only"
+                              ]
+                            },
+                            "percentBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "fixedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "typeName",
+                            "method",
+                            "percentBp",
+                            "fixedMinor"
+                          ]
+                        },
+                        "current": {
+                          "type": "object",
+                          "properties": {
+                            "percentBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "fixedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "percentBp",
+                            "fixedMinor"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "recommended",
+                        "current"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "rules"
+        ],
+        "summary": "Choose how staff are paid (percent hand fee, fixed per case, fixed per class, salary only): saves a new pay rule version",
+        "description": "Requires header `X-Tenant-Id`. Permission: `rules:write`. Module: `payouts`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "hand_fee_percent",
+                      "per_case_fixed",
+                      "per_class_fixed",
+                      "salary_only"
+                    ]
+                  },
+                  "percentBp": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  },
+                  "fixedMinor": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000000
+                  }
+                },
+                "required": [
+                  "method"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pay method",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "hand_fee_percent",
+                            "per_case_fixed",
+                            "per_class_fixed",
+                            "salary_only",
+                            "custom",
+                            null
+                          ]
+                        },
+                        "recommended": {
+                          "type": "object",
+                          "properties": {
+                            "typeName": {
+                              "type": "object",
+                              "properties": {
+                                "th": {
+                                  "type": "string"
+                                },
+                                "en": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "th",
+                                "en"
+                              ]
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": [
+                                "hand_fee_percent",
+                                "per_case_fixed",
+                                "per_class_fixed",
+                                "salary_only"
+                              ]
+                            },
+                            "percentBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "fixedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "typeName",
+                            "method",
+                            "percentBp",
+                            "fixedMinor"
+                          ]
+                        },
+                        "current": {
+                          "type": "object",
+                          "properties": {
+                            "percentBp": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "fixedMinor": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "percentBp",
+                            "fixedMinor"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "method",
+                        "recommended",
+                        "current"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/rules/explain": {
       "post": {
         "tags": [
@@ -157626,6 +159390,9 @@
                               "null"
                             ]
                           },
+                          "welcomeEnabled": {
+                            "type": "boolean"
+                          },
                           "createdAt": {
                             "type": "string"
                           }
@@ -157645,6 +159412,7 @@
                           "quota",
                           "lastWebhookAt",
                           "lastTestSentAt",
+                          "welcomeEnabled",
                           "createdAt"
                         ]
                       }
@@ -157912,6 +159680,9 @@
                             "null"
                           ]
                         },
+                        "welcomeEnabled": {
+                          "type": "boolean"
+                        },
                         "createdAt": {
                           "type": "string"
                         }
@@ -157931,6 +159702,7 @@
                         "quota",
                         "lastWebhookAt",
                         "lastTestSentAt",
+                        "welcomeEnabled",
                         "createdAt"
                       ]
                     }
@@ -158144,6 +159916,9 @@
                             "null"
                           ]
                         },
+                        "welcomeEnabled": {
+                          "type": "boolean"
+                        },
                         "createdAt": {
                           "type": "string"
                         }
@@ -158163,6 +159938,7 @@
                         "quota",
                         "lastWebhookAt",
                         "lastTestSentAt",
+                        "welcomeEnabled",
                         "createdAt"
                       ]
                     }
@@ -158321,6 +160097,9 @@
                       "active",
                       "paused"
                     ]
+                  },
+                  "welcomeEnabled": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -158433,6 +160212,9 @@
                             "null"
                           ]
                         },
+                        "welcomeEnabled": {
+                          "type": "boolean"
+                        },
                         "createdAt": {
                           "type": "string"
                         }
@@ -158452,6 +160234,7 @@
                         "quota",
                         "lastWebhookAt",
                         "lastTestSentAt",
+                        "welcomeEnabled",
                         "createdAt"
                       ]
                     }
@@ -158933,6 +160716,299 @@
                         "queued",
                         "messageJobId",
                         "reason"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/channel-accounts/{id}/welcome": {
+      "get": {
+        "tags": [
+          "messaging"
+        ],
+        "summary": "Welcome-on-follow: is it on, and the shop’s editable message (created on first read)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `messages:read`. Module: `messaging`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Welcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "template": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "key": {
+                              "type": "string"
+                            },
+                            "trigger": {
+                              "type": "string"
+                            },
+                            "channel": {
+                              "type": "string"
+                            },
+                            "locale": {
+                              "type": "string",
+                              "enum": [
+                                "th",
+                                "en"
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "content": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "text"
+                                      ]
+                                    },
+                                    "text": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1000
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "text"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "card"
+                                      ]
+                                    },
+                                    "title": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "body": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 500
+                                    },
+                                    "buttons": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "label": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 40
+                                          },
+                                          "action": {
+                                            "oneOf": [
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "uri"
+                                                    ]
+                                                  },
+                                                  "uri": {
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 1000
+                                                  }
+                                                },
+                                                "required": [
+                                                  "type",
+                                                  "uri"
+                                                ]
+                                              },
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "postback"
+                                                    ]
+                                                  },
+                                                  "data": {
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 300
+                                                  }
+                                                },
+                                                "required": [
+                                                  "type",
+                                                  "data"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "label",
+                                          "action"
+                                        ]
+                                      },
+                                      "maxItems": 4,
+                                      "default": []
+                                    }
+                                  },
+                                  "required": [
+                                    "type",
+                                    "title",
+                                    "body"
+                                  ]
+                                }
+                              ]
+                            },
+                            "variables": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "active": {
+                              "type": "boolean"
+                            },
+                            "isShared": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "key",
+                            "trigger",
+                            "channel",
+                            "locale",
+                            "name",
+                            "content",
+                            "variables",
+                            "version",
+                            "active",
+                            "isShared"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "enabled",
+                        "template"
                       ]
                     }
                   },

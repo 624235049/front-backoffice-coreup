@@ -1,5 +1,6 @@
 import {
   Activity,
+  Bot,
   KanbanSquare,
   LayoutDashboard,
   Package,
@@ -45,6 +46,14 @@ export const navItems: NavItem[] = [
     permission: 'platform:read',
     module: 'platform',
     order: 25,
+  },
+  {
+    to: '/platform/ai-demo',
+    labelKey: 'nav:aiDemo',
+    icon: Bot,
+    permission: 'platform:manage',
+    module: 'platform',
+    order: 26,
   },
   {
     to: '/platform/onboarding',

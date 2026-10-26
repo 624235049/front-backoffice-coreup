@@ -336,12 +336,6 @@
     "confirm": "Switch to “{{type}}”?",
     "confirmHint": "Works on every plan. Only adds template parts; the shop's own data is never edited or deleted. Recorded in the audit log.",
     "done": "Switched to “{{type}}”",
-    "pay": {
-      "add": "The shop has no pay rule yet; the template's rule is added",
-      "same": "The pay rule already matches the template",
-      "replace_default": "The shop still has the untouched default; a new version is added (history kept)",
-      "keep_custom": "The shop edited its pay rule; left alone"
-    },
     "section": {
       "terminology": "Words (e.g. customer → patient)",
       "customerCode": "Customer code prefix",
@@ -349,7 +343,6 @@
       "positions": "Positions",
       "services": "Services and packages",
       "products": "Example products",
-      "compensation": "Pay rule",
       "messages": "LINE messages",
       "settings": "Defaults (calendar, cost)"
     }
@@ -1285,6 +1278,106 @@
     "topupConfirmTitle": "Add {{topupMessages}} messages this month?",
     "topupConfirmBody": "The quota grows by {{topupMessages}} now and {{topup}} appears on the shop's next invoice.",
     "topupConfirm": "Add messages",
-    "topupDone": "Messages added."
+    "topupDone": "Messages added.",
+    "audience": {
+      "title": "Who does the AI answer",
+      "hint": "Start with a few testers, then open it to every customer.",
+      "nowOff": "The AI is off and answers nobody",
+      "nowEveryone": "The AI answers every customer",
+      "nowTesters": "The AI answers only: {{names}}",
+      "nowNobody": "Test mode, but nobody is chosen yet, so the AI answers nobody",
+      "modes": {
+        "off": {
+          "name": "Off",
+          "hint": "Answers nobody"
+        },
+        "testers": {
+          "name": "Test",
+          "hint": "Only the people you pick"
+        },
+        "everyone": {
+          "name": "Everyone",
+          "hint": "Every customer who writes in"
+        }
+      },
+      "set": {
+        "off": "AI switched off",
+        "testers": "Test mode on: the AI answers only the people you picked",
+        "everyone": "The AI now answers every customer"
+      },
+      "testFirst": "Turn on test mode and try it with your testers first; then you can open it to everyone.",
+      "confirmTitle": "Let the AI answer every customer?",
+      "confirmBody": "From now on every customer who writes on LINE gets the AI's answer. If you are not sure, finish trying the chat below first. You can go back to test mode or off any time.",
+      "confirmYes": "Answer everyone",
+      "testersTitle": "Testers {{n}}/{{max}}",
+      "remove": "Remove {{name}}",
+      "search": "Search your LINE friends by name",
+      "pick": "Pick",
+      "picked": "Picked",
+      "unnamed": "No name",
+      "noFollowers": "No LINE friends to pick yet. Ask the testers to add your shop on LINE first.",
+      "noMatch": "No one with this name",
+      "followersHint": "These are the people who added your shop on LINE after it was connected to CoreUp."
+    },
+    "test": {
+      "title": "Try the AI",
+      "hint": "The AI answers from your shop's real data like it does for customers, but nothing reaches a customer, nothing is saved as history and the quota is not used. Use it to check the answers before you turn the AI on.",
+      "presets": {
+        "price": "Service prices",
+        "free": "Free tomorrow?",
+        "discount": "Ask for a discount",
+        "unknown": "Ask about something we don't offer",
+        "admin": "Ask for the admin",
+        "book": "Book it for me"
+      },
+      "usingUnsaved": "Trying with extra knowledge that is not saved yet",
+      "empty": "Tap an example above or type as if you were a customer",
+      "thinking": "The AI is typing…",
+      "placeholder": "Type as a customer",
+      "send": "Send",
+      "limitHint": "200 tries a day per shop",
+      "left": "{{n}} tries left today",
+      "reset": "Start over",
+      "noReply": "Short texts like ok or thanks get no answer from the AI, and cost nothing",
+      "handoff": "Handed to admin",
+      "blocked": "The answer check stopped the AI's own answer ({{why}}), so it was handed to the admin instead",
+      "evidence": "What the AI used to answer",
+      "noLookup": "The AI looked up nothing about the shop for this one",
+      "cost": "About {{tokens}} tokens ≈ {{cost}} (not counted in the quota)",
+      "tools": {
+        "shop_info": "Shop info",
+        "search_services": "Search services",
+        "search_rentals": "Search rentals",
+        "check_availability": "Check free slots",
+        "booking_link": "Booking link",
+        "handoff": "Hand to admin"
+      }
+    },
+    "modeNow": {
+      "off": "Off",
+      "testers": "Test mode",
+      "everyone": "Everyone"
+    },
+    "avgCost": "Average cost per AI reply",
+    "testUsage": "AI tries this month ({{n}})",
+    "platformCost": "AI cost of all shops this month / budget",
+    "noBudget": "no budget set",
+    "budgetReached": "This month's AI budget is used up. The AI answers no shop until next month (or raise AI_CHAT_MONTHLY_BUDGET_THB).",
+    "knowledge": "Extra knowledge about the shop",
+    "knowledgeHint": "Type, then try it in the chat below without saving; save when you are happy (the shop can edit it in its own app too)",
+    "knowledgeSave": "Save knowledge",
+    "demo": {
+      "cardTitle": "CoreUp demo LINE (prospects play a sample shop)",
+      "title": "Sample shops to play",
+      "hint": "People who write to CoreUp's LINE see a button per shop; the AI then answers as that shop's admin with that shop's data. Button names are at most 20 characters.",
+      "none": "No sample shop chosen: this LINE works as a plain CoreUp AI.",
+      "label": "Button name",
+      "remove": "Remove",
+      "search": "Search a sample shop to add",
+      "add": "Add",
+      "added": "Sample shop added",
+      "pageTitle": "CoreUp AI demo LINE",
+      "pageHint": "Choose the sample shops people can play through CoreUp's LINE, who may talk to it (testers → everyone) and the cost"
+    }
   }
 }

@@ -89,5 +89,8 @@
     "practitioner": "The shop has no staff who serve customers yet",
     "payment_method": "The shop has no payment methods yet",
     "tenant": "Shop not found"
-  }
+  },
+  "AI_NOT_CONFIGURED": "AI is not configured yet",
+  "AI_TEST_LIMIT_REACHED": "Daily AI test limit (200) reached",
+  "AI_UNAVAILABLE": "The AI could not answer right now"
 }
