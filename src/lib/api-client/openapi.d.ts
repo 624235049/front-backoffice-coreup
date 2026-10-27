@@ -47653,6 +47653,7 @@ export interface paths {
                             note?: string | null;
                             /** @default [] */
                             photoFileIds?: string[];
+                            chargeMinor?: number | null;
                         };
                     };
                 };
