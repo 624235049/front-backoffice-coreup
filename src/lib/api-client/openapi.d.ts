@@ -46359,6 +46359,13 @@ export interface paths {
                                 serviceId: string;
                                 serviceName: string;
                                 rental: boolean;
+                                stay?: {
+                                    pickupDate: string;
+                                    pickupTime: string | null;
+                                    returnDate: string;
+                                    returnTime: string | null;
+                                    itemCode: string | null;
+                                } | null;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -46555,6 +46562,13 @@ export interface paths {
                                 serviceId: string;
                                 serviceName: string;
                                 rental: boolean;
+                                stay?: {
+                                    pickupDate: string;
+                                    pickupTime: string | null;
+                                    returnDate: string;
+                                    returnTime: string | null;
+                                    itemCode: string | null;
+                                } | null;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -46731,6 +46745,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46801,6 +46822,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46871,6 +46899,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46942,6 +46977,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -47012,6 +47054,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -47236,6 +47285,13 @@ export interface paths {
                                 serviceId: string;
                                 serviceName: string;
                                 rental: boolean;
+                                stay?: {
+                                    pickupDate: string;
+                                    pickupTime: string | null;
+                                    returnDate: string;
+                                    returnTime: string | null;
+                                    itemCode: string | null;
+                                } | null;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -47422,6 +47478,13 @@ export interface paths {
                                 serviceId: string;
                                 serviceName: string;
                                 rental: boolean;
+                                stay?: {
+                                    pickupDate: string;
+                                    pickupTime: string | null;
+                                    returnDate: string;
+                                    returnTime: string | null;
+                                    itemCode: string | null;
+                                } | null;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -47610,6 +47673,13 @@ export interface paths {
                                 serviceId: string;
                                 serviceName: string;
                                 rental: boolean;
+                                stay?: {
+                                    pickupDate: string;
+                                    pickupTime: string | null;
+                                    returnDate: string;
+                                    returnTime: string | null;
+                                    itemCode: string | null;
+                                } | null;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -48113,6 +48183,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -48492,6 +48569,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -51365,6 +51449,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51508,6 +51599,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51651,6 +51749,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51794,6 +51899,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51937,6 +52049,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -52080,6 +52199,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -52223,6 +52349,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -52366,6 +52499,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -52509,6 +52649,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -52851,6 +52998,13 @@ export interface paths {
                                         serviceId: string;
                                         serviceName: string;
                                         rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -53154,6 +53308,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -53438,6 +53599,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -53959,6 +54127,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -54222,6 +54397,13 @@ export interface paths {
                                     serviceId: string;
                                     serviceName: string;
                                     rental: boolean;
+                                    stay?: {
+                                        pickupDate: string;
+                                        pickupTime: string | null;
+                                        returnDate: string;
+                                        returnTime: string | null;
+                                        itemCode: string | null;
+                                    } | null;
                                     extraServices: {
                                         id: string;
                                         name: string;
