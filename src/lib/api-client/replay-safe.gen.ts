@@ -91,6 +91,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'PATCH /v1/platform/tenants/{id}/meta-channels',
   'PATCH /v1/positions/{id}',
   'PATCH /v1/question-bank/{id}',
+  'PATCH /v1/rentals/{id}',
   'PATCH /v1/roles/{id}',
   'PATCH /v1/service-categories/{id}',
   'PATCH /v1/service-records/{id}',

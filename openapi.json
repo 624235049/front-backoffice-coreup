@@ -99124,6 +99124,42 @@
                               "minutes"
                             ]
                           }
+                        },
+                        "rentalConflicts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "appointmentId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerName": {
+                                "type": "string"
+                              },
+                              "phone": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "pickupDate": {
+                                "type": "string",
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "returnDate": {
+                                "type": "string",
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              }
+                            },
+                            "required": [
+                              "appointmentId",
+                              "customerName",
+                              "phone",
+                              "pickupDate",
+                              "returnDate"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -99133,7 +99169,8 @@
                         "followupsCreated",
                         "packageUsed",
                         "nextDueAt",
-                        "impact"
+                        "impact",
+                        "rentalConflicts"
                       ]
                     }
                   },
@@ -109102,6 +109139,15 @@
             "required": false,
             "name": "branchId",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "ignoreId",
+            "in": "query"
           }
         ],
         "responses": {
@@ -109804,8 +109850,8 @@
         "tags": [
           "rentals"
         ],
-        "summary": "Take a rental at the counter",
-        "description": "The item must be free on every day of the range, cleaning days included, for at least one piece; checked under a per-item lock, so two bookings for the same dates cannot both succeed (the loser gets 409 `APPOINTMENT_SLOT_TAKEN`).\n\nRequires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
+        "summary": "Take a rental at the counter (one or several rooms / pieces of the item)",
+        "description": "The item must be free on every day of the range, cleaning days included, for as many pieces as `quantity` asks; checked under a per-item lock, so two bookings for the same dates cannot both succeed (the loser gets 409 `APPOINTMENT_SLOT_TAKEN`). With `quantity` above 1 all rentals are made in one transaction: if one piece is not free none is booked.\n\nRequires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nRequires header `Idempotency-Key` (replayed for 24h).",
         "security": [
           {
             "cookieAuth": []
@@ -109913,6 +109959,12 @@
                       "amountMinor",
                       "method"
                     ]
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20,
+                    "default": 1
                   }
                 },
                 "required": [
@@ -110433,6 +110485,13 @@
                             "shippedAt",
                             "trackingUrl"
                           ]
+                        },
+                        "siblingIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          }
                         }
                       },
                       "required": [
@@ -110449,7 +110508,689 @@
                         "pickupTime",
                         "returnAt",
                         "returnMethod",
-                        "parcel"
+                        "parcel",
+                        "siblingIds"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rentals/{id}": {
+      "patch": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "Change the days (and / or the item or room) of a rental that is not picked up yet",
+        "description": "Same checks as taking a rental, the rental itself excluded: 422 when the stay is too long or outside the booking window, 409 `APPOINTMENT_SLOT_TAKEN` when the item is out on the new days, 409 `INVALID_TRANSITION` once it is picked up or closed. The price follows the new days and item (`previousPriceMinor` is what it was). The customer is told the new days on LINE.\n\nRequires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pickupDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "returnDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "serviceId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "pickupTime": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "pickupDate",
+                  "returnDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "appointment": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "branchId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "customerId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "customerHasCaution": {
+                              "type": "boolean"
+                            },
+                            "customer": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "visitCount": {
+                                  "type": "integer"
+                                },
+                                "pendingFirstVisit": {
+                                  "type": "boolean"
+                                },
+                                "caution": {
+                                  "type": "object",
+                                  "properties": {
+                                    "notes": {
+                                      "type": "boolean"
+                                    },
+                                    "allergy": {
+                                      "type": "boolean"
+                                    },
+                                    "chronic": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "notes",
+                                    "allergy",
+                                    "chronic"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "code",
+                                "visitCount",
+                                "pendingFirstVisit",
+                                "caution"
+                              ]
+                            },
+                            "customerBirthDate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "serviceId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "serviceName": {
+                              "type": "string"
+                            },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
+                            "labels": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
+                            },
+                            "durationMin": {
+                              "type": "integer"
+                            },
+                            "membershipId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "memberName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "resourceId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "resourceName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "startAt": {
+                              "type": "string"
+                            },
+                            "endAt": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "booked",
+                                "confirmed",
+                                "reschedule_requested",
+                                "checked_in",
+                                "in_service",
+                                "completed",
+                                "no_show",
+                                "cancelled"
+                              ]
+                            },
+                            "source": {
+                              "type": "string",
+                              "enum": [
+                                "front_desk",
+                                "liff",
+                                "phone",
+                                "walk_in",
+                                "import"
+                              ]
+                            },
+                            "isRequestedMember": {
+                              "type": "boolean"
+                            },
+                            "partySize": {
+                              "type": "integer"
+                            },
+                            "customerPackageId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "saleMembershipId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "allowedTransitions": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "confirmed",
+                                  "reschedule_requested",
+                                  "checked_in",
+                                  "in_service",
+                                  "completed",
+                                  "no_show",
+                                  "cancelled"
+                                ]
+                              }
+                            },
+                            "onlineDeposit": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "awaiting_slip",
+                                    "slip_submitted",
+                                    "confirmed",
+                                    "rejected"
+                                  ]
+                                },
+                                "amountMinor": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "slipFileId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "slipSubmittedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "rejectReason": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "depositId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "slipCheck": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "passed",
+                                        "failed",
+                                        "error",
+                                        "skipped",
+                                        "basic_ok"
+                                      ]
+                                    },
+                                    "reasons": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "amount_low",
+                                          "wrong_receiver",
+                                          "too_old",
+                                          "duplicate",
+                                          "not_found",
+                                          "plan",
+                                          "quota",
+                                          "platform_cap",
+                                          "provider_error",
+                                          "no_qr",
+                                          "promptpay_qr",
+                                          "qr_invalid"
+                                        ]
+                                      }
+                                    },
+                                    "amountMinor": {
+                                      "type": [
+                                        "integer",
+                                        "null"
+                                      ]
+                                    },
+                                    "receiverName": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "receiverAccountMasked": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "transRef": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "paidAt": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "checkedAt": {
+                                      "type": "string"
+                                    },
+                                    "method": {
+                                      "type": "string",
+                                      "enum": [
+                                        "basic"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "status",
+                                    "reasons",
+                                    "amountMinor",
+                                    "receiverName",
+                                    "receiverAccountMasked",
+                                    "transRef",
+                                    "paidAt",
+                                    "checkedAt"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "status",
+                                "amountMinor",
+                                "slipFileId",
+                                "slipSubmittedAt",
+                                "rejectReason",
+                                "depositId",
+                                "slipCheck"
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "updatedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "branchId",
+                            "customerId",
+                            "customerName",
+                            "customerHasCaution",
+                            "customer",
+                            "customerBirthDate",
+                            "serviceId",
+                            "serviceName",
+                            "extraServices",
+                            "labels",
+                            "durationMin",
+                            "membershipId",
+                            "memberName",
+                            "resourceId",
+                            "resourceName",
+                            "startAt",
+                            "endAt",
+                            "status",
+                            "source",
+                            "isRequestedMember",
+                            "partySize",
+                            "customerPackageId",
+                            "saleMembershipId",
+                            "note",
+                            "version",
+                            "allowedTransitions",
+                            "onlineDeposit",
+                            "createdAt",
+                            "updatedAt"
+                          ]
+                        },
+                        "pickupDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "returnDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "shipOutDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "expectedReturnDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "shipBeforeDays": {
+                          "type": "integer"
+                        },
+                        "units": {
+                          "type": "integer"
+                        },
+                        "priceMinor": {
+                          "type": "integer"
+                        },
+                        "imageUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pickupTime": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        },
+                        "returnAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "returnMethod": {
+                          "type": "string",
+                          "enum": [
+                            "in_store",
+                            "parcel"
+                          ]
+                        },
+                        "parcel": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "courier": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingNo": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shippedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "courier",
+                            "trackingNo",
+                            "shippedAt",
+                            "trackingUrl"
+                          ]
+                        },
+                        "previousPriceMinor": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "appointment",
+                        "pickupDate",
+                        "returnDate",
+                        "shipOutDate",
+                        "expectedReturnDate",
+                        "shipBeforeDays",
+                        "units",
+                        "priceMinor",
+                        "imageUrl",
+                        "note",
+                        "pickupTime",
+                        "returnAt",
+                        "returnMethod",
+                        "parcel",
+                        "previousPriceMinor"
                       ]
                     }
                   },
@@ -184603,6 +185344,549 @@
         "responses": {
           "200": {
             "description": "Updated appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "serviceId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "startAt": {
+                          "type": "string"
+                        },
+                        "endAt": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "confirmed",
+                            "reschedule_requested",
+                            "checked_in",
+                            "in_service",
+                            "completed",
+                            "no_show",
+                            "cancelled"
+                          ]
+                        },
+                        "serviceName": {
+                          "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "branchName": {
+                          "type": "string"
+                        },
+                        "branchMapUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "practitionerName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "canConfirm": {
+                          "type": "boolean"
+                        },
+                        "canReschedule": {
+                          "type": "boolean"
+                        },
+                        "memberId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "deposit": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "awaiting_slip",
+                                "slip_submitted",
+                                "confirmed",
+                                "rejected"
+                              ]
+                            },
+                            "amountMinor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "accounts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "bank",
+                                      "promptpay",
+                                      "qr"
+                                    ]
+                                  },
+                                  "label": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "bank": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bankCode": {
+                                        "type": "string",
+                                        "enum": [
+                                          "KBANK",
+                                          "SCB",
+                                          "BBL",
+                                          "KTB",
+                                          "BAY",
+                                          "TTB",
+                                          "GSB",
+                                          "BAAC",
+                                          "GHB",
+                                          "KKP",
+                                          "CIMB",
+                                          "UOB",
+                                          "LHB",
+                                          "TISCO",
+                                          "ICBC",
+                                          "TCR",
+                                          "IBANK",
+                                          "PROMPTPAY"
+                                        ]
+                                      },
+                                      "bankName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "accountNumber": {
+                                        "type": "string",
+                                        "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                      },
+                                      "accountName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      }
+                                    },
+                                    "required": [
+                                      "bankName",
+                                      "accountNumber",
+                                      "accountName"
+                                    ]
+                                  },
+                                  "promptpay": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "accountName": {
+                                        "type": "string"
+                                      },
+                                      "accountHint": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "accountName",
+                                      "accountHint"
+                                    ]
+                                  },
+                                  "qrPayload": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "kind",
+                                  "label",
+                                  "bank",
+                                  "promptpay",
+                                  "qrPayload",
+                                  "qr"
+                                ]
+                              }
+                            },
+                            "slipSubmittedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "rejectReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "amountMinor",
+                            "accounts",
+                            "slipSubmittedAt",
+                            "rejectReason"
+                          ]
+                        },
+                        "canRequestReschedule": {
+                          "type": "boolean"
+                        },
+                        "canCancel": {
+                          "type": "boolean"
+                        },
+                        "cancellationWindowMin": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "rental": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "pickupDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "returnDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "shipBeforeDays": {
+                              "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "pickupDate",
+                            "returnDate",
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
+                          ]
+                        },
+                        "feedbackToken": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "branchId",
+                        "serviceId",
+                        "startAt",
+                        "endAt",
+                        "status",
+                        "serviceName",
+                        "extraServices",
+                        "branchName",
+                        "branchMapUrl",
+                        "practitionerName",
+                        "practitionerPhotoUrl",
+                        "canConfirm",
+                        "canReschedule",
+                        "memberId",
+                        "deposit",
+                        "canRequestReschedule",
+                        "canCancel",
+                        "cancellationWindowMin",
+                        "rental",
+                        "feedbackToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/liff/{tenantSlug}/booking/guest/appointments/{id}/parcel": {
+      "post": {
+        "tags": [
+          "liff-booking"
+        ],
+        "summary": "Guest link, rental: I sent the item back by parcel (courier and tracking number), while I hold the item",
+        "description": "Public endpoint (no authentication).",
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 60,
+              "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+            },
+            "required": true,
+            "name": "tenantSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "required": true,
+            "name": "t",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courier": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "trackingNo": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9-]{4,40}$"
+                  }
+                },
+                "required": [
+                  "courier",
+                  "trackingNo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Appointment",
             "content": {
               "application/json": {
                 "schema": {

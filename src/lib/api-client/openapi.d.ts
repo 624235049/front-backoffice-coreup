@@ -47779,6 +47779,13 @@ export interface paths {
                                     kind: "reminder_sent" | "confirm_by_customer" | "followup_auto_created" | "overlap_prevented" | "payout_auto_calculated" | "checklist_completed" | "owner_decision_delegated" | "reschedule_self_service" | "report_auto_sent" | "no_show_recovered";
                                     minutes: number;
                                 }[];
+                                rentalConflicts: {
+                                    appointmentId: string;
+                                    customerName: string;
+                                    phone: string | null;
+                                    pickupDate: string;
+                                    returnDate: string;
+                                }[];
                             };
                         };
                     };
@@ -51723,6 +51730,7 @@ export interface paths {
                     from?: string;
                     to?: string;
                     branchId?: string;
+                    ignoreId?: string;
                 };
                 header?: never;
                 path: {
@@ -51934,8 +51942,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Take a rental at the counter
-         * @description The item must be free on every day of the range, cleaning days included, for at least one piece; checked under a per-item lock, so two bookings for the same dates cannot both succeed (the loser gets 409 `APPOINTMENT_SLOT_TAKEN`).
+         * Take a rental at the counter (one or several rooms / pieces of the item)
+         * @description The item must be free on every day of the range, cleaning days included, for as many pieces as `quantity` asks; checked under a per-item lock, so two bookings for the same dates cannot both succeed (the loser gets 409 `APPOINTMENT_SLOT_TAKEN`). With `quantity` above 1 all rentals are made in one transaction: if one piece is not free none is booked.
          *
          *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
          *
@@ -51970,6 +51978,8 @@ export interface paths {
                             slipFileId?: string | null;
                             confirmAdditional?: boolean;
                         };
+                        /** @default 1 */
+                        quantity?: number;
                     };
                 };
             };
@@ -52070,6 +52080,7 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                 } | null;
+                                siblingIds: string[];
                             };
                         };
                     };
@@ -52143,6 +52154,218 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Change the days (and / or the item or room) of a rental that is not picked up yet
+         * @description Same checks as taking a rental, the rental itself excluded: 422 when the stay is too long or outside the booking window, 409 `APPOINTMENT_SLOT_TAKEN` when the item is out on the new days, 409 `INVALID_TRANSITION` once it is picked up or closed. The price follows the new days and item (`previousPriceMinor` is what it was). The customer is told the new days on LINE.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        pickupDate: string;
+                        returnDate: string;
+                        serviceId?: string;
+                        pickupTime?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointment: {
+                                    id: string;
+                                    branchId: string;
+                                    customerId: string;
+                                    customerName: string;
+                                    customerHasCaution: boolean;
+                                    customer: {
+                                        id: string;
+                                        name: string;
+                                        code: string | null;
+                                        visitCount: number;
+                                        pendingFirstVisit: boolean;
+                                        caution: {
+                                            notes: boolean;
+                                            allergy: boolean;
+                                            chronic: boolean;
+                                        };
+                                    };
+                                    customerBirthDate: string | null;
+                                    serviceId: string;
+                                    serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
+                                    durationMin: number;
+                                    membershipId: string | null;
+                                    memberName: string | null;
+                                    resourceId: string | null;
+                                    resourceName: string | null;
+                                    startAt: string;
+                                    endAt: string;
+                                    /** @enum {string} */
+                                    status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                    /** @enum {string} */
+                                    source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                    isRequestedMember: boolean;
+                                    partySize: number;
+                                    customerPackageId: string | null;
+                                    saleMembershipId: string | null;
+                                    note: string | null;
+                                    version: number;
+                                    allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
+                                        } | null;
+                                    } | null;
+                                    createdAt: string;
+                                    updatedAt: string;
+                                };
+                                pickupDate: string;
+                                returnDate: string;
+                                shipOutDate: string | null;
+                                expectedReturnDate: string;
+                                shipBeforeDays: number;
+                                units: number;
+                                priceMinor: number;
+                                imageUrl: string | null;
+                                note: string | null;
+                                pickupTime: string | null;
+                                returnAt: string | null;
+                                /** @enum {string} */
+                                returnMethod: "in_store" | "parcel";
+                                parcel: {
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                } | null;
+                                previousPriceMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         trace?: never;
     };
     "/v1/rentals/items/{id}/condition": {
@@ -87645,6 +87868,191 @@ export interface paths {
             };
             responses: {
                 /** @description Updated appointment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay" | "qr";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
+                                    }[];
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                } | null;
+                                feedbackToken: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/guest/appointments/{id}/parcel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guest link, rental: I sent the item back by parcel (courier and tracking number), while I hold the item
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query: {
+                    t: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        courier: string;
+                        trackingNo: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Appointment */
                 200: {
                     headers: {
                         [name: string]: unknown;
