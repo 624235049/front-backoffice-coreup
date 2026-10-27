@@ -974,6 +974,21 @@ export interface paths {
                                         noteLabel: string | null;
                                         noteRequired: boolean;
                                         pickupTimes: boolean;
+                                        sizeChart: {
+                                            size: string;
+                                            bust?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            waist?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            hip?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                        }[] | null;
                                     } | null;
                                     /** @enum {string|null} */
                                     payMethod: "hand_fee_percent" | "per_case_fixed" | "per_class_fixed" | "salary_only" | "custom" | null;
@@ -50994,6 +51009,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51084,6 +51100,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51174,6 +51191,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51264,6 +51282,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51354,6 +51373,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51444,6 +51464,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51534,6 +51555,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51624,6 +51646,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -51842,6 +51865,7 @@ export interface paths {
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
+                                    itemCode: string | null;
                                     note: string | null;
                                     pickupTime: string | null;
                                     returnAt: string | null;
@@ -52069,6 +52093,7 @@ export interface paths {
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
+                                itemCode: string | null;
                                 note: string | null;
                                 pickupTime: string | null;
                                 returnAt: string | null;
@@ -52285,6 +52310,7 @@ export interface paths {
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
+                                itemCode: string | null;
                                 note: string | null;
                                 pickupTime: string | null;
                                 returnAt: string | null;
@@ -52753,6 +52779,7 @@ export interface paths {
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
+                                itemCode: string | null;
                                 note: string | null;
                                 pickupTime: string | null;
                                 returnAt: string | null;
@@ -52883,6 +52910,36 @@ export interface paths {
                                     categoryId: string | null;
                                     categoryName: string | null;
                                     size: string | null;
+                                    measurements: {
+                                        bust?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        waist?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        hip?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        length?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        fabric?: string | null;
+                                        /** @enum {string|null} */
+                                        stretch?: "none" | "slight" | "stretchy" | null;
+                                        lined?: boolean | null;
+                                        heightCm?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        closure?: string | null;
+                                        note?: string | null;
+                                        fromChart: boolean;
+                                    } | null;
+                                    code: string | null;
                                     priceMinor: number;
                                     rentalDays: number;
                                     quantity: number;
@@ -52908,6 +52965,114 @@ export interface paths {
                                         count: number;
                                     }[];
                                 } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/items/next-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The next free product code (รหัสชุด) for a new item of the category, e.g. EV-013; null when there is nothing to base it on
+         * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    categoryId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                code: string | null;
                             };
                         };
                     };
@@ -85759,6 +85924,21 @@ export interface paths {
                                     noteLabel: string | null;
                                     noteRequired: boolean;
                                     pickupTimes: boolean;
+                                    sizeChart: {
+                                        size: string;
+                                        bust?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        waist?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        hip?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                    }[] | null;
                                 } | null;
                                 branches: {
                                     id: string;
@@ -85910,6 +86090,36 @@ export interface paths {
                                             days: number;
                                             shipBeforeDays: number;
                                             size: string | null;
+                                            code: string | null;
+                                            measurements: {
+                                                bust?: number | {
+                                                    min: number;
+                                                    max: number;
+                                                } | null;
+                                                waist?: number | {
+                                                    min: number;
+                                                    max: number;
+                                                } | null;
+                                                hip?: number | {
+                                                    min: number;
+                                                    max: number;
+                                                } | null;
+                                                length?: number | {
+                                                    min: number;
+                                                    max: number;
+                                                } | null;
+                                                fabric?: string | null;
+                                                /** @enum {string|null} */
+                                                stretch?: "none" | "slight" | "stretchy" | null;
+                                                lined?: boolean | null;
+                                                heightCm?: number | {
+                                                    min: number;
+                                                    max: number;
+                                                } | null;
+                                                closure?: string | null;
+                                                note?: string | null;
+                                                fromChart: boolean;
+                                            } | null;
                                             imageUrls: string[];
                                         } | null;
                                     }[];
@@ -91407,6 +91617,36 @@ export interface paths {
                                         days: number;
                                         shipBeforeDays: number;
                                         size: string | null;
+                                        code: string | null;
+                                        measurements: {
+                                            bust?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            waist?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            hip?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            length?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            fabric?: string | null;
+                                            /** @enum {string|null} */
+                                            stretch?: "none" | "slight" | "stretchy" | null;
+                                            lined?: boolean | null;
+                                            heightCm?: number | {
+                                                min: number;
+                                                max: number;
+                                            } | null;
+                                            closure?: string | null;
+                                            note?: string | null;
+                                            fromChart: boolean;
+                                        } | null;
                                         imageUrls: string[];
                                     } | null;
                                 }[];
@@ -91548,6 +91788,36 @@ export interface paths {
                                     days: number;
                                     shipBeforeDays: number;
                                     size: string | null;
+                                    code: string | null;
+                                    measurements: {
+                                        bust?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        waist?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        hip?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        length?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        fabric?: string | null;
+                                        /** @enum {string|null} */
+                                        stretch?: "none" | "slight" | "stretchy" | null;
+                                        lined?: boolean | null;
+                                        heightCm?: number | {
+                                            min: number;
+                                            max: number;
+                                        } | null;
+                                        closure?: string | null;
+                                        note?: string | null;
+                                        fromChart: boolean;
+                                    } | null;
                                     imageUrls: string[];
                                 } | null;
                             };
@@ -106700,6 +106970,35 @@ export interface paths {
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
                                 rentalSize: string | null;
+                                code: string | null;
+                                rentalMeasurements: {
+                                    bust?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    waist?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    hip?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    length?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    fabric?: string | null;
+                                    /** @enum {string|null} */
+                                    stretch?: "none" | "slight" | "stretchy" | null;
+                                    lined?: boolean | null;
+                                    heightCm?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    closure?: string | null;
+                                    note?: string | null;
+                                } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
                                     /** @enum {string} */
@@ -106860,6 +107159,35 @@ export interface paths {
                         /** @default 0 */
                         rentalShipBeforeDays?: number;
                         rentalSize?: string | null;
+                        code?: string | null;
+                        rentalMeasurements?: {
+                            bust?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            waist?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            hip?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            length?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            fabric?: string | null;
+                            /** @enum {string|null} */
+                            stretch?: "none" | "slight" | "stretchy" | null;
+                            lined?: boolean | null;
+                            heightCm?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            closure?: string | null;
+                            note?: string | null;
+                        } | null;
                         /** @default [] */
                         rentalImageFileIds?: string[];
                         depositRule?: {
@@ -106922,6 +107250,35 @@ export interface paths {
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
                                 rentalSize: string | null;
+                                code: string | null;
+                                rentalMeasurements: {
+                                    bust?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    waist?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    hip?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    length?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    fabric?: string | null;
+                                    /** @enum {string|null} */
+                                    stretch?: "none" | "slight" | "stretchy" | null;
+                                    lined?: boolean | null;
+                                    heightCm?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    closure?: string | null;
+                                    note?: string | null;
+                                } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
                                     /** @enum {string} */
@@ -107076,6 +107433,35 @@ export interface paths {
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
                                 rentalSize: string | null;
+                                code: string | null;
+                                rentalMeasurements: {
+                                    bust?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    waist?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    hip?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    length?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    fabric?: string | null;
+                                    /** @enum {string|null} */
+                                    stretch?: "none" | "slight" | "stretchy" | null;
+                                    lined?: boolean | null;
+                                    heightCm?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    closure?: string | null;
+                                    note?: string | null;
+                                } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
                                     /** @enum {string} */
@@ -107308,6 +107694,35 @@ export interface paths {
                         rentalBufferDays?: number;
                         rentalShipBeforeDays?: number;
                         rentalSize?: string | null;
+                        code?: string | null;
+                        rentalMeasurements?: {
+                            bust?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            waist?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            hip?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            length?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            fabric?: string | null;
+                            /** @enum {string|null} */
+                            stretch?: "none" | "slight" | "stretchy" | null;
+                            lined?: boolean | null;
+                            heightCm?: number | {
+                                min: number;
+                                max: number;
+                            } | null;
+                            closure?: string | null;
+                            note?: string | null;
+                        } | null;
                         rentalImageFileIds?: string[];
                         depositRule?: {
                             /** @enum {string} */
@@ -107369,6 +107784,35 @@ export interface paths {
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
                                 rentalSize: string | null;
+                                code: string | null;
+                                rentalMeasurements: {
+                                    bust?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    waist?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    hip?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    length?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    fabric?: string | null;
+                                    /** @enum {string|null} */
+                                    stretch?: "none" | "slight" | "stretchy" | null;
+                                    lined?: boolean | null;
+                                    heightCm?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    closure?: string | null;
+                                    note?: string | null;
+                                } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
                                     /** @enum {string} */
@@ -107643,6 +108087,35 @@ export interface paths {
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
                                 rentalSize: string | null;
+                                code: string | null;
+                                rentalMeasurements: {
+                                    bust?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    waist?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    hip?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    length?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    fabric?: string | null;
+                                    /** @enum {string|null} */
+                                    stretch?: "none" | "slight" | "stretchy" | null;
+                                    lined?: boolean | null;
+                                    heightCm?: number | {
+                                        min: number;
+                                        max: number;
+                                    } | null;
+                                    closure?: string | null;
+                                    note?: string | null;
+                                } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
                                     /** @enum {string} */

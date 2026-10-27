@@ -1377,6 +1377,122 @@
                                   },
                                   "pickupTimes": {
                                     "type": "boolean"
+                                  },
+                                  "sizeChart": {
+                                    "type": [
+                                      "array",
+                                      "null"
+                                    ],
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "size": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 40
+                                        },
+                                        "bust": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "minimum": 10,
+                                              "maximum": 80
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "min": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                "max": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                }
+                                              },
+                                              "required": [
+                                                "min",
+                                                "max"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "waist": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "minimum": 10,
+                                              "maximum": 80
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "min": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                "max": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                }
+                                              },
+                                              "required": [
+                                                "min",
+                                                "max"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        },
+                                        "hip": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "minimum": 10,
+                                              "maximum": 80
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "min": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                "max": {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                }
+                                              },
+                                              "required": [
+                                                "min",
+                                                "max"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "size"
+                                      ],
+                                      "additionalProperties": false
+                                    }
                                   }
                                 },
                                 "required": [
@@ -1384,7 +1500,8 @@
                                   "pricing",
                                   "noteLabel",
                                   "noteRequired",
-                                  "pickupTimes"
+                                  "pickupTimes",
+                                  "sizeChart"
                                 ]
                               },
                               "payMethod": {
@@ -105267,6 +105384,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -105342,6 +105465,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -105788,6 +105912,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -105863,6 +105993,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -106309,6 +106440,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -106384,6 +106521,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -106830,6 +106968,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -106905,6 +107049,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -107351,6 +107496,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -107426,6 +107577,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -107872,6 +108024,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -107947,6 +108105,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -108393,6 +108552,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -108468,6 +108633,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -108914,6 +109080,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -108989,6 +109161,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -109671,6 +109844,12 @@
                                   "null"
                                 ]
                               },
+                              "itemCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "note": {
                                 "type": [
                                   "string",
@@ -109746,6 +109925,7 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
+                              "itemCode",
                               "note",
                               "pickupTime",
                               "returnAt",
@@ -110422,6 +110602,12 @@
                             "null"
                           ]
                         },
+                        "itemCode": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "note": {
                           "type": [
                             "string",
@@ -110504,6 +110690,7 @@
                         "units",
                         "priceMinor",
                         "imageUrl",
+                        "itemCode",
                         "note",
                         "pickupTime",
                         "returnAt",
@@ -111107,6 +111294,12 @@
                             "null"
                           ]
                         },
+                        "itemCode": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "note": {
                           "type": [
                             "string",
@@ -111185,6 +111378,7 @@
                         "units",
                         "priceMinor",
                         "imageUrl",
+                        "itemCode",
                         "note",
                         "pickupTime",
                         "returnAt",
@@ -112288,6 +112482,12 @@
                             "null"
                           ]
                         },
+                        "itemCode": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "note": {
                           "type": [
                             "string",
@@ -112363,6 +112563,7 @@
                         "units",
                         "priceMinor",
                         "imageUrl",
+                        "itemCode",
                         "note",
                         "pickupTime",
                         "returnAt",
@@ -112591,6 +112792,228 @@
                                   "null"
                                 ]
                               },
+                              "measurements": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "bust": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "waist": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "hip": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "length": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fabric": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                  },
+                                  "stretch": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "enum": [
+                                      "none",
+                                      "slight",
+                                      "stretchy",
+                                      null
+                                    ]
+                                  },
+                                  "lined": {
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ]
+                                  },
+                                  "heightCm": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 100,
+                                        "maximum": 230
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 100,
+                                            "maximum": 230
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 100,
+                                            "maximum": 230
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "closure": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "minLength": 1,
+                                    "maxLength": 60
+                                  },
+                                  "note": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "minLength": 1,
+                                    "maxLength": 200
+                                  },
+                                  "fromChart": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "fromChart"
+                                ]
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
                               "priceMinor": {
                                 "type": "integer"
                               },
@@ -112643,6 +113066,8 @@
                               "categoryId",
                               "categoryName",
                               "size",
+                              "measurements",
+                              "code",
                               "priceMinor",
                               "rentalDays",
                               "quantity",
@@ -112718,6 +113143,132 @@
                         "items",
                         "total",
                         "facets"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rentals/items/next-code": {
+      "get": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "The next free product code (รหัสชุด) for a new item of the category, e.g. EV-013; null when there is nothing to base it on",
+        "description": "Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "categoryId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "code"
                       ]
                     }
                   },
@@ -180380,6 +180931,122 @@
                             },
                             "pickupTimes": {
                               "type": "boolean"
+                            },
+                            "sizeChart": {
+                              "type": [
+                                "array",
+                                "null"
+                              ],
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "size": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 40
+                                  },
+                                  "bust": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "waist": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "hip": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "min": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          "max": {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          }
+                                        },
+                                        "required": [
+                                          "min",
+                                          "max"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "size"
+                                ],
+                                "additionalProperties": false
+                              }
                             }
                           },
                           "required": [
@@ -180387,7 +181054,8 @@
                             "pricing",
                             "noteLabel",
                             "noteRequired",
-                            "pickupTimes"
+                            "pickupTimes",
+                            "sizeChart"
                           ]
                         },
                         "branches": {
@@ -180714,6 +181382,228 @@
                                             "null"
                                           ]
                                         },
+                                        "code": {
+                                          "type": [
+                                            "string",
+                                            "null"
+                                          ]
+                                        },
+                                        "measurements": {
+                                          "type": [
+                                            "object",
+                                            "null"
+                                          ],
+                                          "properties": {
+                                            "bust": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "min": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    },
+                                                    "max": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "min",
+                                                    "max"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "waist": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "min": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    },
+                                                    "max": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "min",
+                                                    "max"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "hip": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "min": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    },
+                                                    "max": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "min",
+                                                    "max"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "length": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "minimum": 10,
+                                                  "maximum": 80
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "min": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    },
+                                                    "max": {
+                                                      "type": "number",
+                                                      "minimum": 10,
+                                                      "maximum": 80
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "min",
+                                                    "max"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "fabric": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ],
+                                              "minLength": 1,
+                                              "maxLength": 100
+                                            },
+                                            "stretch": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ],
+                                              "enum": [
+                                                "none",
+                                                "slight",
+                                                "stretchy",
+                                                null
+                                              ]
+                                            },
+                                            "lined": {
+                                              "type": [
+                                                "boolean",
+                                                "null"
+                                              ]
+                                            },
+                                            "heightCm": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "number",
+                                                  "minimum": 100,
+                                                  "maximum": 230
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "min": {
+                                                      "type": "number",
+                                                      "minimum": 100,
+                                                      "maximum": 230
+                                                    },
+                                                    "max": {
+                                                      "type": "number",
+                                                      "minimum": 100,
+                                                      "maximum": 230
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "min",
+                                                    "max"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "null"
+                                                }
+                                              ]
+                                            },
+                                            "closure": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ],
+                                              "minLength": 1,
+                                              "maxLength": 60
+                                            },
+                                            "note": {
+                                              "type": [
+                                                "string",
+                                                "null"
+                                              ],
+                                              "minLength": 1,
+                                              "maxLength": 200
+                                            },
+                                            "fromChart": {
+                                              "type": "boolean"
+                                            }
+                                          },
+                                          "required": [
+                                            "fromChart"
+                                          ]
+                                        },
                                         "imageUrls": {
                                           "type": "array",
                                           "items": {
@@ -180725,6 +181615,8 @@
                                         "days",
                                         "shipBeforeDays",
                                         "size",
+                                        "code",
+                                        "measurements",
                                         "imageUrls"
                                       ]
                                     }
@@ -192684,6 +193576,228 @@
                                       "null"
                                     ]
                                   },
+                                  "code": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "measurements": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bust": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "min": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              },
+                                              "max": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              }
+                                            },
+                                            "required": [
+                                              "min",
+                                              "max"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "waist": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "min": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              },
+                                              "max": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              }
+                                            },
+                                            "required": [
+                                              "min",
+                                              "max"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "hip": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "min": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              },
+                                              "max": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              }
+                                            },
+                                            "required": [
+                                              "min",
+                                              "max"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "length": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 10,
+                                            "maximum": 80
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "min": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              },
+                                              "max": {
+                                                "type": "number",
+                                                "minimum": 10,
+                                                "maximum": 80
+                                              }
+                                            },
+                                            "required": [
+                                              "min",
+                                              "max"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "fabric": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      },
+                                      "stretch": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "enum": [
+                                          "none",
+                                          "slight",
+                                          "stretchy",
+                                          null
+                                        ]
+                                      },
+                                      "lined": {
+                                        "type": [
+                                          "boolean",
+                                          "null"
+                                        ]
+                                      },
+                                      "heightCm": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number",
+                                            "minimum": 100,
+                                            "maximum": 230
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "min": {
+                                                "type": "number",
+                                                "minimum": 100,
+                                                "maximum": 230
+                                              },
+                                              "max": {
+                                                "type": "number",
+                                                "minimum": 100,
+                                                "maximum": 230
+                                              }
+                                            },
+                                            "required": [
+                                              "min",
+                                              "max"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "closure": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "note": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ],
+                                        "minLength": 1,
+                                        "maxLength": 200
+                                      },
+                                      "fromChart": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "fromChart"
+                                    ]
+                                  },
                                   "imageUrls": {
                                     "type": "array",
                                     "items": {
@@ -192695,6 +193809,8 @@
                                   "days",
                                   "shipBeforeDays",
                                   "size",
+                                  "code",
+                                  "measurements",
                                   "imageUrls"
                                 ]
                               }
@@ -192982,6 +194098,228 @@
                                 "null"
                               ]
                             },
+                            "code": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "measurements": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "bust": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "min": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        },
+                                        "max": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        }
+                                      },
+                                      "required": [
+                                        "min",
+                                        "max"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "waist": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "min": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        },
+                                        "max": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        }
+                                      },
+                                      "required": [
+                                        "min",
+                                        "max"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "hip": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "min": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        },
+                                        "max": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        }
+                                      },
+                                      "required": [
+                                        "min",
+                                        "max"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "length": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "min": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        },
+                                        "max": {
+                                          "type": "number",
+                                          "minimum": 10,
+                                          "maximum": 80
+                                        }
+                                      },
+                                      "required": [
+                                        "min",
+                                        "max"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "fabric": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "minLength": 1,
+                                  "maxLength": 100
+                                },
+                                "stretch": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "enum": [
+                                    "none",
+                                    "slight",
+                                    "stretchy",
+                                    null
+                                  ]
+                                },
+                                "lined": {
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ]
+                                },
+                                "heightCm": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "min": {
+                                          "type": "number",
+                                          "minimum": 100,
+                                          "maximum": 230
+                                        },
+                                        "max": {
+                                          "type": "number",
+                                          "minimum": 100,
+                                          "maximum": 230
+                                        }
+                                      },
+                                      "required": [
+                                        "min",
+                                        "max"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "closure": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "note": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "minLength": 1,
+                                  "maxLength": 200
+                                },
+                                "fromChart": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "fromChart"
+                              ]
+                            },
                             "imageUrls": {
                               "type": "array",
                               "items": {
@@ -192993,6 +194331,8 @@
                             "days",
                             "shipBeforeDays",
                             "size",
+                            "code",
+                            "measurements",
                             "imageUrls"
                           ]
                         }
@@ -220793,6 +222133,225 @@
                               "null"
                             ]
                           },
+                          "code": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "minLength": 1,
+                            "maxLength": 30
+                          },
+                          "rentalMeasurements": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "bust": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 10,
+                                    "maximum": 80
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "min": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      "max": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      }
+                                    },
+                                    "required": [
+                                      "min",
+                                      "max"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "waist": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 10,
+                                    "maximum": 80
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "min": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      "max": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      }
+                                    },
+                                    "required": [
+                                      "min",
+                                      "max"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "hip": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 10,
+                                    "maximum": 80
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "min": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      "max": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      }
+                                    },
+                                    "required": [
+                                      "min",
+                                      "max"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "length": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 10,
+                                    "maximum": 80
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "min": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      },
+                                      "max": {
+                                        "type": "number",
+                                        "minimum": 10,
+                                        "maximum": 80
+                                      }
+                                    },
+                                    "required": [
+                                      "min",
+                                      "max"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fabric": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "stretch": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "none",
+                                  "slight",
+                                  "stretchy",
+                                  null
+                                ]
+                              },
+                              "lined": {
+                                "type": [
+                                  "boolean",
+                                  "null"
+                                ]
+                              },
+                              "heightCm": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 100,
+                                    "maximum": 230
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "min": {
+                                        "type": "number",
+                                        "minimum": 100,
+                                        "maximum": 230
+                                      },
+                                      "max": {
+                                        "type": "number",
+                                        "minimum": 100,
+                                        "maximum": 230
+                                      }
+                                    },
+                                    "required": [
+                                      "min",
+                                      "max"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "closure": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "additionalProperties": false
+                          },
                           "rentalImageFileIds": {
                             "type": "array",
                             "items": {
@@ -220874,6 +222433,8 @@
                           "rentalBufferDays",
                           "rentalShipBeforeDays",
                           "rentalSize",
+                          "code",
+                          "rentalMeasurements",
                           "rentalImageFileIds",
                           "depositRule"
                         ]
@@ -221203,6 +222764,225 @@
                     ],
                     "maxLength": 40
                   },
+                  "code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 30
+                  },
+                  "rentalMeasurements": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "bust": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "waist": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "hip": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "fabric": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "stretch": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "enum": [
+                          "none",
+                          "slight",
+                          "stretchy",
+                          null
+                        ]
+                      },
+                      "lined": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "heightCm": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 100,
+                            "maximum": 230
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 100,
+                                "maximum": 230
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 100,
+                                "maximum": 230
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "closure": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "additionalProperties": false
+                  },
                   "rentalImageFileIds": {
                     "type": "array",
                     "items": {
@@ -221435,6 +223215,225 @@
                             "null"
                           ]
                         },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 30
+                        },
+                        "rentalMeasurements": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bust": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "waist": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "hip": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "length": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "fabric": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "stretch": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "none",
+                                "slight",
+                                "stretchy",
+                                null
+                              ]
+                            },
+                            "lined": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "heightCm": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 100,
+                                  "maximum": 230
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "closure": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "additionalProperties": false
+                        },
                         "rentalImageFileIds": {
                           "type": "array",
                           "items": {
@@ -221516,6 +223515,8 @@
                         "rentalBufferDays",
                         "rentalShipBeforeDays",
                         "rentalSize",
+                        "code",
+                        "rentalMeasurements",
                         "rentalImageFileIds",
                         "depositRule"
                       ]
@@ -221793,6 +223794,225 @@
                             "null"
                           ]
                         },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 30
+                        },
+                        "rentalMeasurements": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bust": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "waist": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "hip": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "length": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "fabric": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "stretch": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "none",
+                                "slight",
+                                "stretchy",
+                                null
+                              ]
+                            },
+                            "lined": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "heightCm": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 100,
+                                  "maximum": 230
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "closure": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "additionalProperties": false
+                        },
                         "rentalImageFileIds": {
                           "type": "array",
                           "items": {
@@ -221874,6 +224094,8 @@
                         "rentalBufferDays",
                         "rentalShipBeforeDays",
                         "rentalSize",
+                        "code",
+                        "rentalMeasurements",
                         "rentalImageFileIds",
                         "depositRule"
                       ]
@@ -222167,6 +224389,225 @@
                     ],
                     "maxLength": 40
                   },
+                  "code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 30
+                  },
+                  "rentalMeasurements": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "bust": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "waist": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "hip": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "length": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 10,
+                            "maximum": 80
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 10,
+                                "maximum": 80
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "fabric": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "stretch": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "enum": [
+                          "none",
+                          "slight",
+                          "stretchy",
+                          null
+                        ]
+                      },
+                      "lined": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "heightCm": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 100,
+                            "maximum": 230
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "number",
+                                "minimum": 100,
+                                "maximum": 230
+                              },
+                              "max": {
+                                "type": "number",
+                                "minimum": 100,
+                                "maximum": 230
+                              }
+                            },
+                            "required": [
+                              "min",
+                              "max"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "closure": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "additionalProperties": false
+                  },
                   "rentalImageFileIds": {
                     "type": "array",
                     "items": {
@@ -222394,6 +224835,225 @@
                             "null"
                           ]
                         },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 30
+                        },
+                        "rentalMeasurements": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bust": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "waist": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "hip": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "length": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "fabric": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "stretch": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "none",
+                                "slight",
+                                "stretchy",
+                                null
+                              ]
+                            },
+                            "lined": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "heightCm": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 100,
+                                  "maximum": 230
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "closure": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "additionalProperties": false
+                        },
                         "rentalImageFileIds": {
                           "type": "array",
                           "items": {
@@ -222475,6 +225135,8 @@
                         "rentalBufferDays",
                         "rentalShipBeforeDays",
                         "rentalSize",
+                        "code",
+                        "rentalMeasurements",
                         "rentalImageFileIds",
                         "depositRule"
                       ]
@@ -223018,6 +225680,225 @@
                             "null"
                           ]
                         },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 30
+                        },
+                        "rentalMeasurements": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bust": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "waist": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "hip": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "length": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 10,
+                                  "maximum": 80
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 10,
+                                      "maximum": 80
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "fabric": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "stretch": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "none",
+                                "slight",
+                                "stretchy",
+                                null
+                              ]
+                            },
+                            "lined": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "heightCm": {
+                              "anyOf": [
+                                {
+                                  "type": "number",
+                                  "minimum": 100,
+                                  "maximum": 230
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    },
+                                    "max": {
+                                      "type": "number",
+                                      "minimum": 100,
+                                      "maximum": 230
+                                    }
+                                  },
+                                  "required": [
+                                    "min",
+                                    "max"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "closure": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 60
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "additionalProperties": false
+                        },
                         "rentalImageFileIds": {
                           "type": "array",
                           "items": {
@@ -223099,6 +225980,8 @@
                         "rentalBufferDays",
                         "rentalShipBeforeDays",
                         "rentalSize",
+                        "code",
+                        "rentalMeasurements",
                         "rentalImageFileIds",
                         "depositRule"
                       ]
