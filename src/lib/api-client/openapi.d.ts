@@ -95810,6 +95810,7 @@ export interface paths {
                                     priceMinor: number;
                                     /** @enum {string} */
                                     interval: "month" | "year";
+                                    members: number | null;
                                     marketing: {
                                         sort: number;
                                         setupFeeMinor: number;

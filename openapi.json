@@ -198651,6 +198651,12 @@
                                   "year"
                                 ]
                               },
+                              "members": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              },
                               "marketing": {
                                 "type": [
                                   "object",
@@ -198825,6 +198831,7 @@
                               "name",
                               "priceMinor",
                               "interval",
+                              "members",
                               "marketing"
                             ]
                           }
