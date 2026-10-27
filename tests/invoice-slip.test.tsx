@@ -104,6 +104,18 @@ describe('slip review sheet actions', () => {
     expect(h.reject).not.toHaveBeenCalled();
   });
 
+  it.each([
+    [null, 'invoices.slip.confirmedToast.plan'],
+    ['ai_chat', 'invoices.slip.confirmedToast.ai_chat'],
+    ['ai_topup', 'invoices.slip.confirmedToast.ai_topup'],
+  ])('the toast after confirming a %s invoice names what was opened', (addon, key) => {
+    h.invoices = [invoice({ addon })];
+    h.confirm.mockImplementation((_id: string, o: { onSuccess: () => void }) => o.onSuccess());
+    open();
+    fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirm' }));
+    expect(h.toast.success).toHaveBeenCalledWith(key);
+  });
+
   it('reject needs a note: an empty one is blocked with a reason, nothing is sent', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.reject' }));
@@ -184,5 +196,26 @@ describe('invoice detail: acceptance of the terms and the automatic slip check',
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByRole('button', { name: 'invoices.detail' })[0] as HTMLElement);
     expect(screen.getByTestId('terms-none')).toBeTruthy();
+  });
+});
+
+describe('invoices the shop bought itself ("ซื้อเลย")', () => {
+  it('are marked "สร้างโดยร้าน" next to the shop in the list, and not the team-issued ones', () => {
+    h.invoices = [
+      invoice({ id: 'a', number: 'INV-A', selfServe: true }),
+      invoice({ id: 'b', number: 'INV-B', selfServe: false }),
+    ];
+    render(<InvoicesPage />);
+    // each invoice renders in the phone card and the desktop table; the mark follows only the self-serve one
+    const marks = screen.getAllByTestId('self-serve-badge');
+    expect(marks.length).toBe(2);
+    expect(marks.every((m) => m.textContent === 'invoices.selfServe')).toBe(true);
+  });
+
+  it('the detail sheet says the invoice was created by the shop', () => {
+    h.invoices = [invoice({ selfServe: true })];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'invoices.slip.review' })[0] as HTMLElement);
+    expect(document.body.textContent).toContain('invoiceSource.subscription · invoices.selfServe');
   });
 });

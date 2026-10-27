@@ -122,7 +122,10 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
 
   const rows: [string, string][] = [
     [t('invoices.col.shop'), invoice.tenantName],
-    [t('invoices.col.source'), t(`invoiceSource.${invoice.source}`)],
+    [
+      t('invoices.col.source'),
+      `${t(`invoiceSource.${invoice.source}`)}${invoice.selfServe ? ` · ${t('invoices.selfServe')}` : ''}`,
+    ],
     ...(invoice.planName ? ([[t('invoices.col.plan'), invoice.planName]] as [string, string][]) : []),
     ...(invoice.periodStart && invoice.periodEnd
       ? ([[t('invoices.col.period'), `${dmyBE(invoice.periodStart)}–${dmyBE(invoice.periodEnd)}`]] as [
@@ -188,7 +191,9 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
             onClick={() =>
               confirm.mutate(invoice.id, {
                 onSuccess: () => {
-                  toast.success(t('invoices.slip.confirmedToast', { number: invoice.number }));
+                  toast.success(
+                    t(`invoices.slip.confirmedToast.${invoice.addon ?? 'plan'}`, { number: invoice.number }),
+                  );
                   onClose();
                 },
               })

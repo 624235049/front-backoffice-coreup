@@ -59,6 +59,17 @@ function SlipBadge({ invoice }: { invoice: Invoice }) {
   );
 }
 
+/** "สร้างโดยร้าน": the shop bought it itself with "ซื้อเลย" (self-serve checkout), nobody on the team issued it. */
+export function SelfServeBadge({ invoice }: { invoice: Invoice }) {
+  const { t } = useTranslation('platform');
+  if (!invoice.selfServe) return null;
+  return (
+    <Badge variant="secondary" className="mt-1 block w-fit" data-testid="self-serve-badge">
+      {t('invoices.selfServe')}
+    </Badge>
+  );
+}
+
 export function InvoiceStatusBadge({ status }: { status: Invoice['status'] }) {
   const { t } = useTranslation('platform');
   const tone = {
@@ -250,6 +261,7 @@ export function InvoicesPage() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <div className="font-semibold">{i.tenantName}</div>
+                        <SelfServeBadge invoice={i} />
                         <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
                       </div>
                       <InvoiceStatusBadge status={i.status} />
@@ -290,7 +302,10 @@ export function InvoicesPage() {
                             <span className="block text-muted-foreground">{i.receiptNumber}</span>
                           ) : null}
                         </TableCell>
-                        <TableCell>{i.tenantName}</TableCell>
+                        <TableCell>
+                          {i.tenantName}
+                          <SelfServeBadge invoice={i} />
+                        </TableCell>
                         <TableCell>
                           {i.planName ?? t(`invoiceSource.${i.source}`)}
                           {i.periodStart && i.periodEnd ? (

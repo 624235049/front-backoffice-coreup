@@ -837,6 +837,7 @@
     "monthNeeded": "Pick a month first",
     "slipFilter": "Awaiting confirmation",
     "slipEmpty": "Nothing awaiting confirmation",
+    "selfServe": "Created by the shop",
     "slip": {
       "badge": "Transfer reported",
       "review": "Review slip",
@@ -849,7 +850,11 @@
       "sentAt": "Reported at",
       "confirm": "Confirm payment (activate the shop's package)",
       "confirmHint": "Renews the package, issues the receipt and sends the owner an email and an in-app notice right away.",
-      "confirmedToast": "Payment for {{number}} confirmed, package activated",
+      "confirmedToast": {
+        "plan": "Payment for {{number}} confirmed, package activated",
+        "ai_chat": "Payment for {{number}} confirmed, AI chat switched on for the shop",
+        "ai_topup": "Payment for {{number}} confirmed, messages added for the shop"
+      },
       "noteLabel": "Invalid slip: tell the shop why",
       "notePlaceholder": "e.g. amount does not match, or this is not the slip for this invoice",
       "noteNeeded": "Write the reason first so the shop knows what to fix",

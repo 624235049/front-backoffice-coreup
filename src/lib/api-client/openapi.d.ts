@@ -974,6 +974,65 @@ export interface paths {
                                         noteLabel: string | null;
                                         noteRequired: boolean;
                                         pickupTimes: boolean;
+                                        terms: {
+                                            minDays?: number;
+                                            maxDays?: number;
+                                            includedDays?: number;
+                                            /** @enum {string} */
+                                            priceMode?: "extra" | "tiers" | "rates";
+                                            extraDayMinor?: number;
+                                            extraDayPercent?: number;
+                                            weekCapMinor?: number;
+                                            tiers?: {
+                                                upToDays: number;
+                                                priceMinor: number;
+                                            }[];
+                                            dayMinor?: number;
+                                            weekMinor?: number;
+                                            monthMinor?: number;
+                                            securityDepositMinor?: number;
+                                            securityDepositPercent?: number;
+                                            lateFee?: {
+                                                /** @enum {string} */
+                                                mode: "hour" | "day";
+                                                amountMinor: number;
+                                                graceMin: number;
+                                            };
+                                            postLateFee?: {
+                                                perDayMinor: number;
+                                                graceDays: number;
+                                            };
+                                            replacementValueMinor?: number;
+                                            lostAfterDays?: number;
+                                            /** @enum {string} */
+                                            lostDepositRule?: "offset" | "forfeit_extra";
+                                            lostChargesReplacement?: boolean;
+                                            cleaningFeeMinor?: number;
+                                            checkInEveryDays?: number;
+                                            timeModel?: {
+                                                /** @enum {string} */
+                                                kind: "24h";
+                                            } | {
+                                                /** @enum {string} */
+                                                kind: "fixed";
+                                                pickupFrom: string;
+                                                returnBy: string;
+                                            } | {
+                                                /** @enum {string} */
+                                                kind: "choose";
+                                                /** @enum {string} */
+                                                countBy: "hours" | "calendar";
+                                                graceMin: number;
+                                            };
+                                            slotMin?: 15 | 30 | 60;
+                                            cancellationText?: string;
+                                            cancellation?: {
+                                                daysBefore: number;
+                                                refundPercent: number;
+                                            }[];
+                                            /** @enum {string} */
+                                            securityWhen?: "pickup" | "booking";
+                                        } | null;
                                         sizeChart: {
                                             size: string;
                                             bust?: number | {
@@ -989,6 +1048,302 @@ export interface paths {
                                                 max: number;
                                             } | null;
                                         }[] | null;
+                                        shipping: {
+                                            enabled: boolean;
+                                            prepDays: number;
+                                            options: {
+                                                id: string;
+                                                name: string;
+                                                courier: string | null;
+                                                transitDays: {
+                                                    metro: number;
+                                                    upcountry: number;
+                                                };
+                                                returnTransitDays: {
+                                                    metro: number;
+                                                    upcountry: number;
+                                                };
+                                                feeMinor: number;
+                                                freeOverMinor: number | null;
+                                                areas: "all" | string[];
+                                                slot: string | null;
+                                            }[];
+                                            returnPostDays: number;
+                                            marginDays: number;
+                                            lostAfterDays: number;
+                                            /** @enum {string} */
+                                            returnPaidBy: "shop" | "customer";
+                                            packagingFeeMinor: number;
+                                            requireDistrict: boolean;
+                                            defaultCourier: string | null;
+                                            areas: "all" | string[];
+                                            termsText: string | null;
+                                            allowPickupToo: boolean;
+                                        };
+                                        booking: {
+                                            /** @default null */
+                                            maxAheadDays: number | null;
+                                            /** @default true */
+                                            sameDay: boolean;
+                                            /** @default 20 */
+                                            maxItems: number;
+                                            /**
+                                             * @default {
+                                             *       "idCard": false,
+                                             *       "eventDate": false,
+                                             *       "eventType": false,
+                                             *       "height": false,
+                                             *       "measurements": false
+                                             *     }
+                                             */
+                                            required: {
+                                                /** @default false */
+                                                idCard: boolean;
+                                                /** @default false */
+                                                eventDate: boolean;
+                                                /** @default false */
+                                                eventType: boolean;
+                                                /** @default false */
+                                                height: boolean;
+                                                /** @default false */
+                                                measurements: boolean;
+                                            };
+                                        };
+                                        customers: {
+                                            /** @default null */
+                                            lateWarnAt: number | null;
+                                            /** @default null */
+                                            extraDepositAt: number | null;
+                                            /** @default 0 */
+                                            extraDepositMinor: number;
+                                            /** @default false */
+                                            idCheck: boolean;
+                                        };
+                                        messages: {
+                                            confirmed?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            depositReceived?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            pickupReminder?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            shipped?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            returnReminder?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            lateNotice?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            refundDone?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            thankYou?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                            rebook?: {
+                                                /** @default true */
+                                                enabled: boolean;
+                                                /** @default null */
+                                                text: string | null;
+                                                /** @default null */
+                                                hours: number | null;
+                                                /** @default null */
+                                                days: number | null;
+                                            };
+                                        };
+                                        alerts: {
+                                            /**
+                                             * @default {
+                                             *       "ship": true,
+                                             *       "lateShip": true,
+                                             *       "pickups": true,
+                                             *       "returns": true,
+                                             *       "overdue": true,
+                                             *       "parcels": true,
+                                             *       "repairs": true,
+                                             *       "newBookings": true,
+                                             *       "deposits": true,
+                                             *       "refunds": true
+                                             *     }
+                                             */
+                                            sections: {
+                                                /** @default true */
+                                                ship: boolean;
+                                                /** @default true */
+                                                lateShip: boolean;
+                                                /** @default true */
+                                                pickups: boolean;
+                                                /** @default true */
+                                                returns: boolean;
+                                                /** @default true */
+                                                overdue: boolean;
+                                                /** @default true */
+                                                parcels: boolean;
+                                                /** @default true */
+                                                repairs: boolean;
+                                                /** @default true */
+                                                newBookings: boolean;
+                                                /** @default true */
+                                                deposits: boolean;
+                                                /** @default true */
+                                                refunds: boolean;
+                                            };
+                                            /** @default {} */
+                                            recipients: {
+                                                morning?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                                overdue?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                                unitDown?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                                newBooking?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                                depositSlip?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                                refund?: {
+                                                    /**
+                                                     * @default [
+                                                     *       "manager",
+                                                     *       "frontDesk"
+                                                     *     ]
+                                                     */
+                                                    roles: ("manager" | "frontDesk")[];
+                                                    /** @default [] */
+                                                    branchIds: string[];
+                                                };
+                                            };
+                                        };
+                                        documents: {
+                                            /** @default false */
+                                            agreementOn: boolean;
+                                            /** @default  */
+                                            agreementText: string;
+                                            /**
+                                             * @default {
+                                             *       "taxId": null,
+                                             *       "phone": null,
+                                             *       "footer": null
+                                             *     }
+                                             */
+                                            receipt: {
+                                                /** @default null */
+                                                taxId: string | null;
+                                                /** @default null */
+                                                phone: string | null;
+                                                /** @default null */
+                                                footer: string | null;
+                                            };
+                                            /**
+                                             * @default 100x150
+                                             * @enum {string}
+                                             */
+                                            labelSize: "100x150" | "a6";
+                                        };
                                     } | null;
                                     /** @enum {string|null} */
                                     payMethod: "hand_fee_percent" | "per_case_fixed" | "per_class_fixed" | "salary_only" | "custom" | null;
@@ -12393,6 +12748,15 @@ export interface paths {
                     content: {
                         "application/json": {
                             data: {
+                                cards: {
+                                    code: string | null;
+                                    name: string;
+                                    size: string | null;
+                                    body: string | null;
+                                    priceBaht: number | null;
+                                    imageUrl: string | null;
+                                    link: string;
+                                }[];
                                 reply: string;
                                 handoff: boolean;
                                 noReply: boolean;
@@ -15942,7 +16306,7 @@ export interface paths {
                                     /**
                                      * @default {
                                      *       "nail": "https://www.coreup.pro/b/petal-nail",
-                                     *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                                     *       "dress_rental": "https://www.coreup.pro/b/dress-demo"
                                      *     }
                                      */
                                     demoLinks: {
@@ -16177,7 +16541,7 @@ export interface paths {
                         /**
                          * @default {
                          *       "nail": "https://www.coreup.pro/b/petal-nail",
-                         *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                         *       "dress_rental": "https://www.coreup.pro/b/dress-demo"
                          *     }
                          */
                         demoLinks?: {
@@ -16323,7 +16687,7 @@ export interface paths {
                                     /**
                                      * @default {
                                      *       "nail": "https://www.coreup.pro/b/petal-nail",
-                                     *       "dress_rental": "https://www.coreup.pro/b/bloom-dress"
+                                     *       "dress_rental": "https://www.coreup.pro/b/dress-demo"
                                      *     }
                                      */
                                     demoLinks: {
@@ -19377,6 +19741,9 @@ export interface paths {
                                     ip: string | null;
                                     userAgent: string | null;
                                 } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | null;
                             };
                         };
                     };
@@ -19867,6 +20234,9 @@ export interface paths {
                                     ip: string | null;
                                     userAgent: string | null;
                                 } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | null;
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -20034,6 +20404,9 @@ export interface paths {
                                     ip: string | null;
                                     userAgent: string | null;
                                 } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | null;
                             };
                         };
                     };
@@ -20309,6 +20682,9 @@ export interface paths {
                                     ip: string | null;
                                     userAgent: string | null;
                                 } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | null;
                             };
                         };
                     };
@@ -20471,6 +20847,9 @@ export interface paths {
                                     ip: string | null;
                                     userAgent: string | null;
                                 } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | null;
                             };
                         };
                     };
@@ -35716,7 +36095,7 @@ export interface paths {
                                 note: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string|null} */
-                                source: "shop" | "booking" | "online" | "import" | null;
+                                source: "shop" | "booking" | "online" | "import" | "security" | null;
                                 estimated: boolean;
                             }[];
                             summary: {
@@ -45979,6 +46358,7 @@ export interface paths {
                                 customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                rental: boolean;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -46174,6 +46554,7 @@ export interface paths {
                                 customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                rental: boolean;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -46349,6 +46730,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46418,6 +46800,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46487,6 +46870,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46557,6 +46941,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46626,6 +47011,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -46849,6 +47235,7 @@ export interface paths {
                                 customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                rental: boolean;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -47034,6 +47421,7 @@ export interface paths {
                                 customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                rental: boolean;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -47221,6 +47609,7 @@ export interface paths {
                                 customerBirthDate: string | null;
                                 serviceId: string;
                                 serviceName: string;
+                                rental: boolean;
                                 extraServices: {
                                     id: string;
                                     name: string;
@@ -47659,7 +48048,7 @@ export interface paths {
                             labCostMinor?: number;
                             labVendor?: string | null;
                             /** @enum {string|null} */
-                            incomeKind?: "shipping" | "late_fee" | "damage" | null;
+                            incomeKind?: "shipping" | "late_fee" | "damage" | "cleaning" | "lost" | null;
                         }[];
                         rentalReturn?: {
                             /** @enum {string} */
@@ -47669,6 +48058,26 @@ export interface paths {
                             /** @default [] */
                             photoFileIds?: string[];
                             chargeMinor?: number | null;
+                        };
+                        rentalSettlement?: {
+                            /** @default false */
+                            lost?: boolean;
+                            lateReason?: string | null;
+                            refund?: {
+                                /** @enum {string} */
+                                method: "cash" | "transfer" | "promptpay";
+                                to?: {
+                                    /** @enum {string} */
+                                    kind: "promptpay" | "bank";
+                                    account: string;
+                                    name?: string | null;
+                                    bank?: string | null;
+                                } | null;
+                                /** @default false */
+                                paid?: boolean;
+                                slipFileId?: string | null;
+                                note?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -47703,6 +48112,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -48081,6 +48491,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -50953,6 +51364,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51006,12 +51418,206 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                }[];
+                                lateShips: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        rental: boolean;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
+                                            } | null;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipOutDate: string | null;
+                                    expectedReturnDate: string;
+                                    shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
+                                    units: number;
+                                    priceMinor: number;
+                                    imageUrl: string | null;
+                                    itemCode: string | null;
+                                    note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
+                                    pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51044,6 +51650,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51097,12 +51704,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51135,6 +51793,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51188,12 +51847,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51226,6 +51936,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51279,12 +51990,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51317,6 +52079,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51370,12 +52133,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51408,6 +52222,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51461,12 +52276,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51499,6 +52365,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51552,12 +52419,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51590,6 +52508,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51643,12 +52562,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51754,6 +52724,10 @@ export interface paths {
                     to?: string;
                     branchId?: string;
                     ignoreId?: string;
+                    delivery?: "pickup" | "parcel";
+                    shipOption?: string;
+                    province?: string;
+                    priceMinor?: number | null;
                 };
                 header?: never;
                 path: {
@@ -51780,11 +52754,78 @@ export interface paths {
                                     maxUnits: number;
                                     bufferDays: number;
                                     shipBeforeDays: number;
+                                    /** @enum {string} */
+                                    delivery: "pickup" | "parcel";
+                                    shippingOptions: {
+                                        id: string;
+                                        name: string;
+                                        courier: string | null;
+                                        slot: string | null;
+                                        transitDays: number;
+                                        shipDays: number;
+                                        feeMinor: number;
+                                        freeOverMinor: number | null;
+                                        chargeMinor: number;
+                                        earliestPickup: string;
+                                    }[];
+                                    shipOption: string | null;
+                                    deliveryMethods: ("pickup" | "parcel")[];
                                     earliestPickup: string;
                                     latestPickup: string;
                                     fullDays: string[];
                                     pickupSlots: {
                                         [key: string]: string[];
+                                    } | null;
+                                    terms: {
+                                        minDays: number;
+                                        maxDays: number;
+                                        timeModel: {
+                                            /** @enum {string} */
+                                            kind: "24h";
+                                        } | {
+                                            /** @enum {string} */
+                                            kind: "fixed";
+                                            pickupFrom: string;
+                                            returnBy: string;
+                                        } | {
+                                            /** @enum {string} */
+                                            kind: "choose";
+                                            /** @enum {string} */
+                                            countBy: "hours" | "calendar";
+                                            graceMin: number;
+                                        };
+                                        slotMin: number;
+                                        priceTable: {
+                                            units: number;
+                                            totalMinor: number;
+                                            lines: {
+                                                /** @enum {string} */
+                                                kind: "base" | "extra" | "tier" | "day" | "week" | "month" | "cap";
+                                                qty: number;
+                                                days: number;
+                                                unitMinor: number;
+                                                totalMinor: number;
+                                            }[];
+                                        }[];
+                                        securityDepositMinor: number;
+                                        securityDepositPercent: number | null;
+                                        lateFee: {
+                                            /** @enum {string} */
+                                            mode: "hour" | "day";
+                                            amountMinor: number;
+                                            graceMin: number;
+                                        } | null;
+                                        postLateFee: {
+                                            perDayMinor: number;
+                                            graceDays: number;
+                                        } | null;
+                                        replacementValueMinor: number | null;
+                                        cleaningFeeMinor: number;
+                                        cancellationText: string | null;
+                                        /** @enum {string} */
+                                        securityWhen: "pickup" | "booking";
+                                        /** @enum {string} */
+                                        lostDepositRule: "offset" | "forfeit_extra";
                                     } | null;
                                 };
                                 bookings: {
@@ -51809,6 +52850,7 @@ export interface paths {
                                         customerBirthDate: string | null;
                                         serviceId: string;
                                         serviceName: string;
+                                        rental: boolean;
                                         extraServices: {
                                             id: string;
                                             name: string;
@@ -51862,12 +52904,63 @@ export interface paths {
                                     shipOutDate: string | null;
                                     expectedReturnDate: string;
                                     shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
                                     units: number;
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -51992,6 +53085,7 @@ export interface paths {
                         pickupDate: string;
                         returnDate: string;
                         pickupTime?: string | null;
+                        returnTime?: string | null;
                         note?: string | null;
                         deposit?: {
                             amountMinor: number;
@@ -52001,6 +53095,28 @@ export interface paths {
                             note?: string | null;
                             slipFileId?: string | null;
                             confirmAdditional?: boolean;
+                        };
+                        /** @enum {string} */
+                        deliveryMethod?: "pickup" | "parcel";
+                        shipTo?: {
+                            name: string;
+                            phone: string;
+                            address: string;
+                            subdistrict: string;
+                            district: string;
+                            province: string;
+                            postcode: string;
+                            note?: string | null;
+                        } | null;
+                        shipOption?: string | null;
+                        extras?: {
+                            idCardNo?: string;
+                            eventDate?: string;
+                            eventType?: string;
+                            heightCm?: number;
+                            bust?: number;
+                            waist?: number;
+                            hip?: number;
                         };
                         /** @default 1 */
                         quantity?: number;
@@ -52037,6 +53153,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -52090,12 +53207,63 @@ export interface paths {
                                 shipOutDate: string | null;
                                 expectedReturnDate: string;
                                 shipBeforeDays: number;
+                                delivery: {
+                                    /** @enum {string} */
+                                    method: "pickup" | "parcel";
+                                    shipTo: {
+                                        name: string;
+                                        phone: string;
+                                        address: string;
+                                        subdistrict: string;
+                                        district: string;
+                                        province: string;
+                                        postcode: string;
+                                        note?: string | null;
+                                    } | null;
+                                    hasAddress: boolean;
+                                    option: string | null;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                    feeMinor: number;
+                                    arriveDate: string | null;
+                                    returnPostBy: string | null;
+                                    expectedArrival: string | null;
+                                    postedLateDays: number;
+                                    lost: boolean;
+                                };
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
+                                extras: {
+                                    idCardNo: string | null;
+                                    hasIdCard: boolean;
+                                    eventDate: string | null;
+                                    eventType: string | null;
+                                    heightCm: number | null;
+                                    bust: number | null;
+                                    waist: number | null;
+                                    hip: number | null;
+                                } | null;
+                                customerLateCount: number;
+                                customerBlocked: boolean;
+                                security: {
+                                    requiredMinor: number;
+                                    /** @enum {string} */
+                                    when: "pickup" | "booking";
+                                    collectedMinor: number;
+                                    heldMinor: number;
+                                    depositId: string | null;
+                                    receiptNumber: string | null;
+                                    /** @enum {string|null} */
+                                    method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                    takenAt: string | null;
+                                };
                                 pickupTime: string | null;
+                                returnTime: string | null;
                                 returnAt: string | null;
                                 /** @enum {string} */
                                 returnMethod: "in_store" | "parcel";
@@ -52221,6 +53389,21 @@ export interface paths {
                         returnDate: string;
                         serviceId?: string;
                         pickupTime?: string | null;
+                        returnTime?: string | null;
+                        dryRun?: boolean;
+                        /** @enum {string} */
+                        deliveryMethod?: "pickup" | "parcel";
+                        shipTo?: {
+                            name: string;
+                            phone: string;
+                            address: string;
+                            subdistrict: string;
+                            district: string;
+                            province: string;
+                            postcode: string;
+                            note?: string | null;
+                        } | null;
+                        shipOption?: string | null;
                     };
                 };
             };
@@ -52254,6 +53437,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -52307,12 +53491,63 @@ export interface paths {
                                 shipOutDate: string | null;
                                 expectedReturnDate: string;
                                 shipBeforeDays: number;
+                                delivery: {
+                                    /** @enum {string} */
+                                    method: "pickup" | "parcel";
+                                    shipTo: {
+                                        name: string;
+                                        phone: string;
+                                        address: string;
+                                        subdistrict: string;
+                                        district: string;
+                                        province: string;
+                                        postcode: string;
+                                        note?: string | null;
+                                    } | null;
+                                    hasAddress: boolean;
+                                    option: string | null;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                    feeMinor: number;
+                                    arriveDate: string | null;
+                                    returnPostBy: string | null;
+                                    expectedArrival: string | null;
+                                    postedLateDays: number;
+                                    lost: boolean;
+                                };
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
+                                extras: {
+                                    idCardNo: string | null;
+                                    hasIdCard: boolean;
+                                    eventDate: string | null;
+                                    eventType: string | null;
+                                    heightCm: number | null;
+                                    bust: number | null;
+                                    waist: number | null;
+                                    hip: number | null;
+                                } | null;
+                                customerLateCount: number;
+                                customerBlocked: boolean;
+                                security: {
+                                    requiredMinor: number;
+                                    /** @enum {string} */
+                                    when: "pickup" | "booking";
+                                    collectedMinor: number;
+                                    heldMinor: number;
+                                    depositId: string | null;
+                                    receiptNumber: string | null;
+                                    /** @enum {string|null} */
+                                    method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                    takenAt: string | null;
+                                };
                                 pickupTime: string | null;
+                                returnTime: string | null;
                                 returnAt: string | null;
                                 /** @enum {string} */
                                 returnMethod: "in_store" | "parcel";
@@ -52723,6 +53958,7 @@ export interface paths {
                                     customerBirthDate: string | null;
                                     serviceId: string;
                                     serviceName: string;
+                                    rental: boolean;
                                     extraServices: {
                                         id: string;
                                         name: string;
@@ -52776,12 +54012,63 @@ export interface paths {
                                 shipOutDate: string | null;
                                 expectedReturnDate: string;
                                 shipBeforeDays: number;
+                                delivery: {
+                                    /** @enum {string} */
+                                    method: "pickup" | "parcel";
+                                    shipTo: {
+                                        name: string;
+                                        phone: string;
+                                        address: string;
+                                        subdistrict: string;
+                                        district: string;
+                                        province: string;
+                                        postcode: string;
+                                        note?: string | null;
+                                    } | null;
+                                    hasAddress: boolean;
+                                    option: string | null;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                    feeMinor: number;
+                                    arriveDate: string | null;
+                                    returnPostBy: string | null;
+                                    expectedArrival: string | null;
+                                    postedLateDays: number;
+                                    lost: boolean;
+                                };
                                 units: number;
                                 priceMinor: number;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
+                                extras: {
+                                    idCardNo: string | null;
+                                    hasIdCard: boolean;
+                                    eventDate: string | null;
+                                    eventType: string | null;
+                                    heightCm: number | null;
+                                    bust: number | null;
+                                    waist: number | null;
+                                    hip: number | null;
+                                } | null;
+                                customerLateCount: number;
+                                customerBlocked: boolean;
+                                security: {
+                                    requiredMinor: number;
+                                    /** @enum {string} */
+                                    when: "pickup" | "booking";
+                                    collectedMinor: number;
+                                    heldMinor: number;
+                                    depositId: string | null;
+                                    receiptNumber: string | null;
+                                    /** @enum {string|null} */
+                                    method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                    takenAt: string | null;
+                                };
                                 pickupTime: string | null;
+                                returnTime: string | null;
                                 returnAt: string | null;
                                 /** @enum {string} */
                                 returnMethod: "in_store" | "parcel";
@@ -52867,6 +54154,520 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rentals/{id}/shipment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record that the parcel was handed to the courier (courier + tracking number)
+         * @description Only for a rental sent by parcel. The rental goes out (status `checked_in`) and the customer is told on LINE with the tracking link and the day to post it back. Sending again corrects the number (the customer is told once per number). 409 `INVALID_TRANSITION` once it is returned or cancelled.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        courier: string;
+                        trackingNo: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointment: {
+                                    id: string;
+                                    branchId: string;
+                                    customerId: string;
+                                    customerName: string;
+                                    customerHasCaution: boolean;
+                                    customer: {
+                                        id: string;
+                                        name: string;
+                                        code: string | null;
+                                        visitCount: number;
+                                        pendingFirstVisit: boolean;
+                                        caution: {
+                                            notes: boolean;
+                                            allergy: boolean;
+                                            chronic: boolean;
+                                        };
+                                    };
+                                    customerBirthDate: string | null;
+                                    serviceId: string;
+                                    serviceName: string;
+                                    rental: boolean;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
+                                    durationMin: number;
+                                    membershipId: string | null;
+                                    memberName: string | null;
+                                    resourceId: string | null;
+                                    resourceName: string | null;
+                                    startAt: string;
+                                    endAt: string;
+                                    /** @enum {string} */
+                                    status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                    /** @enum {string} */
+                                    source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                    isRequestedMember: boolean;
+                                    partySize: number;
+                                    customerPackageId: string | null;
+                                    saleMembershipId: string | null;
+                                    note: string | null;
+                                    version: number;
+                                    allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
+                                        } | null;
+                                    } | null;
+                                    createdAt: string;
+                                    updatedAt: string;
+                                };
+                                pickupDate: string;
+                                returnDate: string;
+                                shipOutDate: string | null;
+                                expectedReturnDate: string;
+                                shipBeforeDays: number;
+                                delivery: {
+                                    /** @enum {string} */
+                                    method: "pickup" | "parcel";
+                                    shipTo: {
+                                        name: string;
+                                        phone: string;
+                                        address: string;
+                                        subdistrict: string;
+                                        district: string;
+                                        province: string;
+                                        postcode: string;
+                                        note?: string | null;
+                                    } | null;
+                                    hasAddress: boolean;
+                                    option: string | null;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                    feeMinor: number;
+                                    arriveDate: string | null;
+                                    returnPostBy: string | null;
+                                    expectedArrival: string | null;
+                                    postedLateDays: number;
+                                    lost: boolean;
+                                };
+                                units: number;
+                                priceMinor: number;
+                                imageUrl: string | null;
+                                itemCode: string | null;
+                                note: string | null;
+                                extras: {
+                                    idCardNo: string | null;
+                                    hasIdCard: boolean;
+                                    eventDate: string | null;
+                                    eventType: string | null;
+                                    heightCm: number | null;
+                                    bust: number | null;
+                                    waist: number | null;
+                                    hip: number | null;
+                                } | null;
+                                customerLateCount: number;
+                                customerBlocked: boolean;
+                                security: {
+                                    requiredMinor: number;
+                                    /** @enum {string} */
+                                    when: "pickup" | "booking";
+                                    collectedMinor: number;
+                                    heldMinor: number;
+                                    depositId: string | null;
+                                    receiptNumber: string | null;
+                                    /** @enum {string|null} */
+                                    method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                    takenAt: string | null;
+                                };
+                                pickupTime: string | null;
+                                returnTime: string | null;
+                                returnAt: string | null;
+                                /** @enum {string} */
+                                returnMethod: "in_store" | "parcel";
+                                parcel: {
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/label": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shipping label data of a parcel rental (to, from, dresses, dates); the screen prints it as A6 / 100x150 mm
+         * @description Carries the delivery address: needs `customers:read` and `appointments:read`. 404 when the rental is not a parcel or has no address.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `customers:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                reference: string;
+                                from: {
+                                    name: string;
+                                    branch: string | null;
+                                    address: string | null;
+                                    phone: string | null;
+                                };
+                                to: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                    subdistrict: string;
+                                    district: string;
+                                    province: string;
+                                    postcode: string;
+                                    note?: string | null;
+                                };
+                                itemCode: string | null;
+                                itemName: string;
+                                pickupDate: string;
+                                returnDate: string;
+                                shipOutDate: string | null;
+                                option: string | null;
+                                courier: string | null;
+                                trackingNo: string | null;
+                                returnPostBy: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/customers/{id}/addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A customer's earlier delivery addresses, the last used first (to prefill a parcel booking)
+         * @description Requires header `X-Tenant-Id`. Permission: `customers:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                addresses: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                    subdistrict: string;
+                                    district: string;
+                                    province: string;
+                                    postcode: string;
+                                    note?: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/rentals/items": {
         parameters: {
             query?: never;
@@ -52886,6 +54687,9 @@ export interface paths {
                     size?: string;
                     pickupDate?: string;
                     returnDate?: string;
+                    delivery?: "pickup" | "parcel";
+                    shipOption?: string;
+                    province?: string;
                     offset?: number | null;
                     limit?: number;
                     active?: "true" | "false" | "all";
@@ -52945,6 +54749,7 @@ export interface paths {
                                     quantity: number;
                                     bufferDays: number;
                                     shipBeforeDays: number;
+                                    ships: boolean;
                                     active: boolean;
                                     onlineBookable: boolean;
                                     imageUrl: string | null;
@@ -53194,6 +54999,15 @@ export interface paths {
                             buffer?: number | string | null;
                             description?: string | null;
                             online?: boolean | number | string | null;
+                            code?: string | null;
+                            bust?: number | string | null;
+                            waist?: number | string | null;
+                            hip?: number | string | null;
+                            length?: number | string | null;
+                            fabric?: string | null;
+                            note?: string | null;
+                            deposit?: number | string | null;
+                            images?: string | null;
                         }[];
                     };
                 };
@@ -53223,6 +55037,10 @@ export interface paths {
                                     message: string | null;
                                 }[];
                                 newCategories: string[];
+                                images: {
+                                    saved: number;
+                                    failed: number;
+                                };
                             };
                         };
                     };
@@ -53308,7 +55126,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Create / update rental items from spreadsheet rows, matched by name + size; new categories are created (a bad row is reported and skipped)
+         * Create / update rental items from spreadsheet rows, matched by product code (else name + size); new categories are created, picture links are downloaded (a bad row is reported and skipped)
          * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
          *
          *     Requires header `Idempotency-Key` (replayed for 24h).
@@ -53342,6 +55160,15 @@ export interface paths {
                             buffer?: number | string | null;
                             description?: string | null;
                             online?: boolean | number | string | null;
+                            code?: string | null;
+                            bust?: number | string | null;
+                            waist?: number | string | null;
+                            hip?: number | string | null;
+                            length?: number | string | null;
+                            fabric?: string | null;
+                            note?: string | null;
+                            deposit?: number | string | null;
+                            images?: string | null;
                         }[];
                     };
                 };
@@ -53371,6 +55198,10 @@ export interface paths {
                                     message: string | null;
                                 }[];
                                 newCategories: string[];
+                                images: {
+                                    saved: number;
+                                    failed: number;
+                                };
                             };
                         };
                     };
@@ -53440,6 +55271,1865 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/booking-imports/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dry run of the bookings import: what each row would do, clashes included (nothing is saved)
+         * @description Same rental service as the counter: the item must be free on every day (cleaning days included), checked under the per-item lock, so overbooking is never saved. Only the lead-time, past-date and required-note rules are skipped. A customer is found by phone, else made; a deposit already paid is recorded against the booking.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @default false */
+                        allOrNothing?: boolean;
+                        branchId?: string;
+                        rows: {
+                            code?: string | null;
+                            customerName?: string | null;
+                            phone?: number | string | null;
+                            pickupDate?: number | string | null;
+                            pickupTime?: number | string | null;
+                            returnDate?: number | string | null;
+                            depositPaid?: number | string | null;
+                            note?: string | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Result */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                committed: boolean;
+                                created: number;
+                                newCustomers: number;
+                                deposits: number;
+                                errors: {
+                                    row: number;
+                                    message: string;
+                                }[];
+                                rows: {
+                                    /** @description 1-based, first row under the header */
+                                    row: number;
+                                    /** @enum {string} */
+                                    action: "create" | "error";
+                                    code: string;
+                                    customerName: string;
+                                    message: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/booking-imports/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Take the future bookings of a spreadsheet as rentals (no message goes to the customers); a row that clashes with a booking or names an unknown code is reported, `allOrNothing` saves nothing when any row fails
+         * @description Same rental service as the counter: the item must be free on every day (cleaning days included), checked under the per-item lock, so overbooking is never saved. Only the lead-time, past-date and required-note rules are skipped. A customer is found by phone, else made; a deposit already paid is recorded against the booking.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @default false */
+                        allOrNothing?: boolean;
+                        branchId?: string;
+                        rows: {
+                            code?: string | null;
+                            customerName?: string | null;
+                            phone?: number | string | null;
+                            pickupDate?: number | string | null;
+                            pickupTime?: number | string | null;
+                            returnDate?: number | string | null;
+                            depositPaid?: number | string | null;
+                            note?: string | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Result */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                committed: boolean;
+                                created: number;
+                                newCustomers: number;
+                                deposits: number;
+                                errors: {
+                                    row: number;
+                                    message: string;
+                                }[];
+                                rows: {
+                                    /** @description 1-based, first row under the header */
+                                    row: number;
+                                    /** @enum {string} */
+                                    action: "create" | "error";
+                                    code: string;
+                                    customerName: string;
+                                    message: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/terms/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview the rental price of every length for terms being edited (shop defaults and / or a dress override)
+         * @description `shop` null = the saved shop defaults. The answer lists the price (with its breakdown) of every length from the minimum to the longest stay, so the shop can check its rules before saving.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        shop: {
+                            minDays?: number;
+                            maxDays?: number;
+                            includedDays?: number;
+                            /** @enum {string} */
+                            priceMode?: "extra" | "tiers" | "rates";
+                            extraDayMinor?: number;
+                            extraDayPercent?: number;
+                            weekCapMinor?: number;
+                            tiers?: {
+                                upToDays: number;
+                                priceMinor: number;
+                            }[];
+                            dayMinor?: number;
+                            weekMinor?: number;
+                            monthMinor?: number;
+                            securityDepositMinor?: number;
+                            securityDepositPercent?: number;
+                            lateFee?: {
+                                /** @enum {string} */
+                                mode: "hour" | "day";
+                                amountMinor: number;
+                                graceMin: number;
+                            };
+                            postLateFee?: {
+                                perDayMinor: number;
+                                graceDays: number;
+                            };
+                            replacementValueMinor?: number;
+                            lostAfterDays?: number;
+                            /** @enum {string} */
+                            lostDepositRule?: "offset" | "forfeit_extra";
+                            lostChargesReplacement?: boolean;
+                            cleaningFeeMinor?: number;
+                            checkInEveryDays?: number;
+                            timeModel?: {
+                                /** @enum {string} */
+                                kind: "24h";
+                            } | {
+                                /** @enum {string} */
+                                kind: "fixed";
+                                pickupFrom: string;
+                                returnBy: string;
+                            } | {
+                                /** @enum {string} */
+                                kind: "choose";
+                                /** @enum {string} */
+                                countBy: "hours" | "calendar";
+                                graceMin: number;
+                            };
+                            slotMin?: 15 | 30 | 60;
+                            cancellationText?: string;
+                            cancellation?: {
+                                daysBefore: number;
+                                refundPercent: number;
+                            }[];
+                            /** @enum {string} */
+                            securityWhen?: "pickup" | "booking";
+                        } | null;
+                        dress: {
+                            minDays?: number;
+                            maxDays?: number;
+                            includedDays?: number;
+                            /** @enum {string} */
+                            priceMode?: "extra" | "tiers" | "rates";
+                            extraDayMinor?: number;
+                            extraDayPercent?: number;
+                            weekCapMinor?: number;
+                            tiers?: {
+                                upToDays: number;
+                                priceMinor: number;
+                            }[];
+                            dayMinor?: number;
+                            weekMinor?: number;
+                            monthMinor?: number;
+                            securityDepositMinor?: number;
+                            securityDepositPercent?: number;
+                            lateFee?: {
+                                /** @enum {string} */
+                                mode: "hour" | "day";
+                                amountMinor: number;
+                                graceMin: number;
+                            };
+                            postLateFee?: {
+                                perDayMinor: number;
+                                graceDays: number;
+                            };
+                            replacementValueMinor?: number;
+                            lostAfterDays?: number;
+                            /** @enum {string} */
+                            lostDepositRule?: "offset" | "forfeit_extra";
+                            lostChargesReplacement?: boolean;
+                            cleaningFeeMinor?: number;
+                            checkInEveryDays?: number;
+                        } | null;
+                        basePriceMinor: number;
+                        itemMaxDays?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                minDays: number;
+                                maxDays: number;
+                                priceTable: {
+                                    units: number;
+                                    totalMinor: number;
+                                    lines: {
+                                        /** @enum {string} */
+                                        kind: "base" | "extra" | "tier" | "day" | "week" | "month" | "cap";
+                                        qty: number;
+                                        days: number;
+                                        unitMinor: number;
+                                        totalMinor: number;
+                                    }[];
+                                }[];
+                                securityTable: number[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/settlement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The money at the return of a rental right now: late fee, charges, security deposit refund or extra due
+         * @description Worked out from the terms the rental agreed at booking: the late fee is automatic (in-store: hours or days late against the return moment; parcel: days posted after the post-by day) unless `lateMinor` is sent. Security deposit refund = held minus late, damage, cleaning and lost charges (never below 0). A lost dress charges the replacement value when the rules say so; by default the held deposit pays it (`lostDepositRule` offset), under `forfeit_extra` the shop keeps the deposit on top. Nothing is saved.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    damageMinor?: number | null;
+                    cleaningMinor?: number | null;
+                    lateMinor?: number | null;
+                    lost?: "true" | "false";
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                rentalMinor: number;
+                                shippingMinor: number;
+                                lateMinor: number;
+                                damageMinor: number;
+                                cleaningMinor: number;
+                                lostMinor: number;
+                                chargesMinor: number;
+                                depositPaidMinor: number;
+                                securityHeldMinor: number;
+                                securityKeptMinor: number;
+                                securityUsedMinor: number;
+                                refundMinor: number;
+                                extraDueMinor: number;
+                                payNowMinor: number;
+                                autoLateMinor: number;
+                                dueAt: string | null;
+                                postedLateDays: number | null;
+                                replacementValueMinor: number | null;
+                                cleaningFeeMinor: number;
+                                securityRequiredMinor: number;
+                                /** @enum {string} */
+                                lostDepositRule: "offset" | "forfeit_extra";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/blocklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Customers the shop blocked from online rental booking
+         * @description Requires header `X-Tenant-Id`. Permission: `customers:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                phoneTail: string | null;
+                                note: string | null;
+                                addedAt: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Block a customer (or a phone number) from online rental booking
+         * @description Online bookings by the same phone number or LINE account are refused; the counter only sees a warning. The phone is kept as a keyed hash plus its last 4 digits.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        customerId?: string;
+                        phone?: string;
+                        note?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Blocked */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                phoneTail: string | null;
+                                note: string | null;
+                                addedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/blocklist/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Lift a block
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lifted */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/customer-risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A customer's rental history against the shop's customer rules (late returns, block, extra deposit)
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    customerId: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                blocked: boolean;
+                                lateCount: number;
+                                warn: boolean;
+                                extraDepositMinor: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/security": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The security deposit (ค่าประกันชุด) of one rental: what the terms ask and what is held
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                requiredMinor: number;
+                                /** @enum {string} */
+                                when: "pickup" | "booking";
+                                collectedMinor: number;
+                                heldMinor: number;
+                                depositId: string | null;
+                                receiptNumber: string | null;
+                                /** @enum {string|null} */
+                                method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                takenAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Take the security deposit of a rental (at pick-up, or with the booking). Cash goes into the open drawer; one per rental (409 when already taken)
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        amountMinor: number;
+                        /** @enum {string} */
+                        method: "cash" | "transfer" | "promptpay" | "other";
+                        reference?: string | null;
+                        slipFileId?: string | null;
+                        note?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Taken */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                requiredMinor: number;
+                                /** @enum {string} */
+                                when: "pickup" | "booking";
+                                collectedMinor: number;
+                                heldMinor: number;
+                                depositId: string | null;
+                                receiptNumber: string | null;
+                                /** @enum {string|null} */
+                                method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                takenAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/refunds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Refunds of security deposits, pending (oldest first) or done. The customer account to pay is only shown with `customers:read`
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    status?: "pending" | "refunded";
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointmentId: string;
+                                customerId: string;
+                                customerName: string | null;
+                                itemName: string | null;
+                                itemCode: string | null;
+                                refundMinor: number;
+                                /** @enum {string} */
+                                status: "pending" | "refunded";
+                                /** @enum {string} */
+                                method: "cash" | "transfer" | "promptpay";
+                                to: {
+                                    /** @enum {string} */
+                                    kind: "promptpay" | "bank";
+                                    account: string;
+                                    name?: string | null;
+                                    bank?: string | null;
+                                } | null;
+                                hasTo: boolean;
+                                slipFileId: string | null;
+                                note: string | null;
+                                settledAt: string;
+                                refundedAt: string | null;
+                                daysPending: number;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mark the pending refund of a rental security deposit as handed back (cash from the drawer, or a transfer with its slip)
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        slipFileId?: string | null;
+                        note?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Refunded */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                ok: true;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rental report: money by kind and period, security deposits (held / refunded / kept), where the items are, utilisation and top dresses, late customers
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    grain?: "day" | "month";
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                from: string;
+                                to: string;
+                                /** @enum {string} */
+                                grain: "day" | "month";
+                                revenue: {
+                                    rows: {
+                                        period: string;
+                                        rentalMinor: number;
+                                        shippingMinor: number;
+                                        lateFeeMinor: number;
+                                        damageMinor: number;
+                                        cleaningMinor: number;
+                                        lostMinor: number;
+                                        totalMinor: number;
+                                    }[];
+                                    totals: {
+                                        rentalMinor: number;
+                                        shippingMinor: number;
+                                        lateFeeMinor: number;
+                                        damageMinor: number;
+                                        cleaningMinor: number;
+                                        lostMinor: number;
+                                        totalMinor: number;
+                                    };
+                                };
+                                security: {
+                                    heldNowMinor: number;
+                                    pendingRefundMinor: number;
+                                    pendingRefunds: number;
+                                    collectedMinor: number;
+                                    refundedMinor: number;
+                                    keptMinor: number;
+                                };
+                                operations: {
+                                    out: number;
+                                    inTransitOut: number;
+                                    inTransitBack: number;
+                                    overdueReturns: number;
+                                    overduePosts: number;
+                                    lateArrivals: number;
+                                    inRepair: number;
+                                };
+                                dresses: {
+                                    serviceId: string;
+                                    code: string | null;
+                                    name: string;
+                                    rentals: number;
+                                    daysRented: number;
+                                    daysAvailable: number;
+                                    utilisationBp: number;
+                                    revenueMinor: number;
+                                }[];
+                                lateCustomers: {
+                                    customerId: string;
+                                    name: string | null;
+                                    lateCount: number;
+                                    rentals: number;
+                                    lastLateAt: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/report/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One table of the rental report as CSV (UTF-8 with BOM): revenue, dresses or late customers
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:export`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    grain?: "day" | "month";
+                    branchId?: string;
+                    part?: "revenue" | "dresses" | "customers";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description CSV file */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/csv": string;
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -54220,6 +57910,29 @@ export interface paths {
                                     label: string;
                                 }[];
                                 knowledge: string;
+                                rentalShop: boolean;
+                                dress: {
+                                    /** @default {} */
+                                    facts: {
+                                        /** @default true */
+                                        prices: boolean;
+                                        /** @default true */
+                                        deposit: boolean;
+                                        /** @default true */
+                                        shipping: boolean;
+                                        /** @default true */
+                                        measurements: boolean;
+                                    };
+                                    /** @default {} */
+                                    handoff: {
+                                        /** @default true */
+                                        priceNegotiation: boolean;
+                                        /** @default true */
+                                        longRental: boolean;
+                                        /** @default [] */
+                                        keywords: string[];
+                                    };
+                                };
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -54334,6 +58047,28 @@ export interface paths {
                             label: string;
                         }[];
                         knowledge?: string;
+                        dress?: {
+                            /** @default {} */
+                            facts?: {
+                                /** @default true */
+                                prices?: boolean;
+                                /** @default true */
+                                deposit?: boolean;
+                                /** @default true */
+                                shipping?: boolean;
+                                /** @default true */
+                                measurements?: boolean;
+                            };
+                            /** @default {} */
+                            handoff?: {
+                                /** @default true */
+                                priceNegotiation?: boolean;
+                                /** @default true */
+                                longRental?: boolean;
+                                /** @default [] */
+                                keywords?: string[];
+                            };
+                        };
                     };
                 };
             };
@@ -54354,6 +58089,29 @@ export interface paths {
                                     label: string;
                                 }[];
                                 knowledge: string;
+                                rentalShop: boolean;
+                                dress: {
+                                    /** @default {} */
+                                    facts: {
+                                        /** @default true */
+                                        prices: boolean;
+                                        /** @default true */
+                                        deposit: boolean;
+                                        /** @default true */
+                                        shipping: boolean;
+                                        /** @default true */
+                                        measurements: boolean;
+                                    };
+                                    /** @default {} */
+                                    handoff: {
+                                        /** @default true */
+                                        priceNegotiation: boolean;
+                                        /** @default true */
+                                        longRental: boolean;
+                                        /** @default [] */
+                                        keywords: string[];
+                                    };
+                                };
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -54482,6 +58240,29 @@ export interface paths {
                                     label: string;
                                 }[];
                                 knowledge: string;
+                                rentalShop: boolean;
+                                dress: {
+                                    /** @default {} */
+                                    facts: {
+                                        /** @default true */
+                                        prices: boolean;
+                                        /** @default true */
+                                        deposit: boolean;
+                                        /** @default true */
+                                        shipping: boolean;
+                                        /** @default true */
+                                        measurements: boolean;
+                                    };
+                                    /** @default {} */
+                                    handoff: {
+                                        /** @default true */
+                                        priceNegotiation: boolean;
+                                        /** @default true */
+                                        longRental: boolean;
+                                        /** @default [] */
+                                        keywords: string[];
+                                    };
+                                };
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -55460,6 +59241,15 @@ export interface paths {
                     content: {
                         "application/json": {
                             data: {
+                                cards: {
+                                    code: string | null;
+                                    name: string;
+                                    size: string | null;
+                                    body: string | null;
+                                    priceBaht: number | null;
+                                    imageUrl: string | null;
+                                    link: string;
+                                }[];
                                 reply: string;
                                 handoff: boolean;
                                 noReply: boolean;
@@ -55617,7 +59407,7 @@ export interface paths {
                                 takenBy: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string} */
-                                source: "shop" | "booking" | "online" | "import";
+                                source: "shop" | "booking" | "online" | "import" | "security";
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -55763,7 +59553,7 @@ export interface paths {
                                 takenBy: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string} */
-                                source: "shop" | "booking" | "online" | "import";
+                                source: "shop" | "booking" | "online" | "import" | "security";
                             };
                         };
                     };
@@ -55896,7 +59686,7 @@ export interface paths {
                                 takenBy: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string} */
-                                source: "shop" | "booking" | "online" | "import";
+                                source: "shop" | "booking" | "online" | "import" | "security";
                             };
                         };
                     };
@@ -56175,7 +59965,7 @@ export interface paths {
                                 takenBy: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string} */
-                                source: "shop" | "booking" | "online" | "import";
+                                source: "shop" | "booking" | "online" | "import" | "security";
                             };
                         };
                     };
@@ -56322,7 +60112,7 @@ export interface paths {
                                 takenBy: string | null;
                                 slipFileId: string | null;
                                 /** @enum {string} */
-                                source: "shop" | "booking" | "online" | "import";
+                                source: "shop" | "booking" | "online" | "import" | "security";
                             };
                         };
                     };
@@ -56459,7 +60249,7 @@ export interface paths {
                                     takenBy: string | null;
                                     slipFileId: string | null;
                                     /** @enum {string} */
-                                    source: "shop" | "booking" | "online" | "import";
+                                    source: "shop" | "booking" | "online" | "import" | "security";
                                 }[];
                             };
                         };
@@ -56965,7 +60755,7 @@ export interface paths {
                             labCostMinor?: number;
                             labVendor?: string | null;
                             /** @enum {string|null} */
-                            incomeKind?: "shipping" | "late_fee" | "damage" | null;
+                            incomeKind?: "shipping" | "late_fee" | "damage" | "cleaning" | "lost" | null;
                         }[];
                         /**
                          * @description integer satang
@@ -57465,7 +61255,7 @@ export interface paths {
                             labCostMinor?: number;
                             labVendor?: string | null;
                             /** @enum {string|null} */
-                            incomeKind?: "shipping" | "late_fee" | "damage" | null;
+                            incomeKind?: "shipping" | "late_fee" | "damage" | "cleaning" | "lost" | null;
                         }[];
                         /** @description integer satang */
                         tipMinor?: number;
@@ -60302,6 +64092,11 @@ export interface paths {
                                     usedPoints: number;
                                     earnedPoints: number;
                                     balance: number;
+                                } | null;
+                                shopLines?: {
+                                    taxId: string | null;
+                                    phone: string | null;
+                                    footer: string | null;
                                 } | null;
                             };
                         };
@@ -83072,6 +86867,7 @@ export interface paths {
                                         returnDate: string;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
+                                        returnTime: string | null;
                                         returnAt: string | null;
                                         /** @enum {string} */
                                         returnMethod: "in_store" | "parcel";
@@ -83080,6 +86876,24 @@ export interface paths {
                                             trackingNo: string | null;
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
+                                        } | null;
+                                        delivery: {
+                                            /** @enum {string} */
+                                            method: "pickup" | "parcel";
+                                            option: string | null;
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                            feeMinor: number;
+                                            arriveDate: string | null;
+                                            returnPostBy: string | null;
+                                            expectedArrival: string | null;
+                                            lost: boolean;
+                                        };
+                                        due: {
+                                            rentalLeftMinor: number;
+                                            securityDepositMinor: number;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -83142,6 +86956,7 @@ export interface paths {
                                         returnDate: string;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
+                                        returnTime: string | null;
                                         returnAt: string | null;
                                         /** @enum {string} */
                                         returnMethod: "in_store" | "parcel";
@@ -83150,6 +86965,24 @@ export interface paths {
                                             trackingNo: string | null;
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
+                                        } | null;
+                                        delivery: {
+                                            /** @enum {string} */
+                                            method: "pickup" | "parcel";
+                                            option: string | null;
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                            feeMinor: number;
+                                            arriveDate: string | null;
+                                            returnPostBy: string | null;
+                                            expectedArrival: string | null;
+                                            lost: boolean;
+                                        };
+                                        due: {
+                                            rentalLeftMinor: number;
+                                            securityDepositMinor: number;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -83438,6 +87271,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -83446,6 +87280,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -83621,6 +87473,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -83629,6 +87482,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -83803,6 +87674,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -83811,6 +87683,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -83986,6 +87876,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -83994,6 +87885,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -85924,6 +89833,65 @@ export interface paths {
                                     noteLabel: string | null;
                                     noteRequired: boolean;
                                     pickupTimes: boolean;
+                                    terms: {
+                                        minDays?: number;
+                                        maxDays?: number;
+                                        includedDays?: number;
+                                        /** @enum {string} */
+                                        priceMode?: "extra" | "tiers" | "rates";
+                                        extraDayMinor?: number;
+                                        extraDayPercent?: number;
+                                        weekCapMinor?: number;
+                                        tiers?: {
+                                            upToDays: number;
+                                            priceMinor: number;
+                                        }[];
+                                        dayMinor?: number;
+                                        weekMinor?: number;
+                                        monthMinor?: number;
+                                        securityDepositMinor?: number;
+                                        securityDepositPercent?: number;
+                                        lateFee?: {
+                                            /** @enum {string} */
+                                            mode: "hour" | "day";
+                                            amountMinor: number;
+                                            graceMin: number;
+                                        };
+                                        postLateFee?: {
+                                            perDayMinor: number;
+                                            graceDays: number;
+                                        };
+                                        replacementValueMinor?: number;
+                                        lostAfterDays?: number;
+                                        /** @enum {string} */
+                                        lostDepositRule?: "offset" | "forfeit_extra";
+                                        lostChargesReplacement?: boolean;
+                                        cleaningFeeMinor?: number;
+                                        checkInEveryDays?: number;
+                                        timeModel?: {
+                                            /** @enum {string} */
+                                            kind: "24h";
+                                        } | {
+                                            /** @enum {string} */
+                                            kind: "fixed";
+                                            pickupFrom: string;
+                                            returnBy: string;
+                                        } | {
+                                            /** @enum {string} */
+                                            kind: "choose";
+                                            /** @enum {string} */
+                                            countBy: "hours" | "calendar";
+                                            graceMin: number;
+                                        };
+                                        slotMin?: 15 | 30 | 60;
+                                        cancellationText?: string;
+                                        cancellation?: {
+                                            daysBefore: number;
+                                            refundPercent: number;
+                                        }[];
+                                        /** @enum {string} */
+                                        securityWhen?: "pickup" | "booking";
+                                    } | null;
                                     sizeChart: {
                                         size: string;
                                         bust?: number | {
@@ -85939,6 +89907,67 @@ export interface paths {
                                             max: number;
                                         } | null;
                                     }[] | null;
+                                    shipping: {
+                                        enabled: boolean;
+                                        prepDays: number;
+                                        options: {
+                                            id: string;
+                                            name: string;
+                                            courier: string | null;
+                                            transitDays: {
+                                                metro: number;
+                                                upcountry: number;
+                                            };
+                                            returnTransitDays: {
+                                                metro: number;
+                                                upcountry: number;
+                                            };
+                                            feeMinor: number;
+                                            freeOverMinor: number | null;
+                                            areas: "all" | string[];
+                                            slot: string | null;
+                                        }[];
+                                        returnPostDays: number;
+                                        marginDays: number;
+                                        lostAfterDays: number;
+                                        /** @enum {string} */
+                                        returnPaidBy: "shop" | "customer";
+                                        packagingFeeMinor: number;
+                                        requireDistrict: boolean;
+                                        defaultCourier: string | null;
+                                        areas: "all" | string[];
+                                        termsText: string | null;
+                                        allowPickupToo: boolean;
+                                    };
+                                    booking: {
+                                        /** @default null */
+                                        maxAheadDays: number | null;
+                                        /** @default true */
+                                        sameDay: boolean;
+                                        /** @default 20 */
+                                        maxItems: number;
+                                        /**
+                                         * @default {
+                                         *       "idCard": false,
+                                         *       "eventDate": false,
+                                         *       "eventType": false,
+                                         *       "height": false,
+                                         *       "measurements": false
+                                         *     }
+                                         */
+                                        required: {
+                                            /** @default false */
+                                            idCard: boolean;
+                                            /** @default false */
+                                            eventDate: boolean;
+                                            /** @default false */
+                                            eventType: boolean;
+                                            /** @default false */
+                                            height: boolean;
+                                            /** @default false */
+                                            measurements: boolean;
+                                        };
+                                    };
                                 } | null;
                                 branches: {
                                     id: string;
@@ -86089,6 +90118,7 @@ export interface paths {
                                         rental: {
                                             days: number;
                                             shipBeforeDays: number;
+                                            ships: boolean;
                                             size: string | null;
                                             code: string | null;
                                             measurements: {
@@ -86220,6 +90250,11 @@ export interface paths {
                     extraServiceIds?: string;
                     pickupDate?: string;
                     returnDate?: string;
+                    pickupTime?: string;
+                    returnTime?: string;
+                    delivery?: "pickup" | "parcel";
+                    shipOption?: string;
+                    province?: string;
                 };
                 header?: never;
                 path: {
@@ -86707,6 +90742,10 @@ export interface paths {
                 query: {
                     from: string;
                     to: string;
+                    delivery?: "pickup" | "parcel";
+                    shipOption?: string;
+                    province?: string;
+                    priceMinor?: number | null;
                     branchId: string;
                 };
                 header?: never;
@@ -86734,11 +90773,78 @@ export interface paths {
                                 maxUnits: number;
                                 bufferDays: number;
                                 shipBeforeDays: number;
+                                /** @enum {string} */
+                                delivery: "pickup" | "parcel";
+                                shippingOptions: {
+                                    id: string;
+                                    name: string;
+                                    courier: string | null;
+                                    slot: string | null;
+                                    transitDays: number;
+                                    shipDays: number;
+                                    feeMinor: number;
+                                    freeOverMinor: number | null;
+                                    chargeMinor: number;
+                                    earliestPickup: string;
+                                }[];
+                                shipOption: string | null;
+                                deliveryMethods: ("pickup" | "parcel")[];
                                 earliestPickup: string;
                                 latestPickup: string;
                                 fullDays: string[];
                                 pickupSlots: {
                                     [key: string]: string[];
+                                } | null;
+                                terms: {
+                                    minDays: number;
+                                    maxDays: number;
+                                    timeModel: {
+                                        /** @enum {string} */
+                                        kind: "24h";
+                                    } | {
+                                        /** @enum {string} */
+                                        kind: "fixed";
+                                        pickupFrom: string;
+                                        returnBy: string;
+                                    } | {
+                                        /** @enum {string} */
+                                        kind: "choose";
+                                        /** @enum {string} */
+                                        countBy: "hours" | "calendar";
+                                        graceMin: number;
+                                    };
+                                    slotMin: number;
+                                    priceTable: {
+                                        units: number;
+                                        totalMinor: number;
+                                        lines: {
+                                            /** @enum {string} */
+                                            kind: "base" | "extra" | "tier" | "day" | "week" | "month" | "cap";
+                                            qty: number;
+                                            days: number;
+                                            unitMinor: number;
+                                            totalMinor: number;
+                                        }[];
+                                    }[];
+                                    securityDepositMinor: number;
+                                    securityDepositPercent: number | null;
+                                    lateFee: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    } | null;
+                                    postLateFee: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    } | null;
+                                    replacementValueMinor: number | null;
+                                    cleaningFeeMinor: number;
+                                    cancellationText: string | null;
+                                    /** @enum {string} */
+                                    securityWhen: "pickup" | "booking";
+                                    /** @enum {string} */
+                                    lostDepositRule: "offset" | "forfeit_extra";
                                 } | null;
                             };
                         };
@@ -86920,6 +91026,109 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/liff/{tenantSlug}/booking/photos/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Booking-page picture served directly (JPEG / PNG / WebP / GIF bytes, long cache)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The image bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/liff/{tenantSlug}/booking/appointments": {
         parameters: {
             query?: never;
@@ -86952,9 +91161,32 @@ export interface paths {
                         pickupDate?: string;
                         returnDate?: string;
                         pickupTime?: string;
+                        returnTime?: string;
+                        /** @enum {string} */
+                        deliveryMethod?: "pickup" | "parcel";
+                        shipTo?: {
+                            name: string;
+                            phone: string;
+                            address: string;
+                            subdistrict: string;
+                            district: string;
+                            province: string;
+                            postcode: string;
+                            note?: string | null;
+                        };
+                        shipOption?: string;
                         extraServiceIds?: string[];
                         partySize?: number;
                         note?: string;
+                        extras?: {
+                            idCardNo?: string;
+                            eventDate?: string;
+                            eventType?: string;
+                            heightCm?: number;
+                            bust?: number;
+                            waist?: number;
+                            hip?: number;
+                        };
                         name?: string;
                         phone?: string;
                         consent: boolean;
@@ -87040,6 +91272,7 @@ export interface paths {
                                         returnDate: string;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
+                                        returnTime: string | null;
                                         returnAt: string | null;
                                         /** @enum {string} */
                                         returnMethod: "in_store" | "parcel";
@@ -87048,6 +91281,24 @@ export interface paths {
                                             trackingNo: string | null;
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
+                                        } | null;
+                                        delivery: {
+                                            /** @enum {string} */
+                                            method: "pickup" | "parcel";
+                                            option: string | null;
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                            feeMinor: number;
+                                            arriveDate: string | null;
+                                            returnPostBy: string | null;
+                                            expectedArrival: string | null;
+                                            lost: boolean;
+                                        };
+                                        due: {
+                                            rentalLeftMinor: number;
+                                            securityDepositMinor: number;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -87169,6 +91420,123 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/liff/{tenantSlug}/booking/my-addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My earlier delivery addresses, the last used first (liffToken): prefills the parcel form
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Addresses */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                addresses: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                    subdistrict: string;
+                                    district: string;
+                                    province: string;
+                                    postcode: string;
+                                    note?: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/liff/{tenantSlug}/booking/appointments/{id}/reschedule": {
         parameters: {
             query?: never;
@@ -87266,6 +91634,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -87274,6 +91643,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -87572,6 +91959,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -87580,6 +91968,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -87691,8 +92097,31 @@ export interface paths {
                         pickupDate?: string;
                         returnDate?: string;
                         pickupTime?: string;
+                        returnTime?: string;
+                        /** @enum {string} */
+                        deliveryMethod?: "pickup" | "parcel";
+                        shipTo?: {
+                            name: string;
+                            phone: string;
+                            address: string;
+                            subdistrict: string;
+                            district: string;
+                            province: string;
+                            postcode: string;
+                            note?: string | null;
+                        };
+                        shipOption?: string;
                         partySize?: number;
                         note?: string;
+                        extras?: {
+                            idCardNo?: string;
+                            eventDate?: string;
+                            eventType?: string;
+                            heightCm?: number;
+                            bust?: number;
+                            waist?: number;
+                            hip?: number;
+                        };
                         name: string;
                         phone: string;
                         termsVersion?: string;
@@ -87778,6 +92207,7 @@ export interface paths {
                                         returnDate: string;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
+                                        returnTime: string | null;
                                         returnAt: string | null;
                                         /** @enum {string} */
                                         returnMethod: "in_store" | "parcel";
@@ -87786,6 +92216,24 @@ export interface paths {
                                             trackingNo: string | null;
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
+                                        } | null;
+                                        delivery: {
+                                            /** @enum {string} */
+                                            method: "pickup" | "parcel";
+                                            option: string | null;
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                            feeMinor: number;
+                                            arriveDate: string | null;
+                                            returnPostBy: string | null;
+                                            expectedArrival: string | null;
+                                            lost: boolean;
+                                        };
+                                        due: {
+                                            rentalLeftMinor: number;
+                                            securityDepositMinor: number;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -87956,6 +92404,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -87964,6 +92413,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -88142,6 +92609,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -88150,6 +92618,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -88327,6 +92813,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -88335,6 +92822,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -88637,6 +93142,7 @@ export interface paths {
                                     returnDate: string;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
+                                    returnTime: string | null;
                                     returnAt: string | null;
                                     /** @enum {string} */
                                     returnMethod: "in_store" | "parcel";
@@ -88645,6 +93151,24 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
                                     } | null;
                                 } | null;
                                 feedbackToken: string | null;
@@ -91580,6 +96104,9 @@ export interface paths {
                     size?: string;
                     pickupDate?: string;
                     returnDate?: string;
+                    delivery?: "pickup" | "parcel";
+                    shipOption?: string;
+                    province?: string;
                     offset?: number | null;
                     limit?: number;
                     branchId: string;
@@ -91616,6 +96143,7 @@ export interface paths {
                                     rental: {
                                         days: number;
                                         shipBeforeDays: number;
+                                        ships: boolean;
                                         size: string | null;
                                         code: string | null;
                                         measurements: {
@@ -91787,6 +96315,7 @@ export interface paths {
                                 rental: {
                                     days: number;
                                     shipBeforeDays: number;
+                                    ships: boolean;
                                     size: string | null;
                                     code: string | null;
                                     measurements: {
@@ -96571,6 +101100,10 @@ export interface paths {
                                     periodEnd: string | null;
                                     payUrl: string;
                                 }[];
+                                aiChatQuote: {
+                                    days: number | null;
+                                    amountMinor: number;
+                                };
                             };
                         };
                     };
@@ -96642,6 +101175,130 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Self-serve purchase ("ซื้อเลย"): issue the invoice for a package + cycle or an add-on (an unpaid one for the same item is reused) and return its pay page. Enterprise: 409 contact_team
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Requires header `Idempotency-Key` (replayed for 24h).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Required; unique per logical operation */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        planCode: string;
+                        /** @enum {string} */
+                        cycle: "month" | "year";
+                    } | {
+                        /** @enum {string} */
+                        addon: "ai_chat" | "ai_topup";
+                    };
+                };
+            };
+            responses: {
+                /** @description Invoice to pay */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                invoiceId: string;
+                                payUrl: string;
+                                reused: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -106969,6 +111626,7 @@ export interface paths {
                                 rentalQuantity: number;
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
+                                rentalShips: boolean;
                                 rentalSize: string | null;
                                 code: string | null;
                                 rentalMeasurements: {
@@ -106998,6 +111656,42 @@ export interface paths {
                                     } | null;
                                     closure?: string | null;
                                     note?: string | null;
+                                } | null;
+                                rentalTerms: {
+                                    minDays?: number;
+                                    maxDays?: number;
+                                    includedDays?: number;
+                                    /** @enum {string} */
+                                    priceMode?: "extra" | "tiers" | "rates";
+                                    extraDayMinor?: number;
+                                    extraDayPercent?: number;
+                                    weekCapMinor?: number;
+                                    tiers?: {
+                                        upToDays: number;
+                                        priceMinor: number;
+                                    }[];
+                                    dayMinor?: number;
+                                    weekMinor?: number;
+                                    monthMinor?: number;
+                                    securityDepositMinor?: number;
+                                    securityDepositPercent?: number;
+                                    lateFee?: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    };
+                                    postLateFee?: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    };
+                                    replacementValueMinor?: number;
+                                    lostAfterDays?: number;
+                                    /** @enum {string} */
+                                    lostDepositRule?: "offset" | "forfeit_extra";
+                                    lostChargesReplacement?: boolean;
+                                    cleaningFeeMinor?: number;
+                                    checkInEveryDays?: number;
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -107158,6 +111852,8 @@ export interface paths {
                         rentalBufferDays?: number;
                         /** @default 0 */
                         rentalShipBeforeDays?: number;
+                        /** @default true */
+                        rentalShips?: boolean;
                         rentalSize?: string | null;
                         code?: string | null;
                         rentalMeasurements?: {
@@ -107187,6 +111883,42 @@ export interface paths {
                             } | null;
                             closure?: string | null;
                             note?: string | null;
+                        } | null;
+                        rentalTerms?: {
+                            minDays?: number;
+                            maxDays?: number;
+                            includedDays?: number;
+                            /** @enum {string} */
+                            priceMode?: "extra" | "tiers" | "rates";
+                            extraDayMinor?: number;
+                            extraDayPercent?: number;
+                            weekCapMinor?: number;
+                            tiers?: {
+                                upToDays: number;
+                                priceMinor: number;
+                            }[];
+                            dayMinor?: number;
+                            weekMinor?: number;
+                            monthMinor?: number;
+                            securityDepositMinor?: number;
+                            securityDepositPercent?: number;
+                            lateFee?: {
+                                /** @enum {string} */
+                                mode: "hour" | "day";
+                                amountMinor: number;
+                                graceMin: number;
+                            };
+                            postLateFee?: {
+                                perDayMinor: number;
+                                graceDays: number;
+                            };
+                            replacementValueMinor?: number;
+                            lostAfterDays?: number;
+                            /** @enum {string} */
+                            lostDepositRule?: "offset" | "forfeit_extra";
+                            lostChargesReplacement?: boolean;
+                            cleaningFeeMinor?: number;
+                            checkInEveryDays?: number;
                         } | null;
                         /** @default [] */
                         rentalImageFileIds?: string[];
@@ -107249,6 +111981,7 @@ export interface paths {
                                 rentalQuantity: number;
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
+                                rentalShips: boolean;
                                 rentalSize: string | null;
                                 code: string | null;
                                 rentalMeasurements: {
@@ -107278,6 +112011,42 @@ export interface paths {
                                     } | null;
                                     closure?: string | null;
                                     note?: string | null;
+                                } | null;
+                                rentalTerms: {
+                                    minDays?: number;
+                                    maxDays?: number;
+                                    includedDays?: number;
+                                    /** @enum {string} */
+                                    priceMode?: "extra" | "tiers" | "rates";
+                                    extraDayMinor?: number;
+                                    extraDayPercent?: number;
+                                    weekCapMinor?: number;
+                                    tiers?: {
+                                        upToDays: number;
+                                        priceMinor: number;
+                                    }[];
+                                    dayMinor?: number;
+                                    weekMinor?: number;
+                                    monthMinor?: number;
+                                    securityDepositMinor?: number;
+                                    securityDepositPercent?: number;
+                                    lateFee?: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    };
+                                    postLateFee?: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    };
+                                    replacementValueMinor?: number;
+                                    lostAfterDays?: number;
+                                    /** @enum {string} */
+                                    lostDepositRule?: "offset" | "forfeit_extra";
+                                    lostChargesReplacement?: boolean;
+                                    cleaningFeeMinor?: number;
+                                    checkInEveryDays?: number;
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -107432,6 +112201,7 @@ export interface paths {
                                 rentalQuantity: number;
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
+                                rentalShips: boolean;
                                 rentalSize: string | null;
                                 code: string | null;
                                 rentalMeasurements: {
@@ -107461,6 +112231,42 @@ export interface paths {
                                     } | null;
                                     closure?: string | null;
                                     note?: string | null;
+                                } | null;
+                                rentalTerms: {
+                                    minDays?: number;
+                                    maxDays?: number;
+                                    includedDays?: number;
+                                    /** @enum {string} */
+                                    priceMode?: "extra" | "tiers" | "rates";
+                                    extraDayMinor?: number;
+                                    extraDayPercent?: number;
+                                    weekCapMinor?: number;
+                                    tiers?: {
+                                        upToDays: number;
+                                        priceMinor: number;
+                                    }[];
+                                    dayMinor?: number;
+                                    weekMinor?: number;
+                                    monthMinor?: number;
+                                    securityDepositMinor?: number;
+                                    securityDepositPercent?: number;
+                                    lateFee?: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    };
+                                    postLateFee?: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    };
+                                    replacementValueMinor?: number;
+                                    lostAfterDays?: number;
+                                    /** @enum {string} */
+                                    lostDepositRule?: "offset" | "forfeit_extra";
+                                    lostChargesReplacement?: boolean;
+                                    cleaningFeeMinor?: number;
+                                    checkInEveryDays?: number;
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -107693,6 +112499,7 @@ export interface paths {
                         rentalQuantity?: number;
                         rentalBufferDays?: number;
                         rentalShipBeforeDays?: number;
+                        rentalShips?: boolean;
                         rentalSize?: string | null;
                         code?: string | null;
                         rentalMeasurements?: {
@@ -107722,6 +112529,42 @@ export interface paths {
                             } | null;
                             closure?: string | null;
                             note?: string | null;
+                        } | null;
+                        rentalTerms?: {
+                            minDays?: number;
+                            maxDays?: number;
+                            includedDays?: number;
+                            /** @enum {string} */
+                            priceMode?: "extra" | "tiers" | "rates";
+                            extraDayMinor?: number;
+                            extraDayPercent?: number;
+                            weekCapMinor?: number;
+                            tiers?: {
+                                upToDays: number;
+                                priceMinor: number;
+                            }[];
+                            dayMinor?: number;
+                            weekMinor?: number;
+                            monthMinor?: number;
+                            securityDepositMinor?: number;
+                            securityDepositPercent?: number;
+                            lateFee?: {
+                                /** @enum {string} */
+                                mode: "hour" | "day";
+                                amountMinor: number;
+                                graceMin: number;
+                            };
+                            postLateFee?: {
+                                perDayMinor: number;
+                                graceDays: number;
+                            };
+                            replacementValueMinor?: number;
+                            lostAfterDays?: number;
+                            /** @enum {string} */
+                            lostDepositRule?: "offset" | "forfeit_extra";
+                            lostChargesReplacement?: boolean;
+                            cleaningFeeMinor?: number;
+                            checkInEveryDays?: number;
                         } | null;
                         rentalImageFileIds?: string[];
                         depositRule?: {
@@ -107783,6 +112626,7 @@ export interface paths {
                                 rentalQuantity: number;
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
+                                rentalShips: boolean;
                                 rentalSize: string | null;
                                 code: string | null;
                                 rentalMeasurements: {
@@ -107812,6 +112656,42 @@ export interface paths {
                                     } | null;
                                     closure?: string | null;
                                     note?: string | null;
+                                } | null;
+                                rentalTerms: {
+                                    minDays?: number;
+                                    maxDays?: number;
+                                    includedDays?: number;
+                                    /** @enum {string} */
+                                    priceMode?: "extra" | "tiers" | "rates";
+                                    extraDayMinor?: number;
+                                    extraDayPercent?: number;
+                                    weekCapMinor?: number;
+                                    tiers?: {
+                                        upToDays: number;
+                                        priceMinor: number;
+                                    }[];
+                                    dayMinor?: number;
+                                    weekMinor?: number;
+                                    monthMinor?: number;
+                                    securityDepositMinor?: number;
+                                    securityDepositPercent?: number;
+                                    lateFee?: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    };
+                                    postLateFee?: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    };
+                                    replacementValueMinor?: number;
+                                    lostAfterDays?: number;
+                                    /** @enum {string} */
+                                    lostDepositRule?: "offset" | "forfeit_extra";
+                                    lostChargesReplacement?: boolean;
+                                    cleaningFeeMinor?: number;
+                                    checkInEveryDays?: number;
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -108086,6 +112966,7 @@ export interface paths {
                                 rentalQuantity: number;
                                 rentalBufferDays: number;
                                 rentalShipBeforeDays: number;
+                                rentalShips: boolean;
                                 rentalSize: string | null;
                                 code: string | null;
                                 rentalMeasurements: {
@@ -108115,6 +112996,42 @@ export interface paths {
                                     } | null;
                                     closure?: string | null;
                                     note?: string | null;
+                                } | null;
+                                rentalTerms: {
+                                    minDays?: number;
+                                    maxDays?: number;
+                                    includedDays?: number;
+                                    /** @enum {string} */
+                                    priceMode?: "extra" | "tiers" | "rates";
+                                    extraDayMinor?: number;
+                                    extraDayPercent?: number;
+                                    weekCapMinor?: number;
+                                    tiers?: {
+                                        upToDays: number;
+                                        priceMinor: number;
+                                    }[];
+                                    dayMinor?: number;
+                                    weekMinor?: number;
+                                    monthMinor?: number;
+                                    securityDepositMinor?: number;
+                                    securityDepositPercent?: number;
+                                    lateFee?: {
+                                        /** @enum {string} */
+                                        mode: "hour" | "day";
+                                        amountMinor: number;
+                                        graceMin: number;
+                                    };
+                                    postLateFee?: {
+                                        perDayMinor: number;
+                                        graceDays: number;
+                                    };
+                                    replacementValueMinor?: number;
+                                    lostAfterDays?: number;
+                                    /** @enum {string} */
+                                    lostDepositRule?: "offset" | "forfeit_extra";
+                                    lostChargesReplacement?: boolean;
+                                    cleaningFeeMinor?: number;
+                                    checkInEveryDays?: number;
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
