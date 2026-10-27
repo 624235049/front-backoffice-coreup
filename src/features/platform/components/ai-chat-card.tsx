@@ -21,6 +21,7 @@ import { useAddons } from '../api';
 import { formatMoney, useIntlLocale } from '../format';
 import { AiAudienceCard } from './ai-audience-card';
 import { AiDemoShops } from './ai-demo-shops';
+import { AiFreeGrant } from './ai-free-grant';
 import { AiTestChat } from './ai-test-chat';
 
 /** Tenant detail › "AI ตอบแชท": switch the add-on on a shop, set its quota, add a ฿290 top-up, see usage and cost. */
@@ -103,6 +104,19 @@ function Body({ id, d, demo }: { id: string; d: AiChatAdmin; demo: boolean }) {
           <span className="text-xs text-muted-foreground">{t('aiChat.activeHint', price)}</span>
         </span>
       </label>
+
+      {demo ? null : (
+        <AiFreeGrant
+          enabledUntil={d.enabledUntil}
+          free={d.free}
+          disabled={!canWrite || patch.isPending}
+          onGrant={(grant) =>
+            patch.mutate(grant, {
+              onSuccess: () => toast.success(t(grant.free ? 'aiChat.grant.freeDone' : 'aiChat.grant.done')),
+            })
+          }
+        />
+      )}
 
       {d.active ? <AiAudienceCard id={id} settings={d} /> : null}
       {d.active && demo ? <AiDemoShops id={id} shops={d.demoShops} /> : null}

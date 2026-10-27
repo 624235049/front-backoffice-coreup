@@ -1280,6 +1280,19 @@
     "topupConfirmBody": "The quota grows by {{topupMessages}} now and {{topup}} appears on the shop's next invoice.",
     "topupConfirm": "Add messages",
     "topupDone": "Messages added.",
+    "grant": {
+      "title": "Free access or an end date",
+      "hint": "The add-on switches itself off after the last day. A free grant never puts an AI line on the invoice, and the shop owners are told 3 days before it ends.",
+      "freeMonth": "Open AI free for 1 month",
+      "day": "Last day of use",
+      "free": "Free (not on invoices)",
+      "note": "Note (optional, kept in the audit log)",
+      "apply": "Set end date",
+      "freeUntil": "Free until {{date}}",
+      "until": "Active until {{date}}",
+      "freeDone": "AI opened free for the shop.",
+      "done": "End date set."
+    },
     "audience": {
       "title": "Who does the AI answer",
       "hint": "Start with a few testers, then open it to every customer.",

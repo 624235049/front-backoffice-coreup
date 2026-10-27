@@ -973,6 +973,7 @@ export interface paths {
                                         pricing: "fixed" | "per_unit";
                                         noteLabel: string | null;
                                         noteRequired: boolean;
+                                        pickupTimes: boolean;
                                     } | null;
                                     /** @enum {string|null} */
                                     payMethod: "hand_fee_percent" | "per_case_fixed" | "per_class_fixed" | "salary_only" | "custom" | null;
@@ -7741,7 +7742,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "rental_damage" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -11819,6 +11820,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 freeQuota: number;
                                 freeUsed: number;
                                 inputTokens: number;
@@ -11940,6 +11943,9 @@ export interface paths {
                         }[];
                         knowledge?: string;
                         monthlyQuota?: number;
+                        enabledUntil?: string;
+                        free?: boolean;
+                        note?: string;
                     };
                 };
             };
@@ -11975,6 +11981,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 freeQuota: number;
                                 freeUsed: number;
                                 inputTokens: number;
@@ -12119,6 +12127,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 freeQuota: number;
                                 freeUsed: number;
                                 inputTokens: number;
@@ -47636,6 +47646,14 @@ export interface paths {
                             /** @enum {string|null} */
                             incomeKind?: "shipping" | "late_fee" | "damage" | null;
                         }[];
+                        rentalReturn?: {
+                            /** @enum {string} */
+                            condition: "ok" | "damaged" | "in_repair";
+                            repairUntil?: string | null;
+                            note?: string | null;
+                            /** @default [] */
+                            photoFileIds?: string[];
+                        };
                     };
                 };
             };
@@ -49324,6 +49342,10 @@ export interface paths {
                                 offsetsMinutes: number[];
                                 notifyAssignee: boolean;
                                 notifyFrontDesk: boolean;
+                                /** @default true */
+                                rentalDue: boolean;
+                                /** @default true */
+                                rentalOverdue: boolean;
                             };
                         };
                     };
@@ -49416,6 +49438,10 @@ export interface paths {
                         offsetsMinutes: number[];
                         notifyAssignee: boolean;
                         notifyFrontDesk: boolean;
+                        /** @default true */
+                        rentalDue?: boolean;
+                        /** @default true */
+                        rentalOverdue?: boolean;
                     };
                 };
             };
@@ -49432,6 +49458,10 @@ export interface paths {
                                 offsetsMinutes: number[];
                                 notifyAssignee: boolean;
                                 notifyFrontDesk: boolean;
+                                /** @default true */
+                                rentalDue: boolean;
+                                /** @default true */
+                                rentalOverdue: boolean;
                             };
                         };
                     };
@@ -50861,6 +50891,7 @@ export interface paths {
                 query?: {
                     date?: string;
                     branchId?: string;
+                    parcelOnly?: "true" | "false";
                 };
                 header?: never;
                 path?: never;
@@ -50956,6 +50987,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 pickups: {
                                     appointment: {
@@ -51036,6 +51077,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 returns: {
                                     appointment: {
@@ -51116,6 +51167,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 arrivals: {
                                     appointment: {
@@ -51196,6 +51257,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 overdue: {
                                     appointment: {
@@ -51276,6 +51347,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 missed: {
                                     appointment: {
@@ -51356,6 +51437,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 out: {
                                     appointment: {
@@ -51436,6 +51527,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 upcoming: {
                                     appointment: {
@@ -51516,6 +51617,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                             };
                         };
@@ -51610,6 +51721,7 @@ export interface paths {
                 query?: {
                     from?: string;
                     to?: string;
+                    branchId?: string;
                 };
                 header?: never;
                 path: {
@@ -51639,6 +51751,9 @@ export interface paths {
                                     earliestPickup: string;
                                     latestPickup: string;
                                     fullDays: string[];
+                                    pickupSlots: {
+                                        [key: string]: string[];
+                                    } | null;
                                 };
                                 bookings: {
                                     appointment: {
@@ -51719,6 +51834,16 @@ export interface paths {
                                     priceMinor: number;
                                     imageUrl: string | null;
                                     note: string | null;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 }[];
                                 quantity: number;
                             };
@@ -51833,6 +51958,7 @@ export interface paths {
                         serviceId: string;
                         pickupDate: string;
                         returnDate: string;
+                        pickupTime?: string | null;
                         note?: string | null;
                         deposit?: {
                             amountMinor: number;
@@ -51933,6 +52059,16 @@ export interface paths {
                                 priceMinor: number;
                                 imageUrl: string | null;
                                 note: string | null;
+                                pickupTime: string | null;
+                                returnAt: string | null;
+                                /** @enum {string} */
+                                returnMethod: "in_store" | "parcel";
+                                parcel: {
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                } | null;
                             };
                         };
                     };
@@ -52008,6 +52144,478 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rentals/items/{id}/condition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One rental item: pieces out of use (damaged / in repair) now, and its damage log, newest first
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                condition: "ok" | "damaged" | "in_repair";
+                                repairUntil: string | null;
+                                unitsDown: number;
+                                history: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    condition: "damaged" | "in_repair";
+                                    repairUntil: string | null;
+                                    note: string | null;
+                                    photoFileIds: string[];
+                                    chargeMinor: number;
+                                    appointmentId: string | null;
+                                    customerName: string | null;
+                                    recordedByName: string | null;
+                                    createdAt: string;
+                                    open: boolean;
+                                    resolvedAt: string | null;
+                                    resolvedByName: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/items/{id}/condition/{entryId}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * "ซ่อมเสร็จ": the damaged / in-repair piece is usable (bookable) again at once
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                    entryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                condition: "ok" | "damaged" | "in_repair";
+                                repairUntil: string | null;
+                                unitsDown: number;
+                                history: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    condition: "damaged" | "in_repair";
+                                    repairUntil: string | null;
+                                    note: string | null;
+                                    photoFileIds: string[];
+                                    chargeMinor: number;
+                                    appointmentId: string | null;
+                                    customerName: string | null;
+                                    recordedByName: string | null;
+                                    createdAt: string;
+                                    open: boolean;
+                                    resolvedAt: string | null;
+                                    resolvedByName: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/return-method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * How a live rental comes back: in the shop, or by parcel (courier, tracking number, day shipped)
+         * @description `in_store` clears the parcel details. The parcel fields can be filled in as they become known (send the whole set each time).
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        returnMethod: "in_store" | "parcel";
+                        courier?: string | null;
+                        trackingNo?: string | null;
+                        shippedOn?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                appointment: {
+                                    id: string;
+                                    branchId: string;
+                                    customerId: string;
+                                    customerName: string;
+                                    customerHasCaution: boolean;
+                                    customer: {
+                                        id: string;
+                                        name: string;
+                                        code: string | null;
+                                        visitCount: number;
+                                        pendingFirstVisit: boolean;
+                                        caution: {
+                                            notes: boolean;
+                                            allergy: boolean;
+                                            chronic: boolean;
+                                        };
+                                    };
+                                    customerBirthDate: string | null;
+                                    serviceId: string;
+                                    serviceName: string;
+                                    extraServices: {
+                                        id: string;
+                                        name: string;
+                                    }[];
+                                    labels: string[];
+                                    durationMin: number;
+                                    membershipId: string | null;
+                                    memberName: string | null;
+                                    resourceId: string | null;
+                                    resourceName: string | null;
+                                    startAt: string;
+                                    endAt: string;
+                                    /** @enum {string} */
+                                    status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                    /** @enum {string} */
+                                    source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                    isRequestedMember: boolean;
+                                    partySize: number;
+                                    customerPackageId: string | null;
+                                    saleMembershipId: string | null;
+                                    note: string | null;
+                                    version: number;
+                                    allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                    onlineDeposit: {
+                                        /** @enum {string} */
+                                        status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                        amountMinor: number;
+                                        slipFileId: string | null;
+                                        slipSubmittedAt: string | null;
+                                        rejectReason: string | null;
+                                        depositId: string | null;
+                                        slipCheck: {
+                                            /** @enum {string} */
+                                            status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                            reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                            amountMinor: number | null;
+                                            receiverName: string | null;
+                                            receiverAccountMasked: string | null;
+                                            transRef: string | null;
+                                            paidAt: string | null;
+                                            checkedAt: string;
+                                            /** @enum {string} */
+                                            method?: "basic";
+                                        } | null;
+                                    } | null;
+                                    createdAt: string;
+                                    updatedAt: string;
+                                };
+                                pickupDate: string;
+                                returnDate: string;
+                                shipOutDate: string | null;
+                                expectedReturnDate: string;
+                                shipBeforeDays: number;
+                                units: number;
+                                priceMinor: number;
+                                imageUrl: string | null;
+                                note: string | null;
+                                pickupTime: string | null;
+                                returnAt: string | null;
+                                /** @enum {string} */
+                                returnMethod: "in_store" | "parcel";
+                                parcel: {
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    shippedAt: string | null;
+                                    trackingUrl: string | null;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/rentals/items": {
         parameters: {
             query?: never;
@@ -52060,6 +52668,9 @@ export interface paths {
                                     onlineBookable: boolean;
                                     imageUrl: string | null;
                                     photoCount: number;
+                                    /** @enum {string} */
+                                    condition: "ok" | "damaged" | "in_repair";
+                                    repairUntil: string | null;
                                 }[];
                                 total: number;
                                 facets: {
@@ -53228,6 +53839,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 lineConnected: boolean;
                                 lineName: string | null;
                                 tested: boolean;
@@ -53360,6 +53973,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 lineConnected: boolean;
                                 lineName: string | null;
                                 tested: boolean;
@@ -53486,6 +54101,8 @@ export interface paths {
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
                                 allowance: "addon" | "free";
+                                enabledUntil: string | null;
+                                free: boolean;
                                 lineConnected: boolean;
                                 lineName: string | null;
                                 tested: boolean;
@@ -82065,6 +82682,16 @@ export interface paths {
                                         pickupDate: string;
                                         returnDate: string;
                                         shipBeforeDays: number;
+                                        pickupTime: string | null;
+                                        returnAt: string | null;
+                                        /** @enum {string} */
+                                        returnMethod: "in_store" | "parcel";
+                                        parcel: {
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 }[];
@@ -82125,6 +82752,16 @@ export interface paths {
                                         pickupDate: string;
                                         returnDate: string;
                                         shipBeforeDays: number;
+                                        pickupTime: string | null;
+                                        returnAt: string | null;
+                                        /** @enum {string} */
+                                        returnMethod: "in_store" | "parcel";
+                                        parcel: {
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 }[];
@@ -82411,6 +83048,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -82584,6 +83231,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -82756,6 +83413,199 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                } | null;
+                                feedbackToken: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/appointments/{id}/parcel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rental: I sent the item back by parcel (courier and tracking number), while I hold the item
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        courier: string;
+                        trackingNo: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated appointment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay" | "qr";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
+                                    }[];
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -84684,6 +85534,7 @@ export interface paths {
                                     pricing: "fixed" | "per_unit";
                                     noteLabel: string | null;
                                     noteRequired: boolean;
+                                    pickupTimes: boolean;
                                 } | null;
                                 branches: {
                                     id: string;
@@ -85452,6 +86303,9 @@ export interface paths {
                                 earliestPickup: string;
                                 latestPickup: string;
                                 fullDays: string[];
+                                pickupSlots: {
+                                    [key: string]: string[];
+                                } | null;
                             };
                         };
                     };
@@ -85663,6 +86517,7 @@ export interface paths {
                         startAt?: string;
                         pickupDate?: string;
                         returnDate?: string;
+                        pickupTime?: string;
                         extraServiceIds?: string[];
                         partySize?: number;
                         note?: string;
@@ -85750,6 +86605,16 @@ export interface paths {
                                         pickupDate: string;
                                         returnDate: string;
                                         shipBeforeDays: number;
+                                        pickupTime: string | null;
+                                        returnAt: string | null;
+                                        /** @enum {string} */
+                                        returnMethod: "in_store" | "parcel";
+                                        parcel: {
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 };
@@ -85966,6 +86831,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -86262,6 +87137,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -86371,6 +87256,7 @@ export interface paths {
                         startAt?: string;
                         pickupDate?: string;
                         returnDate?: string;
+                        pickupTime?: string;
                         partySize?: number;
                         note?: string;
                         name: string;
@@ -86457,6 +87343,16 @@ export interface paths {
                                         pickupDate: string;
                                         returnDate: string;
                                         shipBeforeDays: number;
+                                        pickupTime: string | null;
+                                        returnAt: string | null;
+                                        /** @enum {string} */
+                                        returnMethod: "in_store" | "parcel";
+                                        parcel: {
+                                            courier: string | null;
+                                            trackingNo: string | null;
+                                            shippedAt: string | null;
+                                            trackingUrl: string | null;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 };
@@ -86625,6 +87521,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -86801,6 +87707,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -87101,6 +88017,16 @@ export interface paths {
                                     pickupDate: string;
                                     returnDate: string;
                                     shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };

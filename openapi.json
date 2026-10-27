@@ -1374,13 +1374,17 @@
                                   },
                                   "noteRequired": {
                                     "type": "boolean"
+                                  },
+                                  "pickupTimes": {
+                                    "type": "boolean"
                                   }
                                 },
                                 "required": [
                                   "unit",
                                   "pricing",
                                   "noteLabel",
-                                  "noteRequired"
+                                  "noteRequired",
+                                  "pickupTimes"
                                 ]
                               },
                               "payMethod": {
@@ -13055,6 +13059,7 @@
                 "receiving_qr",
                 "staff_photo",
                 "clinical_attachment",
+                "rental_damage",
                 "other"
               ]
             },
@@ -21340,6 +21345,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "freeQuota": {
                           "type": "integer"
                         },
@@ -21406,6 +21420,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "freeQuota",
                         "freeUsed",
                         "inputTokens",
@@ -21606,6 +21622,17 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 1000000
+                  },
+                  "enabledUntil": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "free": {
+                    "type": "boolean"
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 200
                   }
                 }
               }
@@ -21722,6 +21749,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "freeQuota": {
                           "type": "integer"
                         },
@@ -21788,6 +21824,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "freeQuota",
                         "freeUsed",
                         "inputTokens",
@@ -22029,6 +22067,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "freeQuota": {
                           "type": "integer"
                         },
@@ -22095,6 +22142,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "freeQuota",
                         "freeUsed",
                         "inputTokens",
@@ -98365,6 +98414,45 @@
                     },
                     "maxItems": 50,
                     "default": []
+                  },
+                  "rentalReturn": {
+                    "type": "object",
+                    "properties": {
+                      "condition": {
+                        "type": "string",
+                        "enum": [
+                          "ok",
+                          "damaged",
+                          "in_repair"
+                        ]
+                      },
+                      "repairUntil": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "note": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 500
+                      },
+                      "photoFileIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "maxItems": 6,
+                        "default": []
+                      }
+                    },
+                    "required": [
+                      "condition"
+                    ]
                   }
                 }
               }
@@ -102219,6 +102307,14 @@
                         },
                         "notifyFrontDesk": {
                           "type": "boolean"
+                        },
+                        "rentalDue": {
+                          "type": "boolean",
+                          "default": true
+                        },
+                        "rentalOverdue": {
+                          "type": "boolean",
+                          "default": true
                         }
                       },
                       "required": [
@@ -102357,6 +102453,14 @@
                   },
                   "notifyFrontDesk": {
                     "type": "boolean"
+                  },
+                  "rentalDue": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "rentalOverdue": {
+                    "type": "boolean",
+                    "default": true
                   }
                 },
                 "required": [
@@ -102397,6 +102501,14 @@
                         },
                         "notifyFrontDesk": {
                           "type": "boolean"
+                        },
+                        "rentalDue": {
+                          "type": "boolean",
+                          "default": true
+                        },
+                        "rentalOverdue": {
+                          "type": "boolean",
+                          "default": true
                         }
                       },
                       "required": [
@@ -104642,6 +104754,19 @@
             "required": false,
             "name": "branchId",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "default": "false"
+            },
+            "required": false,
+            "name": "parcelOnly",
+            "in": "query"
           }
         ],
         "responses": {
@@ -105102,6 +105227,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -105114,7 +105297,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -105561,6 +105748,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -105573,7 +105818,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -106020,6 +106269,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -106032,7 +106339,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -106479,6 +106790,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -106491,7 +106860,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -106938,6 +107311,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -106950,7 +107381,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -107397,6 +107832,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -107409,7 +107902,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -107856,6 +108353,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -107868,7 +108423,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -108315,6 +108874,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -108327,7 +108944,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         }
@@ -108464,6 +109085,15 @@
             "required": false,
             "name": "to",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "branchId",
+            "in": "query"
           }
         ],
         "responses": {
@@ -108521,6 +109151,19 @@
                                 "type": "string",
                                 "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                               }
+                            },
+                            "pickupSlots": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                }
+                              }
                             }
                           },
                           "required": [
@@ -108532,7 +109175,8 @@
                             "shipBeforeDays",
                             "earliestPickup",
                             "latestPickup",
-                            "fullDays"
+                            "fullDays",
+                            "pickupSlots"
                           ]
                         },
                         "bookings": {
@@ -108978,6 +109622,64 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "pickupTime": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                              },
+                              "returnAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "returnMethod": {
+                                "type": "string",
+                                "enum": [
+                                  "in_store",
+                                  "parcel"
+                                ]
+                              },
+                              "parcel": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "courier": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingNo": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "shippedAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "trackingUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "courier",
+                                  "trackingNo",
+                                  "shippedAt",
+                                  "trackingUrl"
+                                ]
                               }
                             },
                             "required": [
@@ -108990,7 +109692,11 @@
                               "units",
                               "priceMinor",
                               "imageUrl",
-                              "note"
+                              "note",
+                              "pickupTime",
+                              "returnAt",
+                              "returnMethod",
+                              "parcel"
                             ]
                           }
                         },
@@ -109137,6 +109843,13 @@
                   "returnDate": {
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "pickupTime": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                   },
                   "note": {
                     "type": [
@@ -109654,6 +110367,64 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "pickupTime": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        },
+                        "returnAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "returnMethod": {
+                          "type": "string",
+                          "enum": [
+                            "in_store",
+                            "parcel"
+                          ]
+                        },
+                        "parcel": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "courier": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingNo": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shippedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "courier",
+                            "trackingNo",
+                            "shippedAt",
+                            "trackingUrl"
+                          ]
                         }
                       },
                       "required": [
@@ -109666,7 +110437,1188 @@
                         "units",
                         "priceMinor",
                         "imageUrl",
-                        "note"
+                        "note",
+                        "pickupTime",
+                        "returnAt",
+                        "returnMethod",
+                        "parcel"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rentals/items/{id}/condition": {
+      "get": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "One rental item: pieces out of use (damaged / in repair) now, and its damage log, newest first",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "condition": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "damaged",
+                            "in_repair"
+                          ]
+                        },
+                        "repairUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "unitsDown": {
+                          "type": "integer"
+                        },
+                        "history": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "condition": {
+                                "type": "string",
+                                "enum": [
+                                  "damaged",
+                                  "in_repair"
+                                ]
+                              },
+                              "repairUntil": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "photoFileIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                }
+                              },
+                              "chargeMinor": {
+                                "type": "integer"
+                              },
+                              "appointmentId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "recordedByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "open": {
+                                "type": "boolean"
+                              },
+                              "resolvedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "resolvedByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "condition",
+                              "repairUntil",
+                              "note",
+                              "photoFileIds",
+                              "chargeMinor",
+                              "appointmentId",
+                              "customerName",
+                              "recordedByName",
+                              "createdAt",
+                              "open",
+                              "resolvedAt",
+                              "resolvedByName"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "condition",
+                        "repairUntil",
+                        "unitsDown",
+                        "history"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rentals/items/{id}/condition/{entryId}/resolve": {
+      "post": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "\"ซ่อมเสร็จ\": the damaged / in-repair piece is usable (bookable) again at once",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "entryId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "condition": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "damaged",
+                            "in_repair"
+                          ]
+                        },
+                        "repairUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "unitsDown": {
+                          "type": "integer"
+                        },
+                        "history": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "condition": {
+                                "type": "string",
+                                "enum": [
+                                  "damaged",
+                                  "in_repair"
+                                ]
+                              },
+                              "repairUntil": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                              },
+                              "note": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "photoFileIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                }
+                              },
+                              "chargeMinor": {
+                                "type": "integer"
+                              },
+                              "appointmentId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "customerName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "recordedByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "open": {
+                                "type": "boolean"
+                              },
+                              "resolvedAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "resolvedByName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "condition",
+                              "repairUntil",
+                              "note",
+                              "photoFileIds",
+                              "chargeMinor",
+                              "appointmentId",
+                              "customerName",
+                              "recordedByName",
+                              "createdAt",
+                              "open",
+                              "resolvedAt",
+                              "resolvedByName"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "condition",
+                        "repairUntil",
+                        "unitsDown",
+                        "history"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rentals/{id}/return-method": {
+      "put": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "How a live rental comes back: in the shop, or by parcel (courier, tracking number, day shipped)",
+        "description": "`in_store` clears the parcel details. The parcel fields can be filled in as they become known (send the whole set each time).\n\nRequires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "returnMethod": {
+                    "type": "string",
+                    "enum": [
+                      "in_store",
+                      "parcel"
+                    ]
+                  },
+                  "courier": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "trackingNo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[A-Za-z0-9-]{4,40}$"
+                  },
+                  "shippedOn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "returnMethod"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "appointment": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "branchId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "customerId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "customerHasCaution": {
+                              "type": "boolean"
+                            },
+                            "customer": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "visitCount": {
+                                  "type": "integer"
+                                },
+                                "pendingFirstVisit": {
+                                  "type": "boolean"
+                                },
+                                "caution": {
+                                  "type": "object",
+                                  "properties": {
+                                    "notes": {
+                                      "type": "boolean"
+                                    },
+                                    "allergy": {
+                                      "type": "boolean"
+                                    },
+                                    "chronic": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "notes",
+                                    "allergy",
+                                    "chronic"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "code",
+                                "visitCount",
+                                "pendingFirstVisit",
+                                "caution"
+                              ]
+                            },
+                            "customerBirthDate": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "serviceId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "serviceName": {
+                              "type": "string"
+                            },
+                            "extraServices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ]
+                              }
+                            },
+                            "labels": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24
+                              }
+                            },
+                            "durationMin": {
+                              "type": "integer"
+                            },
+                            "membershipId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "memberName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "resourceId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "resourceName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "startAt": {
+                              "type": "string"
+                            },
+                            "endAt": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "booked",
+                                "confirmed",
+                                "reschedule_requested",
+                                "checked_in",
+                                "in_service",
+                                "completed",
+                                "no_show",
+                                "cancelled"
+                              ]
+                            },
+                            "source": {
+                              "type": "string",
+                              "enum": [
+                                "front_desk",
+                                "liff",
+                                "phone",
+                                "walk_in",
+                                "import"
+                              ]
+                            },
+                            "isRequestedMember": {
+                              "type": "boolean"
+                            },
+                            "partySize": {
+                              "type": "integer"
+                            },
+                            "customerPackageId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "saleMembershipId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "note": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "version": {
+                              "type": "integer"
+                            },
+                            "allowedTransitions": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "confirmed",
+                                  "reschedule_requested",
+                                  "checked_in",
+                                  "in_service",
+                                  "completed",
+                                  "no_show",
+                                  "cancelled"
+                                ]
+                              }
+                            },
+                            "onlineDeposit": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "awaiting_slip",
+                                    "slip_submitted",
+                                    "confirmed",
+                                    "rejected"
+                                  ]
+                                },
+                                "amountMinor": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "slipFileId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "slipSubmittedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "rejectReason": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "depositId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "slipCheck": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "passed",
+                                        "failed",
+                                        "error",
+                                        "skipped",
+                                        "basic_ok"
+                                      ]
+                                    },
+                                    "reasons": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "amount_low",
+                                          "wrong_receiver",
+                                          "too_old",
+                                          "duplicate",
+                                          "not_found",
+                                          "plan",
+                                          "quota",
+                                          "platform_cap",
+                                          "provider_error",
+                                          "no_qr",
+                                          "promptpay_qr",
+                                          "qr_invalid"
+                                        ]
+                                      }
+                                    },
+                                    "amountMinor": {
+                                      "type": [
+                                        "integer",
+                                        "null"
+                                      ]
+                                    },
+                                    "receiverName": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "receiverAccountMasked": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "transRef": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "paidAt": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "checkedAt": {
+                                      "type": "string"
+                                    },
+                                    "method": {
+                                      "type": "string",
+                                      "enum": [
+                                        "basic"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "status",
+                                    "reasons",
+                                    "amountMinor",
+                                    "receiverName",
+                                    "receiverAccountMasked",
+                                    "transRef",
+                                    "paidAt",
+                                    "checkedAt"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "status",
+                                "amountMinor",
+                                "slipFileId",
+                                "slipSubmittedAt",
+                                "rejectReason",
+                                "depositId",
+                                "slipCheck"
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "updatedAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "branchId",
+                            "customerId",
+                            "customerName",
+                            "customerHasCaution",
+                            "customer",
+                            "customerBirthDate",
+                            "serviceId",
+                            "serviceName",
+                            "extraServices",
+                            "labels",
+                            "durationMin",
+                            "membershipId",
+                            "memberName",
+                            "resourceId",
+                            "resourceName",
+                            "startAt",
+                            "endAt",
+                            "status",
+                            "source",
+                            "isRequestedMember",
+                            "partySize",
+                            "customerPackageId",
+                            "saleMembershipId",
+                            "note",
+                            "version",
+                            "allowedTransitions",
+                            "onlineDeposit",
+                            "createdAt",
+                            "updatedAt"
+                          ]
+                        },
+                        "pickupDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "returnDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "shipOutDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "expectedReturnDate": {
+                          "type": "string",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                        },
+                        "shipBeforeDays": {
+                          "type": "integer"
+                        },
+                        "units": {
+                          "type": "integer"
+                        },
+                        "priceMinor": {
+                          "type": "integer"
+                        },
+                        "imageUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "note": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "pickupTime": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                        },
+                        "returnAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "returnMethod": {
+                          "type": "string",
+                          "enum": [
+                            "in_store",
+                            "parcel"
+                          ]
+                        },
+                        "parcel": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "courier": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingNo": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shippedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "courier",
+                            "trackingNo",
+                            "shippedAt",
+                            "trackingUrl"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "appointment",
+                        "pickupDate",
+                        "returnDate",
+                        "shipOutDate",
+                        "expectedReturnDate",
+                        "shipBeforeDays",
+                        "units",
+                        "priceMinor",
+                        "imageUrl",
+                        "note",
+                        "pickupTime",
+                        "returnAt",
+                        "returnMethod",
+                        "parcel"
                       ]
                     }
                   },
@@ -109919,6 +111871,21 @@
                               },
                               "photoCount": {
                                 "type": "integer"
+                              },
+                              "condition": {
+                                "type": "string",
+                                "enum": [
+                                  "ok",
+                                  "damaged",
+                                  "in_repair"
+                                ]
+                              },
+                              "repairUntil": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                               }
                             },
                             "required": [
@@ -109935,7 +111902,9 @@
                               "active",
                               "onlineBookable",
                               "imageUrl",
-                              "photoCount"
+                              "photoCount",
+                              "condition",
+                              "repairUntil"
                             ]
                           }
                         },
@@ -112143,6 +114112,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "lineConnected": {
                           "type": "boolean"
                         },
@@ -112170,6 +114148,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "lineConnected",
                         "lineName",
                         "tested",
@@ -112404,6 +114384,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "lineConnected": {
                           "type": "boolean"
                         },
@@ -112431,6 +114420,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "lineConnected",
                         "lineName",
                         "tested",
@@ -112620,6 +114611,15 @@
                             "free"
                           ]
                         },
+                        "enabledUntil": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "free": {
+                          "type": "boolean"
+                        },
                         "lineConnected": {
                           "type": "boolean"
                         },
@@ -112647,6 +114647,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
+                        "enabledUntil",
+                        "free",
                         "lineConnected",
                         "lineName",
                         "tested",
@@ -172281,12 +174283,74 @@
                                   },
                                   "shipBeforeDays": {
                                     "type": "integer"
+                                  },
+                                  "pickupTime": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  },
+                                  "returnAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "returnMethod": {
+                                    "type": "string",
+                                    "enum": [
+                                      "in_store",
+                                      "parcel"
+                                    ]
+                                  },
+                                  "parcel": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "courier": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "trackingNo": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "shippedAt": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "trackingUrl": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "courier",
+                                      "trackingNo",
+                                      "shippedAt",
+                                      "trackingUrl"
+                                    ]
                                   }
                                 },
                                 "required": [
                                   "pickupDate",
                                   "returnDate",
-                                  "shipBeforeDays"
+                                  "shipBeforeDays",
+                                  "pickupTime",
+                                  "returnAt",
+                                  "returnMethod",
+                                  "parcel"
                                 ]
                               },
                               "feedbackToken": {
@@ -172611,12 +174675,74 @@
                                   },
                                   "shipBeforeDays": {
                                     "type": "integer"
+                                  },
+                                  "pickupTime": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                  },
+                                  "returnAt": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "returnMethod": {
+                                    "type": "string",
+                                    "enum": [
+                                      "in_store",
+                                      "parcel"
+                                    ]
+                                  },
+                                  "parcel": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "courier": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "trackingNo": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "shippedAt": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "trackingUrl": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "courier",
+                                      "trackingNo",
+                                      "shippedAt",
+                                      "trackingUrl"
+                                    ]
                                   }
                                 },
                                 "required": [
                                   "pickupDate",
                                   "returnDate",
-                                  "shipBeforeDays"
+                                  "shipBeforeDays",
+                                  "pickupTime",
+                                  "returnAt",
+                                  "returnMethod",
+                                  "parcel"
                                 ]
                               },
                               "feedbackToken": {
@@ -173224,12 +175350,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -173688,12 +175876,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -174149,12 +176399,606 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
+                          ]
+                        },
+                        "feedbackToken": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "branchId",
+                        "serviceId",
+                        "startAt",
+                        "endAt",
+                        "status",
+                        "serviceName",
+                        "extraServices",
+                        "branchName",
+                        "branchMapUrl",
+                        "practitionerName",
+                        "practitionerPhotoUrl",
+                        "canConfirm",
+                        "canReschedule",
+                        "memberId",
+                        "deposit",
+                        "canRequestReschedule",
+                        "canCancel",
+                        "cancellationWindowMin",
+                        "rental",
+                        "feedbackToken"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/liff/{tenantSlug}/appointments/{id}/parcel": {
+      "post": {
+        "tags": [
+          "liff"
+        ],
+        "summary": "Rental: I sent the item back by parcel (courier and tracking number), while I hold the item",
+        "description": "Public endpoint (no authentication).",
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 60
+            },
+            "required": true,
+            "name": "tenantSlug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courier": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "trackingNo": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9-]{4,40}$"
+                  }
+                },
+                "required": [
+                  "courier",
+                  "trackingNo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "branchId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "serviceId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "startAt": {
+                          "type": "string"
+                        },
+                        "endAt": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "confirmed",
+                            "reschedule_requested",
+                            "checked_in",
+                            "in_service",
+                            "completed",
+                            "no_show",
+                            "cancelled"
+                          ]
+                        },
+                        "serviceName": {
+                          "type": "string"
+                        },
+                        "extraServices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          }
+                        },
+                        "branchName": {
+                          "type": "string"
+                        },
+                        "branchMapUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "practitionerName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "practitionerPhotoUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "canConfirm": {
+                          "type": "boolean"
+                        },
+                        "canReschedule": {
+                          "type": "boolean"
+                        },
+                        "memberId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "deposit": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "awaiting_slip",
+                                "slip_submitted",
+                                "confirmed",
+                                "rejected"
+                              ]
+                            },
+                            "amountMinor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "accounts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                  },
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "bank",
+                                      "promptpay",
+                                      "qr"
+                                    ]
+                                  },
+                                  "label": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "bank": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bankCode": {
+                                        "type": "string",
+                                        "enum": [
+                                          "KBANK",
+                                          "SCB",
+                                          "BBL",
+                                          "KTB",
+                                          "BAY",
+                                          "TTB",
+                                          "GSB",
+                                          "BAAC",
+                                          "GHB",
+                                          "KKP",
+                                          "CIMB",
+                                          "UOB",
+                                          "LHB",
+                                          "TISCO",
+                                          "ICBC",
+                                          "TCR",
+                                          "IBANK",
+                                          "PROMPTPAY"
+                                        ]
+                                      },
+                                      "bankName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "accountNumber": {
+                                        "type": "string",
+                                        "pattern": "^[0-9][0-9 -]{4,28}[0-9]$"
+                                      },
+                                      "accountName": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 100
+                                      }
+                                    },
+                                    "required": [
+                                      "bankName",
+                                      "accountNumber",
+                                      "accountName"
+                                    ]
+                                  },
+                                  "promptpay": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "accountName": {
+                                        "type": "string"
+                                      },
+                                      "accountHint": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "accountName",
+                                      "accountHint"
+                                    ]
+                                  },
+                                  "qrPayload": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "qr": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "imageUrl": {
+                                        "type": "string"
+                                      },
+                                      "accountName": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "imageUrl",
+                                      "accountName"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "kind",
+                                  "label",
+                                  "bank",
+                                  "promptpay",
+                                  "qrPayload",
+                                  "qr"
+                                ]
+                              }
+                            },
+                            "slipSubmittedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "rejectReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "status",
+                            "amountMinor",
+                            "accounts",
+                            "slipSubmittedAt",
+                            "rejectReason"
+                          ]
+                        },
+                        "canRequestReschedule": {
+                          "type": "boolean"
+                        },
+                        "canCancel": {
+                          "type": "boolean"
+                        },
+                        "cancellationWindowMin": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "rental": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "pickupDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "returnDate": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "shipBeforeDays": {
+                              "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "pickupDate",
+                            "returnDate",
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -176784,13 +179628,17 @@
                             },
                             "noteRequired": {
                               "type": "boolean"
+                            },
+                            "pickupTimes": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "unit",
                             "pricing",
                             "noteLabel",
-                            "noteRequired"
+                            "noteRequired",
+                            "pickupTimes"
                           ]
                         },
                         "branches": {
@@ -178198,6 +181046,19 @@
                             "type": "string",
                             "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                           }
+                        },
+                        "pickupSlots": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            }
+                          }
                         }
                       },
                       "required": [
@@ -178209,7 +181070,8 @@
                         "shipBeforeDays",
                         "earliestPickup",
                         "latestPickup",
-                        "fullDays"
+                        "fullDays",
+                        "pickupSlots"
                       ]
                     }
                   },
@@ -178453,6 +181315,10 @@
                   "returnDate": {
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "pickupTime": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                   },
                   "extraServiceIds": {
                     "type": "array",
@@ -178849,12 +181715,74 @@
                                 },
                                 "shipBeforeDays": {
                                   "type": "integer"
+                                },
+                                "pickupTime": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                "returnAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "returnMethod": {
+                                  "type": "string",
+                                  "enum": [
+                                    "in_store",
+                                    "parcel"
+                                  ]
+                                },
+                                "parcel": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "courier": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "trackingNo": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "shippedAt": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "trackingUrl": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "courier",
+                                    "trackingNo",
+                                    "shippedAt",
+                                    "trackingUrl"
+                                  ]
                                 }
                               },
                               "required": [
                                 "pickupDate",
                                 "returnDate",
-                                "shipBeforeDays"
+                                "shipBeforeDays",
+                                "pickupTime",
+                                "returnAt",
+                                "returnMethod",
+                                "parcel"
                               ]
                             },
                             "feedbackToken": {
@@ -179551,12 +182479,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -180198,12 +183188,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -180379,6 +183431,10 @@
                   "returnDate": {
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "pickupTime": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
                   },
                   "partySize": {
                     "type": "integer",
@@ -180771,12 +183827,74 @@
                                 },
                                 "shipBeforeDays": {
                                   "type": "integer"
+                                },
+                                "pickupTime": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                                },
+                                "returnAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "returnMethod": {
+                                  "type": "string",
+                                  "enum": [
+                                    "in_store",
+                                    "parcel"
+                                  ]
+                                },
+                                "parcel": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "courier": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "trackingNo": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "shippedAt": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "trackingUrl": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "courier",
+                                    "trackingNo",
+                                    "shippedAt",
+                                    "trackingUrl"
+                                  ]
                                 }
                               },
                               "required": [
                                 "pickupDate",
                                 "returnDate",
-                                "shipBeforeDays"
+                                "shipBeforeDays",
+                                "pickupTime",
+                                "returnAt",
+                                "returnMethod",
+                                "parcel"
                               ]
                             },
                             "feedbackToken": {
@@ -181236,12 +184354,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -181708,12 +184888,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
@@ -182375,12 +185617,74 @@
                             },
                             "shipBeforeDays": {
                               "type": "integer"
+                            },
+                            "pickupTime": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                            },
+                            "returnAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "returnMethod": {
+                              "type": "string",
+                              "enum": [
+                                "in_store",
+                                "parcel"
+                              ]
+                            },
+                            "parcel": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "courier": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingNo": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "shippedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "trackingUrl": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "courier",
+                                "trackingNo",
+                                "shippedAt",
+                                "trackingUrl"
+                              ]
                             }
                           },
                           "required": [
                             "pickupDate",
                             "returnDate",
-                            "shipBeforeDays"
+                            "shipBeforeDays",
+                            "pickupTime",
+                            "returnAt",
+                            "returnMethod",
+                            "parcel"
                           ]
                         },
                         "feedbackToken": {
