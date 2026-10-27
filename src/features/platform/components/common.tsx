@@ -106,4 +106,5 @@ export const INDUSTRY_KEYS = [
   'dress_rental',
   'equipment_rental',
   'pet_hotel',
+  'resort',
 ] as const;
