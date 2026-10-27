@@ -1379,15 +1379,12 @@
       "pageTitle": "CoreUp AI demo LINE",
       "pageHint": "Choose the sample shops people can play through CoreUp's LINE, who may talk to it (testers → everyone) and the cost"
     },
-    "freeTrial": "Free trial messages (whole trial)",
-    "trialUntil": "trial until {{date}}",
-    "trialOver": "trial is over",
     "paidQuota": "Paid add-on quota (month + top-ups)",
     "allowance": {
       "addon": "counts against the add-on",
-      "trial": "counts against the free messages",
-      "none": "AI silent (no add-on)"
-    }
+      "free": "counts against the free messages"
+    },
+    "free": "Free first messages (once, all months together)"
   },
   "metaChannels": {
     "title": "Connect Facebook/IG",

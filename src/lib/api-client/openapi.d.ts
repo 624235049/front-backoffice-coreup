@@ -11818,11 +11818,9 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
-                                freeTrialQuota: number;
-                                freeTrialUsed: number;
-                                inTrial: boolean;
+                                allowance: "addon" | "free";
+                                freeQuota: number;
+                                freeUsed: number;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -11976,11 +11974,9 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
-                                freeTrialQuota: number;
-                                freeTrialUsed: number;
-                                inTrial: boolean;
+                                allowance: "addon" | "free";
+                                freeQuota: number;
+                                freeUsed: number;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -12122,11 +12118,9 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
-                                freeTrialQuota: number;
-                                freeTrialUsed: number;
-                                inTrial: boolean;
+                                allowance: "addon" | "free";
+                                freeQuota: number;
+                                freeUsed: number;
                                 inputTokens: number;
                                 outputTokens: number;
                                 costEstimateMinor: number | null;
@@ -15908,7 +15902,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                     *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -16143,7 +16137,7 @@ export interface paths {
                          *       },
                          *       {
                          *         "q": "มี AI ตอบแชทไหม",
-                         *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                         *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                          *       },
                          *       {
                          *         "q": "ตรวจสลิปได้ไหม",
@@ -16289,7 +16283,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                     *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -53233,8 +53227,10 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
+                                allowance: "addon" | "free";
+                                lineConnected: boolean;
+                                lineName: string | null;
+                                tested: boolean;
                                 topupRequested: boolean;
                             };
                         };
@@ -53363,8 +53359,10 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
+                                allowance: "addon" | "free";
+                                lineConnected: boolean;
+                                lineName: string | null;
+                                tested: boolean;
                                 topupRequested: boolean;
                             };
                         };
@@ -53487,8 +53485,10 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "trial" | "none";
-                                trialEndsOn: string | null;
+                                allowance: "addon" | "free";
+                                lineConnected: boolean;
+                                lineName: string | null;
+                                tested: boolean;
                                 topupRequested: boolean;
                             };
                         };

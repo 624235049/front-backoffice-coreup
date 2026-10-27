@@ -21337,24 +21337,14 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "freeTrialQuota": {
+                        "freeQuota": {
                           "type": "integer"
                         },
-                        "freeTrialUsed": {
+                        "freeUsed": {
                           "type": "integer"
-                        },
-                        "inTrial": {
-                          "type": "boolean"
                         },
                         "inputTokens": {
                           "type": "integer"
@@ -21416,10 +21406,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
-                        "freeTrialQuota",
-                        "freeTrialUsed",
-                        "inTrial",
+                        "freeQuota",
+                        "freeUsed",
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
@@ -21731,24 +21719,14 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "freeTrialQuota": {
+                        "freeQuota": {
                           "type": "integer"
                         },
-                        "freeTrialUsed": {
+                        "freeUsed": {
                           "type": "integer"
-                        },
-                        "inTrial": {
-                          "type": "boolean"
                         },
                         "inputTokens": {
                           "type": "integer"
@@ -21810,10 +21788,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
-                        "freeTrialQuota",
-                        "freeTrialUsed",
-                        "inTrial",
+                        "freeQuota",
+                        "freeUsed",
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
@@ -22050,24 +22026,14 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "freeTrialQuota": {
+                        "freeQuota": {
                           "type": "integer"
                         },
-                        "freeTrialUsed": {
+                        "freeUsed": {
                           "type": "integer"
-                        },
-                        "inTrial": {
-                          "type": "boolean"
                         },
                         "inputTokens": {
                           "type": "integer"
@@ -22129,10 +22095,8 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
-                        "freeTrialQuota",
-                        "freeTrialUsed",
-                        "inTrial",
+                        "freeQuota",
+                        "freeUsed",
                         "inputTokens",
                         "outputTokens",
                         "costEstimateMinor",
@@ -29797,7 +29761,7 @@
                                 },
                                 {
                                   "q": "มี AI ตอบแชทไหม",
-                                  "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                  "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                 },
                                 {
                                   "q": "ตรวจสลิปได้ไหม",
@@ -30227,7 +30191,7 @@
                       },
                       {
                         "q": "มี AI ตอบแชทไหม",
-                        "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                        "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                       },
                       {
                         "q": "ตรวจสลิปได้ไหม",
@@ -30501,7 +30465,7 @@
                                 },
                                 {
                                   "q": "มี AI ตอบแชทไหม",
-                                  "a": "ทดลองฟรี 30 วัน ได้ใช้ AI ตอบแชทฟรี 100 ข้อความ (ต้องเชื่อม LINE OA) หลังทดลอง AI ตอบแชท ฿490/เดือน ได้ 1,000 ข้อความ"
+                                  "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                 },
                                 {
                                   "q": "ตรวจสลิปได้ไหม",
@@ -112176,15 +112140,20 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
+                        "lineConnected": {
+                          "type": "boolean"
+                        },
+                        "lineName": {
                           "type": [
                             "string",
                             "null"
                           ]
+                        },
+                        "tested": {
+                          "type": "boolean"
                         },
                         "topupRequested": {
                           "type": "boolean"
@@ -112201,7 +112170,9 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
+                        "lineConnected",
+                        "lineName",
+                        "tested",
                         "topupRequested"
                       ]
                     }
@@ -112430,15 +112401,20 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
+                        "lineConnected": {
+                          "type": "boolean"
+                        },
+                        "lineName": {
                           "type": [
                             "string",
                             "null"
                           ]
+                        },
+                        "tested": {
+                          "type": "boolean"
                         },
                         "topupRequested": {
                           "type": "boolean"
@@ -112455,7 +112431,9 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
+                        "lineConnected",
+                        "lineName",
+                        "tested",
                         "topupRequested"
                       ]
                     }
@@ -112639,15 +112617,20 @@
                           "type": "string",
                           "enum": [
                             "addon",
-                            "trial",
-                            "none"
+                            "free"
                           ]
                         },
-                        "trialEndsOn": {
+                        "lineConnected": {
+                          "type": "boolean"
+                        },
+                        "lineName": {
                           "type": [
                             "string",
                             "null"
                           ]
+                        },
+                        "tested": {
+                          "type": "boolean"
                         },
                         "topupRequested": {
                           "type": "boolean"
@@ -112664,7 +112647,9 @@
                         "topupMessages",
                         "state",
                         "allowance",
-                        "trialEndsOn",
+                        "lineConnected",
+                        "lineName",
+                        "tested",
                         "topupRequested"
                       ]
                     }
