@@ -17,7 +17,8 @@ const bangkokDay = (days: number, from = Date.now()) =>
   new Date(from + days * DAY_MS).toLocaleDateString('en-CA', { timeZone: 'Asia/Bangkok' });
 
 /**
- * The add-on's end: "เปิด AI ฟรี 1 เดือน" (30 days, free: never on an invoice) and a custom last day (free or billed).
+ * The add-on's end: a custom last day, billed unless "ให้ใช้ฟรี" is ticked on purpose (a free grant is never on an invoice).
+ * There is no one-click free month any more: every shop already gets its first 100 AI messages free.
  * `enabledUntil` from the API is the first instant after the last day.
  */
 export function AiFreeGrant({
@@ -34,7 +35,7 @@ export function AiFreeGrant({
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   const [day, setDay] = useState('');
-  const [customFree, setCustomFree] = useState(true);
+  const [customFree, setCustomFree] = useState(false);
   const [note, setNote] = useState('');
   const lastDay = enabledUntil ? bangkokDay(0, Date.parse(enabledUntil) - 1) : null;
   const noteOf = note.trim() ? { note: note.trim() } : {};
@@ -51,13 +52,6 @@ export function AiFreeGrant({
       </div>
       <p className="text-xs text-muted-foreground">{t('aiChat.grant.hint')}</p>
       <div className="flex flex-wrap items-end gap-3">
-        <Button
-          data-testid="ai-free-month"
-          disabled={disabled}
-          onClick={() => onGrant({ active: true, free: true, enabledUntil: bangkokDay(30), ...noteOf })}
-        >
-          {t('aiChat.grant.freeMonth')}
-        </Button>
         <label htmlFor="ai-grant-day" className="grid gap-1 text-sm">
           <span>{t('aiChat.grant.day')}</span>
           <Input

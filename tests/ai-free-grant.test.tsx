@@ -35,18 +35,21 @@ const view = (over: Partial<Parameters<typeof AiFreeGrant>[0]> = {}) => {
 };
 
 describe('AiFreeGrant', () => {
-  it('"เปิด AI ฟรี 1 เดือน" grants free until today + 30 days (Bangkok)', () => {
-    const onGrant = view();
-    fireEvent.click(screen.getByRole('button', { name: 'เปิด AI ฟรี 1 เดือน' }));
-    expect(onGrant).toHaveBeenCalledWith({ active: true, free: true, enabledUntil: '2026-11-27' });
+  it('has no one-click free month: the first 100 messages are free for everybody already', () => {
+    view();
+    expect(screen.queryByTestId('ai-free-month')).toBeNull();
+    expect(screen.queryByRole('button', { name: /ฟรี 1 เดือน/ })).toBeNull();
   });
 
-  it('a custom day goes out free by default, billed when "ให้ใช้ฟรี" is unticked, with the note', () => {
+  it('a custom day goes out billed by default, free only when "ให้ใช้ฟรี" is ticked, with the note', () => {
     const onGrant = view();
     const apply = screen.getByTestId('ai-grant-custom') as HTMLButtonElement;
     expect(apply.disabled).toBe(true);
     fireEvent.change(screen.getByLabelText('วันสุดท้ายที่ใช้ได้'), { target: { value: '2026-12-31' } });
     fireEvent.change(screen.getByLabelText(/หมายเหตุ/), { target: { value: ' ร้านชุดเช่า ' } });
+    fireEvent.click(apply);
+    expect(onGrant).toHaveBeenLastCalledWith({ active: true, enabledUntil: '2026-12-31', note: 'ร้านชุดเช่า' });
+    fireEvent.click(screen.getByLabelText('ให้ใช้ฟรี (ไม่ขึ้นใบแจ้งชำระ)'));
     fireEvent.click(apply);
     expect(onGrant).toHaveBeenLastCalledWith({
       active: true,
@@ -54,9 +57,6 @@ describe('AiFreeGrant', () => {
       free: true,
       note: 'ร้านชุดเช่า',
     });
-    fireEvent.click(screen.getByLabelText('ให้ใช้ฟรี (ไม่ขึ้นใบแจ้งชำระ)'));
-    fireEvent.click(apply);
-    expect(onGrant).toHaveBeenLastCalledWith({ active: true, enabledUntil: '2026-12-31', note: 'ร้านชุดเช่า' });
   });
 
   it('shows "ฟรีถึง {date}" with the last day (the API sends the first instant after it); nothing while no end', () => {
@@ -72,6 +72,6 @@ describe('AiFreeGrant', () => {
 
   it('is locked while saving or without write access', () => {
     view({ disabled: true });
-    expect((screen.getByTestId('ai-free-month') as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByTestId('ai-grant-custom') as HTMLButtonElement).disabled).toBe(true);
   });
 });

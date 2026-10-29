@@ -164,15 +164,49 @@ function AddonsDialog({ initial, onClose }: { initial: Settings; onClose: () => 
               onChange={(v) => setS({ ...s, setupService: { ...s.setupService, ...v } })}
             />
           </section>
+          <section className="grid gap-3" data-testid="addon-extras">
+            <h3 className="text-sm font-semibold">{t('plans.addons.extras')}</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <MoneyField
+                id="ad-seat"
+                label={t('plans.addons.field.seat')}
+                hint=""
+                minor={s.extras.seatMonthlyMinor}
+                onChange={(m) => setS({ ...s, extras: { ...s.extras, seatMonthlyMinor: m } })}
+              />
+              <MoneyField
+                id="ad-branch"
+                label={t('plans.addons.field.branch')}
+                hint=""
+                minor={s.extras.branchMonthlyMinor}
+                onChange={(m) => setS({ ...s, extras: { ...s.extras, branchMonthlyMinor: m } })}
+              />
+            </div>
+          </section>
           <section className="grid gap-3">
             <h3 className="text-sm font-semibold">{t('plans.addons.migration')}</h3>
-            <MoneyField
-              id="ad-mig"
-              label={t('plans.addons.field.from')}
-              hint=""
-              minor={s.migration.fromMinor}
-              onChange={(m) => setS({ ...s, migration: { ...s.migration, fromMinor: m } })}
-            />
+            <div className="grid gap-3 sm:grid-cols-2">
+              {s.migration.tiers.map((tier, i) =>
+                tier.priceMinor === null ? null : (
+                  <MoneyField
+                    key={tier.upToCustomers ?? 'rest'}
+                    id={`ad-mig-tier-${i}`}
+                    label={t('plans.addons.field.tier', { n: tier.upToCustomers })}
+                    hint=""
+                    minor={tier.priceMinor}
+                    onChange={(m) =>
+                      setS({
+                        ...s,
+                        migration: {
+                          ...s.migration,
+                          tiers: s.migration.tiers.map((x, j) => (j === i ? { ...x, priceMinor: m } : x)),
+                        },
+                      })
+                    }
+                  />
+                ),
+              )}
+            </div>
             <TextPair
               id="ad-mig"
               value={s.migration}
@@ -240,7 +274,9 @@ export function AddonsCard() {
                 </li>
                 <li>
                   <span className="font-medium">{settings.migration[lang].name}</span>{' '}
-                  {t('plans.addons.from', { price: formatMoney(settings.migration.fromMinor, locale) })}
+                  {t('plans.addons.from', {
+                    price: formatMoney(settings.migration.tiers[0]?.priceMinor ?? 0, locale),
+                  })}
                 </li>
               </ul>
               {editing ? <AddonsDialog initial={settings} onClose={() => setEditing(false)} /> : null}

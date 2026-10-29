@@ -92,7 +92,14 @@
     "save": "Save",
     "saved": "{{name}} quota saved",
     "unchanged": "Quota not changed yet. Type a new number or tick “Unlimited” first",
-    "invalid": "The quota must be a whole number from 0, or empty to follow the package"
+    "invalid": "The quota must be a whole number from 0, or empty to follow the package",
+    "extra": {
+      "members": "Extra accounts bought ({{price}}/account/month)",
+      "branches": "Extra branches bought ({{price}}/branch/month)",
+      "invalid": "Enter a whole number from 0 to 500",
+      "grant": "Old quota of {{n}} kept until {{date}} (free)",
+      "grantUnlimited": "Old unlimited quota kept until {{date}} (free)"
+    }
   },
   "engagementType": {
     "free_check": "Free check",
@@ -160,7 +167,8 @@
   },
   "invoiceSource": {
     "subscription": "Subscription",
-    "engagement": "Consulting"
+    "engagement": "Consulting",
+    "other": "Other"
   },
   "auditStatus": {
     "open": "Open",
@@ -570,32 +578,9 @@
     }
   },
   "access": {
-    "when": "When",
-    "who": "Who",
-    "action": "Action",
-    "reason": "Reason",
-    "impersonating": "Impersonation",
-    "actions": {
-      "platform.impersonate_started": "Started viewing as the shop",
-      "platform.impersonate_ended": "Ended viewing",
-      "platform.report_viewed": "Viewed a report",
-      "platform.tenant_updated": "Updated the shop",
-      "platform.modules_changed": "Changed modules",
-      "platform.tenant_created": "Created the shop",
-      "platform.assignment_added": "Assigned a team member",
-      "platform.assignment_removed": "Removed a team member",
-      "platform.audit_created": "Started an audit",
-      "platform.audit_report_generated": "Generated the audit report",
-      "platform.invoice_issued": "Issued an invoice",
-      "platform.audit_scored": "Scored the rubric",
-      "platform.audit_action_plan_saved": "Saved the 90-day plan",
-      "platform.audit_report_requested": "Requested the audit report",
-      "platform.invoice_updated": "Updated an invoice",
-      "platform.engagement_created": "Opened an engagement",
-      "platform.engagement_updated": "Updated an engagement",
-      "platform.module_enabled_by_playbook": "Enabled a module via the playbook",
-      "platform.lead_converted": "Converted a lead to the shop"
-    }
+    "ok": "Active",
+    "grace": "Grace period",
+    "locked": "Locked"
   },
   "impersonate": {
     "button": "View as shop",
@@ -798,6 +783,9 @@
     "title": "Payment notices",
     "description": "Package payment notices of every shop, issued automatically before expiry. The admin's job is “Confirm payment” in the “Awaiting confirmation” queue (the receipt is issued automatically).",
     "add": "Issue payment notice",
+    "addOther": "Issue “Other” notice",
+    "moreLines": "+{{count}} more",
+    "otherLines": "Items",
     "issue": "Issue",
     "run": "Run monthly billing",
     "runHint": "Creates subscription invoices for every active shop (legacy invoices that are due included, never duplicates)",
@@ -849,11 +837,16 @@
       "none": "This invoice has no slip",
       "sentAt": "Reported at",
       "confirm": "Confirm payment (activate the shop's package)",
+      "confirmOther": "Confirm payment (issue receipt)",
       "confirmHint": "Renews the package, issues the receipt and sends the owner an email and an in-app notice right away.",
+      "confirmHintOther": "Issues the receipt and sends the owner an email and an in-app notice right away. The package and period do not change.",
       "confirmedToast": {
         "plan": "Payment for {{number}} confirmed, package activated",
         "ai_chat": "Payment for {{number}} confirmed, AI chat switched on for the shop",
-        "ai_topup": "Payment for {{number}} confirmed, messages added for the shop"
+        "ai_topup": "Payment for {{number}} confirmed, messages added for the shop",
+        "other": "Payment for {{number}} confirmed, receipt issued",
+        "extra_seats": "Payment {{number}} confirmed and the extra staff accounts added to the shop.",
+        "extra_branches": "Payment {{number}} confirmed and the extra branches added to the shop."
       },
       "noteLabel": "Invalid slip: tell the shop why",
       "notePlaceholder": "e.g. amount does not match, or this is not the slip for this invoice",
@@ -1155,7 +1148,9 @@
         "topupMessages": "Messages per top-up",
         "setup": "One-time set-up (baht)",
         "price": "Price (baht)",
-        "from": "Starting price (baht)"
+        "seat": "Extra staff account, per account a month (baht)",
+        "branch": "Extra branch, per branch a month (baht)",
+        "tier": "Price to move up to {{n}} customers (baht)"
       },
       "hint": {
         "setupYearly": "Free when paid yearly"
@@ -1173,7 +1168,8 @@
       },
       "saved": "Add-ons saved",
       "aiLine": "{{monthly}}/month · {{included}} messages included · top-up {{topup}} per {{topupMessages}} messages · set-up {{setup}}",
-      "from": "from {{price}}"
+      "from": "from {{price}}",
+      "extras": "Extras: staff accounts and branches"
     }
   },
   "team": {
@@ -1227,12 +1223,52 @@
     "nothingToClear": "No demo data was generated yet, nothing to delete",
     "resourceShop": "Cannot fill sample data: this shop books by table / court / room, which the generator does not support"
   },
+  "lock": {
+    "title": "Shop access",
+    "state": "Status",
+    "lockOn": "Usable until",
+    "lockOnHint": "After this day the shop is locked (end date + 7 days). Data is never deleted",
+    "lockedNote": "This shop is locked. A package payment or a longer trial unlocks it",
+    "none": "No end date, never locked automatically",
+    "extend": "Set the end of the trial",
+    "extendHint": "Pick today or a later date. A locked shop can use the system at once",
+    "extendDate": "Trial end date",
+    "extendBtn": "Save date",
+    "extended": "Trial end saved. The shop can use the system until {{date}}"
+  },
   "ownerPhone": {
     "label": "Owner's mobile",
     "copy": "Copy number",
     "copied": "Number copied",
     "copyFailed": "Could not copy. The number is {{phone}}",
     "trialEnds": "Trial ends"
+  },
+  "otherInvoice": {
+    "title": "Issue an “Other” payment notice",
+    "description": "A one-off charge such as migration, setup or extra development. The shop sees it on its package page and pays it like any payment notice. The shop's package and period do not change.",
+    "presets": "Common items",
+    "presetList": {
+      "move": "System migration fee",
+      "setup": "System setup fee",
+      "dev": "Extra development fee"
+    },
+    "line": "Item {{n}}",
+    "descriptionLabel": "Item",
+    "descriptionPlaceholder": "e.g. System migration fee",
+    "quantity": "Quantity",
+    "unitPrice": "Unit price (THB, before VAT)",
+    "note": "Note (optional)",
+    "notePlaceholder": "Shown on the payment notice and receipt documents",
+    "addLine": "Add item",
+    "removeLine": "Remove item",
+    "total": "Total before VAT",
+    "descriptionNeeded": "Enter the item name first",
+    "priceNeeded": "Enter a unit price greater than 0, e.g. 3000",
+    "quantityNeeded": "Quantity must be a whole number from 1",
+    "submit": "Issue payment notice",
+    "issuedToast": "Payment notice {{number}} issued. The shop got an email and sees it on its package page",
+    "copyLink": "Copy payment link",
+    "copiedLink": "Link copied. Send it to the shop on LINE"
   },
   "issueInvoice": {
     "open": "Issue renewal notice",
@@ -1288,7 +1324,6 @@
     "grant": {
       "title": "Free access or an end date",
       "hint": "The add-on switches itself off after the last day. A free grant never puts an AI line on the invoice, and the shop owners are told 3 days before it ends.",
-      "freeMonth": "Open AI free for 1 month",
       "day": "Last day of use",
       "free": "Free (not on invoices)",
       "note": "Note (optional, kept in the audit log)",

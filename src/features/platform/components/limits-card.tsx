@@ -8,11 +8,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useCan } from '@/lib/permissions';
-import { type TenantLimit, useSetTenantLimit, useTenantLimits } from '../api';
-import { useIntlLocale } from '../format';
+import { type TenantLimit, useAddons, useSetTenantExtras, useSetTenantLimit, useTenantLimits } from '../api';
+import { formatDate, formatMoney, useIntlLocale } from '../format';
 
 /** The API stores "unlimited for this shop" as -1; `null` removes the custom value (package value applies). */
 export const UNLIMITED_OVERRIDE = -1;
+/** The API accepts at most this many extra accounts / branches per shop. */
+const MAX_EXTRA = 500;
 
 /** What the row would send: `undefined` = the typed text is not a whole number ≥ 0. */
 export function limitValue(draft: string, unlimited: boolean): number | null | undefined {
@@ -47,10 +49,13 @@ export function LimitsCard({ id }: { id: string }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rows.map((r) => (
+                {rows.flatMap((r) => [
                   // remount after a save so the inputs show the stored value
-                  <LimitRow key={`${r.key}:${r.override}`} tenantId={id} row={r} />
-                ))}
+                  <LimitRow key={`${r.key}:${r.override}`} tenantId={id} row={r} />,
+                  r.key === 'members' || r.key === 'branches' ? (
+                    <ExtrasRow key={`${r.key}:extra:${r.extra}`} tenantId={id} row={r} />
+                  ) : null,
+                ])}
               </TableBody>
             </Table>
           )}
@@ -132,6 +137,64 @@ function LimitRow({ tenantId, row }: { tenantId: string; row: TenantLimit }) {
             {t('limits.save')}
           </Button>
         ) : null}
+      </TableCell>
+    </TableRow>
+  );
+}
+
+/** Accounts / branches the shop bought on top of the package (billed on its renewal invoices) and the free allowance it keeps until its period ends. */
+function ExtrasRow({ tenantId, row }: { tenantId: string; row: TenantLimit }) {
+  const { t } = useTranslation('platform');
+  const locale = useIntlLocale();
+  const canWrite = useCan('platform:write');
+  const save = useSetTenantExtras(tenantId);
+  const [draft, setDraft] = useState(String(row.extra));
+  const key = row.key === 'members' ? 'members' : 'branches';
+  const count =
+    /^\d+$/.test(draft.trim()) && Number(draft.trim()) <= MAX_EXTRA ? Number(draft.trim()) : undefined;
+  // the price per unit is the add-on setting the shop is billed with
+  const prices = useAddons().data?.settings.extras;
+  const minor = row.key === 'members' ? prices?.seatMonthlyMinor : prices?.branchMonthlyMinor;
+  const price = minor === undefined ? '' : formatMoney(minor, locale);
+  const name = t(`plans.limit.${row.key}`, { defaultValue: row.key });
+  return (
+    <TableRow data-testid={`limit-extra-${row.key}`}>
+      <TableCell colSpan={6}>
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          <span className="font-medium">{t(`limits.extra.${key}`, { price })}</span>
+          <Input
+            inputMode="numeric"
+            className="w-24"
+            value={draft}
+            disabled={!canWrite}
+            aria-label={t(`limits.extra.${key}`, { price })}
+            onChange={(e) => setDraft(e.target.value)}
+          />
+          {canWrite ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={save.isPending}
+              blockedReason={
+                (count === undefined && t('limits.extra.invalid')) ||
+                (count === row.extra && t('limits.unchanged'))
+              }
+              onClick={() =>
+                count !== undefined &&
+                save.mutate({ key, count }, { onSuccess: () => toast.success(t('limits.saved', { name })) })
+              }
+            >
+              {t('limits.save')}
+            </Button>
+          ) : null}
+          {row.grant ? (
+            <span className="text-muted-foreground" data-testid={`limit-grant-${row.key}`}>
+              {row.grant.value < 0
+                ? t('limits.extra.grantUnlimited', { date: formatDate(row.grant.until, locale) })
+                : t('limits.extra.grant', { n: row.grant.value, date: formatDate(row.grant.until, locale) })}
+            </span>
+          ) : null}
+        </div>
       </TableCell>
     </TableRow>
   );

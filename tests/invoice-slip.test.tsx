@@ -22,6 +22,7 @@ vi.mock('@/features/platform/api', () => ({
   usePatchInvoice: () => ({ mutate: h.patch, isPending: false }),
   useCreateInvoice: () => ({ mutate: vi.fn(), isPending: false }),
   useGenerateInvoices: () => ({ mutate: vi.fn(), isPending: false }),
+  useCreateOtherInvoice: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
 const invoice = (over: Record<string, unknown> = {}) => ({
@@ -44,6 +45,7 @@ const invoice = (over: Record<string, unknown> = {}) => ({
   receiptNumber: null,
   payUrl: 'https://app.coreup.pro/pay/tok',
   termsAcceptance: null,
+  otherLines: [] as unknown[],
   slipCheck: null,
   ...over,
 });
@@ -89,6 +91,24 @@ describe('invoices page: slips and mark-as-paid', () => {
     expect(h.patch).toHaveBeenCalledWith({ id: 'inv-2', body: { status: 'paid' } }, expect.anything());
     expect(h.confirm).not.toHaveBeenCalled();
   });
+
+  it('"mark as paid" on a one-off invoice runs confirm-payment so the receipt is issued', () => {
+    h.invoices = [
+      invoice({
+        id: 'inv-3',
+        source: 'engagement',
+        slipUrl: null,
+        slipUploadedAt: null,
+        otherLines: [
+          { description: 'ค่าย้ายระบบ', quantity: 1, unitMinor: 300_000, amountMinor: 300_000, note: null },
+        ],
+      }),
+    ];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'invoices.markPaid' })[0] as HTMLElement);
+    expect(h.confirm).toHaveBeenCalledWith('inv-3', expect.anything());
+    expect(h.patch).not.toHaveBeenCalled();
+  });
 });
 
 describe('slip review sheet actions', () => {
@@ -114,6 +134,38 @@ describe('slip review sheet actions', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirm' }));
     expect(h.toast.success).toHaveBeenCalledWith(key);
+  });
+
+  it('a one-off "อื่น ๆ" invoice lists its lines, confirms with receipt wording and never says "package"', () => {
+    h.invoices = [
+      invoice({
+        id: 'inv-3',
+        source: 'engagement',
+        planName: 'ค่าย้ายระบบ',
+        periodStart: null,
+        periodEnd: null,
+        otherLines: [
+          {
+            description: 'ค่าย้ายระบบ',
+            quantity: 1,
+            unitMinor: 300_000,
+            amountMinor: 300_000,
+            note: 'ย้ายจากระบบเดิม',
+          },
+          { description: 'ค่าพัฒนาเพิ่ม', quantity: 2, unitMinor: 50_000, amountMinor: 100_000, note: null },
+        ],
+      }),
+    ];
+    h.confirm.mockImplementation((_id: string, o: { onSuccess: () => void }) => o.onSuccess());
+    open();
+    const lines = screen.getByTestId('other-lines').textContent ?? '';
+    expect(lines).toContain('ค่าย้ายระบบ');
+    expect(lines).toContain('ย้ายจากระบบเดิม');
+    expect(lines).toContain('2 ×');
+    expect(screen.queryByRole('button', { name: 'invoices.slip.confirm' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirmOther' }));
+    expect(h.confirm).toHaveBeenCalledWith('inv-3', expect.anything());
+    expect(h.toast.success).toHaveBeenCalledWith('invoices.slip.confirmedToast.other');
   });
 
   it('reject needs a note: an empty one is blocked with a reason, nothing is sent', () => {

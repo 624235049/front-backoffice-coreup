@@ -306,6 +306,16 @@ export const useSetTenantLimit = (id: string) =>
     unwrap(api.PUT('/v1/platform/tenants/{id}/limits', { params: { path: { id } }, body })),
   );
 
+export const useSetTenantExtras = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/extras', 'put'>) =>
+    unwrap(api.PUT('/v1/platform/tenants/{id}/extras', { params: { path: { id } }, body })),
+  );
+
+export const useSetTrialEnd = (id: string) =>
+  useMut((body: ApiBody<'/v1/platform/tenants/{id}/trial', 'put'>) =>
+    unwrap(api.PUT('/v1/platform/tenants/{id}/trial', { params: { path: { id } }, body })),
+  );
+
 export const useSwitchBusinessType = (id: string) =>
   useMut((body: ApiBody<'/v1/platform/tenants/{id}/business-type', 'post'>) =>
     unwrap(api.POST('/v1/platform/tenants/{id}/business-type', { params: { path: { id } }, body })),
@@ -439,6 +449,11 @@ export const useRequestReport = (id: string) =>
 export const useCreateInvoice = () =>
   useMut((body: ApiBody<'/v1/platform/invoices', 'post'>) =>
     unwrap(api.POST('/v1/platform/invoices', { body })),
+  );
+
+export const useCreateOtherInvoice = () =>
+  useMut((body: ApiBody<'/v1/platform/invoices/other', 'post'>) =>
+    unwrap(api.POST('/v1/platform/invoices/other', { body })),
   );
 
 export const usePatchInvoice = () =>

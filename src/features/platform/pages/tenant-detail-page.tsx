@@ -46,6 +46,7 @@ import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { LimitsCard } from '../components/limits-card';
+import { LockCard } from '../components/lock-card';
 import { MetaChannelsCard } from '../components/meta-channels-card';
 import { ModulesCard } from '../components/modules-card';
 import { NoticesPanel } from '../components/notices-panel';
@@ -255,6 +256,7 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           ) : null}
         </CardContent>
       </Card>
+      <LockCard d={d} />
       <ModulesCard d={d} />
       <BusinessTypeCard d={d} />
       <LimitsCard id={d.id} />

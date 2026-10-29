@@ -61,6 +61,14 @@ export function UsageHealthBadge({ health }: { health: keyof typeof HEALTH_TONE 
   return <Badge variant={HEALTH_TONE[health]}>{t(`usageHealth.${health}`)}</Badge>;
 }
 
+const ACCESS_TONE = { ok: 'success', grace: 'warning', locked: 'destructive' } as const;
+
+/** Whether the shop may still use the system: ok / 7 grace days after the trial or package ended / locked. */
+export function AccessBadge({ access }: { access: keyof typeof ACCESS_TONE }) {
+  const { t } = useTranslation('platform');
+  return <Badge variant={ACCESS_TONE[access]}>{t(`access.${access}`)}</Badge>;
+}
+
 /** Small labelled value used in detail headers. */
 export function Field({ label, children }: { label: ReactNode; children: ReactNode }) {
   return (

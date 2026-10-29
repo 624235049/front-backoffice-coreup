@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { type Invoice, useConfirmPayment, usePlans, useRejectSlip } from '../api';
 import { dmyBE } from '../billing-docs';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
-import { hasPendingSlip, slipCheckTone } from '../invoice-slip';
+import { hasPendingSlip, isOtherInvoice, slipCheckTone } from '../invoice-slip';
 import { copyLineMessage } from './issue-invoice-dialog';
 
 /** A slip is a photo or a PDF; the URL is presigned, so look at the file name in the path, not the query string. */
@@ -119,14 +119,17 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
   const pending = hasPendingSlip(invoice);
   const open = invoice.status === 'issued' || invoice.status === 'overdue';
   const plan = (plans.data ?? []).find((p) => p.id === invoice.sourceId);
+  const other = isOtherInvoice(invoice);
 
   const rows: [string, string][] = [
     [t('invoices.col.shop'), invoice.tenantName],
     [
       t('invoices.col.source'),
-      `${t(`invoiceSource.${invoice.source}`)}${invoice.selfServe ? ` · ${t('invoices.selfServe')}` : ''}`,
+      `${t(other ? 'invoiceSource.other' : `invoiceSource.${invoice.source}`)}${invoice.selfServe ? ` · ${t('invoices.selfServe')}` : ''}`,
     ],
-    ...(invoice.planName ? ([[t('invoices.col.plan'), invoice.planName]] as [string, string][]) : []),
+    ...(invoice.planName && !other
+      ? ([[t('invoices.col.plan'), invoice.planName]] as [string, string][])
+      : []),
     ...(invoice.periodStart && invoice.periodEnd
       ? ([[t('invoices.col.period'), `${dmyBE(invoice.periodStart)}–${dmyBE(invoice.periodEnd)}`]] as [
           string,
@@ -153,7 +156,27 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
           </div>
         ))}
       </dl>
-      {invoice.source === 'subscription' ? (
+      {other ? (
+        <div className="grid gap-2" data-testid="other-lines">
+          <p className="text-sm font-medium">{t('invoices.otherLines')}</p>
+          <ul className="grid gap-2 text-sm">
+            {invoice.otherLines.map((l, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: read-only list, no reordering
+              <li key={i} className="rounded-md border p-2">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="min-w-0 break-words font-medium">{l.description}</span>
+                  <span className="whitespace-nowrap">{formatMoney(l.amountMinor, locale)}</span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {l.quantity} × {formatMoney(l.unitMinor, locale)}
+                </div>
+                {l.note ? <div className="mt-1 text-xs">{l.note}</div> : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {invoice.source === 'subscription' || other ? (
         invoice.termsAcceptance ? (
           <Acceptance a={invoice.termsAcceptance} />
         ) : (
@@ -192,16 +215,20 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
               confirm.mutate(invoice.id, {
                 onSuccess: () => {
                   toast.success(
-                    t(`invoices.slip.confirmedToast.${invoice.addon ?? 'plan'}`, { number: invoice.number }),
+                    t(`invoices.slip.confirmedToast.${other ? 'other' : (invoice.addon ?? 'plan')}`, {
+                      number: invoice.number,
+                    }),
                   );
                   onClose();
                 },
               })
             }
           >
-            {t('invoices.slip.confirm')}
+            {t(other ? 'invoices.slip.confirmOther' : 'invoices.slip.confirm')}
           </Button>
-          <p className="-mt-3 text-xs text-muted-foreground">{t('invoices.slip.confirmHint')}</p>
+          <p className="-mt-3 text-xs text-muted-foreground">
+            {t(other ? 'invoices.slip.confirmHintOther' : 'invoices.slip.confirmHint')}
+          </p>
           <div className="grid gap-2 border-t pt-4">
             <Label htmlFor="slip-note">{t('invoices.slip.noteLabel')}</Label>
             <Textarea

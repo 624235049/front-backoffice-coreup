@@ -71,7 +71,9 @@
     "invoice_void": "The invoice is void",
     "cannot_demote_self": "You cannot lower your own role",
     "platform_owner_only": "Only a CoreUp owner can do this",
-    "platform_only": "CoreUp team only"
+    "platform_only": "CoreUp team only",
+    "extra_seats_unavailable": "Extra accounts cannot be bought now: the package must be Pro or above and the subscription in good standing (not past its end date).",
+    "extra_branches_unavailable": "Extra branches cannot be bought now: the package must be Business or above and the subscription in good standing (not past its end date)."
   },
   "field": {
     "taxId": "Tax ID must be 13 digits with a valid check digit",

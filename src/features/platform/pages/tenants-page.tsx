@@ -14,6 +14,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Can } from '@/lib/permissions';
 import { type TenantRow, type TenantsQuery, useTenants } from '../api';
 import { TenantStatusBadge, UsageHealthBadge } from '../components/common';
+import { LockLine } from '../components/lock-card';
 import { OnboardDialog } from '../components/onboard-dialog';
 import { OwnerPhone } from '../components/owner-phone';
 import { formatDate, todayBangkok, useIntlLocale } from '../format';
@@ -151,6 +152,9 @@ export function TenantsPage() {
                         </span>
                       </div>
                     ) : null}
+                    <div className="px-1">
+                      <LockLine r={r} />
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -211,6 +215,7 @@ export function TenantsPage() {
                               {t('ownerPhone.trialEnds')}: {formatDate(r.trialEndsOn, locale)}
                             </div>
                           ) : null}
+                          <LockLine r={r} />
                         </TableCell>
                       </TableRow>
                     ))}

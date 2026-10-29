@@ -7,6 +7,9 @@ import { type Invoice, useInvoices } from './api';
 export const hasPendingSlip = (i: Pick<Invoice, 'status' | 'slipUploadedAt'>): boolean =>
   (i.status === 'issued' || i.status === 'overdue') && i.slipUploadedAt !== null;
 
+/** A one-off "อื่น ๆ" charge (ค่าย้ายระบบ …): confirming it only issues the receipt, the shop's package is untouched. */
+export const isOtherInvoice = (i: Pick<Invoice, 'otherLines'>): boolean => i.otherLines.length > 0;
+
 /** Badge colour of each automatic slip-check status (list badge and detail box). */
 export const slipCheckTone = {
   passed: 'success',

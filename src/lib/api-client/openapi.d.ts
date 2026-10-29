@@ -78,6 +78,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -202,6 +211,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -309,6 +327,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -409,6 +436,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -530,6 +566,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -637,6 +682,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -758,6 +812,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -856,6 +919,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1009,6 +1081,7 @@ export interface paths {
                                             lostChargesReplacement?: boolean;
                                             cleaningFeeMinor?: number;
                                             checkInEveryDays?: number;
+                                            allowedDays?: number[];
                                             timeModel?: {
                                                 /** @enum {string} */
                                                 kind: "24h";
@@ -1032,6 +1105,7 @@ export interface paths {
                                             }[];
                                             /** @enum {string} */
                                             securityWhen?: "pickup" | "booking";
+                                            payInFull?: boolean;
                                         } | null;
                                         sizeChart: {
                                             size: string;
@@ -1118,6 +1192,11 @@ export interface paths {
                                             extraDepositMinor: number;
                                             /** @default false */
                                             idCheck: boolean;
+                                            /**
+                                             * @default off
+                                             * @enum {string}
+                                             */
+                                            idPhoto: "off" | "optional" | "required";
                                         };
                                         messages: {
                                             confirmed?: {
@@ -1347,6 +1426,14 @@ export interface paths {
                                     } | null;
                                     /** @enum {string|null} */
                                     payMethod: "hand_fee_percent" | "per_case_fixed" | "per_class_fixed" | "salary_only" | "custom" | null;
+                                    subscription: {
+                                        /** @enum {string} */
+                                        state: "ok" | "grace" | "locked";
+                                        /** @enum {string|null} */
+                                        kind: "trial" | "paid" | null;
+                                        lockOn: string | null;
+                                        daysLeft: number | null;
+                                    };
                                 };
                                 memberId: string;
                                 displayName: string;
@@ -1378,6 +1465,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1503,6 +1599,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -1616,6 +1721,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1748,6 +1862,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1907,6 +2030,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -2047,6 +2179,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -2144,6 +2285,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2257,6 +2407,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -2352,6 +2511,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2483,6 +2651,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2644,6 +2821,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -2743,6 +2929,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -2858,6 +3053,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -2966,6 +3170,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -3100,6 +3313,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -3206,6 +3428,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -3391,6 +3622,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -3521,6 +3761,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -3663,6 +3912,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -3797,6 +4055,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -3921,6 +4188,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -4008,6 +4284,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -4154,6 +4439,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -4257,6 +4551,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -4376,6 +4679,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -4509,6 +4821,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -4612,6 +4933,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -4738,6 +5068,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -4836,6 +5175,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -4952,6 +5300,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -5054,6 +5411,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -5182,6 +5548,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -5297,6 +5672,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -5398,6 +5782,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -5520,6 +5913,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -5617,6 +6019,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -5734,6 +6145,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -5836,6 +6256,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -5951,6 +6380,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -6055,6 +6493,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -6208,6 +6655,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -6351,6 +6807,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -6480,6 +6945,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -6644,6 +7118,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -6779,6 +7262,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -6930,6 +7422,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -7056,6 +7557,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -7165,6 +7675,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -7293,6 +7812,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -7412,6 +7940,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -7521,6 +8058,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -7645,6 +8191,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -7758,6 +8313,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -7893,6 +8457,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -8049,6 +8622,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -8112,7 +8694,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "rental_damage" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "rental_damage" | "rental_id_card" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -8154,6 +8736,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -8274,6 +8865,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -8376,6 +8976,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -8520,6 +9129,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -8649,6 +9267,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -8795,6 +9422,16 @@ export interface paths {
                                             text: string;
                                         };
                                     };
+                                    /**
+                                     * @default {
+                                     *       "seatMonthlyMinor": 9900,
+                                     *       "branchMonthlyMinor": 49000
+                                     *     }
+                                     */
+                                    extras: {
+                                        seatMonthlyMinor: number;
+                                        branchMonthlyMinor: number;
+                                    };
                                     setupService: {
                                         priceMinor: number;
                                         th: {
@@ -8807,7 +9444,26 @@ export interface paths {
                                         };
                                     };
                                     migration: {
-                                        fromMinor: number;
+                                        /**
+                                         * @default [
+                                         *       {
+                                         *         "upToCustomers": 100,
+                                         *         "priceMinor": 150000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": 500,
+                                         *         "priceMinor": 300000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": null,
+                                         *         "priceMinor": null
+                                         *       }
+                                         *     ]
+                                         */
+                                        tiers: {
+                                            upToCustomers: number | null;
+                                            priceMinor: number | null;
+                                        }[];
                                         th: {
                                             name: string;
                                             text: string;
@@ -8816,6 +9472,16 @@ export interface paths {
                                             name: string;
                                             text: string;
                                         };
+                                    };
+                                };
+                                extras: {
+                                    seats: {
+                                        monthlyMinor: number;
+                                        planCodes: string[];
+                                    };
+                                    branches: {
+                                        monthlyMinor: number;
+                                        planCodes: string[];
                                     };
                                 };
                             };
@@ -8833,6 +9499,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -9005,6 +9680,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -9126,6 +9810,9 @@ export interface paths {
                                 trialEndsOn: string | null;
                                 periodStart: string | null;
                                 periodEnd: string | null;
+                                lockOn: string | null;
+                                /** @enum {string} */
+                                access: "ok" | "grace" | "locked";
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
@@ -9155,6 +9842,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -9289,6 +9985,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -9452,6 +10157,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -9568,6 +10282,9 @@ export interface paths {
                                 trialEndsOn: string | null;
                                 periodStart: string | null;
                                 periodEnd: string | null;
+                                lockOn: string | null;
+                                /** @enum {string} */
+                                access: "ok" | "grace" | "locked";
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
@@ -9652,6 +10369,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -9781,6 +10507,9 @@ export interface paths {
                                 trialEndsOn: string | null;
                                 periodStart: string | null;
                                 periodEnd: string | null;
+                                lockOn: string | null;
+                                /** @enum {string} */
+                                access: "ok" | "grace" | "locked";
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
@@ -9865,6 +10594,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -10003,6 +10741,9 @@ export interface paths {
                                 trialEndsOn: string | null;
                                 periodStart: string | null;
                                 periodEnd: string | null;
+                                lockOn: string | null;
+                                /** @enum {string} */
+                                access: "ok" | "grace" | "locked";
                                 selfServe: boolean;
                                 owner: {
                                     name: string;
@@ -10087,6 +10828,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -10273,6 +11023,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -10423,6 +11182,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -10538,6 +11306,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -10664,6 +11441,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -10753,6 +11539,11 @@ export interface paths {
                                 override: number | null;
                                 effective: number | null;
                                 used: number | null;
+                                extra: number;
+                                grant: {
+                                    value: number;
+                                    until: string;
+                                } | null;
                             }[];
                         };
                     };
@@ -10768,6 +11559,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -10864,6 +11664,11 @@ export interface paths {
                                 override: number | null;
                                 effective: number | null;
                                 used: number | null;
+                                extra: number;
+                                grant: {
+                                    value: number;
+                                    until: string;
+                                } | null;
                             }[];
                         };
                     };
@@ -10879,6 +11684,286 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/extras": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set how many extra accounts (`members`) or branches (`branches`) the shop has, billed on its renewal invoices (฿99 / ฿490 each a month; 0 removes them). 409 `extra_seats_unavailable` / `extra_branches_unavailable` for a package that does not sell them
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:write`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        key: "members" | "branches";
+                        count: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated limits */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
+                                plan: number | null;
+                                override: number | null;
+                                effective: number | null;
+                                used: number | null;
+                                extra: number;
+                                grant: {
+                                    value: number;
+                                    until: string;
+                                } | null;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/trial": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set the last day of a shop's free trial (today or later). A shop whose trial ran out is unlocked at once. 409 `not_on_trial` for a shop that already pays
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        trialEndsOn: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description New trial end */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                trialEndsOn: string;
+                                lockOn: string;
+                                /** @enum {string} */
+                                access: "ok" | "grace" | "locked";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -11034,6 +12119,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -11133,6 +12227,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -11264,6 +12367,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -11365,6 +12477,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -11498,6 +12619,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -11607,6 +12737,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -11735,6 +12874,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -11856,6 +13004,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -11961,6 +13118,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -12078,6 +13244,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -12220,6 +13395,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -12388,6 +13572,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -12534,6 +13727,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -12638,6 +13840,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -12797,6 +14008,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -12896,6 +14116,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13005,6 +14234,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13140,6 +14378,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13293,6 +14540,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -13390,6 +14646,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13506,6 +14771,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13648,6 +14922,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -13804,6 +15087,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -13923,6 +15215,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14075,6 +15376,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -14220,6 +15530,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -14319,6 +15638,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14435,6 +15763,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14560,6 +15897,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -14678,6 +16024,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14812,6 +16167,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -14960,6 +16324,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -15077,6 +16450,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -15223,6 +16605,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -15337,6 +16728,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -15484,6 +16884,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -15617,6 +17026,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -15803,6 +17221,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -15961,6 +17388,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -16145,6 +17581,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -16291,7 +17736,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -16385,6 +17830,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -16526,7 +17980,7 @@ export interface paths {
                          *       },
                          *       {
                          *         "q": "มี AI ตอบแชทไหม",
-                         *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                         *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                          *       },
                          *       {
                          *         "q": "ตรวจสลิปได้ไหม",
@@ -16672,7 +18126,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "มีค่ะ ช่วงทดลองได้ลองใช้ AI ตอบแชทฟรี (ต้องเชื่อม LINE OA ของร้านก่อน) AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -16766,6 +18220,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -16884,6 +18347,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -16987,6 +18459,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -17170,6 +18651,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -17286,6 +18776,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -17429,6 +18928,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -17555,6 +19063,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -17700,6 +19217,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -17810,6 +19336,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -17947,6 +19482,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -18068,6 +19612,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -18238,6 +19791,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -18394,6 +19956,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -18564,6 +20135,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -18747,6 +20327,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -18881,6 +20470,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -18990,6 +20588,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -19112,6 +20719,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -19302,6 +20918,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -19410,6 +21035,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -19608,6 +21242,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -19743,7 +21386,14 @@ export interface paths {
                                 } | null;
                                 selfServe: boolean;
                                 /** @enum {string|null} */
-                                addon: "ai_chat" | "ai_topup" | null;
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
                             };
                         };
                     };
@@ -19759,6 +21409,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -19865,6 +21524,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -19987,6 +21655,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -20094,6 +21771,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20236,7 +21922,14 @@ export interface paths {
                                 } | null;
                                 selfServe: boolean;
                                 /** @enum {string|null} */
-                                addon: "ai_chat" | "ai_topup" | null;
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -20259,6 +21952,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20406,7 +22108,14 @@ export interface paths {
                                 } | null;
                                 selfServe: boolean;
                                 /** @enum {string|null} */
-                                addon: "ai_chat" | "ai_topup" | null;
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
                             };
                         };
                     };
@@ -20422,6 +22131,200 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/invoices/other": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Issue a one-off "อื่น ๆ" invoice (ค่าย้ายระบบ, ค่าตั้งระบบ, ค่าพัฒนาเพิ่ม): same number, mail, payment page and receipt as a package invoice; the package is untouched
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        tenantId: string;
+                        lines: {
+                            description: string;
+                            quantity: number;
+                            unitMinor: number;
+                            note?: string | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Issued */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                tenantId: string;
+                                tenantName: string;
+                                /** @enum {string} */
+                                source: "subscription" | "engagement";
+                                sourceId: string | null;
+                                number: string;
+                                amountMinor: number;
+                                vatMinor: number;
+                                totalMinor: number;
+                                issuedOn: string;
+                                dueOn: string;
+                                paidAt: string | null;
+                                /** @enum {string} */
+                                status: "draft" | "issued" | "paid" | "void" | "overdue";
+                                slipUrl: string | null;
+                                slipUploadedAt: string | null;
+                                slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20541,6 +22444,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20684,7 +22596,14 @@ export interface paths {
                                 } | null;
                                 selfServe: boolean;
                                 /** @enum {string|null} */
-                                addon: "ai_chat" | "ai_topup" | null;
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
                             };
                         };
                     };
@@ -20700,6 +22619,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20849,7 +22777,14 @@ export interface paths {
                                 } | null;
                                 selfServe: boolean;
                                 /** @enum {string|null} */
-                                addon: "ai_chat" | "ai_topup" | null;
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
                             };
                         };
                     };
@@ -20865,6 +22800,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -20991,6 +22935,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -21141,6 +23094,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -21302,6 +23264,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -21479,6 +23450,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -21684,6 +23664,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -21777,6 +23766,16 @@ export interface paths {
                                             text: string;
                                         };
                                     };
+                                    /**
+                                     * @default {
+                                     *       "seatMonthlyMinor": 9900,
+                                     *       "branchMonthlyMinor": 49000
+                                     *     }
+                                     */
+                                    extras: {
+                                        seatMonthlyMinor: number;
+                                        branchMonthlyMinor: number;
+                                    };
                                     setupService: {
                                         priceMinor: number;
                                         th: {
@@ -21789,7 +23788,26 @@ export interface paths {
                                         };
                                     };
                                     migration: {
-                                        fromMinor: number;
+                                        /**
+                                         * @default [
+                                         *       {
+                                         *         "upToCustomers": 100,
+                                         *         "priceMinor": 150000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": 500,
+                                         *         "priceMinor": 300000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": null,
+                                         *         "priceMinor": null
+                                         *       }
+                                         *     ]
+                                         */
+                                        tiers: {
+                                            upToCustomers: number | null;
+                                            priceMinor: number | null;
+                                        }[];
                                         th: {
                                             name: string;
                                             text: string;
@@ -21816,6 +23834,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -21904,6 +23931,16 @@ export interface paths {
                                 text: string;
                             };
                         };
+                        /**
+                         * @default {
+                         *       "seatMonthlyMinor": 9900,
+                         *       "branchMonthlyMinor": 49000
+                         *     }
+                         */
+                        extras?: {
+                            seatMonthlyMinor: number;
+                            branchMonthlyMinor: number;
+                        };
                         setupService: {
                             priceMinor: number;
                             th: {
@@ -21916,7 +23953,26 @@ export interface paths {
                             };
                         };
                         migration: {
-                            fromMinor: number;
+                            /**
+                             * @default [
+                             *       {
+                             *         "upToCustomers": 100,
+                             *         "priceMinor": 150000
+                             *       },
+                             *       {
+                             *         "upToCustomers": 500,
+                             *         "priceMinor": 300000
+                             *       },
+                             *       {
+                             *         "upToCustomers": null,
+                             *         "priceMinor": null
+                             *       }
+                             *     ]
+                             */
+                            tiers?: {
+                                upToCustomers: number | null;
+                                priceMinor: number | null;
+                            }[];
                             th: {
                                 name: string;
                                 text: string;
@@ -21954,6 +24010,16 @@ export interface paths {
                                             text: string;
                                         };
                                     };
+                                    /**
+                                     * @default {
+                                     *       "seatMonthlyMinor": 9900,
+                                     *       "branchMonthlyMinor": 49000
+                                     *     }
+                                     */
+                                    extras: {
+                                        seatMonthlyMinor: number;
+                                        branchMonthlyMinor: number;
+                                    };
                                     setupService: {
                                         priceMinor: number;
                                         th: {
@@ -21966,7 +24032,26 @@ export interface paths {
                                         };
                                     };
                                     migration: {
-                                        fromMinor: number;
+                                        /**
+                                         * @default [
+                                         *       {
+                                         *         "upToCustomers": 100,
+                                         *         "priceMinor": 150000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": 500,
+                                         *         "priceMinor": 300000
+                                         *       },
+                                         *       {
+                                         *         "upToCustomers": null,
+                                         *         "priceMinor": null
+                                         *       }
+                                         *     ]
+                                         */
+                                        tiers: {
+                                            upToCustomers: number | null;
+                                            priceMinor: number | null;
+                                        }[];
                                         th: {
                                             name: string;
                                             text: string;
@@ -21993,6 +24078,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -22101,6 +24195,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -22230,6 +24333,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -22339,6 +24451,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -22481,6 +24602,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -22576,6 +24706,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -22727,6 +24866,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -22870,6 +25018,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -22992,6 +25149,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -23100,6 +25266,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23219,6 +25394,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23367,6 +25551,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23576,6 +25769,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -23702,6 +25904,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -23838,6 +26049,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -23942,6 +26162,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -24071,6 +26300,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -24158,6 +26396,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -24296,6 +26543,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -24410,6 +26666,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -24537,6 +26802,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -24638,6 +26912,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -24767,6 +27050,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -24864,6 +27156,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -24979,6 +27280,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -25080,6 +27390,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -25192,6 +27511,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -25331,6 +27659,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -25501,6 +27838,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -25738,6 +28084,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -25922,6 +28277,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -26144,6 +28508,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -26230,6 +28603,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -26451,6 +28833,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -26648,6 +29039,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -26860,6 +29260,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -27060,6 +29469,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -27392,6 +29810,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -27596,6 +30023,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -27702,6 +30138,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -27823,6 +30268,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -27926,6 +30380,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -28046,6 +30509,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -28158,6 +30630,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -28313,6 +30794,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -28500,6 +30990,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -28640,6 +31139,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -28828,6 +31336,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -28914,6 +31431,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -29050,6 +31576,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -29195,6 +31730,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -29312,6 +31856,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -29460,6 +32013,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -29599,6 +32161,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -29726,6 +32297,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -29873,6 +32453,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -30073,6 +32662,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -30178,6 +32776,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -30300,6 +32907,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -30407,6 +33023,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -30538,6 +33163,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -30662,6 +33296,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -30812,6 +33455,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -30922,6 +33574,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -31064,6 +33725,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -31185,6 +33855,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -31272,6 +33951,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -31410,6 +34098,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -31527,6 +34224,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -31662,6 +34368,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -31774,6 +34489,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -31941,6 +34665,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -32059,6 +34792,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -32193,6 +34935,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -32289,6 +35040,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -32404,6 +35164,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -32539,6 +35308,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -32636,6 +35414,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -32754,6 +35541,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -32881,6 +35677,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -32996,6 +35801,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -33140,6 +35954,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -33268,6 +36091,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -33411,6 +36243,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -33542,6 +36383,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -33665,6 +36515,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -33778,6 +36637,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -33911,6 +36779,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -33978,6 +36855,8 @@ export interface paths {
                     date?: string;
                     declaredCashMinor?: number | null;
                     declaredTransferMinor?: number | null;
+                    declaredPromptpayMinor?: number | null;
+                    declaredCardMinor?: number | null;
                 };
                 header?: never;
                 path?: never;
@@ -34047,12 +36926,22 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    expectedPromptpayMinor?: number;
+                                    openingFloatMinor?: number;
+                                    counted?: {
+                                        cashMinor: number;
+                                        transferMinor: number;
+                                        promptpayMinor: number;
+                                        cardMinor: number;
+                                    };
+                                    varianceNote?: string;
                                     cashPayInMinor?: number;
                                     cashPayOutMinor?: number;
                                 };
                                 expected: {
                                     cashMinor: number;
                                     transferMinor: number;
+                                    promptpayMinor: number;
                                     cardMinor: number;
                                     packageMinor: number;
                                     depositMinor: number;
@@ -34105,9 +36994,12 @@ export interface paths {
                                     declaredTransferMinor: number;
                                     cashVarianceMinor: number;
                                     transferVarianceMinor: number;
+                                    cardVarianceMinor: number;
+                                    promptpayVarianceMinor: number;
                                     varianceMinor: number;
                                     /** @enum {string} */
                                     status: "balanced" | "over" | "short";
+                                    mismatch: boolean;
                                 } | null;
                                 summaryLines: string[];
                                 urgentFollowups: number;
@@ -34134,6 +37026,15 @@ export interface paths {
                                         expectedCashMinor: number;
                                         expectedTransferMinor: number;
                                         expectedCardMinor: number;
+                                        expectedPromptpayMinor?: number;
+                                        openingFloatMinor?: number;
+                                        counted?: {
+                                            cashMinor: number;
+                                            transferMinor: number;
+                                            promptpayMinor: number;
+                                            cardMinor: number;
+                                        };
+                                        varianceNote?: string;
                                         cashPayInMinor?: number;
                                         cashPayOutMinor?: number;
                                     };
@@ -34165,6 +37066,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -34280,6 +37190,15 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    expectedPromptpayMinor?: number;
+                                    openingFloatMinor?: number;
+                                    counted?: {
+                                        cashMinor: number;
+                                        transferMinor: number;
+                                        promptpayMinor: number;
+                                        cardMinor: number;
+                                    };
+                                    varianceNote?: string;
                                     cashPayInMinor?: number;
                                     cashPayOutMinor?: number;
                                 };
@@ -34310,6 +37229,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -34388,6 +37316,9 @@ export interface paths {
                         date: string;
                         declaredCashMinor: number;
                         declaredTransferMinor: number;
+                        declaredPromptpayMinor?: number;
+                        declaredCardMinor?: number;
+                        varianceNote?: string;
                         handoverNote?: string;
                     };
                 };
@@ -34421,6 +37352,15 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    expectedPromptpayMinor?: number;
+                                    openingFloatMinor?: number;
+                                    counted?: {
+                                        cashMinor: number;
+                                        transferMinor: number;
+                                        promptpayMinor: number;
+                                        cardMinor: number;
+                                    };
+                                    varianceNote?: string;
                                     cashPayInMinor?: number;
                                     cashPayOutMinor?: number;
                                 };
@@ -34474,6 +37414,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -34584,6 +37533,15 @@ export interface paths {
                                     expectedCashMinor: number;
                                     expectedTransferMinor: number;
                                     expectedCardMinor: number;
+                                    expectedPromptpayMinor?: number;
+                                    openingFloatMinor?: number;
+                                    counted?: {
+                                        cashMinor: number;
+                                        transferMinor: number;
+                                        promptpayMinor: number;
+                                        cardMinor: number;
+                                    };
+                                    varianceNote?: string;
                                     cashPayInMinor?: number;
                                     cashPayOutMinor?: number;
                                 };
@@ -34614,6 +37572,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -34762,6 +37729,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -34894,6 +37870,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -35003,6 +37988,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -35190,6 +38184,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -35327,6 +38330,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -35442,6 +38454,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -35549,6 +38570,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -35792,6 +38822,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -35989,6 +39028,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -36140,6 +39188,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -36337,6 +39394,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -36442,6 +39508,10 @@ export interface paths {
                                 /** @description integer satang */
                                 depositNetMinor: number;
                                 /** @description integer satang */
+                                securityNetMinor: number;
+                                /** @description integer satang */
+                                prepaidMinor: number;
+                                /** @description integer satang */
                                 refundedMinor: number;
                             }[];
                             totals: {
@@ -36462,7 +39532,37 @@ export interface paths {
                                 /** @description integer satang */
                                 depositNetMinor: number;
                                 /** @description integer satang */
+                                securityNetMinor: number;
+                                /** @description integer satang */
+                                prepaidMinor: number;
+                                /** @description integer satang */
                                 refundedMinor: number;
+                            };
+                            reconcile: {
+                                /** @description integer satang */
+                                salesMinor: number;
+                                /** @description integer satang */
+                                billRefundMinor: number;
+                                /** @description integer satang */
+                                tipMinor: number;
+                                /** @description integer satang */
+                                paidByDepositMinor: number;
+                                /** @description integer satang */
+                                paidByPackageMinor: number;
+                                /** @description integer satang */
+                                depositTakenMinor: number;
+                                /** @description integer satang */
+                                depositRefundMinor: number;
+                                /** @description integer satang */
+                                otherMinor: number;
+                                /** @description integer satang */
+                                receivedMinor: number;
+                                /** @description integer satang */
+                                heldMinor: number;
+                                /** @description integer satang */
+                                securityMinor: number;
+                                /** @description integer satang */
+                                prepaidMinor: number;
                             };
                         };
                     };
@@ -36478,6 +39578,179 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sales-reports/money-entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Every payment, refund and deposit behind the payment-sources figures, one entry each
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                    method?: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                    q?: string;
+                    offset?: number | null;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Entries */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                kind: "payment" | "refund" | "void" | "deposit" | "deposit_refund";
+                                at: string;
+                                date: string;
+                                time: string;
+                                /** @enum {string} */
+                                method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                                amountMinor: number;
+                                billId: string | null;
+                                billNumber: string | null;
+                                receiptNumber: string | null;
+                                customerCode: string | null;
+                                customerName: string | null;
+                                receiverName: string | null;
+                                /** @enum {string|null} */
+                                depositKind: "booking" | "security" | "prepaid" | null;
+                                note: string | null;
+                            }[];
+                            totals: {
+                                count: number;
+                                /** @description integer satang */
+                                inMinor: number;
+                                /** @description integer satang */
+                                outMinor: number;
+                                /** @description integer satang */
+                                netMinor: number;
+                                /** @description integer satang */
+                                cashMinor: number;
+                                /** @description integer satang */
+                                transferMinor: number;
+                                /** @description integer satang */
+                                promptpayMinor: number;
+                                /** @description integer satang */
+                                cardMinor: number;
+                                /** @description integer satang */
+                                otherMinor: number;
+                            };
+                            page: {
+                                offset: number;
+                                limit: number;
+                                hasMore: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -36610,6 +39883,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -36772,6 +40054,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -36900,6 +40191,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -37040,6 +40340,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -37165,6 +40474,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -37439,6 +40757,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -37611,6 +40938,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -37715,6 +41051,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -37808,6 +41153,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -38014,6 +41368,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -38177,6 +41540,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -38296,6 +41668,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -38425,6 +41806,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -38541,6 +41931,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -38705,6 +42104,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -38862,6 +42270,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -39012,6 +42429,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -39184,6 +42610,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -39299,6 +42734,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -39432,6 +42876,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -39603,6 +43056,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -39715,6 +43177,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -39851,6 +43322,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -39952,6 +43432,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -40090,6 +43579,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -40212,6 +43710,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -40365,6 +43872,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -40489,6 +44005,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -40639,6 +44164,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -40769,6 +44303,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -40870,6 +44413,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -41025,6 +44577,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -41122,6 +44683,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -41266,6 +44836,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -41381,6 +44960,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -41518,6 +45106,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -41639,6 +45236,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -41752,6 +45358,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -41894,6 +45509,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -42014,6 +45638,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -42175,6 +45808,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -42329,6 +45971,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -42450,6 +46101,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -42603,6 +46263,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -42818,6 +46487,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -42974,6 +46652,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -43109,6 +46796,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -43267,6 +46963,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -43389,6 +47094,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -43547,6 +47261,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -43673,6 +47396,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -43811,6 +47543,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -43904,6 +47645,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -44057,6 +47807,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -44256,6 +48015,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -44374,6 +48142,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -44513,6 +48290,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -44680,6 +48466,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -44786,6 +48581,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -44913,6 +48717,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -45016,6 +48829,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -45141,6 +48963,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -45228,6 +49059,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -45355,6 +49195,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -45459,6 +49308,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -45581,6 +49439,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -45681,6 +49548,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -45791,6 +49667,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -45911,6 +49796,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -45996,6 +49890,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -46107,6 +50010,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -46243,6 +50155,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -46410,6 +50331,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -46428,6 +50351,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -46613,6 +50545,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -46631,6 +50565,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -46796,6 +50739,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -46873,6 +50818,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -46950,6 +50897,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -47028,6 +50977,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -47105,6 +51056,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -47172,6 +51125,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47336,6 +51298,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -47354,6 +51318,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47529,6 +51502,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -47547,6 +51522,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47724,6 +51708,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 createdAt: string;
                                 updatedAt: string;
@@ -47742,6 +51728,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47857,6 +51852,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47992,6 +51996,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -48234,6 +52247,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -48303,6 +52318,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -48436,6 +52460,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -48620,6 +52653,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -48691,6 +52726,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -48830,6 +52874,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -48931,6 +52984,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -49075,6 +53137,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -49212,6 +53283,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -49316,6 +53396,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -49431,6 +53520,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -49558,6 +53656,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -49667,6 +53774,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -49767,6 +53883,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -49886,6 +54011,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -49995,6 +54129,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -50148,6 +54291,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -50284,6 +54436,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -50434,6 +54595,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -50544,6 +54714,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -50671,6 +54850,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -50787,6 +54975,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -50888,6 +55085,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -51025,6 +55231,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -51137,6 +55352,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -51223,6 +55447,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -51332,6 +55565,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -51500,6 +55742,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -51537,6 +55781,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -51550,8 +55795,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -51574,6 +55821,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 lateShips: {
@@ -51650,6 +55901,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -51687,6 +55940,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -51700,8 +55954,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -51724,6 +55980,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 pickups: {
@@ -51800,6 +56060,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -51837,6 +56099,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -51850,8 +56113,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -51874,6 +56139,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 returns: {
@@ -51950,6 +56219,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -51987,6 +56258,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52000,8 +56272,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52024,6 +56298,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 arrivals: {
@@ -52100,6 +56378,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -52137,6 +56417,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52150,8 +56431,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52174,6 +56457,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 overdue: {
@@ -52250,6 +56537,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -52287,6 +56576,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52300,8 +56590,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52324,6 +56616,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 missed: {
@@ -52400,6 +56696,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -52437,6 +56735,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52450,8 +56749,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52474,6 +56775,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 out: {
@@ -52550,6 +56855,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -52587,6 +56894,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52600,8 +56908,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52624,6 +56934,10 @@ export interface paths {
                                         trackingNo: string | null;
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
                                     } | null;
                                 }[];
                                 upcoming: {
@@ -52700,6 +57014,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -52737,6 +57053,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -52750,8 +57067,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -52775,6 +57094,10 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                     } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
+                                    } | null;
                                 }[];
                             };
                         };
@@ -52791,6 +57114,142 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rental overview of today: pieces total, free, out (paid / unpaid), to hand over, due back, overdue
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                today: string;
+                                total: number;
+                                available: number;
+                                rentedPaid: number;
+                                rentedUnpaid: number;
+                                pickupsToday: number;
+                                returnsToday: number;
+                                returnsTodayPaid: number;
+                                overdue: number;
+                                repair: number;
+                                cleaning: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -52969,6 +57428,8 @@ export interface paths {
                                         replacementValueMinor: number | null;
                                         cleaningFeeMinor: number;
                                         cancellationText: string | null;
+                                        allowedDays: number[] | null;
+                                        payInFull: boolean;
                                         /** @enum {string} */
                                         securityWhen: "pickup" | "booking";
                                         /** @enum {string} */
@@ -53049,6 +57510,8 @@ export interface paths {
                                                 /** @enum {string} */
                                                 method?: "basic";
                                             } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
                                         } | null;
                                         createdAt: string;
                                         updatedAt: string;
@@ -53086,6 +57549,7 @@ export interface paths {
                                     };
                                     units: number;
                                     priceMinor: number;
+                                    payInFull?: boolean;
                                     imageUrl: string | null;
                                     itemCode: string | null;
                                     note: string | null;
@@ -53099,8 +57563,10 @@ export interface paths {
                                         waist: number | null;
                                         hip: number | null;
                                     } | null;
+                                    hasIdPhoto: boolean;
                                     customerLateCount: number;
                                     customerBlocked: boolean;
+                                    customerPhone: string | null;
                                     security: {
                                         requiredMinor: number;
                                         /** @enum {string} */
@@ -53124,6 +57590,10 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                     } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
+                                    } | null;
                                 }[];
                                 quantity: number;
                             };
@@ -53141,6 +57611,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -53249,6 +57728,12 @@ export interface paths {
                             note?: string | null;
                             slipFileId?: string | null;
                             confirmAdditional?: boolean;
+                        };
+                        discount?: {
+                            /** @description integer satang */
+                            discountMinor?: number;
+                            percentBp?: number;
+                            reason?: string;
                         };
                         /** @enum {string} */
                         deliveryMethod?: "pickup" | "parcel";
@@ -53359,6 +57844,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -53396,6 +57883,7 @@ export interface paths {
                                 };
                                 units: number;
                                 priceMinor: number;
+                                payInFull?: boolean;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
@@ -53409,8 +57897,10 @@ export interface paths {
                                     waist: number | null;
                                     hip: number | null;
                                 } | null;
+                                hasIdPhoto: boolean;
                                 customerLateCount: number;
                                 customerBlocked: boolean;
+                                customerPhone: string | null;
                                 security: {
                                     requiredMinor: number;
                                     /** @enum {string} */
@@ -53434,6 +57924,10 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                 } | null;
+                                discount: {
+                                    discountMinor: number;
+                                    reason: string;
+                                } | null;
                                 siblingIds: string[];
                             };
                         };
@@ -53450,6 +57944,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -53504,6 +58007,131 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/discount-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * What the discount fields of a rental show up front: the ceiling, the reasons the shop allows, who can decide
+         * @description The bill discount policy for a rental that has no bill yet (the booking and return dialogs): the ceiling worked out on `subtotalMinor` (the rental fee).
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    branchId: string;
+                    subtotalMinor?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @description integer satang */
+                                ceilingMinor: number | null;
+                                allowedReasons: string[];
+                                approvalsAvailable: boolean;
+                                canApprove: boolean;
+                                approvalAtCounter: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -53650,6 +58278,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -53687,6 +58317,7 @@ export interface paths {
                                 };
                                 units: number;
                                 priceMinor: number;
+                                payInFull?: boolean;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
@@ -53700,8 +58331,10 @@ export interface paths {
                                     waist: number | null;
                                     hip: number | null;
                                 } | null;
+                                hasIdPhoto: boolean;
                                 customerLateCount: number;
                                 customerBlocked: boolean;
+                                customerPhone: string | null;
                                 security: {
                                     requiredMinor: number;
                                     /** @enum {string} */
@@ -53725,6 +58358,10 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                 } | null;
+                                discount: {
+                                    discountMinor: number;
+                                    reason: string;
+                                } | null;
                                 previousPriceMinor: number;
                             };
                         };
@@ -53741,6 +58378,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -53862,6 +58508,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -53997,6 +58652,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -54178,6 +58842,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -54215,6 +58881,7 @@ export interface paths {
                                 };
                                 units: number;
                                 priceMinor: number;
+                                payInFull?: boolean;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
@@ -54228,8 +58895,10 @@ export interface paths {
                                     waist: number | null;
                                     hip: number | null;
                                 } | null;
+                                hasIdPhoto: boolean;
                                 customerLateCount: number;
                                 customerBlocked: boolean;
+                                customerPhone: string | null;
                                 security: {
                                     requiredMinor: number;
                                     /** @enum {string} */
@@ -54253,6 +58922,10 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                 } | null;
+                                discount: {
+                                    discountMinor: number;
+                                    reason: string;
+                                } | null;
                             };
                         };
                     };
@@ -54268,6 +58941,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -54448,6 +59130,8 @@ export interface paths {
                                             /** @enum {string} */
                                             method?: "basic";
                                         } | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     createdAt: string;
                                     updatedAt: string;
@@ -54485,6 +59169,7 @@ export interface paths {
                                 };
                                 units: number;
                                 priceMinor: number;
+                                payInFull?: boolean;
                                 imageUrl: string | null;
                                 itemCode: string | null;
                                 note: string | null;
@@ -54498,8 +59183,10 @@ export interface paths {
                                     waist: number | null;
                                     hip: number | null;
                                 } | null;
+                                hasIdPhoto: boolean;
                                 customerLateCount: number;
                                 customerBlocked: boolean;
+                                customerPhone: string | null;
                                 security: {
                                     requiredMinor: number;
                                     /** @enum {string} */
@@ -54523,6 +59210,10 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                 } | null;
+                                discount: {
+                                    discountMinor: number;
+                                    reason: string;
+                                } | null;
                             };
                         };
                     };
@@ -54538,6 +59229,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -54678,6 +59378,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -54788,6 +59497,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -54974,6 +59692,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -55082,6 +59809,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -55175,6 +59911,7 @@ export interface paths {
                             category?: string | null;
                             size?: string | null;
                             price?: number | string | null;
+                            tiers?: number | string | null;
                             days?: number | string | null;
                             quantity?: number | string | null;
                             shipBefore?: number | string | null;
@@ -55238,6 +59975,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -55336,6 +60082,7 @@ export interface paths {
                             category?: string | null;
                             size?: string | null;
                             price?: number | string | null;
+                            tiers?: number | string | null;
                             days?: number | string | null;
                             quantity?: number | string | null;
                             shipBefore?: number | string | null;
@@ -55399,6 +60146,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -55553,6 +60309,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -55700,6 +60465,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -55818,6 +60592,7 @@ export interface paths {
                             lostChargesReplacement?: boolean;
                             cleaningFeeMinor?: number;
                             checkInEveryDays?: number;
+                            allowedDays?: number[];
                             timeModel?: {
                                 /** @enum {string} */
                                 kind: "24h";
@@ -55841,6 +60616,7 @@ export interface paths {
                             }[];
                             /** @enum {string} */
                             securityWhen?: "pickup" | "booking";
+                            payInFull?: boolean;
                         } | null;
                         dress: {
                             minDays?: number;
@@ -55877,6 +60653,7 @@ export interface paths {
                             lostChargesReplacement?: boolean;
                             cleaningFeeMinor?: number;
                             checkInEveryDays?: number;
+                            allowedDays?: number[];
                         } | null;
                         basePriceMinor: number;
                         itemMaxDays?: number;
@@ -55922,6 +60699,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -56002,6 +60788,7 @@ export interface paths {
                     cleaningMinor?: number | null;
                     lateMinor?: number | null;
                     lost?: "true" | "false";
+                    discountMinor?: number | null;
                 };
                 header?: never;
                 path: {
@@ -56021,6 +60808,8 @@ export interface paths {
                             data: {
                                 rentalMinor: number;
                                 shippingMinor: number;
+                                bookingHeldMinor: number;
+                                discountMinor: number;
                                 lateMinor: number;
                                 damageMinor: number;
                                 cleaningMinor: number;
@@ -56056,6 +60845,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -56166,6 +60964,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -56284,6 +61091,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -56392,6 +61208,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -56493,6 +61318,133 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/{id}/id-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The ID card photo the customer attached to a rental booking (short-lived link; every view is audited)
+         * @description Requires header `X-Tenant-Id`. Permission: `customers:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                url: string;
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -56617,6 +61569,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -56729,6 +61690,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -56865,6 +61835,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -56988,6 +61967,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -57098,6 +62086,8 @@ export interface paths {
                                         lostMinor: number;
                                         totalMinor: number;
                                     };
+                                    discountMinor: number;
+                                    discountBills: number;
                                 };
                                 security: {
                                     heldNowMinor: number;
@@ -57133,6 +62123,10 @@ export interface paths {
                                     rentals: number;
                                     lastLateAt: string;
                                 }[];
+                                counts: {
+                                    rentals: number;
+                                    lateCustomers: number;
+                                };
                             };
                         };
                     };
@@ -57148,6 +62142,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -57256,6 +62259,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -57406,6 +62418,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -57538,6 +62559,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -57681,6 +62711,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -57785,6 +62824,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -57880,6 +62928,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -57994,6 +63051,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -58144,6 +63210,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -58330,6 +63405,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -58481,6 +63565,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -58605,6 +63698,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -58722,6 +63824,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -58829,6 +63940,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -58957,6 +64077,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -59072,6 +64201,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -59213,6 +64351,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -59315,6 +64462,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -59472,6 +64628,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -59619,6 +64784,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -59751,6 +64925,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -59891,6 +65074,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -60012,6 +65204,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -60170,6 +65371,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -60317,6 +65527,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -60455,6 +65674,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -60581,6 +65809,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -60695,6 +65932,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -60834,6 +66080,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -61107,6 +66362,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -61333,6 +66597,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -61605,6 +66878,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -61849,6 +67131,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -62113,6 +67404,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -62359,6 +67659,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -62584,6 +67893,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -62687,6 +68005,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -62948,6 +68275,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -63218,6 +68554,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -63469,6 +68814,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -63740,6 +69094,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -63888,6 +69251,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -64148,6 +69520,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -64302,6 +69683,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -64430,6 +69820,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -64525,6 +69924,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -64655,6 +70063,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -64764,6 +70181,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -64885,6 +70311,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -65031,6 +70466,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -65201,6 +70645,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -65334,6 +70787,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -65503,6 +70965,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -65631,6 +71102,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -65785,6 +71265,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -65909,6 +71398,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -66022,6 +71520,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -66229,6 +71736,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -66388,6 +71904,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -66487,6 +72012,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -66605,6 +72139,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -66709,6 +72252,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -66831,6 +72383,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -66932,6 +72493,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -67058,6 +72628,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -67157,6 +72736,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -67273,6 +72861,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -67374,6 +72971,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -67487,6 +73093,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -67614,6 +73229,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -67780,6 +73404,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -67891,6 +73524,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -68016,6 +73658,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -68159,6 +73810,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -68380,6 +74040,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -68554,6 +74223,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -68641,6 +74319,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -68863,6 +74550,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -69077,6 +74773,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -69307,6 +75012,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -69455,6 +75169,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -69592,6 +75315,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -69795,6 +75527,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -69955,6 +75696,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -70163,6 +75913,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -70326,6 +76085,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -70517,6 +76285,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -70697,6 +76474,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -70821,6 +76607,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -70934,6 +76729,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -71038,6 +76842,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -71195,6 +77008,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -71406,6 +77228,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -71556,6 +77387,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -71643,6 +77483,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -71830,6 +77679,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -71934,6 +77792,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -72058,6 +77925,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -72166,6 +78042,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -72288,6 +78173,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -72389,6 +78283,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -72502,6 +78405,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -72603,6 +78515,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -72720,6 +78641,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -72820,6 +78750,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -72929,6 +78868,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -73059,6 +79007,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -73203,6 +79160,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -73358,6 +79324,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -73491,6 +79466,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -73596,6 +79580,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -73726,6 +79719,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -73883,6 +79885,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -74023,6 +80034,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -74177,6 +80197,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -74322,6 +80351,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -74456,6 +80494,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -74606,6 +80653,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -74734,6 +80790,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -74871,6 +80936,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -74995,6 +81069,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -75150,6 +81233,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -75282,6 +81374,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -75427,6 +81528,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -75528,6 +81638,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -75643,6 +81762,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -75784,6 +81912,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -75905,6 +82042,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -76034,6 +82180,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -76155,6 +82310,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -76294,6 +82458,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -76399,6 +82572,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -76526,6 +82708,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -76694,6 +82885,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -76834,6 +83034,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -76958,6 +83167,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -77054,6 +83272,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -77208,6 +83435,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -77317,6 +83553,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -77443,6 +83688,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -77589,6 +83843,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -77714,6 +83977,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -77823,6 +84095,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -77958,6 +84239,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -78066,6 +84356,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -78205,6 +84504,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -78315,6 +84623,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -78436,6 +84753,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -78590,6 +84916,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -78686,6 +85021,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -78817,6 +85161,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -78983,6 +85336,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -79102,6 +85464,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -79276,6 +85647,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -79378,6 +85758,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -79501,6 +85890,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -79611,6 +86009,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -79746,6 +86153,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -79851,6 +86267,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -79971,6 +86396,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -80078,6 +86512,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -80228,6 +86671,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -80340,6 +86792,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -80491,6 +86952,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -80603,6 +87073,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -80754,6 +87233,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -80866,6 +87354,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -80993,6 +87490,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -81106,6 +87612,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -81230,6 +87745,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -81417,6 +87941,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -81551,6 +88084,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -81709,6 +88251,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -81842,6 +88393,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -82000,6 +88560,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -82114,6 +88683,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -82256,6 +88834,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -82385,6 +88972,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -82537,6 +89133,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -82667,6 +89272,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -82806,6 +89420,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -82906,6 +89529,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -83077,6 +89709,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -83198,6 +89839,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -83346,6 +89996,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -83474,6 +90133,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -83561,6 +90229,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -83703,6 +90380,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -83815,6 +90501,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -83939,6 +90634,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -84054,6 +90758,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -84196,6 +90909,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -84352,6 +91074,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -84518,6 +91249,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -84694,6 +91434,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -84826,6 +91575,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -84992,6 +91750,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -85166,6 +91933,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -85270,6 +92046,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -85389,6 +92174,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -85535,6 +92329,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -85652,6 +92455,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -85790,6 +92602,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -85912,6 +92733,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -86051,6 +92881,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -86163,6 +93002,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -86294,6 +93142,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -86396,6 +93253,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -86521,6 +93387,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -86661,6 +93536,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -86770,6 +93654,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -86901,6 +93794,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -87040,6 +93942,8 @@ export interface paths {
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
@@ -87076,6 +93980,11 @@ export interface paths {
                                         due: {
                                             rentalLeftMinor: number;
                                             securityDepositMinor: number;
+                                        } | null;
+                                        idCard?: {
+                                            /** @enum {string} */
+                                            mode: "optional" | "required";
+                                            uploaded: boolean;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -87129,6 +94038,8 @@ export interface paths {
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
@@ -87166,6 +94077,11 @@ export interface paths {
                                             rentalLeftMinor: number;
                                             securityDepositMinor: number;
                                         } | null;
+                                        idCard?: {
+                                            /** @enum {string} */
+                                            mode: "optional" | "required";
+                                            uploaded: boolean;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 }[];
@@ -87184,6 +94100,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -87301,6 +94226,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -87444,6 +94378,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -87481,6 +94417,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -87498,6 +94439,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -87646,6 +94596,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -87683,6 +94635,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -87700,6 +94657,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -87847,6 +94813,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -87884,6 +94852,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -87901,6 +94874,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -88049,6 +95031,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -88086,6 +95070,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -88103,6 +95092,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -88236,6 +95234,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -88349,6 +95356,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -88445,6 +95461,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -88566,6 +95591,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -88672,6 +95706,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -88790,6 +95833,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -88892,6 +95944,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -89029,6 +96090,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89153,6 +96223,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89258,6 +96337,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89344,6 +96432,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -89457,6 +96554,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89543,6 +96649,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -89661,6 +96776,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89765,6 +96889,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -89880,6 +97013,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -89978,6 +97120,7 @@ export interface paths {
                                     [key: string]: string;
                                 };
                                 enabled: boolean;
+                                suspended: boolean;
                                 introText: string | null;
                                 policyText: string | null;
                                 coverUrl: string | null;
@@ -90050,6 +97193,7 @@ export interface paths {
                                         lostChargesReplacement?: boolean;
                                         cleaningFeeMinor?: number;
                                         checkInEveryDays?: number;
+                                        allowedDays?: number[];
                                         timeModel?: {
                                             /** @enum {string} */
                                             kind: "24h";
@@ -90073,6 +97217,7 @@ export interface paths {
                                         }[];
                                         /** @enum {string} */
                                         securityWhen?: "pickup" | "booking";
+                                        payInFull?: boolean;
                                     } | null;
                                     sizeChart: {
                                         size: string;
@@ -90187,6 +97332,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -90358,6 +97512,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -90466,6 +97629,8 @@ export interface paths {
                                 depositTotalMinor: number;
                                 fullTotalMinor: number;
                                 choice: boolean;
+                                payInFull?: boolean;
+                                securityMinor?: number;
                             };
                         };
                     };
@@ -90481,6 +97646,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -90599,6 +97773,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -90732,6 +97915,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -90846,6 +98038,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91023,6 +98224,8 @@ export interface paths {
                                     replacementValueMinor: number | null;
                                     cleaningFeeMinor: number;
                                     cancellationText: string | null;
+                                    allowedDays: number[] | null;
+                                    payInFull: boolean;
                                     /** @enum {string} */
                                     securityWhen: "pickup" | "booking";
                                     /** @enum {string} */
@@ -91043,6 +98246,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91153,6 +98365,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -91249,6 +98470,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91445,6 +98675,8 @@ export interface paths {
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
@@ -91481,6 +98713,11 @@ export interface paths {
                                         due: {
                                             rentalLeftMinor: number;
                                             securityDepositMinor: number;
+                                        } | null;
+                                        idCard?: {
+                                            /** @enum {string} */
+                                            mode: "optional" | "required";
+                                            uploaded: boolean;
                                         } | null;
                                     } | null;
                                     feedbackToken: string | null;
@@ -91526,6 +98763,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                             };
                         };
@@ -91542,6 +98781,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91657,6 +98905,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91807,6 +99064,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -91844,6 +99103,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -91861,6 +99125,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -91985,6 +99258,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -92132,6 +99414,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -92169,6 +99453,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -92186,6 +99475,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -92380,6 +99678,8 @@ export interface paths {
                                         }[];
                                         slipSubmittedAt: string | null;
                                         rejectReason: string | null;
+                                        payInFull?: boolean;
+                                        securityMinor?: number;
                                     } | null;
                                     canRequestReschedule: boolean;
                                     canCancel: boolean;
@@ -92417,6 +99717,11 @@ export interface paths {
                                             rentalLeftMinor: number;
                                             securityDepositMinor: number;
                                         } | null;
+                                        idCard?: {
+                                            /** @enum {string} */
+                                            mode: "optional" | "required";
+                                            uploaded: boolean;
+                                        } | null;
                                     } | null;
                                     feedbackToken: string | null;
                                 };
@@ -92436,6 +99741,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -92577,6 +99891,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -92614,6 +99930,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -92631,6 +99952,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -92782,6 +100112,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -92819,6 +100151,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -92836,6 +100173,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -92986,6 +100332,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -93023,6 +100371,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -93040,6 +100393,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -93166,6 +100528,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -93315,6 +100686,8 @@ export interface paths {
                                     }[];
                                     slipSubmittedAt: string | null;
                                     rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 } | null;
                                 canRequestReschedule: boolean;
                                 canCancel: boolean;
@@ -93352,6 +100725,11 @@ export interface paths {
                                         rentalLeftMinor: number;
                                         securityDepositMinor: number;
                                     } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
                                 } | null;
                                 feedbackToken: string | null;
                             };
@@ -93369,6 +100747,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -93483,6 +100870,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -93654,6 +101050,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -93866,6 +101271,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -93980,6 +101394,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94087,6 +101510,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -94223,6 +101655,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94328,6 +101769,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -94464,6 +101914,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94573,6 +102032,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94674,6 +102142,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94767,6 +102244,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -94880,6 +102366,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -94951,6 +102446,7 @@ export interface paths {
                 query?: {
                     status?: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
                     branchId?: string;
+                    appointmentId?: string;
                 };
                 header?: never;
                 path?: never;
@@ -94994,6 +102490,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 };
                             }[];
                         };
@@ -95010,6 +102508,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95149,6 +102656,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 };
                             };
                         };
@@ -95165,6 +102674,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95296,6 +102814,8 @@ export interface paths {
                                         /** @enum {string} */
                                         method?: "basic";
                                     } | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
                                 };
                             };
                         };
@@ -95312,6 +102832,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95422,6 +102951,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95540,6 +103078,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -95640,6 +103187,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95757,6 +103313,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -95907,6 +103472,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -96088,6 +103662,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -96205,6 +103788,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -96394,6 +103986,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -96553,6 +104154,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -96602,6 +104212,710 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments/{id}/id-card/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Presigned PUT for the ID card photo (then call POST …/id-card with the fileId)
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/appointments/{id}/id-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Attach the uploaded ID card photo to the rental booking
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Appointment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay" | "qr";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
+                                    }[];
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
+                                    } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
+                                } | null;
+                                feedbackToken: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/guest/appointments/{id}/id-card/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guest link: presigned PUT for the ID card photo (then POST …/id-card with the fileId)
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query: {
+                    t: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/guest/appointments/{id}/id-card": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guest link: attach the uploaded ID card photo to the rental booking
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query: {
+                    t: string;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Appointment */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                serviceId: string;
+                                startAt: string;
+                                endAt: string;
+                                /** @enum {string} */
+                                status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                serviceName: string;
+                                extraServices: {
+                                    id: string;
+                                    name: string;
+                                }[];
+                                branchName: string;
+                                branchMapUrl: string | null;
+                                practitionerName: string | null;
+                                practitionerPhotoUrl: string | null;
+                                canConfirm: boolean;
+                                canReschedule: boolean;
+                                memberId: string | null;
+                                deposit: {
+                                    /** @enum {string} */
+                                    status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                    amountMinor: number;
+                                    accounts: {
+                                        /** Format: uuid */
+                                        id: string;
+                                        /** @enum {string} */
+                                        kind: "bank" | "promptpay" | "qr";
+                                        label: string | null;
+                                        bank: {
+                                            /** @enum {string} */
+                                            bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                            bankName: string;
+                                            accountNumber: string;
+                                            accountName: string;
+                                        } | null;
+                                        promptpay: {
+                                            accountName: string;
+                                            accountHint: string;
+                                        } | null;
+                                        qrPayload: string | null;
+                                        qr: {
+                                            imageUrl: string;
+                                            accountName: string | null;
+                                        } | null;
+                                    }[];
+                                    slipSubmittedAt: string | null;
+                                    rejectReason: string | null;
+                                    payInFull?: boolean;
+                                    securityMinor?: number;
+                                } | null;
+                                canRequestReschedule: boolean;
+                                canCancel: boolean;
+                                cancellationWindowMin: number | null;
+                                rental: {
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipBeforeDays: number;
+                                    pickupTime: string | null;
+                                    returnTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        lost: boolean;
+                                    };
+                                    due: {
+                                        rentalLeftMinor: number;
+                                        securityDepositMinor: number;
+                                    } | null;
+                                    idCard?: {
+                                        /** @enum {string} */
+                                        mode: "optional" | "required";
+                                        uploaded: boolean;
+                                    } | null;
+                                } | null;
+                                feedbackToken: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -96663,6 +104977,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -96795,6 +105118,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -96919,6 +105251,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -97075,6 +105416,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -97191,6 +105541,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -97292,6 +105651,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -97432,6 +105800,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -97536,6 +105913,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -97660,6 +106046,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -97851,6 +106246,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -97981,6 +106385,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -98123,6 +106536,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -98253,6 +106675,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -98403,6 +106834,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -98517,6 +106957,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -98678,6 +107127,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -98823,6 +107281,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -98981,6 +107448,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -99094,6 +107570,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -99191,6 +107676,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -99306,6 +107800,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -99476,6 +107979,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -99590,6 +108102,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -99731,6 +108252,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -99861,6 +108391,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -99977,6 +108516,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -100074,6 +108622,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -100206,6 +108763,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -100310,6 +108876,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -100486,6 +109061,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -100590,6 +109174,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -100687,6 +109280,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -100816,6 +109418,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -100933,6 +109544,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -101071,6 +109691,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -101286,6 +109915,32 @@ export interface paths {
                                     days: number | null;
                                     amountMinor: number;
                                 };
+                                extraSeats: {
+                                    count: number;
+                                    available: boolean;
+                                    monthlyMinor: number;
+                                    quote: {
+                                        days: number | null;
+                                        amountMinor: number;
+                                    };
+                                    granted: {
+                                        value: number;
+                                        until: string;
+                                    } | null;
+                                };
+                                extraBranches: {
+                                    count: number;
+                                    available: boolean;
+                                    monthlyMinor: number;
+                                    quote: {
+                                        days: number | null;
+                                        amountMinor: number;
+                                    };
+                                    granted: {
+                                        value: number;
+                                        until: string;
+                                    } | null;
+                                };
                             };
                         };
                     };
@@ -101301,6 +109956,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -101397,6 +110061,10 @@ export interface paths {
                     } | {
                         /** @enum {string} */
                         addon: "ai_chat" | "ai_topup";
+                    } | {
+                        /** @enum {string} */
+                        addon: "extra_seats" | "extra_branches";
+                        quantity: number;
                     };
                 };
             };
@@ -101427,6 +110095,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -101555,6 +110232,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -101670,6 +110356,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -101767,6 +110462,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -101913,6 +110617,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102037,6 +110750,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102151,6 +110873,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -102312,6 +111043,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102452,6 +111192,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102557,6 +111306,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -102685,6 +111443,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102789,6 +111556,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -102884,6 +111660,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -103011,6 +111796,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -103118,6 +111912,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -103243,6 +112046,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -103358,6 +112170,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -103494,6 +112315,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -103602,6 +112432,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -103697,6 +112536,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -103820,6 +112668,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -103920,6 +112777,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -104052,6 +112918,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -104177,6 +113052,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -104293,6 +113177,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -104439,6 +113332,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -104569,6 +113471,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -104672,6 +113583,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -104860,6 +113780,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -104969,6 +113898,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -105064,6 +114002,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -105183,6 +114130,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -105311,6 +114267,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -105421,6 +114386,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -105572,6 +114546,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -105684,6 +114667,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -105788,6 +114780,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -105925,6 +114926,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -106042,6 +115052,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -106179,6 +115198,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -106280,6 +115308,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -106417,6 +115454,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -106474,14 +115520,16 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Income / expense report of a month or a year: income and expense by category, net profit, change vs the period before
+         * Income / expense report of a month, a year or a custom range (grain=range&from&to): income and expense by category, net profit, by month, change vs the period before
          * @description Requires header `X-Tenant-Id`. Permission: `finance:read`. Module: `expenses`.
          */
         get: {
             parameters: {
                 query: {
-                    grain: "month" | "year";
-                    period: string;
+                    grain: "month" | "year" | "range";
+                    period?: string;
+                    from?: string;
+                    to?: string;
                     branchId?: string;
                 };
                 header?: never;
@@ -106499,7 +115547,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                grain: "month" | "year";
+                                grain: "month" | "year" | "range";
                                 period: string;
                                 branchId: string | null;
                                 scoped: boolean;
@@ -106559,6 +115607,32 @@ export interface paths {
                                     netMinor: number;
                                 }[] | null;
                                 paidByDepositMinor: number;
+                                reconcile: {
+                                    /** @description integer satang */
+                                    salesMinor: number;
+                                    /** @description integer satang */
+                                    billRefundMinor: number;
+                                    /** @description integer satang */
+                                    tipMinor: number;
+                                    /** @description integer satang */
+                                    paidByDepositMinor: number;
+                                    /** @description integer satang */
+                                    paidByPackageMinor: number;
+                                    /** @description integer satang */
+                                    depositTakenMinor: number;
+                                    /** @description integer satang */
+                                    depositRefundMinor: number;
+                                    /** @description integer satang */
+                                    otherMinor: number;
+                                    /** @description integer satang */
+                                    receivedMinor: number;
+                                    /** @description integer satang */
+                                    heldMinor: number;
+                                    /** @description integer satang */
+                                    securityMinor: number;
+                                    /** @description integer satang */
+                                    prepaidMinor: number;
+                                };
                                 auto: {
                                     payouts: boolean;
                                     stock: boolean;
@@ -106578,6 +115652,149 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/finance/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Every income / expense line of a date range one by one (bill lines and refunds, forfeited deposits, payouts, stock cost, own entries); the totals equal the report of the same range. For the accountant export
+         * @description Requires header `X-Tenant-Id`. Permission: `finance:read`. Module: `expenses`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lines */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                source: "bill" | "deposit" | "manual" | "payout" | "stock";
+                                key: string;
+                                categoryName: string | null;
+                                amountMinor: number;
+                                date: string;
+                                /** @enum {string} */
+                                direction: "income" | "expense";
+                                ref: string | null;
+                                description: string | null;
+                                methods: string[];
+                                note: string | null;
+                                refund: boolean;
+                            }[];
+                            incomeMinor: number;
+                            expenseMinor: number;
+                            netMinor: number;
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -106762,6 +115979,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -106938,6 +116164,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -107092,6 +116327,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -107179,6 +116423,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -107356,6 +116609,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -107524,6 +116786,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -107636,6 +116907,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -107812,6 +117092,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -107917,6 +117206,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -108037,6 +117335,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -108139,6 +117446,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -108253,6 +117569,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -108393,6 +117718,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -108524,6 +117858,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -108687,6 +118030,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -108819,6 +118171,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -108997,6 +118358,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -109105,6 +118475,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -109205,6 +118584,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -109333,6 +118721,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -109434,6 +118831,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -109544,6 +118950,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -109669,6 +119084,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -109776,6 +119200,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -109900,6 +119333,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -109986,6 +119428,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -110094,6 +119545,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -110230,6 +119690,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -110330,6 +119799,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -110481,6 +119959,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -110652,6 +120139,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -110815,6 +120311,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -110970,6 +120475,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -111140,6 +120654,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -111240,6 +120763,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -111348,6 +120880,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -111466,6 +121007,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -111567,6 +121117,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -111677,6 +121236,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -111874,6 +121442,7 @@ export interface paths {
                                     lostChargesReplacement?: boolean;
                                     cleaningFeeMinor?: number;
                                     checkInEveryDays?: number;
+                                    allowedDays?: number[];
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -111906,6 +121475,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -112101,6 +121679,7 @@ export interface paths {
                             lostChargesReplacement?: boolean;
                             cleaningFeeMinor?: number;
                             checkInEveryDays?: number;
+                            allowedDays?: number[];
                         } | null;
                         /** @default [] */
                         rentalImageFileIds?: string[];
@@ -112229,6 +121808,7 @@ export interface paths {
                                     lostChargesReplacement?: boolean;
                                     cleaningFeeMinor?: number;
                                     checkInEveryDays?: number;
+                                    allowedDays?: number[];
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -112254,6 +121834,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -112449,6 +122038,7 @@ export interface paths {
                                     lostChargesReplacement?: boolean;
                                     cleaningFeeMinor?: number;
                                     checkInEveryDays?: number;
+                                    allowedDays?: number[];
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -112474,6 +122064,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -112568,6 +122167,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -112747,6 +122355,7 @@ export interface paths {
                             lostChargesReplacement?: boolean;
                             cleaningFeeMinor?: number;
                             checkInEveryDays?: number;
+                            allowedDays?: number[];
                         } | null;
                         rentalImageFileIds?: string[];
                         depositRule?: {
@@ -112874,6 +122483,7 @@ export interface paths {
                                     lostChargesReplacement?: boolean;
                                     cleaningFeeMinor?: number;
                                     checkInEveryDays?: number;
+                                    allowedDays?: number[];
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -112899,6 +122509,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113006,6 +122625,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113214,6 +122842,7 @@ export interface paths {
                                     lostChargesReplacement?: boolean;
                                     cleaningFeeMinor?: number;
                                     checkInEveryDays?: number;
+                                    allowedDays?: number[];
                                 } | null;
                                 rentalImageFileIds: string[];
                                 depositRule: {
@@ -113239,6 +122868,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113370,6 +123008,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -113478,6 +123125,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113597,6 +123253,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -113684,6 +123349,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113801,6 +123475,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -113934,6 +123617,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -114038,6 +123730,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -114153,6 +123854,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -114288,6 +123998,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -114395,6 +124114,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -114493,6 +124221,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -114608,6 +124345,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -114710,6 +124456,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -114871,6 +124626,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -114991,6 +124755,15 @@ export interface paths {
                 };
                 /** @description UNAUTHENTICATED */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -115132,6 +124905,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -115259,6 +125041,15 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorBody"];
                     };
                 };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
                 /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
                 403: {
                     headers: {
@@ -115321,7 +125112,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "SUBSCRIPTION_REQUIRED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

@@ -25,8 +25,9 @@ import { type Invoice, useConfirmPayment, useGenerateInvoices, useInvoices, useP
 import { dmyBE } from '../billing-docs';
 import { InvoiceDetailSheet } from '../components/invoice-detail-sheet';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
+import { OtherInvoiceDialog } from '../components/other-invoice-dialog';
 import { formatDate, formatDateTime, formatMoney, todayBangkok, useIntlLocale } from '../format';
-import { hasPendingSlip, slipCheckTone } from '../invoice-slip';
+import { hasPendingSlip, isOtherInvoice, slipCheckTone } from '../invoice-slip';
 
 const STATUSES = ['draft', 'issued', 'paid', 'overdue', 'void'] as const;
 const SLIP_FILTER = '__slip__';
@@ -89,6 +90,12 @@ export function InvoicesPage() {
   const [status, setStatus] = useState(SLIP_FILTER);
   const [source, setSource] = useState('__all__');
   const [creating, setCreating] = useState(false);
+  const [creatingOther, setCreatingOther] = useState(false);
+  const sourceLabel = (i: Invoice) =>
+    t(isOtherInvoice(i) ? 'invoiceSource.other' : `invoiceSource.${i.source}`);
+  // what the invoice is for; a one-off charge with several lines adds "+N รายการ"
+  const itemLabel = (i: Invoice) =>
+    `${i.planName ?? sourceLabel(i)}${i.otherLines.length > 1 ? ` ${t('invoices.moreLines', { count: i.otherLines.length - 1 })}` : ''}`;
   const [running, setRunning] = useState(false);
   const invoices = useInvoices({
     status: STATUSES.includes(status as Invoice['status']) ? (status as Invoice['status']) : undefined,
@@ -109,7 +116,7 @@ export function InvoicesPage() {
   const markPaid = (i: Invoice) => {
     const onSuccess = () => toast.success(t('invoices.paidToast', { number: i.number }));
     // a package invoice must run settleInvoice (opens the plan, sets the period); PATCH only flips the status
-    if (i.source === 'subscription') confirm.mutate(i.id, { onSuccess });
+    if (i.source === 'subscription' || isOtherInvoice(i)) confirm.mutate(i.id, { onSuccess });
     else patch.mutate({ id: i.id, body: { status: 'paid' } }, { onSuccess });
   };
 
@@ -163,7 +170,7 @@ export function InvoicesPage() {
                       { header: t('invoices.col.shop'), value: (i: Invoice) => i.tenantName },
                       {
                         header: t('invoices.col.source'),
-                        value: (i: Invoice) => t(`invoiceSource.${i.source}`),
+                        value: (i: Invoice) => sourceLabel(i),
                       },
                       {
                         header: t('invoices.col.issued'),
@@ -207,6 +214,9 @@ export function InvoicesPage() {
             </Button>
             <Button variant="outline" onClick={() => setRunning(true)}>
               {t('invoices.run')}
+            </Button>
+            <Button variant="outline" onClick={() => setCreatingOther(true)}>
+              <Plus /> {t('invoices.addOther')}
             </Button>
             <Button onClick={() => setCreating(true)}>
               <Plus /> {t('invoices.add')}
@@ -263,6 +273,7 @@ export function InvoicesPage() {
                         <div className="font-semibold">{i.tenantName}</div>
                         <SelfServeBadge invoice={i} />
                         <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
+                        <div className="text-sm">{itemLabel(i)}</div>
                       </div>
                       <InvoiceStatusBadge status={i.status} />
                     </div>
@@ -307,7 +318,7 @@ export function InvoicesPage() {
                           <SelfServeBadge invoice={i} />
                         </TableCell>
                         <TableCell>
-                          {i.planName ?? t(`invoiceSource.${i.source}`)}
+                          {itemLabel(i)}
                           {i.periodStart && i.periodEnd ? (
                             <span className="block text-xs text-muted-foreground">
                               {dmyBE(i.periodStart)}–{dmyBE(i.periodEnd)}
@@ -337,6 +348,7 @@ export function InvoicesPage() {
       </QueryState>
       <InvoiceDetailSheet invoice={reviewing} onClose={() => setReviewing(null)} />
       {creating ? <IssueInvoiceDialog open onOpenChange={setCreating} /> : null}
+      {creatingOther ? <OtherInvoiceDialog open onOpenChange={setCreatingOther} /> : null}
       <RunDialog open={running} onOpenChange={setRunning} />
       <Dialog open={voiding !== null} onOpenChange={(o) => !o && setVoiding(null)}>
         <DialogContent closeLabel={t('common.close')}>
