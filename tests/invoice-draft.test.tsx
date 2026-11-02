@@ -159,7 +159,7 @@ describe('draft invoice: nothing is sent until the team confirms', () => {
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByTestId('row-void-paid')[0] as HTMLElement);
     expect(screen.getByTestId('void-no-mail')).toBeTruthy();
-    expect(screen.getByTestId('void-paid-warning').textContent).toBe('invoices.voidPaidWarning');
+    expect(screen.getByTestId('void-paid-warning').textContent).toContain('RE-202611-0003');
     expect(h.patch).not.toHaveBeenCalled();
     fireEvent.click(screen.getByTestId('void-invoice-confirm'));
     expect(h.patch).toHaveBeenCalledWith({ id: 'inv-1', body: { status: 'void' } }, expect.anything());
