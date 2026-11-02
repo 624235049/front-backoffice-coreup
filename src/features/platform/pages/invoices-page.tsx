@@ -374,7 +374,15 @@ export function InvoicesPage() {
                         <TableCell className="font-mono text-xs">
                           {numberLabel(i)}
                           {i.receiptNumber ? (
-                            <span className="block text-muted-foreground">{i.receiptNumber}</span>
+                            <span
+                              className={
+                                i.status === 'void' ? 'block text-destructive line-through' : 'block text-muted-foreground'
+                              }
+                            >
+                              {i.status === 'void'
+                                ? t('invoices.receiptVoided', { number: i.receiptNumber })
+                                : i.receiptNumber}
+                            </span>
                           ) : null}
                         </TableCell>
                         <TableCell>

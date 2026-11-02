@@ -786,6 +786,7 @@
     "addOther": "Issue “Other” notice",
     "moreLines": "+{{count}} more",
     "otherLines": "Items",
+    "receiptVoided": "{{number}} (voided)",
     "issue": "Issue",
     "run": "Run monthly billing",
     "runHint": "Creates draft subscription invoices for every active shop (legacy invoices that are due included, never duplicates). No email is sent; review them, then send one or several.",

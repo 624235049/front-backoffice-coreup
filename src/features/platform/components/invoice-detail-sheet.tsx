@@ -157,7 +157,14 @@ function Review({
     [t('invoices.col.total'), formatMoney(invoice.totalMinor, locale)],
     [t('invoices.col.due'), formatDate(invoice.dueOn, locale)],
     ...(invoice.receiptNumber
-      ? ([[t('invoices.col.receipt'), invoice.receiptNumber]] as [string, string][])
+      ? ([
+          [
+            t('invoices.col.receipt'),
+            invoice.status === 'void'
+              ? t('invoices.receiptVoided', { number: invoice.receiptNumber })
+              : invoice.receiptNumber,
+          ],
+        ] as [string, string][])
       : []),
     ...(invoice.slipUploadedAt
       ? ([[t('invoices.slip.sentAt'), formatDateTime(invoice.slipUploadedAt, locale)]] as [string, string][])
