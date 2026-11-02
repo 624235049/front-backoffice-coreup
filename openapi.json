@@ -101549,6 +101549,32 @@
                               ]
                             }
                           },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "choiceId": {
+                                  "type": "string"
+                                },
+                                "groupName": {
+                                  "type": "string"
+                                },
+                                "choiceName": {
+                                  "type": "string"
+                                },
+                                "priceMinor": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "groupName",
+                                "choiceName",
+                                "priceMinor"
+                              ]
+                            }
+                          },
                           "labels": {
                             "type": "array",
                             "items": {
@@ -101829,6 +101855,7 @@
                           "serviceName",
                           "rental",
                           "extraServices",
+                          "options",
                           "labels",
                           "durationMin",
                           "membershipId",
@@ -102048,6 +102075,15 @@
                       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                     },
                     "maxItems": 8
+                  },
+                  "optionChoiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    },
+                    "maxItems": 10
                   },
                   "source": {
                     "type": "string",
@@ -102279,6 +102315,32 @@
                             "required": [
                               "id",
                               "name"
+                            ]
+                          }
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "choiceId": {
+                                "type": "string"
+                              },
+                              "groupName": {
+                                "type": "string"
+                              },
+                              "choiceName": {
+                                "type": "string"
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "groupName",
+                              "choiceName",
+                              "priceMinor"
                             ]
                           }
                         },
@@ -102562,6 +102624,7 @@
                         "serviceName",
                         "rental",
                         "extraServices",
+                        "options",
                         "labels",
                         "durationMin",
                         "membershipId",
@@ -102869,6 +102932,32 @@
                                   ]
                                 }
                               },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "choiceId": {
+                                      "type": "string"
+                                    },
+                                    "groupName": {
+                                      "type": "string"
+                                    },
+                                    "choiceName": {
+                                      "type": "string"
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "groupName",
+                                    "choiceName",
+                                    "priceMinor"
+                                  ]
+                                }
+                              },
                               "labels": {
                                 "type": "array",
                                 "items": {
@@ -103149,6 +103238,7 @@
                               "serviceName",
                               "rental",
                               "extraServices",
+                              "options",
                               "labels",
                               "durationMin",
                               "membershipId",
@@ -103325,6 +103415,32 @@
                                   ]
                                 }
                               },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "choiceId": {
+                                      "type": "string"
+                                    },
+                                    "groupName": {
+                                      "type": "string"
+                                    },
+                                    "choiceName": {
+                                      "type": "string"
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "groupName",
+                                    "choiceName",
+                                    "priceMinor"
+                                  ]
+                                }
+                              },
                               "labels": {
                                 "type": "array",
                                 "items": {
@@ -103605,6 +103721,7 @@
                               "serviceName",
                               "rental",
                               "extraServices",
+                              "options",
                               "labels",
                               "durationMin",
                               "membershipId",
@@ -103778,6 +103895,32 @@
                                   "required": [
                                     "id",
                                     "name"
+                                  ]
+                                }
+                              },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "choiceId": {
+                                      "type": "string"
+                                    },
+                                    "groupName": {
+                                      "type": "string"
+                                    },
+                                    "choiceName": {
+                                      "type": "string"
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "groupName",
+                                    "choiceName",
+                                    "priceMinor"
                                   ]
                                 }
                               },
@@ -104064,6 +104207,7 @@
                               "serviceName",
                               "rental",
                               "extraServices",
+                              "options",
                               "labels",
                               "durationMin",
                               "membershipId",
@@ -104238,6 +104382,32 @@
                                   "required": [
                                     "id",
                                     "name"
+                                  ]
+                                }
+                              },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "choiceId": {
+                                      "type": "string"
+                                    },
+                                    "groupName": {
+                                      "type": "string"
+                                    },
+                                    "choiceName": {
+                                      "type": "string"
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "groupName",
+                                    "choiceName",
+                                    "priceMinor"
                                   ]
                                 }
                               },
@@ -104521,6 +104691,7 @@
                               "serviceName",
                               "rental",
                               "extraServices",
+                              "options",
                               "labels",
                               "durationMin",
                               "membershipId",
@@ -104695,6 +104866,32 @@
                                 "required": [
                                   "id",
                                   "name"
+                                ]
+                              }
+                            },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
                                 ]
                               }
                             },
@@ -104978,6 +105175,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -105541,6 +105739,32 @@
                             ]
                           }
                         },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "choiceId": {
+                                "type": "string"
+                              },
+                              "groupName": {
+                                "type": "string"
+                              },
+                              "choiceName": {
+                                "type": "string"
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "groupName",
+                              "choiceName",
+                              "priceMinor"
+                            ]
+                          }
+                        },
                         "labels": {
                           "type": "array",
                           "items": {
@@ -105821,6 +106045,7 @@
                         "serviceName",
                         "rental",
                         "extraServices",
+                        "options",
                         "labels",
                         "durationMin",
                         "membershipId",
@@ -106202,6 +106427,32 @@
                             ]
                           }
                         },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "choiceId": {
+                                "type": "string"
+                              },
+                              "groupName": {
+                                "type": "string"
+                              },
+                              "choiceName": {
+                                "type": "string"
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "groupName",
+                              "choiceName",
+                              "priceMinor"
+                            ]
+                          }
+                        },
                         "labels": {
                           "type": "array",
                           "items": {
@@ -106482,6 +106733,7 @@
                         "serviceName",
                         "rental",
                         "extraServices",
+                        "options",
                         "labels",
                         "durationMin",
                         "membershipId",
@@ -106831,6 +107083,32 @@
                             ]
                           }
                         },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "choiceId": {
+                                "type": "string"
+                              },
+                              "groupName": {
+                                "type": "string"
+                              },
+                              "choiceName": {
+                                "type": "string"
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0
+                              }
+                            },
+                            "required": [
+                              "groupName",
+                              "choiceName",
+                              "priceMinor"
+                            ]
+                          }
+                        },
                         "labels": {
                           "type": "array",
                           "items": {
@@ -107111,6 +107389,7 @@
                         "serviceName",
                         "rental",
                         "extraServices",
+                        "options",
                         "labels",
                         "durationMin",
                         "membershipId",
@@ -108258,6 +108537,32 @@
                                 ]
                               }
                             },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
+                                ]
+                              }
+                            },
                             "labels": {
                               "type": "array",
                               "items": {
@@ -108538,6 +108843,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -109556,6 +109862,32 @@
                                   ]
                                 }
                               },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "choiceId": {
+                                      "type": "string"
+                                    },
+                                    "groupName": {
+                                      "type": "string"
+                                    },
+                                    "choiceName": {
+                                      "type": "string"
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "groupName",
+                                    "choiceName",
+                                    "priceMinor"
+                                  ]
+                                }
+                              },
                               "labels": {
                                 "type": "array",
                                 "items": {
@@ -109836,6 +110168,7 @@
                               "serviceName",
                               "rental",
                               "extraServices",
+                              "options",
                               "labels",
                               "durationMin",
                               "membershipId",
@@ -114984,6 +115317,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -115264,6 +115623,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -115917,6 +116277,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -116197,6 +116583,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -116850,6 +117237,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -117130,6 +117543,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -117783,6 +118197,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -118063,6 +118503,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -118716,6 +119157,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -118996,6 +119463,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -119649,6 +120117,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -119929,6 +120423,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -120582,6 +121077,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -120862,6 +121383,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -121515,6 +122037,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -121795,6 +122343,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -122448,6 +122997,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -122728,6 +123303,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -124228,6 +124804,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -124508,6 +125110,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -125591,6 +126194,32 @@
                                 ]
                               }
                             },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
+                                ]
+                              }
+                            },
                             "labels": {
                               "type": "array",
                               "items": {
@@ -125871,6 +126500,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -126964,6 +127594,32 @@
                                 ]
                               }
                             },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
+                                ]
+                              }
+                            },
                             "labels": {
                               "type": "array",
                               "items": {
@@ -127244,6 +127900,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -128594,6 +129251,32 @@
                                 ]
                               }
                             },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
+                                ]
+                              }
+                            },
                             "labels": {
                               "type": "array",
                               "items": {
@@ -128874,6 +129557,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -129683,6 +130367,32 @@
                                 ]
                               }
                             },
+                            "options": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "choiceId": {
+                                    "type": "string"
+                                  },
+                                  "groupName": {
+                                    "type": "string"
+                                  },
+                                  "choiceName": {
+                                    "type": "string"
+                                  },
+                                  "priceMinor": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "groupName",
+                                  "choiceName",
+                                  "priceMinor"
+                                ]
+                              }
+                            },
                             "labels": {
                               "type": "array",
                               "items": {
@@ -129963,6 +130673,7 @@
                             "serviceName",
                             "rental",
                             "extraServices",
+                            "options",
                             "labels",
                             "durationMin",
                             "membershipId",
@@ -131229,6 +131940,32 @@
                                       ]
                                     }
                                   },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "choiceId": {
+                                          "type": "string"
+                                        },
+                                        "groupName": {
+                                          "type": "string"
+                                        },
+                                        "choiceName": {
+                                          "type": "string"
+                                        },
+                                        "priceMinor": {
+                                          "type": "integer",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "groupName",
+                                        "choiceName",
+                                        "priceMinor"
+                                      ]
+                                    }
+                                  },
                                   "labels": {
                                     "type": "array",
                                     "items": {
@@ -131509,6 +132246,7 @@
                                   "serviceName",
                                   "rental",
                                   "extraServices",
+                                  "options",
                                   "labels",
                                   "durationMin",
                                   "membershipId",
@@ -186049,6 +186787,181 @@
         }
       }
     },
+    "/v1/table-orders/{billId}/ship": {
+      "post": {
+        "tags": [
+          "table-ordering"
+        ],
+        "summary": "A confirmed goods delivery order was handed to the courier: `{courier, trackingNo?}`. Lines become served, the bill is marked ready and shipped (the customer’s status page shows `shipped` with the courier and tracking link; nothing is sent to them). Not a delivery order → 409 {reason:\"not_a_delivery\"}; slip not confirmed → 409 {reason:\"prepay_not_confirmed\"}. Again = corrects courier / tracking number",
+        "description": "Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "billId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courier": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "trackingNo": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9-]{4,40}$"
+                  }
+                },
+                "required": [
+                  "courier"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Shipped",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "billId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "shippedAt": {
+                          "type": "string",
+                          "description": "ISO timestamp"
+                        }
+                      },
+                      "required": [
+                        "billId",
+                        "shippedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/table-orders/prepay": {
       "get": {
         "tags": [
@@ -187467,13 +188380,42 @@
                             "feeMinor": {
                               "type": "integer",
                               "minimum": 0
+                            },
+                            "courier": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingNo": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shippedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "description": "ISO timestamp"
                             }
                           },
                           "required": [
                             "name",
                             "phone",
                             "address",
-                            "feeMinor"
+                            "feeMinor",
+                            "courier",
+                            "trackingNo",
+                            "trackingUrl",
+                            "shippedAt"
                           ]
                         },
                         "status": {
@@ -187482,6 +188424,7 @@
                             "received",
                             "preparing",
                             "ready",
+                            "shipped",
                             "collected",
                             "cancelled"
                           ]
@@ -188111,13 +189054,42 @@
                             "feeMinor": {
                               "type": "integer",
                               "minimum": 0
+                            },
+                            "courier": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingNo": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "trackingUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shippedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "description": "ISO timestamp"
                             }
                           },
                           "required": [
                             "name",
                             "phone",
                             "address",
-                            "feeMinor"
+                            "feeMinor",
+                            "courier",
+                            "trackingNo",
+                            "trackingUrl",
+                            "shippedAt"
                           ]
                         },
                         "status": {
@@ -188126,6 +189098,7 @@
                             "received",
                             "preparing",
                             "ready",
+                            "shipped",
                             "collected",
                             "cancelled"
                           ]
@@ -211513,6 +212486,68 @@
                                         "resource"
                                       ]
                                     },
+                                    "options": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 64
+                                          },
+                                          "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 60
+                                          },
+                                          "required": {
+                                            "type": "boolean"
+                                          },
+                                          "multi": {
+                                            "type": "boolean"
+                                          },
+                                          "choices": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 64
+                                                },
+                                                "name": {
+                                                  "type": "string",
+                                                  "minLength": 1,
+                                                  "maxLength": 60
+                                                },
+                                                "priceMinor": {
+                                                  "type": "integer",
+                                                  "minimum": 0,
+                                                  "maximum": 1000000,
+                                                  "description": "integer satang"
+                                                }
+                                              },
+                                              "required": [
+                                                "id",
+                                                "name",
+                                                "priceMinor"
+                                              ]
+                                            },
+                                            "minItems": 1,
+                                            "maxItems": 30
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "name",
+                                          "required",
+                                          "multi",
+                                          "choices"
+                                        ]
+                                      }
+                                    },
                                     "rental": {
                                       "type": [
                                         "object",
@@ -211815,6 +212850,7 @@
                                     "payMode",
                                     "fullMinor",
                                     "bookBy",
+                                    "options",
                                     "rental"
                                   ]
                                 }
@@ -213864,6 +214900,15 @@
                       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                     },
                     "maxItems": 7
+                  },
+                  "optionChoiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    },
+                    "maxItems": 10
                   },
                   "partySize": {
                     "type": "integer",
@@ -216683,6 +217728,15 @@
                       "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                     },
                     "maxItems": 7
+                  },
+                  "optionChoiceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    },
+                    "maxItems": 10
                   },
                   "startAt": {
                     "type": "string"
@@ -226394,6 +227448,68 @@
                                   "resource"
                                 ]
                               },
+                              "options": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "required": {
+                                      "type": "boolean"
+                                    },
+                                    "multi": {
+                                      "type": "boolean"
+                                    },
+                                    "choices": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 64
+                                          },
+                                          "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 60
+                                          },
+                                          "priceMinor": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 1000000,
+                                            "description": "integer satang"
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "name",
+                                          "priceMinor"
+                                        ]
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 30
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "required",
+                                    "multi",
+                                    "choices"
+                                  ]
+                                }
+                              },
                               "rental": {
                                 "type": [
                                   "object",
@@ -226696,6 +227812,7 @@
                               "payMode",
                               "fullMinor",
                               "bookBy",
+                              "options",
                               "rental"
                             ]
                           }
@@ -226959,6 +228076,68 @@
                             "staff",
                             "resource"
                           ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "multi": {
+                                "type": "boolean"
+                              },
+                              "choices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 1000000,
+                                      "description": "integer satang"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "priceMinor"
+                                  ]
+                                },
+                                "minItems": 1,
+                                "maxItems": 30
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "required",
+                              "multi",
+                              "choices"
+                            ]
+                          }
                         },
                         "rental": {
                           "type": [
@@ -227262,6 +228441,7 @@
                         "payMode",
                         "fullMinor",
                         "bookBy",
+                        "options",
                         "rental"
                       ]
                     }
@@ -260051,6 +261231,68 @@
                               "amountMinor",
                               "percent"
                             ]
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 60
+                                },
+                                "required": {
+                                  "type": "boolean"
+                                },
+                                "multi": {
+                                  "type": "boolean"
+                                },
+                                "choices": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 64
+                                      },
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60
+                                      },
+                                      "priceMinor": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1000000,
+                                        "description": "integer satang"
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "name",
+                                      "priceMinor"
+                                    ]
+                                  },
+                                  "minItems": 1,
+                                  "maxItems": 30
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "required",
+                                "multi",
+                                "choices"
+                              ]
+                            }
                           }
                         },
                         "required": [
@@ -260086,7 +261328,8 @@
                           "rentalMeasurements",
                           "rentalTerms",
                           "rentalImageFileIds",
-                          "depositRule"
+                          "depositRule",
+                          "options"
                         ]
                       }
                     },
@@ -260881,6 +262124,70 @@
                       "amountMinor",
                       "percent"
                     ]
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "multi": {
+                          "type": "boolean"
+                        },
+                        "choices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000,
+                                "description": "integer satang"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "priceMinor"
+                            ]
+                          },
+                          "minItems": 1,
+                          "maxItems": 30
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "required",
+                        "multi",
+                        "choices"
+                      ]
+                    },
+                    "maxItems": 10,
+                    "default": []
                   }
                 },
                 "required": [
@@ -261514,6 +262821,68 @@
                             "amountMinor",
                             "percent"
                           ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "multi": {
+                                "type": "boolean"
+                              },
+                              "choices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 1000000,
+                                      "description": "integer satang"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "priceMinor"
+                                  ]
+                                },
+                                "minItems": 1,
+                                "maxItems": 30
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "required",
+                              "multi",
+                              "choices"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -261549,7 +262918,8 @@
                         "rentalMeasurements",
                         "rentalTerms",
                         "rentalImageFileIds",
-                        "depositRule"
+                        "depositRule",
+                        "options"
                       ]
                     }
                   },
@@ -262289,6 +263659,68 @@
                             "amountMinor",
                             "percent"
                           ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "multi": {
+                                "type": "boolean"
+                              },
+                              "choices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 1000000,
+                                      "description": "integer satang"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "priceMinor"
+                                  ]
+                                },
+                                "minItems": 1,
+                                "maxItems": 30
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "required",
+                              "multi",
+                              "choices"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -262324,7 +263756,8 @@
                         "rentalMeasurements",
                         "rentalTerms",
                         "rentalImageFileIds",
-                        "depositRule"
+                        "depositRule",
+                        "options"
                       ]
                     }
                   },
@@ -263081,6 +264514,69 @@
                       "amountMinor",
                       "percent"
                     ]
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        },
+                        "required": {
+                          "type": "boolean"
+                        },
+                        "multi": {
+                          "type": "boolean"
+                        },
+                        "choices": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "priceMinor": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000000,
+                                "description": "integer satang"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "priceMinor"
+                            ]
+                          },
+                          "minItems": 1,
+                          "maxItems": 30
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "required",
+                        "multi",
+                        "choices"
+                      ]
+                    },
+                    "maxItems": 10
                   }
                 }
               }
@@ -263710,6 +265206,68 @@
                             "amountMinor",
                             "percent"
                           ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "multi": {
+                                "type": "boolean"
+                              },
+                              "choices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 1000000,
+                                      "description": "integer satang"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "priceMinor"
+                                  ]
+                                },
+                                "minItems": 1,
+                                "maxItems": 30
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "required",
+                              "multi",
+                              "choices"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -263745,7 +265303,8 @@
                         "rentalMeasurements",
                         "rentalTerms",
                         "rentalImageFileIds",
-                        "depositRule"
+                        "depositRule",
+                        "options"
                       ]
                     }
                   },
@@ -264771,6 +266330,68 @@
                             "amountMinor",
                             "percent"
                           ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                              },
+                              "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 60
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "multi": {
+                                "type": "boolean"
+                              },
+                              "choices": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 64
+                                    },
+                                    "name": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 60
+                                    },
+                                    "priceMinor": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 1000000,
+                                      "description": "integer satang"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "priceMinor"
+                                  ]
+                                },
+                                "minItems": 1,
+                                "maxItems": 30
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "required",
+                              "multi",
+                              "choices"
+                            ]
+                          }
                         }
                       },
                       "required": [
@@ -264806,7 +266427,8 @@
                         "rentalMeasurements",
                         "rentalTerms",
                         "rentalImageFileIds",
-                        "depositRule"
+                        "depositRule",
+                        "options"
                       ]
                     }
                   },

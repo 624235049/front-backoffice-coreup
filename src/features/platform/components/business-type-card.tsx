@@ -93,11 +93,9 @@ export function BusinessTypeCard({ d }: { d: TenantDetail }) {
                 { section: 'messages', text: counts(p.messages.templates) },
                 {
                   section: 'settings',
-                  text:
-                    p.settings.calendarDefaultBy.current === p.settings.calendarDefaultBy.next &&
-                    p.settings.useLabCost.current === p.settings.useLabCost.next
-                      ? t('businessType.same')
-                      : t('businessType.changes'),
+                  // the preview only knows the calendar and lab-cost defaults; a business type may also write the order page, booking
+                  // and hidden menus (online shop), so this row never claims that nothing changes
+                  text: t('businessType.changes'),
                 },
               ];
               const on = new Set(picked ?? rows.map((r) => r.section));

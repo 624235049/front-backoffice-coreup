@@ -52,6 +52,7 @@ interface Done {
   slug: string;
   name: string;
   trial: boolean;
+  online: boolean;
   credentials: { email: string; password: string; loginUrl: string };
 }
 
@@ -129,7 +130,14 @@ export function OnboardDialog({
     form.reset();
     if (ownerCredentials) {
       // the password is shown once: stay on the result screen until the team closes it
-      setDone({ tenantId, slug, name: v.name, trial: v.status === 'trial', credentials: ownerCredentials });
+      setDone({
+        tenantId,
+        slug,
+        name: v.name,
+        trial: v.status === 'trial',
+        online: v.industryKey === 'online_shop',
+        credentials: ownerCredentials,
+      });
       return;
     }
     toast.success(
@@ -158,6 +166,7 @@ export function OnboardDialog({
       password: done.credentials.password,
       loginUrl: done.credentials.loginUrl,
       trial: done.trial,
+      online: done.online,
     });
     return (
       <>
@@ -177,7 +186,10 @@ export function OnboardDialog({
             </DialogHeader>
             <div className="grid gap-3" role="status" data-testid="onboard-result">
               <ResultRow label={t('onboard.name')} value={done.name} />
-              <ResultRow label={t('onboard.result.bookingLink')} value={bookingUrlFor(done.slug)} />
+              <ResultRow
+                label={t(done.online ? 'onboard.result.orderLink' : 'onboard.result.bookingLink')}
+                value={bookingUrlFor(done.slug)}
+              />
               <ResultRow label={t('onboard.result.loginUrl')} value={done.credentials.loginUrl} />
               <ResultRow label={t('onboard.ownerEmail')} value={done.credentials.email} />
               <ResultRow label={t('onboard.result.password')} value={done.credentials.password} mono />

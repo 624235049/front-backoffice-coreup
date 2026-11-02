@@ -48,7 +48,10 @@ export function buildResetLinkMessage(v: { email: string; url: string; expiresAt
 /** The public booking page of a shop (what its customers book from). */
 export const bookingUrlFor = (slug: string): string => `https://www.coreup.pro/b/${slug}`;
 
-/** Ready-to-paste LINE message for a freshly opened shop (always Thai: it goes to the owner). The trial line only for trial shops. */
+/**
+ * Ready-to-paste LINE message for a freshly opened shop (always Thai: it goes to the owner). The trial line only for trial
+ * shops; an online shop's link is where customers order, not book.
+ */
 export function buildNewShopMessage(v: {
   shop: string;
   slug: string;
@@ -56,10 +59,11 @@ export function buildNewShopMessage(v: {
   password: string;
   loginUrl: string;
   trial: boolean;
+  online?: boolean;
 }): string {
   return [
     `สวัสดีค่ะ 😊 ร้าน ${v.shop} พร้อมใช้งานแล้วค่ะ`,
-    `🔗 ลิงก์ให้ลูกค้าจอง: ${bookingUrlFor(v.slug)}`,
+    `🔗 ${v.online ? 'ลิงก์ร้านให้ลูกค้าสั่งซื้อ' : 'ลิงก์ให้ลูกค้าจอง'}: ${bookingUrlFor(v.slug)}`,
     `💻 เข้าหลังร้าน: ${v.loginUrl}`,
     `อีเมล: ${v.email}`,
     `รหัสผ่าน: ${v.password}`,

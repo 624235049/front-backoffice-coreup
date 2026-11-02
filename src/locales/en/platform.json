@@ -33,6 +33,7 @@
     "restaurant": "Restaurant / café / bar",
     "dental": "Dental clinic",
     "retail": "Retail shop (stock)",
+    "online_shop": "Online shop",
     "cafe": "Café / drink shop",
     "photo_studio": "Photo studio",
     "makeup": "Makeup & hair artist",
@@ -328,7 +329,8 @@
       "copyMessage": "Copy message for the customer",
       "copyPassword": "Copy password",
       "copied": "Copied",
-      "goToShop": "Go to the shop"
+      "goToShop": "Go to the shop",
+      "orderLink": "Customer order link"
     }
   },
   "businessType": {
@@ -353,7 +355,7 @@
       "services": "Services and packages",
       "products": "Example products",
       "messages": "LINE messages",
-      "settings": "Defaults (calendar, cost)"
+      "settings": "Defaults (calendar, cost, order page, hidden menus)"
     }
   },
   "notices": {

@@ -336,6 +336,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'POST /v1/table-orders/{billId}/prepay/reject',
   'POST /v1/table-orders/{billId}/ready',
   'POST /v1/table-orders/{billId}/rounds/{round}/printed',
+  'POST /v1/table-orders/{billId}/ship',
   'POST /v1/tenant/apply-template',
   'POST /v1/time-off',
   'POST /v1/time-off/{id}/reassign',

@@ -230,3 +230,48 @@ describe('buildNewShopMessage', () => {
     expect(msg.split('\n').at(-1)).toBe('มีอะไรสงสัยทักแอดมินทาง LINE ได้เลยค่ะ: lin.ee/YOZXXvW');
   });
 });
+
+describe('online shop type (ร้านขายของออนไลน์)', () => {
+  it('can be chosen when opening a shop; the ready message hands over the order link, not a booking link', async () => {
+    mocks.create.mockResolvedValue({
+      data: {
+        tenantId: 'tid-3',
+        slug: 'hipurify-like',
+        ownerUserId: 'u1',
+        branchIds: [],
+        passwordResetSent: false,
+        ownerCredentials: credentials,
+        ownerExisted: false,
+      },
+    });
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    // jsdom has no scrollIntoView / pointer capture, which the Radix select calls when it opens
+    Element.prototype.scrollIntoView = vi.fn();
+    Element.prototype.hasPointerCapture = vi.fn(() => false);
+    renderDialog();
+    fill();
+    const type = screen.getByLabelText('ธุรกิจ');
+    fireEvent.keyDown(type, { key: 'ArrowDown' });
+    fireEvent.click(await screen.findByRole('option', { name: 'ร้านขายของออนไลน์' }));
+    fireEvent.click(screen.getByRole('button', { name: 'เปิดร้าน' }));
+
+    await waitFor(() => expect(screen.getByTestId('onboard-result')).toBeTruthy());
+    expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({ industryKey: 'online_shop' }));
+    expect(screen.getByText('ลิงก์ร้านให้ลูกค้าสั่งซื้อ')).toBeTruthy();
+    expect(screen.queryByText('ลิงก์ให้ลูกค้าจอง')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'คัดลอกข้อความส่งลูกค้า' }));
+    await waitFor(() => expect(writeText).toHaveBeenCalled());
+    expect(writeText.mock.calls.at(-1)?.[0]).toContain(
+      '🔗 ลิงก์ร้านให้ลูกค้าสั่งซื้อ: https://www.coreup.pro/b/hipurify-like',
+    );
+  });
+
+  it('is in the business-type list of the change-type card (INDUSTRY_KEYS) with a Thai and an English name', async () => {
+    const { INDUSTRY_KEYS } = await import('@/features/platform/components/common');
+    const en = (await import('@/locales/en/platform.json')).default;
+    expect(INDUSTRY_KEYS).toContain('online_shop');
+    expect(platform.industry.online_shop).toBe('ร้านขายของออนไลน์');
+    expect(en.industry.online_shop).toBe('Online shop');
+  });
+});

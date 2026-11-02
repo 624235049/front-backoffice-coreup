@@ -51353,6 +51353,12 @@ export interface paths {
                                     id: string;
                                     name: string;
                                 }[];
+                                options: {
+                                    choiceId?: string;
+                                    groupName: string;
+                                    choiceName: string;
+                                    priceMinor: number;
+                                }[];
                                 labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
@@ -51511,6 +51517,7 @@ export interface paths {
                         saleMembershipId?: string | null;
                         labels?: string[];
                         extraServiceIds?: string[];
+                        optionChoiceIds?: string[];
                         /** @enum {string} */
                         source?: "front_desk" | "liff" | "phone" | "walk_in" | "import";
                         overrideReason?: string;
@@ -51566,6 +51573,12 @@ export interface paths {
                                 extraServices: {
                                     id: string;
                                     name: string;
+                                }[];
+                                options: {
+                                    choiceId?: string;
+                                    groupName: string;
+                                    choiceName: string;
+                                    priceMinor: number;
                                 }[];
                                 labels: string[];
                                 durationMin: number;
@@ -51761,6 +51774,12 @@ export interface paths {
                                         id: string;
                                         name: string;
                                     }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
                                     labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
@@ -51840,6 +51859,12 @@ export interface paths {
                                         id: string;
                                         name: string;
                                     }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
                                     labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
@@ -51918,6 +51943,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -51999,6 +52030,12 @@ export interface paths {
                                         id: string;
                                         name: string;
                                     }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
                                     labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
@@ -52077,6 +52114,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -52320,6 +52363,12 @@ export interface paths {
                                     id: string;
                                     name: string;
                                 }[];
+                                options: {
+                                    choiceId?: string;
+                                    groupName: string;
+                                    choiceName: string;
+                                    priceMinor: number;
+                                }[];
                                 labels: string[];
                                 durationMin: number;
                                 membershipId: string | null;
@@ -52523,6 +52572,12 @@ export interface paths {
                                 extraServices: {
                                     id: string;
                                     name: string;
+                                }[];
+                                options: {
+                                    choiceId?: string;
+                                    groupName: string;
+                                    choiceName: string;
+                                    priceMinor: number;
                                 }[];
                                 labels: string[];
                                 durationMin: number;
@@ -52729,6 +52784,12 @@ export interface paths {
                                 extraServices: {
                                     id: string;
                                     name: string;
+                                }[];
+                                options: {
+                                    choiceId?: string;
+                                    groupName: string;
+                                    choiceName: string;
+                                    priceMinor: number;
                                 }[];
                                 labels: string[];
                                 durationMin: number;
@@ -53276,6 +53337,12 @@ export interface paths {
                                         id: string;
                                         name: string;
                                     }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
                                     labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
@@ -53681,6 +53748,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -56777,6 +56850,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -56940,6 +57019,12 @@ export interface paths {
                                         extraServices: {
                                             id: string;
                                             name: string;
+                                        }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
                                         }[];
                                         labels: string[];
                                         durationMin: number;
@@ -57105,6 +57190,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -57268,6 +57359,12 @@ export interface paths {
                                         extraServices: {
                                             id: string;
                                             name: string;
+                                        }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
                                         }[];
                                         labels: string[];
                                         durationMin: number;
@@ -57433,6 +57530,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -57596,6 +57699,12 @@ export interface paths {
                                         extraServices: {
                                             id: string;
                                             name: string;
+                                        }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
                                         }[];
                                         labels: string[];
                                         durationMin: number;
@@ -57761,6 +57870,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -57925,6 +58040,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -58088,6 +58209,12 @@ export interface paths {
                                         extraServices: {
                                             id: string;
                                             name: string;
+                                        }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
                                         }[];
                                         labels: string[];
                                         durationMin: number;
@@ -58594,6 +58721,12 @@ export interface paths {
                                             id: string;
                                             name: string;
                                         }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
+                                        }[];
                                         labels: string[];
                                         durationMin: number;
                                         membershipId: string | null;
@@ -58945,6 +59078,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -59389,6 +59528,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -59961,6 +60106,12 @@ export interface paths {
                                         id: string;
                                         name: string;
                                     }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
                                     labels: string[];
                                     durationMin: number;
                                     membershipId: string | null;
@@ -60253,6 +60404,12 @@ export interface paths {
                                     extraServices: {
                                         id: string;
                                         name: string;
+                                    }[];
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
                                     }[];
                                     labels: string[];
                                     durationMin: number;
@@ -60806,6 +60963,12 @@ export interface paths {
                                         extraServices: {
                                             id: string;
                                             name: string;
+                                        }[];
+                                        options: {
+                                            choiceId?: string;
+                                            groupName: string;
+                                            choiceName: string;
+                                            priceMinor: number;
                                         }[];
                                         labels: string[];
                                         durationMin: number;
@@ -86460,6 +86623,137 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/table-orders/{billId}/ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A confirmed goods delivery order was handed to the courier: `{courier, trackingNo?}`. Lines become served, the bill is marked ready and shipped (the customer’s status page shows `shipped` with the courier and tracking link; nothing is sent to them). Not a delivery order → 409 {reason:"not_a_delivery"}; slip not confirmed → 409 {reason:"prepay_not_confirmed"}. Again = corrects courier / tracking number
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        courier: string;
+                        trackingNo?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Shipped */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                /** @description ISO timestamp */
+                                shippedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/table-orders/prepay": {
         parameters: {
             query?: never;
@@ -87315,9 +87609,14 @@ export interface paths {
                                     phone: string;
                                     address: string;
                                     feeMinor: number;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    trackingUrl: string | null;
+                                    /** @description ISO timestamp */
+                                    shippedAt: string | null;
                                 } | null;
                                 /** @enum {string} */
-                                status: "received" | "preparing" | "ready" | "collected" | "cancelled";
+                                status: "received" | "preparing" | "ready" | "shipped" | "collected" | "cancelled";
                                 items: {
                                     id: string;
                                     name: string;
@@ -87633,9 +87932,14 @@ export interface paths {
                                     phone: string;
                                     address: string;
                                     feeMinor: number;
+                                    courier: string | null;
+                                    trackingNo: string | null;
+                                    trackingUrl: string | null;
+                                    /** @description ISO timestamp */
+                                    shippedAt: string | null;
                                 } | null;
                                 /** @enum {string} */
-                                status: "received" | "preparing" | "ready" | "collected" | "cancelled";
+                                status: "received" | "preparing" | "ready" | "shipped" | "collected" | "cancelled";
                                 items: {
                                     id: string;
                                     name: string;
@@ -99669,6 +99973,18 @@ export interface paths {
                                         fullMinor: number | null;
                                         /** @enum {string} */
                                         bookBy: "staff" | "resource";
+                                        options: {
+                                            id: string;
+                                            name: string;
+                                            required: boolean;
+                                            multi: boolean;
+                                            choices: {
+                                                id: string;
+                                                name: string;
+                                                /** @description integer satang */
+                                                priceMinor: number;
+                                            }[];
+                                        }[];
                                         rental: {
                                             days: number;
                                             shipBeforeDays: number;
@@ -100813,6 +101129,7 @@ export interface paths {
                         };
                         shipOption?: string;
                         extraServiceIds?: string[];
+                        optionChoiceIds?: string[];
                         partySize?: number;
                         note?: string;
                         extras?: {
@@ -101806,6 +102123,7 @@ export interface paths {
                         serviceId: string;
                         memberId: string | null;
                         extraServiceIds?: string[];
+                        optionChoiceIds?: string[];
                         startAt?: string;
                         pickupDate?: string;
                         returnDate?: string;
@@ -106164,6 +106482,18 @@ export interface paths {
                                     fullMinor: number | null;
                                     /** @enum {string} */
                                     bookBy: "staff" | "resource";
+                                    options: {
+                                        id: string;
+                                        name: string;
+                                        required: boolean;
+                                        multi: boolean;
+                                        choices: {
+                                            id: string;
+                                            name: string;
+                                            /** @description integer satang */
+                                            priceMinor: number;
+                                        }[];
+                                    }[];
                                     rental: {
                                         days: number;
                                         shipBeforeDays: number;
@@ -106350,6 +106680,18 @@ export interface paths {
                                 fullMinor: number | null;
                                 /** @enum {string} */
                                 bookBy: "staff" | "resource";
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                                 rental: {
                                     days: number;
                                     shipBeforeDays: number;
@@ -124181,6 +124523,18 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -124419,6 +124773,19 @@ export interface paths {
                             amountMinor: number | null;
                             percent: number | null;
                         } | null;
+                        /** @default [] */
+                        options?: {
+                            id: string;
+                            name: string;
+                            required: boolean;
+                            multi: boolean;
+                            choices: {
+                                id: string;
+                                name: string;
+                                /** @description integer satang */
+                                priceMinor: number;
+                            }[];
+                        }[];
                     };
                 };
             };
@@ -124547,6 +124914,18 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                             };
                         };
                     };
@@ -124777,6 +125156,18 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                             };
                         };
                     };
@@ -125094,6 +125485,18 @@ export interface paths {
                             amountMinor: number | null;
                             percent: number | null;
                         } | null;
+                        options?: {
+                            id: string;
+                            name: string;
+                            required: boolean;
+                            multi: boolean;
+                            choices: {
+                                id: string;
+                                name: string;
+                                /** @description integer satang */
+                                priceMinor: number;
+                            }[];
+                        }[];
                     };
                 };
             };
@@ -125222,6 +125625,18 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                             };
                         };
                     };
@@ -125581,6 +125996,18 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                options: {
+                                    id: string;
+                                    name: string;
+                                    required: boolean;
+                                    multi: boolean;
+                                    choices: {
+                                        id: string;
+                                        name: string;
+                                        /** @description integer satang */
+                                        priceMinor: number;
+                                    }[];
+                                }[];
                             };
                         };
                     };

@@ -99,6 +99,7 @@ export const INDUSTRY_KEYS = [
   'restaurant',
   'cafe',
   'retail',
+  'online_shop',
   'photo_studio',
   'makeup',
   'lash_brow',
