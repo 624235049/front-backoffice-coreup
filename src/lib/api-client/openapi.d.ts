@@ -14271,7 +14271,10 @@ export interface paths {
                                     size: string | null;
                                     body: string | null;
                                     priceBaht: number | null;
+                                    priceUnit?: string;
                                     imageUrl: string | null;
+                                    /** @enum {string} */
+                                    kind?: "dress" | "product";
                                     link: string;
                                 }[];
                                 reply: string;
@@ -66209,7 +66212,10 @@ export interface paths {
                                     size: string | null;
                                     body: string | null;
                                     priceBaht: number | null;
+                                    priceUnit?: string;
                                     imageUrl: string | null;
+                                    /** @enum {string} */
+                                    kind?: "dress" | "product";
                                     link: string;
                                 }[];
                                 reply: string;
@@ -85041,6 +85047,7 @@ export interface paths {
                                     totalMinor: number;
                                     items: {
                                         id: string;
+                                        imageUrl: string | null;
                                         name: string;
                                         qty: number;
                                         unitPriceMinor: number;
@@ -85191,6 +85198,7 @@ export interface paths {
                                 totalMinor: number;
                                 items: {
                                     id: string;
+                                    imageUrl: string | null;
                                     name: string;
                                     qty: number;
                                     unitPriceMinor: number;
@@ -85324,6 +85332,7 @@ export interface paths {
                                 totalMinor: number;
                                 items: {
                                     id: string;
+                                    imageUrl: string | null;
                                     name: string;
                                     qty: number;
                                     unitPriceMinor: number;
@@ -85601,6 +85610,7 @@ export interface paths {
                                     id: string;
                                     name: string;
                                     qty: number;
+                                    imageUrl: string | null;
                                     options: {
                                         choiceId?: string;
                                         groupName: string;
@@ -86005,6 +86015,7 @@ export interface paths {
                                 totalMinor: number;
                                 items: {
                                     id: string;
+                                    imageUrl: string | null;
                                     name: string;
                                     qty: number;
                                     unitPriceMinor: number;
@@ -86797,6 +86808,7 @@ export interface paths {
                                 items: {
                                     name: string;
                                     qty: number;
+                                    imageUrl: string | null;
                                 }[];
                                 slipCheck: {
                                     /** @enum {string} */
@@ -87430,6 +87442,242 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/shops/{slug}/ordering/photos/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Picture of a menu product served directly (JPEG / PNG bytes, long cache; for LINE cards)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                    fileId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The image bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/shops/{slug}/ordering/products/{productId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One product of the order page in full: every picture (first = cover, stable URLs), SKU, the description as the shop wrote it, price and whether it is out of stock. Page closed / module off → 403; not on the menu → 404
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    slug: string;
+                    productId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Product */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                sku: string | null;
+                                priceMinor: number;
+                                description: string | null;
+                                soldOut: boolean;
+                                imageUrls: string[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/shops/{slug}/pickup-orders": {
         parameters: {
             query?: never;
@@ -87619,6 +87867,7 @@ export interface paths {
                                 status: "received" | "preparing" | "ready" | "shipped" | "collected" | "cancelled";
                                 items: {
                                     id: string;
+                                    imageUrl: string | null;
                                     name: string;
                                     qty: number;
                                     unitPriceMinor: number;
@@ -87942,6 +88191,7 @@ export interface paths {
                                 status: "received" | "preparing" | "ready" | "shipped" | "collected" | "cancelled";
                                 items: {
                                     id: string;
+                                    imageUrl: string | null;
                                     name: string;
                                     qty: number;
                                     unitPriceMinor: number;
