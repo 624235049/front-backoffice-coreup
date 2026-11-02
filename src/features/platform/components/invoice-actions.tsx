@@ -271,6 +271,11 @@ export function VoidInvoiceDialog({
       <p className="rounded-md bg-muted p-2 text-xs" data-testid="void-no-mail">
         {t('invoices.voidNoMail')}
       </p>
+      {invoice.status === 'paid' ? (
+        <p className="rounded-md bg-destructive/10 p-2 text-xs text-destructive" data-testid="void-paid-warning">
+          {t('invoices.voidPaidWarning', { receipt: invoice.receiptNumber ?? '-' })}
+        </p>
+      ) : null}
     </ConfirmDialog>
   );
 }

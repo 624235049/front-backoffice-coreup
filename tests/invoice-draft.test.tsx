@@ -153,6 +153,17 @@ describe('draft invoice: nothing is sent until the team confirms', () => {
     fireEvent.click(screen.getByTestId('void-invoice-confirm'));
     expect(h.patch).toHaveBeenCalledWith({ id: 'inv-1', body: { status: 'void' } }, expect.anything());
   });
+
+  it('a paid invoice can be voided: the confirm warns that its receipt is voided too and sends no email', () => {
+    h.invoices = [invoice({ status: 'paid', number: 'INV-202611-0007', receiptNumber: 'RE-202611-0003' })];
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByTestId('row-void-paid')[0] as HTMLElement);
+    expect(screen.getByTestId('void-no-mail')).toBeTruthy();
+    expect(screen.getByTestId('void-paid-warning').textContent).toBe('invoices.voidPaidWarning');
+    expect(h.patch).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId('void-invoice-confirm'));
+    expect(h.patch).toHaveBeenCalledWith({ id: 'inv-1', body: { status: 'void' } }, expect.anything());
+  });
 });
 
 describe('send: voiding the older notice is opt-in', () => {

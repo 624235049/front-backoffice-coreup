@@ -187,6 +187,11 @@ export function InvoicesPage() {
           </Button>
         </>
       ) : null}
+      {i.status === 'paid' ? (
+        <Button size="sm" variant="ghost" data-testid="row-void-paid" onClick={() => setVoiding(i)}>
+          {t('invoices.void')}
+        </Button>
+      ) : null}
     </>
   );
 

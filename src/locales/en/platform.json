@@ -817,6 +817,7 @@
     "voidTitle": "Void invoice {{number}}?",
     "voidHint": "A voided invoice cannot be edited; create a new draft instead",
     "voidNoMail": "Voiding sends no email and tells the customer nothing. The payment link of this invoice stops working.",
+    "voidPaidWarning": "This invoice is paid: voiding also voids receipt {{receipt}} and counts the money as not received (a package or period already extended is not rolled back)",
     "confirmPay": {
       "title": "Confirm payment {{number}}?",
       "hint": "Check the money is in the bank account before you confirm",

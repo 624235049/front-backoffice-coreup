@@ -299,7 +299,7 @@ function Review({
           </div>
         </>
       ) : null}
-      {draft || open ? (
+      {draft || open || invoice.status === 'paid' ? (
         <div className="border-t pt-4">
           <Button
             variant="outline"
