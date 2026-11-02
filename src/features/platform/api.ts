@@ -461,9 +461,25 @@ export const usePatchInvoice = () =>
     unwrap(api.PATCH('/v1/platform/invoices/{id}', { params: { path: { id: v.id } }, body: v.body })),
   );
 
+/** The only way a draft reaches the shop: issues it and queues the bill email. Called only from the confirm dialogs. */
+export const useSendInvoice = () =>
+  useMut((id: string) =>
+    unwrap(
+      api.POST('/v1/platform/invoices/{id}/send', { params: { path: { id } }, body: { confirm: true } }),
+    ),
+  );
+
+export const useDeleteInvoice = () =>
+  useMut((id: string) => unwrap(api.DELETE('/v1/platform/invoices/{id}', { params: { path: { id } } })));
+
 export const useConfirmPayment = () =>
   useMut((id: string) =>
-    unwrap(api.POST('/v1/platform/invoices/{id}/confirm-payment', { params: { path: { id } } })),
+    unwrap(
+      api.POST('/v1/platform/invoices/{id}/confirm-payment', {
+        params: { path: { id } },
+        body: { confirm: true },
+      }),
+    ),
   );
 
 export const useRejectSlip = () =>

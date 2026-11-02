@@ -10,6 +10,10 @@ export const hasPendingSlip = (i: Pick<Invoice, 'status' | 'slipUploadedAt'>): b
 /** A one-off "อื่น ๆ" charge (ค่าย้ายระบบ …): confirming it only issues the receipt, the shop's package is untouched. */
 export const isOtherInvoice = (i: Pick<Invoice, 'otherLines'>): boolean => i.otherLines.length > 0;
 
+/** Package, add-on and one-off invoices (and their receipts) are emailed to the shop owners; a consulting invoice is not. */
+export const mailsBill = (i: Pick<Invoice, 'source' | 'otherLines'>): boolean =>
+  i.source === 'subscription' || isOtherInvoice(i);
+
 /** Badge colour of each automatic slip-check status (list badge and detail box). */
 export const slipCheckTone = {
   passed: 'success',

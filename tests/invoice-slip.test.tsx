@@ -23,6 +23,9 @@ vi.mock('@/features/platform/api', () => ({
   useCreateInvoice: () => ({ mutate: vi.fn(), isPending: false }),
   useGenerateInvoices: () => ({ mutate: vi.fn(), isPending: false }),
   useCreateOtherInvoice: () => ({ mutate: vi.fn(), isPending: false }),
+  useSendInvoice: () => ({ mutate: vi.fn(), mutateAsync: vi.fn(), isPending: false }),
+  useDeleteInvoice: () => ({ mutate: vi.fn(), isPending: false }),
+  useAddons: () => ({ data: undefined }),
 }));
 
 const invoice = (over: Record<string, unknown> = {}) => ({
@@ -46,6 +49,9 @@ const invoice = (over: Record<string, unknown> = {}) => ({
   payUrl: 'https://app.coreup.pro/pay/tok',
   termsAcceptance: null,
   otherLines: [] as unknown[],
+  recipients: ['owner@shop.test'],
+  tenantId: 'shop-1',
+  sourceId: null,
   slipCheck: null,
   ...over,
 });
@@ -76,10 +82,12 @@ describe('invoices page: slips and mark-as-paid', () => {
     expect(img.getAttribute('src')).toBe('https://files.example/slip.png?sig=abc');
   });
 
-  it('"mark as paid" on a package invoice runs confirm-payment, not the status PATCH', () => {
+  it('"mark as paid" on a package invoice asks first, then runs confirm-payment, not the status PATCH', () => {
     h.invoices = [invoice({ slipUrl: null, slipUploadedAt: null })];
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByRole('button', { name: 'invoices.markPaid' })[0] as HTMLElement);
+    expect(h.confirm).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
     expect(h.confirm).toHaveBeenCalledWith('inv-1', expect.anything());
     expect(h.patch).not.toHaveBeenCalled();
   });
@@ -88,7 +96,11 @@ describe('invoices page: slips and mark-as-paid', () => {
     h.invoices = [invoice({ id: 'inv-2', source: 'engagement', slipUrl: null, slipUploadedAt: null })];
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByRole('button', { name: 'invoices.markPaid' })[0] as HTMLElement);
-    expect(h.patch).toHaveBeenCalledWith({ id: 'inv-2', body: { status: 'paid' } }, expect.anything());
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
+    expect(h.patch).toHaveBeenCalledWith(
+      { id: 'inv-2', body: { status: 'paid', confirm: true } },
+      expect.anything(),
+    );
     expect(h.confirm).not.toHaveBeenCalled();
   });
 
@@ -106,6 +118,7 @@ describe('invoices page: slips and mark-as-paid', () => {
     ];
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByRole('button', { name: 'invoices.markPaid' })[0] as HTMLElement);
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
     expect(h.confirm).toHaveBeenCalledWith('inv-3', expect.anything());
     expect(h.patch).not.toHaveBeenCalled();
   });
@@ -117,9 +130,11 @@ describe('slip review sheet actions', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'invoices.slip.review' })[0] as HTMLElement);
   };
 
-  it('confirm sends the invoice id to confirm-payment', () => {
+  it('confirm asks first (dialog), then sends the invoice id to confirm-payment', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirm' }));
+    expect(h.confirm).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
     expect(h.confirm).toHaveBeenCalledWith('inv-1', expect.anything());
     expect(h.reject).not.toHaveBeenCalled();
   });
@@ -133,6 +148,7 @@ describe('slip review sheet actions', () => {
     h.confirm.mockImplementation((_id: string, o: { onSuccess: () => void }) => o.onSuccess());
     open();
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirm' }));
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
     expect(h.toast.success).toHaveBeenCalledWith(key);
   });
 
@@ -164,6 +180,7 @@ describe('slip review sheet actions', () => {
     expect(lines).toContain('2 ×');
     expect(screen.queryByRole('button', { name: 'invoices.slip.confirm' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'invoices.slip.confirmOther' }));
+    fireEvent.click(screen.getByTestId('confirm-payment-confirm'));
     expect(h.confirm).toHaveBeenCalledWith('inv-3', expect.anything());
     expect(h.toast.success).toHaveBeenCalledWith('invoices.slip.confirmedToast.other');
   });

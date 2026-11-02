@@ -1137,8 +1137,15 @@ export interface paths {
                                                     metro: number;
                                                     upcountry: number;
                                                 };
+                                                /**
+                                                 * @default fixed
+                                                 * @enum {string}
+                                                 */
+                                                feeMode: "fixed" | "actual";
                                                 feeMinor: number;
                                                 freeOverMinor: number | null;
+                                                /** @default 0 */
+                                                extraPieceFeeMinor: number;
                                                 areas: "all" | string[];
                                                 slot: string | null;
                                             }[];
@@ -1197,6 +1204,8 @@ export interface paths {
                                              * @enum {string}
                                              */
                                             idPhoto: "off" | "optional" | "required";
+                                            /** @default false */
+                                            attachBeforeBooking: boolean;
                                         };
                                         messages: {
                                             confirmed?: {
@@ -12295,6 +12304,303 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/tenants/{id}/rental-reset/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Backup of what the rental history reset would delete: every row per table plus the customers behind them (phone in clear, audited). 409 NOT_A_RENTAL_TENANT for any other shop
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rows */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                generatedAt: string;
+                                tenant: {
+                                    id: string;
+                                    slug: string;
+                                    name: string;
+                                };
+                                tables: {
+                                    [key: string]: {
+                                        [key: string]: unknown;
+                                    }[];
+                                };
+                                customers: {
+                                    id: string;
+                                    code: string | null;
+                                    displayName: string;
+                                    phone: string | null;
+                                }[];
+                                keptDeposits: {
+                                    id: string;
+                                    customerId: string;
+                                    amountMinor: number;
+                                    remainingMinor: number;
+                                    status: string;
+                                    source: string;
+                                    takenAt: string;
+                                    appliedToDeletedBill: boolean;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/tenants/{id}/rental-reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Delete every rental booking of a rental shop and what hangs off it (bills, payments, deposits, settlements, loyalty, files…) in one transaction. `confirmSlug` must equal the shop slug; `dryRun` returns the counts per table and writes nothing. No message, no outbox event
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        confirmSlug: string;
+                        reason: string;
+                        dryRun: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Counts per table */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                dryRun: boolean;
+                                tenant: {
+                                    id: string;
+                                    slug: string;
+                                };
+                                counts: {
+                                    [key: string]: number;
+                                };
+                                updated: {
+                                    [key: string]: number;
+                                };
+                                blockers: {
+                                    [key: string]: number;
+                                };
+                                keptDeposits: {
+                                    id: string;
+                                    customerId: string;
+                                    amountMinor: number;
+                                    remainingMinor: number;
+                                    status: string;
+                                    source: string;
+                                    takenAt: string;
+                                    appliedToDeletedBill: boolean;
+                                }[];
+                                storedFiles: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/platform/tenants/{id}/impersonate": {
         parameters: {
             query?: never;
@@ -21300,11 +21606,118 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete a draft invoice (never issued, nothing was mailed); 409 `invoice_not_draft` for any other
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                ok: true;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         /**
-         * Mark paid / void / change due date
+         * Mark paid (needs body `confirm: true`; emails the receipt) / void (never mails; releases the invoice's AI top-ups) / change due date / edit the lines of a draft one-off invoice. A draft can only be edited or voided — `send` issues it
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -21327,7 +21740,15 @@ export interface paths {
                         /** @enum {string} */
                         status?: "draft" | "issued" | "paid" | "void" | "overdue";
                         dueOn?: string;
+                        /** @enum {boolean} */
+                        confirm?: true;
                         paidAt?: string | null;
+                        lines?: {
+                            description: string;
+                            quantity: number;
+                            unitMinor: number;
+                            note?: string | null;
+                        }[];
                     };
                 };
             };
@@ -21394,6 +21815,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             };
                         };
                     };
@@ -21930,6 +22352,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             }[];
                             page: {
                                 nextCursor: string | null;
@@ -22017,7 +22440,7 @@ export interface paths {
         };
         put?: never;
         /**
-         * Issue an invoice (number INV-YYYYMM-####, VAT 7% unless given)
+         * Create an invoice as a DRAFT (temporary number, VAT 7% unless given): nothing is mailed and the shop does not see it until `POST /platform/invoices/{id}/send`
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -22045,16 +22468,11 @@ export interface paths {
                         dueOn?: string;
                         periodStart?: string;
                         periodEnd?: string;
-                        /**
-                         * @default issued
-                         * @enum {string}
-                         */
-                        status?: "draft" | "issued";
                     };
                 };
             };
             responses: {
-                /** @description Issued */
+                /** @description Draft */
                 201: {
                     headers: {
                         [name: string]: unknown;
@@ -22116,6 +22534,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             };
                         };
                     };
@@ -22210,7 +22629,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Issue a one-off "อื่น ๆ" invoice (ค่าย้ายระบบ, ค่าตั้งระบบ, ค่าพัฒนาเพิ่ม): same number, mail, payment page and receipt as a package invoice; the package is untouched
+         * Create a one-off "อื่น ๆ" invoice (ค่าย้ายระบบ, ค่าตั้งระบบ, ค่าพัฒนาเพิ่ม) as a DRAFT: nothing is mailed until `POST /platform/invoices/{id}/send`; then same number, mail, payment page and receipt as a package invoice; the package is untouched
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -22239,7 +22658,7 @@ export interface paths {
                 };
             };
             responses: {
-                /** @description Issued */
+                /** @description Draft */
                 201: {
                     headers: {
                         [name: string]: unknown;
@@ -22301,6 +22720,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             };
                         };
                     };
@@ -22395,7 +22815,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Monthly billing run: one subscription invoice per active shop + engagement invoices (idempotent)
+         * Monthly billing run: creates one DRAFT subscription invoice per active shop + DRAFT engagement invoices (idempotent; a draft counts as already billed). Nothing is mailed: send each with `POST /platform/invoices/{id}/send`
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -22513,7 +22933,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/platform/invoices/{id}/confirm-payment": {
+    "/v1/platform/invoices/{id}/send": {
         parameters: {
             query?: never;
             header?: never;
@@ -22523,7 +22943,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Money received: settle the invoice (subscription = plan, period, modules, status) — idempotent
+         * Issue a draft: it gets its INV number, becomes visible and payable for the shop and the bill is mailed to the shop owners (once — 409 `invoice_not_draft` when it is not a draft). Body `{confirm: true}` is required (400 without it): only the team app's confirm dialog sends it
          * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -22540,7 +22960,197 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {boolean} */
+                        confirm: true;
+                    };
+                };
+            };
+            responses: {
+                /** @description Issued invoice */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                tenantId: string;
+                                tenantName: string;
+                                /** @enum {string} */
+                                source: "subscription" | "engagement";
+                                sourceId: string | null;
+                                number: string;
+                                amountMinor: number;
+                                vatMinor: number;
+                                totalMinor: number;
+                                issuedOn: string;
+                                dueOn: string;
+                                paidAt: string | null;
+                                /** @enum {string} */
+                                status: "draft" | "issued" | "paid" | "void" | "overdue";
+                                slipUrl: string | null;
+                                slipUploadedAt: string | null;
+                                slipNote: string | null;
+                                slipCheck: {
+                                    /** @enum {string} */
+                                    status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                    reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                    amountMinor: number | null;
+                                    receiverName: string | null;
+                                    receiverAccountMasked: string | null;
+                                    transRef: string | null;
+                                    paidAt: string | null;
+                                    checkedAt: string;
+                                    /** @enum {string} */
+                                    method?: "basic";
+                                } | null;
+                                planName: string | null;
+                                periodStart: string | null;
+                                periodEnd: string | null;
+                                receiptNumber: string | null;
+                                payUrl: string;
+                                termsAcceptance: {
+                                    version: string;
+                                    acceptedAt: string;
+                                    name: string;
+                                    userId: string | null;
+                                    ip: string | null;
+                                    userAgent: string | null;
+                                } | null;
+                                selfServe: boolean;
+                                /** @enum {string|null} */
+                                addon: "ai_chat" | "ai_topup" | "extra_seats" | "extra_branches" | null;
+                                otherLines: {
+                                    description: string;
+                                    quantity: number;
+                                    unitMinor: number;
+                                    note?: string | null;
+                                    amountMinor: number;
+                                }[];
+                                recipients: string[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/invoices/{id}/confirm-payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Money received: settle the invoice (subscription = plan, period, modules, status) — idempotent, emails the receipt; body `{confirm: true}` is required (400 without it)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {boolean} */
+                        confirm: true;
+                    };
+                };
+            };
             responses: {
                 /** @description Paid invoice */
                 200: {
@@ -22604,6 +23214,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             };
                         };
                     };
@@ -22785,6 +23396,7 @@ export interface paths {
                                     note?: string | null;
                                     amountMinor: number;
                                 }[];
+                                recipients: string[];
                             };
                         };
                     };
@@ -50079,6 +50691,456 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff-line-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My LINE link to the shop's LINE OA (staff alerts): state + add-friend link
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                lineConfigured: boolean;
+                                basicId: string | null;
+                                addFriendUrl: string | null;
+                                linked: boolean;
+                                linkedAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Unlink my LINE (staff alerts go back to the bell / email)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Unlinked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff-line-link/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Draw my one-time code (15 min) to send in the shop's LINE chat
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:read`. Module: `core`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Code */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                code: string;
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff-line-link/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Who is linked to the shop LINE for staff alerts (names only)
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:write`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Linked members */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                membershipId: string;
+                                displayName: string;
+                                linkedAt: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/ops/defaults": {
         parameters: {
             query?: never;
@@ -52145,6 +53207,8 @@ export interface paths {
                         rentalSettlement?: {
                             /** @default false */
                             lost?: boolean;
+                            /** @default false */
+                            useStampReward?: boolean;
                             lateReason?: string | null;
                             refund?: {
                                 /** @enum {string} */
@@ -52161,6 +53225,11 @@ export interface paths {
                                 slipFileId?: string | null;
                                 note?: string | null;
                             } | null;
+                        };
+                        actualReturn?: {
+                            /** Format: date-time */
+                            at: string;
+                            reason: string;
                         };
                     };
                 };
@@ -53989,6 +55058,8 @@ export interface paths {
                                 rentalDue: boolean;
                                 /** @default true */
                                 rentalOverdue: boolean;
+                                /** @default false */
+                                bookingLine: boolean;
                             };
                         };
                     };
@@ -54094,6 +55165,8 @@ export interface paths {
                         rentalDue?: boolean;
                         /** @default true */
                         rentalOverdue?: boolean;
+                        /** @default false */
+                        bookingLine?: boolean;
                     };
                 };
             };
@@ -54114,6 +55187,8 @@ export interface paths {
                                 rentalDue: boolean;
                                 /** @default true */
                                 rentalOverdue: boolean;
+                                /** @default false */
+                                bookingLine: boolean;
                             };
                         };
                     };
@@ -55773,6 +56848,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -55825,6 +56901,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 lateShips: {
@@ -55932,6 +57012,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -55984,6 +57065,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 pickups: {
@@ -56091,6 +57176,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56143,6 +57229,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 returns: {
@@ -56250,6 +57340,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56302,6 +57393,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 arrivals: {
@@ -56409,6 +57504,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56461,6 +57557,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 overdue: {
@@ -56568,6 +57668,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56620,6 +57721,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 missed: {
@@ -56727,6 +57832,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56779,6 +57885,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 out: {
@@ -56886,6 +57996,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -56938,6 +58049,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 upcoming: {
@@ -57045,6 +58160,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -57097,6 +58213,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                             };
@@ -57334,6 +58454,8 @@ export interface paths {
                     shipOption?: string;
                     province?: string;
                     priceMinor?: number | null;
+                    pieces?: number;
+                    joinsBox?: "true" | "false";
                 };
                 header?: never;
                 path: {
@@ -57371,7 +58493,9 @@ export interface paths {
                                         shipDays: number;
                                         feeMinor: number;
                                         freeOverMinor: number | null;
+                                        extraPieceFeeMinor: number;
                                         chargeMinor: number;
+                                        feeActual: boolean;
                                         earliestPickup: string;
                                     }[];
                                     shipOption: string | null;
@@ -57541,6 +58665,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -57593,6 +58718,10 @@ export interface paths {
                                     discount: {
                                         discountMinor: number;
                                         reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
                                     } | null;
                                 }[];
                                 quantity: number;
@@ -57735,6 +58864,12 @@ export interface paths {
                             percentBp?: number;
                             reason?: string;
                         };
+                        extraCharge?: {
+                            label: string;
+                            amountMinor: number;
+                        };
+                        customPriceMinor?: number;
+                        idCardFileId?: string;
                         /** @enum {string} */
                         deliveryMethod?: "pickup" | "parcel";
                         shipTo?: {
@@ -57748,6 +58883,7 @@ export interface paths {
                             note?: string | null;
                         } | null;
                         shipOption?: string | null;
+                        shipWithAppointmentId?: string;
                         extras?: {
                             idCardNo?: string;
                             eventDate?: string;
@@ -57759,6 +58895,12 @@ export interface paths {
                         };
                         /** @default 1 */
                         quantity?: number;
+                        moreItems?: {
+                            serviceId: string;
+                            customPriceMinor?: number;
+                        }[];
+                        /** Format: date-time */
+                        pickedUpAt?: string;
                     };
                 };
             };
@@ -57875,6 +59017,7 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                     feeMinor: number;
+                                    feeActual: boolean;
                                     arriveDate: string | null;
                                     returnPostBy: string | null;
                                     expectedArrival: string | null;
@@ -57927,6 +59070,10 @@ export interface paths {
                                 discount: {
                                     discountMinor: number;
                                     reason: string;
+                                } | null;
+                                extraCharge?: {
+                                    label: string;
+                                    amountMinor: number;
                                 } | null;
                                 siblingIds: string[];
                             };
@@ -58152,8 +59299,8 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Change the days (and / or the item or room) of a rental that is not picked up yet
-         * @description Same checks as taking a rental, the rental itself excluded: 422 when the stay is too long or outside the booking window, 409 `APPOINTMENT_SLOT_TAKEN` when the item is out on the new days, 409 `INVALID_TRANSITION` once it is picked up or closed. The price follows the new days and item (`previousPriceMinor` is what it was). The customer is told the new days on LINE.
+         * Change the days (and / or the item or room) of a rental that is not picked up yet, or correct its price / terms
+         * @description Days / item: same checks as taking a rental, the rental itself excluded: 422 when the stay is too long or outside the booking window, 409 `APPOINTMENT_SLOT_TAKEN` when the item is out on the new days, 409 `INVALID_TRANSITION` once it is picked up or closed. The price follows the new days and item (`previousPriceMinor` is what it was). The customer is told the new days on LINE. Correction (`agreedPriceMinor` and / or `refreshTerms` with a `reason`, no days): dress rental shops only, needs `bills:write` and `tenant:write`; works on a booked, confirmed or picked-up rental (409 `INVALID_TRANSITION` once closed); sets the agreed rental fee (same as `customPriceMinor` at the counter) and / or replaces the terms the rental was taken under with the shop terms of today; idempotent (`corrected: false` when nothing needed changing) and written to the audit log with the reason. `dryRun` answers what would change.
          *
          *     Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `crm`.
          *
@@ -58174,8 +59321,8 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        pickupDate: string;
-                        returnDate: string;
+                        pickupDate?: string;
+                        returnDate?: string;
                         serviceId?: string;
                         pickupTime?: string | null;
                         returnTime?: string | null;
@@ -58193,6 +59340,11 @@ export interface paths {
                             note?: string | null;
                         } | null;
                         shipOption?: string | null;
+                        agreedPriceMinor?: number;
+                        shippingFeeMinor?: number;
+                        /** @enum {boolean} */
+                        refreshTerms?: true;
+                        reason?: string;
                     };
                 };
             };
@@ -58309,6 +59461,7 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                     feeMinor: number;
+                                    feeActual: boolean;
                                     arriveDate: string | null;
                                     returnPostBy: string | null;
                                     expectedArrival: string | null;
@@ -58362,7 +59515,13 @@ export interface paths {
                                     discountMinor: number;
                                     reason: string;
                                 } | null;
+                                extraCharge?: {
+                                    label: string;
+                                    amountMinor: number;
+                                } | null;
                                 previousPriceMinor: number;
+                                priceReset: boolean;
+                                corrected?: boolean;
                             };
                         };
                     };
@@ -58873,6 +60032,7 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                     feeMinor: number;
+                                    feeActual: boolean;
                                     arriveDate: string | null;
                                     returnPostBy: string | null;
                                     expectedArrival: string | null;
@@ -58925,6 +60085,10 @@ export interface paths {
                                 discount: {
                                     discountMinor: number;
                                     reason: string;
+                                } | null;
+                                extraCharge?: {
+                                    label: string;
+                                    amountMinor: number;
                                 } | null;
                             };
                         };
@@ -59161,6 +60325,7 @@ export interface paths {
                                     shippedAt: string | null;
                                     trackingUrl: string | null;
                                     feeMinor: number;
+                                    feeActual: boolean;
                                     arriveDate: string | null;
                                     returnPostBy: string | null;
                                     expectedArrival: string | null;
@@ -59213,6 +60378,10 @@ export interface paths {
                                 discount: {
                                     discountMinor: number;
                                     reason: string;
+                                } | null;
+                                extraCharge?: {
+                                    label: string;
+                                    amountMinor: number;
                                 } | null;
                             };
                         };
@@ -59568,6 +60737,292 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rentals/customers/{id}/parcels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Parcels of a customer that another piece could still go in: booked / confirmed, not shipped, exactly these days
+         * @description The counter offers "send in the same box" from this list; `shipWithAppointmentId` on `POST /rentals` is checked by the API again. The delivery address is only opened for members who may read customers (the counter compares it with the address typed).
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `crm`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    pickupDate: string;
+                    returnDate: string;
+                    branchId?: string;
+                };
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                parcels: {
+                                    appointment: {
+                                        id: string;
+                                        branchId: string;
+                                        customerId: string;
+                                        customerName: string;
+                                        customerHasCaution: boolean;
+                                        customer: {
+                                            id: string;
+                                            name: string;
+                                            code: string | null;
+                                            visitCount: number;
+                                            pendingFirstVisit: boolean;
+                                            caution: {
+                                                notes: boolean;
+                                                allergy: boolean;
+                                                chronic: boolean;
+                                            };
+                                        };
+                                        customerBirthDate: string | null;
+                                        serviceId: string;
+                                        serviceName: string;
+                                        rental: boolean;
+                                        stay?: {
+                                            pickupDate: string;
+                                            pickupTime: string | null;
+                                            returnDate: string;
+                                            returnTime: string | null;
+                                            itemCode: string | null;
+                                        } | null;
+                                        extraServices: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        labels: string[];
+                                        durationMin: number;
+                                        membershipId: string | null;
+                                        memberName: string | null;
+                                        resourceId: string | null;
+                                        resourceName: string | null;
+                                        startAt: string;
+                                        endAt: string;
+                                        /** @enum {string} */
+                                        status: "booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled";
+                                        /** @enum {string} */
+                                        source: "front_desk" | "liff" | "phone" | "walk_in" | "import";
+                                        isRequestedMember: boolean;
+                                        partySize: number;
+                                        customerPackageId: string | null;
+                                        saleMembershipId: string | null;
+                                        note: string | null;
+                                        version: number;
+                                        allowedTransitions: ("booked" | "confirmed" | "reschedule_requested" | "checked_in" | "in_service" | "completed" | "no_show" | "cancelled")[];
+                                        onlineDeposit: {
+                                            /** @enum {string} */
+                                            status: "awaiting_slip" | "slip_submitted" | "confirmed" | "rejected";
+                                            amountMinor: number;
+                                            slipFileId: string | null;
+                                            slipSubmittedAt: string | null;
+                                            rejectReason: string | null;
+                                            depositId: string | null;
+                                            slipCheck: {
+                                                /** @enum {string} */
+                                                status: "passed" | "failed" | "error" | "skipped" | "basic_ok";
+                                                reasons: ("amount_low" | "wrong_receiver" | "too_old" | "duplicate" | "not_found" | "plan" | "quota" | "platform_cap" | "provider_error" | "no_qr" | "promptpay_qr" | "qr_invalid")[];
+                                                amountMinor: number | null;
+                                                receiverName: string | null;
+                                                receiverAccountMasked: string | null;
+                                                transRef: string | null;
+                                                paidAt: string | null;
+                                                checkedAt: string;
+                                                /** @enum {string} */
+                                                method?: "basic";
+                                            } | null;
+                                            payInFull?: boolean;
+                                            securityMinor?: number;
+                                        } | null;
+                                        createdAt: string;
+                                        updatedAt: string;
+                                    };
+                                    pickupDate: string;
+                                    returnDate: string;
+                                    shipOutDate: string | null;
+                                    expectedReturnDate: string;
+                                    shipBeforeDays: number;
+                                    delivery: {
+                                        /** @enum {string} */
+                                        method: "pickup" | "parcel";
+                                        shipTo: {
+                                            name: string;
+                                            phone: string;
+                                            address: string;
+                                            subdistrict: string;
+                                            district: string;
+                                            province: string;
+                                            postcode: string;
+                                            note?: string | null;
+                                        } | null;
+                                        hasAddress: boolean;
+                                        option: string | null;
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                        feeMinor: number;
+                                        feeActual: boolean;
+                                        arriveDate: string | null;
+                                        returnPostBy: string | null;
+                                        expectedArrival: string | null;
+                                        postedLateDays: number;
+                                        lost: boolean;
+                                    };
+                                    units: number;
+                                    priceMinor: number;
+                                    payInFull?: boolean;
+                                    imageUrl: string | null;
+                                    itemCode: string | null;
+                                    note: string | null;
+                                    extras: {
+                                        idCardNo: string | null;
+                                        hasIdCard: boolean;
+                                        eventDate: string | null;
+                                        eventType: string | null;
+                                        heightCm: number | null;
+                                        bust: number | null;
+                                        waist: number | null;
+                                        hip: number | null;
+                                    } | null;
+                                    hasIdPhoto: boolean;
+                                    customerLateCount: number;
+                                    customerBlocked: boolean;
+                                    customerPhone: string | null;
+                                    security: {
+                                        requiredMinor: number;
+                                        /** @enum {string} */
+                                        when: "pickup" | "booking";
+                                        collectedMinor: number;
+                                        heldMinor: number;
+                                        depositId: string | null;
+                                        receiptNumber: string | null;
+                                        /** @enum {string|null} */
+                                        method: "cash" | "transfer" | "promptpay" | "other" | null;
+                                        takenAt: string | null;
+                                    };
+                                    pickupTime: string | null;
+                                    returnTime: string | null;
+                                    returnAt: string | null;
+                                    /** @enum {string} */
+                                    returnMethod: "in_store" | "parcel";
+                                    parcel: {
+                                        courier: string | null;
+                                        trackingNo: string | null;
+                                        shippedAt: string | null;
+                                        trackingUrl: string | null;
+                                    } | null;
+                                    discount: {
+                                        discountMinor: number;
+                                        reason: string;
+                                    } | null;
+                                    extraCharge?: {
+                                        label: string;
+                                        amountMinor: number;
+                                    } | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/rentals/items": {
         parameters: {
             query?: never;
@@ -59645,6 +61100,10 @@ export interface paths {
                                     } | null;
                                     code: string | null;
                                     priceMinor: number;
+                                    fromPrice: {
+                                        days: number;
+                                        priceMinor: number;
+                                    } | null;
                                     rentalDays: number;
                                     quantity: number;
                                     bufferDays: number;
@@ -60787,6 +62246,7 @@ export interface paths {
                     damageMinor?: number | null;
                     cleaningMinor?: number | null;
                     lateMinor?: number | null;
+                    shippingMinor?: number | null;
                     lost?: "true" | "false";
                     discountMinor?: number | null;
                 };
@@ -60814,6 +62274,7 @@ export interface paths {
                                 damageMinor: number;
                                 cleaningMinor: number;
                                 lostMinor: number;
+                                shippingChargeMinor: number;
                                 chargesMinor: number;
                                 depositPaidMinor: number;
                                 securityHeldMinor: number;
@@ -65787,6 +67248,7 @@ export interface paths {
                                 amountMinor: number;
                                 /** @description integer satang */
                                 depositBalanceMinor: number;
+                                isRental: boolean;
                             }[];
                         };
                     };
@@ -66318,6 +67780,11 @@ export interface paths {
                                     points: number;
                                     discountMinor: number;
                                 } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
                                 pendingApprovals: {
                                     id: string;
                                     /** @enum {string} */
@@ -66559,6 +68026,11 @@ export interface paths {
                                 pointsUse: {
                                     points: number;
                                     discountMinor: number;
+                                } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
                                 } | null;
                                 pendingApprovals: {
                                     id: string;
@@ -66834,6 +68306,11 @@ export interface paths {
                                     points: number;
                                     discountMinor: number;
                                 } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
                                 pendingApprovals: {
                                     id: string;
                                     /** @enum {string} */
@@ -67094,6 +68571,11 @@ export interface paths {
                                     points: number;
                                     discountMinor: number;
                                 } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
                                 pendingApprovals: {
                                     id: string;
                                     /** @enum {string} */
@@ -67348,6 +68830,11 @@ export interface paths {
                                     pointsUse: {
                                         points: number;
                                         discountMinor: number;
+                                    } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
                                     } | null;
                                     pendingApprovals: {
                                         id: string;
@@ -67615,6 +69102,11 @@ export interface paths {
                                     points: number;
                                     discountMinor: number;
                                 } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
                                 pendingApprovals: {
                                     id: string;
                                     /** @enum {string} */
@@ -67848,6 +69340,503 @@ export interface paths {
                                 pointsUse: {
                                     points: number;
                                     discountMinor: number;
+                                } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
+                                pendingApprovals: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "discount" | "void" | "refund";
+                                    /** @enum {string} */
+                                    status: "pending" | "approved" | "rejected" | "expired";
+                                    note: string | null;
+                                    requestedBy: string;
+                                    createdAt: string;
+                                }[];
+                                replacesBill: {
+                                    id: string;
+                                    number: string;
+                                } | null;
+                                replacedByBill: {
+                                    id: string;
+                                    number: string;
+                                } | null;
+                                reissue: {
+                                    courseUsed: boolean;
+                                    dayClosed: boolean;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/bills/{id}/stamps-reward": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Use the customer’s stamp-card reward on the open bill (shop set `loyalty.rewardDiscountMinor`): the discount (capped at the bill) and the stamps it costs in one step; one per bill (409 `reward_off` / `reward_already_used` / `not_enough_stamps`)
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Reward used */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                number: string;
+                                customerId: string | null;
+                                customerName: string | null;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                    visitCount: number;
+                                    pendingFirstVisit: boolean;
+                                    caution: {
+                                        notes: boolean;
+                                        allergy: boolean;
+                                        chronic: boolean;
+                                    };
+                                } | null;
+                                appointmentIds: string[];
+                                /** @enum {string} */
+                                status: "open" | "paid" | "void" | "refunded" | "partially_refunded";
+                                /** @description integer satang */
+                                subtotalMinor: number;
+                                /** @description integer satang */
+                                discountMinor: number;
+                                discountReason: string | null;
+                                discountApprovedBy: string | null;
+                                /** @description integer satang */
+                                totalMinor: number;
+                                /** @description integer satang */
+                                tipMinor: number;
+                                /** @description integer satang */
+                                amountDueMinor: number;
+                                /** @description integer satang */
+                                paidMinor: number;
+                                /** @description integer satang */
+                                remainingMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                /** @description integer satang */
+                                refundableMinor: number;
+                                externalRef: string | null;
+                                createdBy: string | null;
+                                paidAt: string | null;
+                                version: number;
+                                createdAt: string;
+                                items: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "service" | "product" | "package_sale" | "package_use";
+                                    refId: string | null;
+                                    name: string;
+                                    /** @default 1 */
+                                    qty: number;
+                                    /** @description integer satang */
+                                    unitPriceMinor: number;
+                                    performerMembershipId: string | null;
+                                    saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
+                                    /** @description integer satang */
+                                    discountMinor: number;
+                                    custom: boolean;
+                                    byResource: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                                payments: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "package" | "deposit" | "other";
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reference: string | null;
+                                    slipFileId: string | null;
+                                    confirmedBy: string | null;
+                                    confirmedAt: string | null;
+                                }[];
+                                refunds: {
+                                    id: string;
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reason: string;
+                                    approvedBy: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                                    createdAt: string;
+                                }[];
+                                receipt: {
+                                    id: string;
+                                    number: string;
+                                    issuedAt: string;
+                                    deliveredVia: string | null;
+                                } | null;
+                                pointsUse: {
+                                    points: number;
+                                    discountMinor: number;
+                                } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
+                                } | null;
+                                pendingApprovals: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "discount" | "void" | "refund";
+                                    /** @enum {string} */
+                                    status: "pending" | "approved" | "rejected" | "expired";
+                                    note: string | null;
+                                    requestedBy: string;
+                                    createdAt: string;
+                                }[];
+                                replacesBill: {
+                                    id: string;
+                                    number: string;
+                                } | null;
+                                replacedByBill: {
+                                    id: string;
+                                    number: string;
+                                } | null;
+                                reissue: {
+                                    courseUsed: boolean;
+                                    dayClosed: boolean;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Take the stamp reward off the open bill: the stamps go back to the customer
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Stamps given back */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                branchId: string;
+                                number: string;
+                                customerId: string | null;
+                                customerName: string | null;
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    code: string | null;
+                                    visitCount: number;
+                                    pendingFirstVisit: boolean;
+                                    caution: {
+                                        notes: boolean;
+                                        allergy: boolean;
+                                        chronic: boolean;
+                                    };
+                                } | null;
+                                appointmentIds: string[];
+                                /** @enum {string} */
+                                status: "open" | "paid" | "void" | "refunded" | "partially_refunded";
+                                /** @description integer satang */
+                                subtotalMinor: number;
+                                /** @description integer satang */
+                                discountMinor: number;
+                                discountReason: string | null;
+                                discountApprovedBy: string | null;
+                                /** @description integer satang */
+                                totalMinor: number;
+                                /** @description integer satang */
+                                tipMinor: number;
+                                /** @description integer satang */
+                                amountDueMinor: number;
+                                /** @description integer satang */
+                                paidMinor: number;
+                                /** @description integer satang */
+                                remainingMinor: number;
+                                /** @description integer satang */
+                                refundedMinor: number;
+                                /** @description integer satang */
+                                refundableMinor: number;
+                                externalRef: string | null;
+                                createdBy: string | null;
+                                paidAt: string | null;
+                                version: number;
+                                createdAt: string;
+                                items: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "service" | "product" | "package_sale" | "package_use";
+                                    refId: string | null;
+                                    name: string;
+                                    /** @default 1 */
+                                    qty: number;
+                                    /** @description integer satang */
+                                    unitPriceMinor: number;
+                                    performerMembershipId: string | null;
+                                    saleMembershipId: string | null;
+                                    /** @description integer satang */
+                                    labCostMinor: number;
+                                    labVendor: string | null;
+                                    /** @description integer satang */
+                                    discountMinor: number;
+                                    custom: boolean;
+                                    byResource: boolean;
+                                    options: {
+                                        choiceId?: string;
+                                        groupName: string;
+                                        choiceName: string;
+                                        priceMinor: number;
+                                    }[];
+                                    note: string | null;
+                                    round: number | null;
+                                    /** @enum {string} */
+                                    kitchenStatus: "none" | "new" | "preparing" | "served" | "cancelled";
+                                }[];
+                                payments: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "package" | "deposit" | "other";
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reference: string | null;
+                                    slipFileId: string | null;
+                                    confirmedBy: string | null;
+                                    confirmedAt: string | null;
+                                }[];
+                                refunds: {
+                                    id: string;
+                                    /** @description integer satang */
+                                    amountMinor: number;
+                                    reason: string;
+                                    approvedBy: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                                    createdAt: string;
+                                }[];
+                                receipt: {
+                                    id: string;
+                                    number: string;
+                                    issuedAt: string;
+                                    deliveredVia: string | null;
+                                } | null;
+                                pointsUse: {
+                                    points: number;
+                                    discountMinor: number;
+                                } | null;
+                                stampReward: {
+                                    stampsUsed: number;
+                                    discountMinor: number;
+                                    rewardText: string;
                                 } | null;
                                 pendingApprovals: {
                                     id: string;
@@ -68235,6 +70224,11 @@ export interface paths {
                                         points: number;
                                         discountMinor: number;
                                     } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
+                                    } | null;
                                     pendingApprovals: {
                                         id: string;
                                         /** @enum {string} */
@@ -68498,6 +70492,11 @@ export interface paths {
                                     pointsUse: {
                                         points: number;
                                         discountMinor: number;
+                                    } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
                                     } | null;
                                     pendingApprovals: {
                                         id: string;
@@ -68765,6 +70764,11 @@ export interface paths {
                                     pointsUse: {
                                         points: number;
                                         discountMinor: number;
+                                    } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
                                     } | null;
                                     pendingApprovals: {
                                         id: string;
@@ -69038,6 +71042,11 @@ export interface paths {
                                     pointsUse: {
                                         points: number;
                                         discountMinor: number;
+                                    } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
                                     } | null;
                                     pendingApprovals: {
                                         id: string;
@@ -69464,6 +71473,11 @@ export interface paths {
                                     pointsUse: {
                                         points: number;
                                         discountMinor: number;
+                                    } | null;
+                                    stampReward: {
+                                        stampsUsed: number;
+                                        discountMinor: number;
+                                        rewardText: string;
                                     } | null;
                                     pendingApprovals: {
                                         id: string;
@@ -76931,7 +78945,7 @@ export interface paths {
                     q?: string;
                     withTotal?: "true" | "false";
                     code?: string;
-                    categoryId?: string;
+                    categoryId?: string | "none";
                     active?: "true" | "false";
                     branchId?: string;
                     kind?: "item" | "ingredient";
@@ -76964,6 +78978,7 @@ export interface paths {
                                 /** @enum {string} */
                                 vatType: "vat" | "none" | "exempt";
                                 imageFileId: string | null;
+                                imageFileIds: string[];
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
@@ -76990,6 +79005,16 @@ export interface paths {
                             page: {
                                 nextCursor: string | null;
                                 hasMore: boolean;
+                                total: number | null;
+                                stock: {
+                                    tracked: number;
+                                    low: number;
+                                    out: number;
+                                } | null;
+                                byCategory: {
+                                    categoryId: string | null;
+                                    count: number;
+                                }[] | null;
                             };
                             meta?: {
                                 total: number;
@@ -77118,6 +79143,7 @@ export interface paths {
                          */
                         vatType?: "vat" | "none" | "exempt";
                         imageFileId?: string | null;
+                        imageFileIds?: string[];
                         /** @default 0 */
                         minStock?: number;
                         /** @default true */
@@ -77175,6 +79201,7 @@ export interface paths {
                                 /** @enum {string} */
                                 vatType: "vat" | "none" | "exempt";
                                 imageFileId: string | null;
+                                imageFileIds: string[];
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
@@ -77334,6 +79361,7 @@ export interface paths {
                                 /** @enum {string} */
                                 vatType: "vat" | "none" | "exempt";
                                 imageFileId: string | null;
+                                imageFileIds: string[];
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
@@ -77581,6 +79609,7 @@ export interface paths {
                         /** @enum {string} */
                         vatType?: "vat" | "none" | "exempt";
                         imageFileId?: string | null;
+                        imageFileIds?: string[];
                         minStock?: number;
                         trackStock?: boolean;
                         active?: boolean;
@@ -77626,6 +79655,7 @@ export interface paths {
                                 /** @enum {string} */
                                 vatType: "vat" | "none" | "exempt";
                                 imageFileId: string | null;
+                                imageFileIds: string[];
                                 minStock: number;
                                 trackStock: boolean;
                                 active: boolean;
@@ -83387,6 +85417,11 @@ export interface paths {
                                 createdByName: string | null;
                                 /** @description ISO timestamp */
                                 pickupAt: string | null;
+                                shipTo: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                } | null;
                                 /** @description ISO timestamp */
                                 releaseAt: string | null;
                                 /** @description ISO timestamp */
@@ -84482,6 +86517,11 @@ export interface paths {
                                     /** @enum {string} */
                                     method?: "basic";
                                 } | null;
+                                shipTo: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                } | null;
                             }[];
                         };
                     };
@@ -84870,6 +86910,10 @@ export interface paths {
                                 preorderEnabled: boolean;
                                 bookingEnabled: boolean;
                                 pickupPrepay: boolean;
+                                goods: {
+                                    storePickup: boolean;
+                                    deliveryFeeMinor: number | null;
+                                } | null;
                                 categories: {
                                     id: string;
                                     name: string;
@@ -85102,7 +87146,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Pickup order from the shop link (name + phone + pickup time + Turnstile): next daily queue number `P1`, `P2` …; pay at the counter. Pickup off / module off → 403; time not one of `pickup.slots` → 422 (path pickupAt); sold-out line → 409 CONFLICT {reason:"sold_out"}; Turnstile fail → 400 TURNSTILE_FAILED
+         * Pickup order from the shop link (name + phone + pickup time + Turnstile): next daily queue number `P1`, `P2` …; pay at the counter. Pickup off / module off → 403; time not one of `pickup.slots` → 422 (path pickupAt); sold-out line → 409 CONFLICT {reason:"sold_out"}; Turnstile fail → 400 TURNSTILE_FAILED. A goods shop (`goods` in the ordering config) takes no `pickupAt`: no `deliveryAddress` = collect in store, with it = delivery (flat fee added to the bill; 403 {reason:"delivery_off" | "store_pickup_off"} when that choice is off); more than the shelf holds → 409 sold_out
          * @description Public endpoint (no authentication).
          */
         post: {
@@ -85128,7 +87172,8 @@ export interface paths {
                         name: string;
                         phone: string;
                         /** @description ISO timestamp */
-                        pickupAt: string;
+                        pickupAt?: string;
+                        deliveryAddress?: string;
                         note?: string;
                         turnstileToken: string;
                     };
@@ -85263,7 +87308,14 @@ export interface paths {
                                 shopName: string;
                                 queueNumber: string;
                                 /** @description ISO timestamp */
-                                pickupAt: string;
+                                pickupAt: string | null;
+                                goods: boolean;
+                                delivery: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                    feeMinor: number;
+                                } | null;
                                 /** @enum {string} */
                                 status: "received" | "preparing" | "ready" | "collected" | "cancelled";
                                 items: {
@@ -85574,7 +87626,14 @@ export interface paths {
                                 shopName: string;
                                 queueNumber: string;
                                 /** @description ISO timestamp */
-                                pickupAt: string;
+                                pickupAt: string | null;
+                                goods: boolean;
+                                delivery: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                    feeMinor: number;
+                                } | null;
                                 /** @enum {string} */
                                 status: "received" | "preparing" | "ready" | "collected" | "cancelled";
                                 items: {
@@ -93951,6 +96010,7 @@ export interface paths {
                                     rental: {
                                         pickupDate: string;
                                         returnDate: string;
+                                        units: number | null;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
                                         returnTime: string | null;
@@ -93972,6 +96032,7 @@ export interface paths {
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
                                             feeMinor: number;
+                                            feeActual: boolean;
                                             arriveDate: string | null;
                                             returnPostBy: string | null;
                                             expectedArrival: string | null;
@@ -94047,6 +96108,7 @@ export interface paths {
                                     rental: {
                                         pickupDate: string;
                                         returnDate: string;
+                                        units: number | null;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
                                         returnTime: string | null;
@@ -94068,6 +96130,7 @@ export interface paths {
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
                                             feeMinor: number;
+                                            feeActual: boolean;
                                             arriveDate: string | null;
                                             returnPostBy: string | null;
                                             expectedArrival: string | null;
@@ -94297,6 +96360,136 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/liff/{tenantSlug}/me/loyalty": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My loyalty card (stamps or points); `enabled: false` when the shop does not run loyalty
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Loyalty card */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                /** @enum {string} */
+                                mode: "stamps" | "points";
+                                stampsRequired: number;
+                                rewardText: string;
+                                count: number;
+                                ready: boolean;
+                                nextExpiresAt: string | null;
+                                pointsBalance: number;
+                                bahtPerPoint: number;
+                                pointRewards: {
+                                    points: number;
+                                    discountMinor: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/liff/{tenantSlug}/appointments/{id}/confirm": {
         parameters: {
             query?: never;
@@ -94387,6 +96580,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -94408,6 +96602,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -94605,6 +96800,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -94626,6 +96822,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -94822,6 +97019,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -94843,6 +97041,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -95040,6 +97239,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -95061,6 +97261,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -97115,6 +99316,7 @@ export interface paths {
                                     /** @enum {string} */
                                     locale: "th" | "en";
                                     timezone: string;
+                                    industryKey: string;
                                 };
                                 terminology: {
                                     [key: string]: string;
@@ -97144,6 +99346,8 @@ export interface paths {
                                     amountMinor: number | null;
                                     percent: number | null;
                                 } | null;
+                                /** @default false */
+                                attachBeforeBooking: boolean;
                                 terms: {
                                     required: boolean;
                                     text: string;
@@ -97249,8 +99453,15 @@ export interface paths {
                                                 metro: number;
                                                 upcountry: number;
                                             };
+                                            /**
+                                             * @default fixed
+                                             * @enum {string}
+                                             */
+                                            feeMode: "fixed" | "actual";
                                             feeMinor: number;
                                             freeOverMinor: number | null;
+                                            /** @default 0 */
+                                            extraPieceFeeMinor: number;
                                             areas: "all" | string[];
                                             slot: string | null;
                                         }[];
@@ -97295,6 +99506,13 @@ export interface paths {
                                             measurements: boolean;
                                         };
                                     };
+                                    /**
+                                     * @default off
+                                     * @enum {string}
+                                     */
+                                    idPhoto: "off" | "optional" | "required";
+                                    /** @default false */
+                                    attachBeforeBooking: boolean;
                                 } | null;
                                 branches: {
                                     id: string;
@@ -97454,6 +99672,11 @@ export interface paths {
                                         rental: {
                                             days: number;
                                             shipBeforeDays: number;
+                                            maxDays: number | null;
+                                            priceTable: {
+                                                days: number;
+                                                priceMinor: number;
+                                            }[] | null;
                                             ships: boolean;
                                             size: string | null;
                                             code: string | null;
@@ -98167,7 +100390,9 @@ export interface paths {
                                     shipDays: number;
                                     feeMinor: number;
                                     freeOverMinor: number | null;
+                                    extraPieceFeeMinor: number;
                                     chargeMinor: number;
+                                    feeActual: boolean;
                                     earliestPickup: string;
                                 }[];
                                 shipOption: string | null;
@@ -98614,6 +100839,8 @@ export interface paths {
                         };
                         /** @enum {string} */
                         payChoice?: "deposit" | "full";
+                        idCardFileId?: string;
+                        slipFileId?: string;
                     };
                 };
             };
@@ -98684,6 +100911,7 @@ export interface paths {
                                     rental: {
                                         pickupDate: string;
                                         returnDate: string;
+                                        units: number | null;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
                                         returnTime: string | null;
@@ -98705,6 +100933,7 @@ export interface paths {
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
                                             feeMinor: number;
+                                            feeActual: boolean;
                                             arriveDate: string | null;
                                             returnPostBy: string | null;
                                             expectedArrival: string | null;
@@ -99073,6 +101302,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -99094,6 +101324,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -99423,6 +101654,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -99444,6 +101676,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -99616,6 +101849,8 @@ export interface paths {
                         };
                         /** @enum {string} */
                         payChoice?: "deposit" | "full";
+                        idCardFileId?: string;
+                        slipFileId?: string;
                         turnstileToken: string;
                     };
                 };
@@ -99687,6 +101922,7 @@ export interface paths {
                                     rental: {
                                         pickupDate: string;
                                         returnDate: string;
+                                        units: number | null;
                                         shipBeforeDays: number;
                                         pickupTime: string | null;
                                         returnTime: string | null;
@@ -99708,6 +101944,7 @@ export interface paths {
                                             shippedAt: string | null;
                                             trackingUrl: string | null;
                                             feeMinor: number;
+                                            feeActual: boolean;
                                             arriveDate: string | null;
                                             returnPostBy: string | null;
                                             expectedArrival: string | null;
@@ -99900,6 +102137,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -99921,6 +102159,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -100121,6 +102360,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -100142,6 +102382,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -100341,6 +102582,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -100362,6 +102604,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -100695,6 +102938,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -100716,6 +102960,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -101007,6 +103252,8 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
+                                    /** @default false */
+                                    attachBeforeBooking: boolean;
                                     accounts: {
                                         /** Format: uuid */
                                         id: string;
@@ -101168,6 +103415,7 @@ export interface paths {
                             mode: "fixed" | "percent";
                             amountMinor: number | null;
                             percent: number | null;
+                            attachBeforeBooking?: boolean;
                         };
                     };
                 };
@@ -101221,6 +103469,8 @@ export interface paths {
                                     mode: "fixed" | "percent";
                                     amountMinor: number | null;
                                     percent: number | null;
+                                    /** @default false */
+                                    attachBeforeBooking: boolean;
                                     accounts: {
                                         /** Format: uuid */
                                         id: string;
@@ -103917,6 +106167,11 @@ export interface paths {
                                     rental: {
                                         days: number;
                                         shipBeforeDays: number;
+                                        maxDays: number | null;
+                                        priceTable: {
+                                            days: number;
+                                            priceMinor: number;
+                                        }[] | null;
                                         ships: boolean;
                                         size: string | null;
                                         code: string | null;
@@ -104098,6 +106353,11 @@ export interface paths {
                                 rental: {
                                     days: number;
                                     shipBeforeDays: number;
+                                    maxDays: number | null;
+                                    priceTable: {
+                                        days: number;
+                                        priceMinor: number;
+                                    }[] | null;
                                     ships: boolean;
                                     size: string | null;
                                     code: string | null;
@@ -104447,6 +106707,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -104468,6 +106729,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -104801,6 +107063,7 @@ export interface paths {
                                 rental: {
                                     pickupDate: string;
                                     returnDate: string;
+                                    units: number | null;
                                     shipBeforeDays: number;
                                     pickupTime: string | null;
                                     returnTime: string | null;
@@ -104822,6 +107085,7 @@ export interface paths {
                                         shippedAt: string | null;
                                         trackingUrl: string | null;
                                         feeMinor: number;
+                                        feeActual: boolean;
                                         arriveDate: string | null;
                                         returnPostBy: string | null;
                                         expectedArrival: string | null;
@@ -104916,6 +107180,416 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/attachments/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Shops that take the ID card photo and slip before booking (LINE login): presigned PUT; then send the fileIds with the booking
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                        /** @enum {string} */
+                        kind: "id_card" | "slip";
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/guest/attachments/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Shops that take the ID card photo and slip before booking (guest, named by the phone of the booking): presigned PUT
+         * @description Public endpoint (no authentication).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        mime: "image/jpeg" | "image/png" | "image/webp";
+                        size: number;
+                        /** @enum {string} */
+                        kind: "id_card" | "slip";
+                        phone: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Upload URL */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                uploadUrl: string;
+                                /** @enum {string} */
+                                method: "PUT";
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/liff/{tenantSlug}/booking/payment-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shops that take the ID card photo and slip before booking: where to pay (the shop’s accounts, PromptPay QR made for the amount)
+         * @description Public endpoint (no authentication).
+         */
+        get: {
+            parameters: {
+                query: {
+                    amountMinor: number;
+                };
+                header?: never;
+                path: {
+                    tenantSlug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Accounts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                accounts: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "bank" | "promptpay" | "qr";
+                                    label: string | null;
+                                    bank: {
+                                        /** @enum {string} */
+                                        bankCode?: "KBANK" | "SCB" | "BBL" | "KTB" | "BAY" | "TTB" | "GSB" | "BAAC" | "GHB" | "KKP" | "CIMB" | "UOB" | "LHB" | "TISCO" | "ICBC" | "TCR" | "IBANK" | "PROMPTPAY";
+                                        bankName: string;
+                                        accountNumber: string;
+                                        accountName: string;
+                                    } | null;
+                                    promptpay: {
+                                        accountName: string;
+                                        accountHint: string;
+                                    } | null;
+                                    qrPayload: string | null;
+                                    qr: {
+                                        imageUrl: string;
+                                        accountName: string | null;
+                                    } | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -118133,7 +120807,7 @@ export interface paths {
                                     enabled: boolean;
                                     stampsRequired: number;
                                     /** @enum {string} */
-                                    countMode: "bill" | "service_line";
+                                    countMode: "bill" | "service_line" | "visit_day";
                                     rewardText: string;
                                     expiryMonths: number | null;
                                     /**
@@ -118155,6 +120829,15 @@ export interface paths {
                                         points: number;
                                         discountMinor: number;
                                     }[];
+                                    /**
+                                     * @default bill
+                                     * @enum {string}
+                                     */
+                                    earnOn: "bill" | "online_payment";
+                                    /** @default null */
+                                    rewardDiscountMinor: number | null;
+                                    /** @default false */
+                                    showInReceipt: boolean;
                                 };
                             };
                         };
@@ -118265,7 +120948,7 @@ export interface paths {
                             enabled: boolean;
                             stampsRequired: number;
                             /** @enum {string} */
-                            countMode: "bill" | "service_line";
+                            countMode: "bill" | "service_line" | "visit_day";
                             rewardText: string;
                             expiryMonths: number | null;
                             /**
@@ -118287,6 +120970,15 @@ export interface paths {
                                 points: number;
                                 discountMinor: number;
                             }[];
+                            /**
+                             * @default bill
+                             * @enum {string}
+                             */
+                            earnOn?: "bill" | "online_payment";
+                            /** @default null */
+                            rewardDiscountMinor?: number | null;
+                            /** @default false */
+                            showInReceipt?: boolean;
                         };
                     };
                 };
@@ -118313,7 +121005,7 @@ export interface paths {
                                     enabled: boolean;
                                     stampsRequired: number;
                                     /** @enum {string} */
-                                    countMode: "bill" | "service_line";
+                                    countMode: "bill" | "service_line" | "visit_day";
                                     rewardText: string;
                                     expiryMonths: number | null;
                                     /**
@@ -118335,6 +121027,15 @@ export interface paths {
                                         points: number;
                                         discountMinor: number;
                                     }[];
+                                    /**
+                                     * @default bill
+                                     * @enum {string}
+                                     */
+                                    earnOn: "bill" | "online_payment";
+                                    /** @default null */
+                                    rewardDiscountMinor: number | null;
+                                    /** @default false */
+                                    showInReceipt: boolean;
                                 };
                             };
                         };
@@ -119902,6 +122603,7 @@ export interface paths {
                             data: {
                                 enabled: boolean;
                                 stampsRequired: number;
+                                rewardDiscountMinor: number | null;
                                 rewardText: string;
                                 expiryMonths: number | null;
                                 count: number;
@@ -119910,8 +122612,10 @@ export interface paths {
                                 stamps: {
                                     id: string;
                                     /** @enum {string} */
-                                    source: "bill" | "manual";
+                                    source: "bill" | "manual" | "booking";
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     earnedAt: string;
                                     expiresAt: string | null;
@@ -119941,6 +122645,8 @@ export interface paths {
                                     kind: "earn" | "reverse_earn" | "redeem" | "restore_redeem" | "manual";
                                     points: number;
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     createdAt: string;
                                 }[];
@@ -120040,7 +122746,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Add a stamp by hand (reason required, audited)
+         * Add stamps by hand (`count` 1–50, default 1; reason required, one audit entry)
          * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -120061,6 +122767,8 @@ export interface paths {
                 content: {
                     "application/json": {
                         reason: string;
+                        /** @default 1 */
+                        count?: number;
                     };
                 };
             };
@@ -120075,6 +122783,7 @@ export interface paths {
                             data: {
                                 enabled: boolean;
                                 stampsRequired: number;
+                                rewardDiscountMinor: number | null;
                                 rewardText: string;
                                 expiryMonths: number | null;
                                 count: number;
@@ -120083,8 +122792,10 @@ export interface paths {
                                 stamps: {
                                     id: string;
                                     /** @enum {string} */
-                                    source: "bill" | "manual";
+                                    source: "bill" | "manual" | "booking";
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     earnedAt: string;
                                     expiresAt: string | null;
@@ -120114,6 +122825,8 @@ export interface paths {
                                     kind: "earn" | "reverse_earn" | "redeem" | "restore_redeem" | "manual";
                                     points: number;
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     createdAt: string;
                                 }[];
@@ -120247,6 +122960,7 @@ export interface paths {
                             data: {
                                 enabled: boolean;
                                 stampsRequired: number;
+                                rewardDiscountMinor: number | null;
                                 rewardText: string;
                                 expiryMonths: number | null;
                                 count: number;
@@ -120255,8 +122969,10 @@ export interface paths {
                                 stamps: {
                                     id: string;
                                     /** @enum {string} */
-                                    source: "bill" | "manual";
+                                    source: "bill" | "manual" | "booking";
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     earnedAt: string;
                                     expiresAt: string | null;
@@ -120286,6 +123002,8 @@ export interface paths {
                                     kind: "earn" | "reverse_earn" | "redeem" | "restore_redeem" | "manual";
                                     points: number;
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     createdAt: string;
                                 }[];
@@ -120418,6 +123136,7 @@ export interface paths {
                             data: {
                                 enabled: boolean;
                                 stampsRequired: number;
+                                rewardDiscountMinor: number | null;
                                 rewardText: string;
                                 expiryMonths: number | null;
                                 count: number;
@@ -120426,8 +123145,10 @@ export interface paths {
                                 stamps: {
                                     id: string;
                                     /** @enum {string} */
-                                    source: "bill" | "manual";
+                                    source: "bill" | "manual" | "booking";
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     earnedAt: string;
                                     expiresAt: string | null;
@@ -120457,6 +123178,8 @@ export interface paths {
                                     kind: "earn" | "reverse_earn" | "redeem" | "restore_redeem" | "manual";
                                     points: number;
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     createdAt: string;
                                 }[];
@@ -120590,6 +123313,7 @@ export interface paths {
                             data: {
                                 enabled: boolean;
                                 stampsRequired: number;
+                                rewardDiscountMinor: number | null;
                                 rewardText: string;
                                 expiryMonths: number | null;
                                 count: number;
@@ -120598,8 +123322,10 @@ export interface paths {
                                 stamps: {
                                     id: string;
                                     /** @enum {string} */
-                                    source: "bill" | "manual";
+                                    source: "bill" | "manual" | "booking";
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     earnedAt: string;
                                     expiresAt: string | null;
@@ -120629,6 +123355,8 @@ export interface paths {
                                     kind: "earn" | "reverse_earn" | "redeem" | "restore_redeem" | "manual";
                                     points: number;
                                     billId: string | null;
+                                    appointmentId: string | null;
+                                    appointmentStartAt: string | null;
                                     reason: string | null;
                                     createdAt: string;
                                 }[];
@@ -125112,7 +127840,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "SUBSCRIPTION_REQUIRED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "NOT_A_RENTAL_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "ATTACHMENTS_REQUIRED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "SUBSCRIPTION_REQUIRED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;

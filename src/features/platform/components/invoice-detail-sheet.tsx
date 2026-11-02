@@ -1,4 +1,4 @@
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -11,7 +11,15 @@ import { type Invoice, useConfirmPayment, usePlans, useRejectSlip } from '../api
 import { dmyBE } from '../billing-docs';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
 import { hasPendingSlip, isOtherInvoice, slipCheckTone } from '../invoice-slip';
+import {
+  ConfirmPaymentDialog,
+  DeleteDraftDialog,
+  SendInvoiceDialog,
+  useNumberLabel,
+  VoidInvoiceDialog,
+} from './invoice-actions';
 import { copyLineMessage } from './issue-invoice-dialog';
+import { OtherInvoiceDialog } from './other-invoice-dialog';
 
 /** A slip is a photo or a PDF; the URL is presigned, so look at the file name in the path, not the query string. */
 const isPdf = (url: string) => new URL(url, window.location.origin).pathname.toLowerCase().endsWith('.pdf');
@@ -108,15 +116,25 @@ function Acceptance({ a }: { a: NonNullable<Invoice['termsAcceptance']> }) {
   );
 }
 
-function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void }) {
+function Review({
+  invoice,
+  onClose,
+  onUpdated,
+}: {
+  invoice: Invoice;
+  onClose: () => void;
+  onUpdated: (i: Invoice) => void;
+}) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   const confirm = useConfirmPayment();
   const reject = useRejectSlip();
   const plans = usePlans();
   const [note, setNote] = useState('');
+  const [dialog, setDialog] = useState<'send' | 'void' | 'delete' | 'edit' | 'pay' | null>(null);
   const busy = confirm.isPending || reject.isPending;
   const pending = hasPendingSlip(invoice);
+  const draft = invoice.status === 'draft';
   const open = invoice.status === 'issued' || invoice.status === 'overdue';
   const plan = (plans.data ?? []).find((p) => p.id === invoice.sourceId);
   const other = isOtherInvoice(invoice);
@@ -148,6 +166,16 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
 
   return (
     <div className="grid gap-5">
+      {draft ? (
+        <div
+          role="status"
+          className="grid gap-1 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm"
+          data-testid="draft-banner"
+        >
+          <p className="font-semibold">{t('invoices.draft.banner')}</p>
+          <p className="text-xs text-muted-foreground">{t('invoices.draft.bannerHint')}</p>
+        </div>
+      ) : null}
       <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 text-sm">
         {rows.map(([label, value]) => (
           <div key={label} className="contents">
@@ -176,7 +204,7 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
           </ul>
         </div>
       ) : null}
-      {invoice.source === 'subscription' || other ? (
+      {!draft && (invoice.source === 'subscription' || other) ? (
         invoice.termsAcceptance ? (
           <Acceptance a={invoice.termsAcceptance} />
         ) : (
@@ -199,6 +227,23 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
           {t('issueInvoice.copyLine')}
         </Button>
       ) : null}
+      {draft ? (
+        <div className="grid gap-2" data-testid="draft-actions">
+          <Button data-testid="draft-send" onClick={() => setDialog('send')}>
+            <Send /> {t('invoices.draft.send')}
+          </Button>
+          <div className={other ? 'grid grid-cols-2 gap-2' : 'grid gap-2'}>
+            {other ? (
+              <Button variant="outline" data-testid="draft-edit" onClick={() => setDialog('edit')}>
+                {t('invoices.draft.edit')}
+              </Button>
+            ) : null}
+            <Button variant="outline" data-testid="draft-delete" onClick={() => setDialog('delete')}>
+              {t('invoices.draft.delete')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
       {pending ? (
         <>
           {invoice.slipCheck ? (
@@ -209,21 +254,7 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
           ) : (
             <p className="text-sm">{t('invoices.slip.none')}</p>
           )}
-          <Button
-            disabled={busy}
-            onClick={() =>
-              confirm.mutate(invoice.id, {
-                onSuccess: () => {
-                  toast.success(
-                    t(`invoices.slip.confirmedToast.${other ? 'other' : (invoice.addon ?? 'plan')}`, {
-                      number: invoice.number,
-                    }),
-                  );
-                  onClose();
-                },
-              })
-            }
-          >
+          <Button disabled={busy} data-testid="slip-confirm" onClick={() => setDialog('pay')}>
             {t(other ? 'invoices.slip.confirmOther' : 'invoices.slip.confirm')}
           </Button>
           <p className="-mt-3 text-xs text-muted-foreground">
@@ -261,6 +292,55 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
           </div>
         </>
       ) : null}
+      {draft || open ? (
+        <div className="border-t pt-4">
+          <Button
+            variant="outline"
+            className="text-destructive"
+            data-testid="void-button"
+            onClick={() => setDialog('void')}
+          >
+            {t('invoices.void')}
+          </Button>
+        </div>
+      ) : null}
+      {dialog === 'send' ? (
+        <SendInvoiceDialog invoice={invoice} onClose={() => setDialog(null)} onSent={onUpdated} />
+      ) : null}
+      {dialog === 'edit' ? (
+        <OtherInvoiceDialog
+          open
+          onOpenChange={(o) => !o && setDialog(null)}
+          draft={invoice}
+          onDone={onUpdated}
+        />
+      ) : null}
+      {dialog === 'delete' ? (
+        <DeleteDraftDialog invoice={invoice} onClose={() => setDialog(null)} onDone={onClose} />
+      ) : null}
+      {dialog === 'void' ? (
+        <VoidInvoiceDialog invoice={invoice} onClose={() => setDialog(null)} onDone={onClose} />
+      ) : null}
+      {dialog === 'pay' ? (
+        <ConfirmPaymentDialog
+          invoice={invoice}
+          pending={confirm.isPending}
+          onClose={() => setDialog(null)}
+          onConfirm={() =>
+            confirm.mutate(invoice.id, {
+              onSuccess: () => {
+                toast.success(
+                  t(`invoices.slip.confirmedToast.${other ? 'other' : (invoice.addon ?? 'plan')}`, {
+                    number: invoice.number,
+                  }),
+                );
+                setDialog(null);
+                onClose();
+              },
+            })
+          }
+        />
+      ) : null}
     </div>
   );
 }
@@ -271,18 +351,28 @@ function Review({ invoice, onClose }: { invoice: Invoice; onClose: () => void })
  */
 export function InvoiceDetailSheet({ invoice, onClose }: { invoice: Invoice | null; onClose: () => void }) {
   const { t } = useTranslation('platform');
+  const numberLabel = useNumberLabel();
+  // an action inside the sheet (send, edit) returns the invoice as it is now; the list behind refreshes on its own
+  const [fresh, setFresh] = useState<Invoice | null>(null);
+  const shown = invoice && fresh?.id === invoice.id ? fresh : invoice;
+  const close = () => {
+    setFresh(null);
+    onClose();
+  };
   return (
-    <Sheet open={invoice !== null} onOpenChange={(o) => (o ? undefined : onClose())}>
+    <Sheet open={shown !== null} onOpenChange={(o) => (o ? undefined : close())}>
       <SheetContent closeLabel={t('common.close')} className="overflow-y-auto p-4 sm:max-w-lg">
         <SheetHeader className="p-0">
           <SheetTitle>
-            {invoice && hasPendingSlip(invoice)
-              ? t('invoices.slip.title', { number: invoice.number })
-              : t('invoices.detailTitle', { number: invoice?.number })}
+            {shown?.status === 'draft'
+              ? t('invoices.draft.title')
+              : shown && hasPendingSlip(shown)
+                ? t('invoices.slip.title', { number: shown.number })
+                : t('invoices.detailTitle', { number: shown ? numberLabel(shown) : undefined })}
           </SheetTitle>
           <SheetDescription>{t('invoices.slip.description')}</SheetDescription>
         </SheetHeader>
-        {invoice ? <Review key={invoice.id} invoice={invoice} onClose={onClose} /> : null}
+        {shown ? <Review key={shown.id} invoice={shown} onClose={close} onUpdated={setFresh} /> : null}
       </SheetContent>
     </Sheet>
   );

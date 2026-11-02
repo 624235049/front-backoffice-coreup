@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/page-header';
 import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,13 @@ import { A4Link } from '@/features/accounting/components/a4-actions';
 import { downloadXlsx } from '@/features/accounting/lib/xlsx';
 import { type Invoice, useConfirmPayment, useGenerateInvoices, useInvoices, usePatchInvoice } from '../api';
 import { dmyBE } from '../billing-docs';
+import {
+  BulkSendDialog,
+  ConfirmPaymentDialog,
+  SendInvoiceDialog,
+  useNumberLabel,
+  VoidInvoiceDialog,
+} from '../components/invoice-actions';
 import { InvoiceDetailSheet } from '../components/invoice-detail-sheet';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { OtherInvoiceDialog } from '../components/other-invoice-dialog';
@@ -104,8 +112,16 @@ export function InvoicesPage() {
   });
   const patch = usePatchInvoice();
   const confirm = useConfirmPayment();
+  const numberLabel = useNumberLabel();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
+  const [sending, setSending] = useState<Invoice | null>(null);
+  const [paying, setPaying] = useState<Invoice | null>(null);
   const [reviewing, setReviewing] = useState<Invoice | null>(null);
+  // drafts ticked for "ส่งที่เลือก"
+  const [picked, setPicked] = useState<string[]>([]);
+  const [bulk, setBulk] = useState(false);
+  const draftRows = (invoices.data ?? []).filter((i) => i.status === 'draft');
+  const selected = draftRows.filter((i) => picked.includes(i.id));
   // the owner's LINE alert "💰 <shop> แจ้งโอน" links here with ?invoice=<id>: open that invoice to confirm the money
   const wanted = new URLSearchParams(window.location.search).get('invoice');
   useEffect(() => {
@@ -114,15 +130,29 @@ export function InvoicesPage() {
   }, [wanted, invoices.data]);
 
   const markPaid = (i: Invoice) => {
-    const onSuccess = () => toast.success(t('invoices.paidToast', { number: i.number }));
+    const onSuccess = () => {
+      toast.success(t('invoices.paidToast', { number: i.number }));
+      setPaying(null);
+    };
     // a package invoice must run settleInvoice (opens the plan, sets the period); PATCH only flips the status
     if (i.source === 'subscription' || isOtherInvoice(i)) confirm.mutate(i.id, { onSuccess });
-    else patch.mutate({ id: i.id, body: { status: 'paid' } }, { onSuccess });
+    else patch.mutate({ id: i.id, body: { status: 'paid', confirm: true } }, { onSuccess });
   };
 
   const rowActions = (i: Invoice) => (
     <>
-      <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />{' '}
+      {i.status === 'draft' ? (
+        <Checkbox
+          className="mr-1 align-middle"
+          aria-label={t('invoices.draft.pick', { shop: i.tenantName })}
+          checked={picked.includes(i.id)}
+          onCheckedChange={() =>
+            setPicked((p) => (p.includes(i.id) ? p.filter((x) => x !== i.id) : [...p, i.id]))
+          }
+        />
+      ) : (
+        <A4Link size="sm" source={{ kind: 'shop-platform', id: i.id }} />
+      )}{' '}
       {hasPendingSlip(i) ? (
         <Button size="sm" onClick={() => setReviewing(i)}>
           {t('invoices.slip.review')}
@@ -132,13 +162,23 @@ export function InvoicesPage() {
           {t('invoices.detail')}
         </Button>
       )}{' '}
-      {i.status === 'issued' || i.status === 'overdue' || i.status === 'draft' ? (
+      {i.status === 'draft' ? (
+        <>
+          <Button size="sm" data-testid="row-send" onClick={() => setSending(i)}>
+            {t('invoices.draft.send')}
+          </Button>{' '}
+          <Button size="sm" variant="ghost" onClick={() => setVoiding(i)}>
+            {t('invoices.void')}
+          </Button>
+        </>
+      ) : null}
+      {i.status === 'issued' || i.status === 'overdue' ? (
         <>
           <Button
             size="sm"
             variant="outline"
             disabled={patch.isPending || confirm.isPending}
-            onClick={() => markPaid(i)}
+            onClick={() => setPaying(i)}
           >
             {t('invoices.markPaid')}
           </Button>{' '}
@@ -249,6 +289,30 @@ export function InvoicesPage() {
             <SelectItem value="engagement">{t('invoiceSource.engagement')}</SelectItem>
           </SelectContent>
         </Select>
+        {draftRows.length > 0 ? (
+          <>
+            <Button
+              variant="outline"
+              onClick={() =>
+                setPicked(selected.length === draftRows.length ? [] : draftRows.map((i) => i.id))
+              }
+            >
+              {t(
+                selected.length === draftRows.length ? 'invoices.draft.pickNone' : 'invoices.draft.pickAll',
+                {
+                  count: draftRows.length,
+                },
+              )}
+            </Button>
+            <Button
+              data-testid="bulk-send-open"
+              blockedReason={selected.length === 0 && t('invoices.draft.pickFirst')}
+              onClick={() => setBulk(true)}
+            >
+              {t('invoices.draft.bulkSend', { count: selected.length })}
+            </Button>
+          </>
+        ) : null}
       </div>
       <QueryState
         query={invoices}
@@ -272,7 +336,7 @@ export function InvoicesPage() {
                       <div className="min-w-0">
                         <div className="font-semibold">{i.tenantName}</div>
                         <SelfServeBadge invoice={i} />
-                        <div className="font-mono text-xs text-muted-foreground">{i.number}</div>
+                        <div className="font-mono text-xs text-muted-foreground">{numberLabel(i)}</div>
                         <div className="text-sm">{itemLabel(i)}</div>
                       </div>
                       <InvoiceStatusBadge status={i.status} />
@@ -308,7 +372,7 @@ export function InvoicesPage() {
                     {rows.map((i) => (
                       <TableRow key={i.id}>
                         <TableCell className="font-mono text-xs">
-                          {i.number}
+                          {numberLabel(i)}
                           {i.receiptNumber ? (
                             <span className="block text-muted-foreground">{i.receiptNumber}</span>
                           ) : null}
@@ -347,45 +411,45 @@ export function InvoicesPage() {
         }}
       </QueryState>
       <InvoiceDetailSheet invoice={reviewing} onClose={() => setReviewing(null)} />
-      {creating ? <IssueInvoiceDialog open onOpenChange={setCreating} /> : null}
-      {creatingOther ? <OtherInvoiceDialog open onOpenChange={setCreatingOther} /> : null}
-      <RunDialog open={running} onOpenChange={setRunning} />
-      <Dialog open={voiding !== null} onOpenChange={(o) => !o && setVoiding(null)}>
-        <DialogContent closeLabel={t('common.close')}>
-          <DialogHeader>
-            <DialogTitle>{t('invoices.voidTitle', { number: voiding?.number })}</DialogTitle>
-            <DialogDescription>{t('invoices.voidHint')}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setVoiding(null)}>
-              {t('common.cancel')}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={patch.isPending}
-              onClick={() =>
-                voiding &&
-                patch.mutate(
-                  { id: voiding.id, body: { status: 'void' } },
-                  {
-                    onSuccess: () => {
-                      toast.success(t('invoices.voidedToast', { number: voiding.number }));
-                      setVoiding(null);
-                    },
-                  },
-                )
-              }
-            >
-              {t('invoices.void')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {creating ? <IssueInvoiceDialog open onOpenChange={setCreating} onDone={setReviewing} /> : null}
+      {creatingOther ? (
+        <OtherInvoiceDialog open onOpenChange={setCreatingOther} onDone={setReviewing} />
+      ) : null}
+      <RunDialog
+        open={running}
+        onOpenChange={setRunning}
+        onDone={() => {
+          // the run made drafts: show them, ready to review and send
+          setStatus('draft');
+          setPicked([]);
+        }}
+      />
+      {voiding ? <VoidInvoiceDialog invoice={voiding} onClose={() => setVoiding(null)} /> : null}
+      {sending ? <SendInvoiceDialog invoice={sending} onClose={() => setSending(null)} /> : null}
+      {paying ? (
+        <ConfirmPaymentDialog
+          invoice={paying}
+          pending={patch.isPending || confirm.isPending}
+          onClose={() => setPaying(null)}
+          onConfirm={() => markPaid(paying)}
+        />
+      ) : null}
+      {bulk ? (
+        <BulkSendDialog invoices={selected} onClose={() => setBulk(false)} onDone={() => setPicked([])} />
+      ) : null}
     </>
   );
 }
 
-function RunDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+function RunDialog({
+  open,
+  onOpenChange,
+  onDone,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  onDone: () => void;
+}) {
   const { t } = useTranslation('platform');
   const run = useGenerateInvoices();
   const [month, setMonth] = useState(todayBangkok().slice(0, 7));
@@ -411,6 +475,7 @@ function RunDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: bo
               run.mutate(month, {
                 onSuccess: (r) => {
                   toast.success(t('invoices.runDone', { created: r.data.created, skipped: r.data.skipped }));
+                  onDone();
                   onOpenChange(false);
                 },
               })

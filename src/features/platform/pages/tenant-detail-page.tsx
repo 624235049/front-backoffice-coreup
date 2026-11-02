@@ -26,6 +26,7 @@ import { useMe } from '@/lib/me';
 import { useMembership } from '@/lib/membership';
 import { Can, useCan } from '@/lib/permissions';
 import {
+  type Invoice,
   type TenantDetail,
   useAccessLog,
   useAddAssignment,
@@ -44,6 +45,7 @@ import { BusinessTypeCard } from '../components/business-type-card';
 import { Field, Stat, TenantStatusBadge, UsageHealthBadge } from '../components/common';
 import { DemoDataCard } from '../components/demo-data-card';
 import { ImpersonateDialog } from '../components/impersonate-dialog';
+import { InvoiceDetailSheet } from '../components/invoice-detail-sheet';
 import { IssueInvoiceDialog } from '../components/issue-invoice-dialog';
 import { LimitsCard } from '../components/limits-card';
 import { LockCard } from '../components/lock-card';
@@ -167,6 +169,8 @@ function OverviewTab({ d }: { d: TenantDetail }) {
       : [];
   });
   const [issuing, setIssuing] = useState(false);
+  // the draft just created: its detail (review, send) opens right away
+  const [draft, setDraft] = useState<Invoice | null>(null);
 
   return (
     <div className="grid gap-4">
@@ -290,7 +294,8 @@ function OverviewTab({ d }: { d: TenantDetail }) {
           </Can>
         </CardContent>
       </Card>
-      {issuing ? <IssueInvoiceDialog open onOpenChange={setIssuing} tenant={d} /> : null}
+      {issuing ? <IssueInvoiceDialog open onOpenChange={setIssuing} tenant={d} onDone={setDraft} /> : null}
+      <InvoiceDetailSheet invoice={draft} onClose={() => setDraft(null)} />
       <ConfirmDialog
         open={pendingStatus !== null}
         onOpenChange={(o) => !o && setPendingStatus(null)}
