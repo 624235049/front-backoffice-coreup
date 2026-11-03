@@ -86844,6 +86844,299 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/table-orders/goods": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Seller center of an online shop: goods orders (no pickup time), newest first, one tab at a time (`awaiting` no slip yet · `review` slip to check · `to_ship` paid delivery not shipped · `to_collect` paid store pickup · `shipped` · `done` · `cancelled`), with the order count of every tab. Search `q` = order number / name / phone, `from` / `to` = shop days, cursor pages (`page.nextCursor`). Branch-scoped
+         * @description Requires header `X-Tenant-Id`. Permission: `bills:read`. Module: `table_ordering`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    branchId?: string;
+                    tab?: "awaiting" | "review" | "to_ship" | "to_collect" | "shipped" | "done" | "cancelled";
+                    q?: string;
+                    from?: string;
+                    to?: string;
+                    limit?: number;
+                    cursor?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Orders */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                queueNumber: string | null;
+                                /** @description ISO timestamp */
+                                createdAt: string;
+                                /** @enum {string} */
+                                tab: "awaiting" | "review" | "to_ship" | "to_collect" | "shipped" | "done" | "cancelled";
+                                customerName: string | null;
+                                phone: string | null;
+                                items: {
+                                    name: string;
+                                    qty: number;
+                                    unitPriceMinor: number;
+                                    imageUrl: string | null;
+                                }[];
+                                productsMinor: number;
+                                shippingFeeMinor: number;
+                                totalMinor: number;
+                                /** @enum {string|null} */
+                                prepayState: "awaiting_slip" | "slip_review" | "confirmed" | "rejected" | null;
+                                /** @description ISO timestamp */
+                                paidAt: string | null;
+                                shipTo: {
+                                    name: string;
+                                    phone: string;
+                                    address: string;
+                                } | null;
+                                courier: string | null;
+                                trackingNo: string | null;
+                                trackingUrl: string | null;
+                                /** @description ISO timestamp */
+                                shippedAt: string | null;
+                                /** @description ISO timestamp */
+                                collectedAt: string | null;
+                                note: string | null;
+                            }[];
+                            page: {
+                                nextCursor: string | null;
+                                hasMore: boolean;
+                            };
+                            counts: {
+                                awaiting: number;
+                                review: number;
+                                to_ship: number;
+                                to_collect: number;
+                                shipped: number;
+                                done: number;
+                                cancelled: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/table-orders/{billId}/collected": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A paid goods order is done: collected in store, or the shipped parcel was received. Delivery not shipped yet → 409 {reason:"not_shipped"}; not paid → 409 {reason:"not_paid"}; slip not confirmed → 409 {reason:"prepay_not_confirmed"}. The customer’s page shows `collected`; nothing is sent to them. Same call again = no-op
+         * @description Requires header `X-Tenant-Id`. Permission: `table_orders:write`. Module: `table_ordering`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    billId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Done */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                billId: string;
+                                /** @description ISO timestamp */
+                                collectedAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/table-orders/{billId}/ship": {
         parameters: {
             query?: never;

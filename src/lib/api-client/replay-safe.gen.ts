@@ -332,6 +332,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'POST /v1/table-orders/counter',
   'POST /v1/table-orders/tables/{resourceId}/orders',
   'POST /v1/table-orders/tables/{resourceId}/token',
+  'POST /v1/table-orders/{billId}/collected',
   'POST /v1/table-orders/{billId}/prepay/confirm',
   'POST /v1/table-orders/{billId}/prepay/reject',
   'POST /v1/table-orders/{billId}/ready',
