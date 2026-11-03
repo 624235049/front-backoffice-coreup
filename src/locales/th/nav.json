@@ -52,5 +52,7 @@
   "users": "ผู้ใช้งาน",
   "plans": "แพ็กเกจ",
   "aiSales": "AI ขาย",
-  "aiDemo": "LINE เดโม AI"
+  "aiDemo": "LINE เดโม AI",
+  "supportCases": "เคสจากร้าน",
+  "supportCaseCount": "เคสจากร้านรอรับเรื่อง {{count}}"
 }

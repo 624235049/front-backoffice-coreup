@@ -4,6 +4,7 @@ import {
   Headset,
   KanbanSquare,
   LayoutDashboard,
+  LifeBuoy,
   Package,
   Receipt,
   Rocket,
@@ -16,6 +17,7 @@ import type { NavItem } from '@/lib/navigation';
 import { useOnboardingSummary } from './api';
 import { usePendingSlipCount } from './invoice-slip';
 import { useNewLeadBadge } from './new-lead-badge';
+import { useOpenSupportCaseCount } from './support-cases-api';
 
 /** Red badge on "New shops": self-serve shops the team should contact today. */
 function useDueOnboardingCount(): number {
@@ -31,6 +33,16 @@ export const navItems: NavItem[] = [
     module: 'platform',
     exact: true,
     order: 10,
+  },
+  {
+    to: '/platform/support-cases',
+    labelKey: 'nav:supportCases',
+    icon: LifeBuoy,
+    permission: 'platform:read',
+    module: 'platform',
+    order: 24,
+    useBadge: useOpenSupportCaseCount,
+    badgeLabel: 'supportCaseCount',
   },
   {
     to: '/platform/tenants',

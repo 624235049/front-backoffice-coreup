@@ -1,0 +1,46 @@
+{
+  "title": "Shop cases",
+  "description": "Problems shop staff sent from the in-app assistant, open ones first. Change the status and write a reply: the shop sees the status and your note in its own app (nothing goes to the shop's customers, no emails).",
+  "filter": {
+    "label": "Status",
+    "all": "All",
+    "open": "Waiting",
+    "in_progress": "In progress",
+    "done": "Done"
+  },
+  "status": {
+    "open": "Waiting",
+    "in_progress": "In progress",
+    "done": "Done"
+  },
+  "columns": {
+    "status": "Status",
+    "shop": "Shop",
+    "title": "Summary",
+    "page": "Page open",
+    "sentAt": "Sent"
+  },
+  "empty": {
+    "title": "No cases from shops yet",
+    "description": "When staff tap “Send to the CoreUp team” in the app, it shows up here."
+  },
+  "detail": {
+    "title": "Case from {{shop}}",
+    "close": "Close",
+    "from": "Sent by {{name}} · {{when}}",
+    "page": "Page open: {{page}}",
+    "words": "Staff's own words",
+    "transcript": "Chat with the assistant",
+    "staff": "Staff",
+    "assistant": "Assistant",
+    "emptyTranscript": "No chat attached",
+    "status": "Status",
+    "note": "Reply to the shop",
+    "noteHint": "The shop sees this next to its case in the app",
+    "save": "Save",
+    "saved": "Saved",
+    "readOnly": "This account is read-only and cannot change the status",
+    "resolvedAt": "Closed {{when}}"
+  },
+  "loadMore": "Load more"
+}

@@ -52,5 +52,7 @@
   "users": "Users",
   "plans": "Plans",
   "aiSales": "AI sales",
-  "aiDemo": "AI demo LINE"
+  "aiDemo": "AI demo LINE",
+  "supportCases": "Shop cases",
+  "supportCaseCount": "{{count}} shop cases waiting"
 }
