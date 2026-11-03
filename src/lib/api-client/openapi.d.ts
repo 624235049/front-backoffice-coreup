@@ -1106,6 +1106,7 @@ export interface paths {
                                             /** @enum {string} */
                                             securityWhen?: "pickup" | "booking";
                                             payInFull?: boolean;
+                                            securityWithRent?: boolean;
                                         } | null;
                                         sizeChart: {
                                             size: string;
@@ -14278,7 +14279,6 @@ export interface paths {
                                     link: string;
                                 }[];
                                 reply: string;
-                                handoff: boolean;
                                 noReply: boolean;
                                 blocked: string | null;
                                 toolCalls: {
@@ -58684,6 +58684,7 @@ export interface paths {
                                         cancellationText: string | null;
                                         allowedDays: number[] | null;
                                         payInFull: boolean;
+                                        securityWithRent: boolean;
                                         /** @enum {string} */
                                         securityWhen: "pickup" | "booking";
                                         /** @enum {string} */
@@ -58993,6 +58994,13 @@ export interface paths {
                             note?: string | null;
                             slipFileId?: string | null;
                             confirmAdditional?: boolean;
+                        };
+                        security?: {
+                            /** @enum {string} */
+                            method: "cash" | "transfer" | "promptpay" | "other";
+                            reference?: string | null;
+                            slipFileId?: string | null;
+                            note?: string | null;
                         };
                         discount?: {
                             /** @description integer satang */
@@ -62242,6 +62250,7 @@ export interface paths {
                             /** @enum {string} */
                             securityWhen?: "pickup" | "booking";
                             payInFull?: boolean;
+                            securityWithRent?: boolean;
                         } | null;
                         dress: {
                             minDays?: number;
@@ -63754,6 +63763,208 @@ export interface paths {
                                     rentals: number;
                                     lateCustomers: number;
                                 };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rentals/daily-money": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Daily money of a rental shop on a cash basis (money really in / out when it was recorded): per day by type (rent, booking deposit, shipping, security deposit in, fees, other; security / other refunds out), net, running total and the entries behind every figure
+         * @description Requires header `X-Tenant-Id`. Permission: `kpi:read`. Module: `checkout`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    from: string;
+                    to: string;
+                    branchId?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                from: string;
+                                to: string;
+                                days: {
+                                    date: string;
+                                    in: {
+                                        rent: number;
+                                        bookingDeposit: number;
+                                        shipping: number;
+                                        securityIn: number;
+                                        fees: number;
+                                        other: number;
+                                    };
+                                    out: {
+                                        securityRefund: number;
+                                        otherRefund: number;
+                                    };
+                                    memo: {
+                                        appliedToRent: number;
+                                        kept: number;
+                                    };
+                                    totalInMinor: number;
+                                    totalOutMinor: number;
+                                    netMinor: number;
+                                    cumulativeMinor: number;
+                                    byMethod: {
+                                        cash: number;
+                                        transfer: number;
+                                        other: number;
+                                    };
+                                    count: number;
+                                }[];
+                                totals: {
+                                    in: {
+                                        rent: number;
+                                        bookingDeposit: number;
+                                        shipping: number;
+                                        securityIn: number;
+                                        fees: number;
+                                        other: number;
+                                    };
+                                    out: {
+                                        securityRefund: number;
+                                        otherRefund: number;
+                                    };
+                                    memo: {
+                                        appliedToRent: number;
+                                        kept: number;
+                                    };
+                                    totalInMinor: number;
+                                    totalOutMinor: number;
+                                    netMinor: number;
+                                    cumulativeMinor: number;
+                                    byMethod: {
+                                        cash: number;
+                                        transfer: number;
+                                        other: number;
+                                    };
+                                    count: number;
+                                };
+                                entryCount: number;
+                                entries: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    kind: "payment" | "refund" | "void" | "deposit" | "deposit_refund" | "applied" | "kept";
+                                    memo: boolean;
+                                    at: string;
+                                    date: string;
+                                    time: string;
+                                    /** @enum {string} */
+                                    method: "cash" | "transfer" | "other";
+                                    amountMinor: number;
+                                    parts: {
+                                        type: string;
+                                        amountMinor: number;
+                                    }[];
+                                    description: string | null;
+                                    billId: string | null;
+                                    billNumber: string | null;
+                                    receiptNumber: string | null;
+                                    customerCode: string | null;
+                                    customerName: string | null;
+                                    receiverName: string | null;
+                                }[];
                             };
                         };
                     };
@@ -66219,7 +66430,6 @@ export interface paths {
                                     link: string;
                                 }[];
                                 reply: string;
-                                handoff: boolean;
                                 noReply: boolean;
                                 blocked: string | null;
                                 toolCalls: {
@@ -99976,6 +100186,7 @@ export interface paths {
                                         /** @enum {string} */
                                         securityWhen?: "pickup" | "booking";
                                         payInFull?: boolean;
+                                        securityWithRent?: boolean;
                                     } | null;
                                     sizeChart: {
                                         size: string;
@@ -101017,6 +101228,7 @@ export interface paths {
                                     cancellationText: string | null;
                                     allowedDays: number[] | null;
                                     payInFull: boolean;
+                                    securityWithRent: boolean;
                                     /** @enum {string} */
                                     securityWhen: "pickup" | "booking";
                                     /** @enum {string} */

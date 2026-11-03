@@ -179,11 +179,6 @@ function Bubble({ turn }: { turn: Turn }) {
           {turn.text}
         </p>
       )}
-      {r?.handoff ? (
-        <Badge variant="warning" className="w-fit" data-testid="ai-test-handoff">
-          {t('aiChat.test.handoff')}
-        </Badge>
-      ) : null}
       {r?.blocked ? (
         <p className="text-xs text-warning">{t('aiChat.test.blocked', { why: r.blocked })}</p>
       ) : null}

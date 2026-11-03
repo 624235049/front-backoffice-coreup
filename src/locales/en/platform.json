@@ -1450,8 +1450,7 @@
       "left": "{{n}} tries left today",
       "reset": "Start over",
       "noReply": "Short texts like ok or thanks get no answer from the AI, and cost nothing",
-      "handoff": "Handed to admin",
-      "blocked": "The answer check stopped the AI's own answer ({{why}}), so it was handed to the admin instead",
+      "blocked": "The answer check stopped the AI's own answer ({{why}}), so the fallback list and link were sent instead",
       "evidence": "What the AI used to answer",
       "noLookup": "The AI looked up nothing about the shop for this one",
       "cost": "About {{tokens}} tokens ≈ {{cost}} (not counted in the quota)",
@@ -1460,8 +1459,7 @@
         "search_services": "Search services",
         "search_rentals": "Search rentals",
         "check_availability": "Check free slots",
-        "booking_link": "Booking link",
-        "handoff": "Hand to admin"
+        "booking_link": "Booking link"
       }
     },
     "modeNow": {
