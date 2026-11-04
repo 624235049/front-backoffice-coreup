@@ -36,6 +36,7 @@
   "audits": "ออดิท",
   "invoices": "ใบแจ้งชำระ",
   "revenue": "รายได้",
+  "ads": "โฆษณา (Ads)",
   "team": "ทีม CoreUp",
   "security": "ความปลอดภัยของบัญชี",
   "accOverview": "ภาพรวมบัญชี",
@@ -54,5 +55,7 @@
   "aiSales": "AI ขาย",
   "aiDemo": "LINE เดโม AI",
   "supportCases": "เคสจากร้าน",
-  "supportCaseCount": "เคสจากร้านรอรับเรื่อง {{count}}"
+  "supportCaseCount": "เคสจากร้านรอรับเรื่อง {{count}}",
+  "pageInbox": "แชทลูกค้าจากเพจ",
+  "pageInboxCount": "แชทลูกค้าจากเพจรอตอบ {{count}}"
 }

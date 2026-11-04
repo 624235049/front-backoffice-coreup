@@ -1,0 +1,16 @@
+/*
+ * แชทลูกค้าจากเพจ: the same LINE OA Manager-like look as the shop's inbox. Tokens live next to the feature so nothing else changes.
+ */
+.chat-root {
+  --chat-bg: #eef1f5;
+  --chat-in: #ffffff;
+  --chat-in-fg: #0b2d4f;
+  --chat-staff: #8de055;
+  --chat-staff-fg: #10361b;
+  --chat-ai: #dcf5d0;
+  --chat-ai-fg: #1b3a24;
+  --chat-page: #cfe3ff;
+  --chat-page-fg: #0b2d4f;
+  --chat-hover: #f1f5f9;
+  --chat-selected: #e6f4f2;
+}

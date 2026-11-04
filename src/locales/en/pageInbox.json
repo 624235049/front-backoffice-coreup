@@ -1,0 +1,182 @@
+{
+  "title": "Page chats",
+  "description": "Talk to people who message CoreUp's own Facebook Page / Instagram: reply in time, send the sample shop, then offer a trial shop.",
+  "tabs": {
+    "all": "All",
+    "needs_reply": "Needs reply",
+    "hot": "Hot leads",
+    "follow_up": "Follow up today"
+  },
+  "stage": {
+    "new": "New",
+    "talking": "Talking",
+    "sample_sent": "Sample sent",
+    "trial": "Trial",
+    "paid": "Paid",
+    "lost": "Not interested"
+  },
+  "shopType": {
+    "dress": "Dress rental",
+    "salon": "Beauty / nails",
+    "massage": "Massage / spa",
+    "barber": "Hair / barber",
+    "unknown": "Type unknown"
+  },
+  "channel": {
+    "messenger": "Messenger",
+    "instagram": "Instagram"
+  },
+  "filters": {
+    "allStages": "All stages",
+    "allAds": "All ads",
+    "allTypes": "All types",
+    "ad": "Ad {{id}} ({{count}})",
+    "search": "Search name or message",
+    "stage": "Stage",
+    "adLabel": "From ad",
+    "typeLabel": "Shop type"
+  },
+  "window": {
+    "free": "Free reply: {{time}} left",
+    "human": "Human send only · {{time}} left",
+    "closed": "Reply window closed",
+    "freeHint": "Within 24 h of the customer's last message: send normally",
+    "humanHint": "After 24 h, up to 7 days: only when a person presses send (HUMAN_AGENT). Never for promotions.",
+    "closedHint": "More than 7 days: nothing can be sent until the customer writes again"
+  },
+  "time": {
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "min": "{{n}} min",
+    "hm": "{{h}} h {{m}} min",
+    "dh": "{{d}} d {{h}} h",
+    "h": "{{h}} h"
+  },
+  "row": {
+    "needsReply": "Needs reply",
+    "hot": "Hot",
+    "followUp": "Follow up day {{day}}",
+    "paused": "Team took over",
+    "you": "Team: ",
+    "noName": "{{channel}} customer"
+  },
+  "list": {
+    "empty": "No chats in this group",
+    "emptyAll": "No chats yet: they appear when someone messages the Page or you press \"Sync last 30 days\"",
+    "error": "Could not load the chats"
+  },
+  "conversation": {
+    "pick": "Pick a chat on the left to reply",
+    "back": "Back",
+    "empty": "No messages yet",
+    "customer": "Customer",
+    "staff": "Team",
+    "page": "Team (typed in the Page)",
+    "ai": "Automatic AI",
+    "humanAgent": "Sent as a person",
+    "image": "[image]",
+    "takeover": "I'll take over",
+    "handBack": "Let AI reply again",
+    "aiPaused": "Automatic reply is paused (the team answered)",
+    "hot": "Hot lead",
+    "loadError": "Could not open the chat"
+  },
+  "composer": {
+    "placeholder": "Write to the customer",
+    "send": "Send",
+    "sendHuman": "Send as a person",
+    "sending": "Sending…",
+    "sent": "Sent",
+    "closedNote": "More than 7 days: nothing can be sent until the customer writes again",
+    "checking": "Checking the message…",
+    "issuesTitle": "This message may contain wrong facts",
+    "issueError": "Wrong",
+    "issueWarn": "Fix",
+    "confirmTitle": "This message has wrong facts. Send anyway?",
+    "confirmBody": "The customer would see information that does not match the real system. Please fix it first.",
+    "confirmSend": "Send anyway",
+    "edit": "Back to edit"
+  },
+  "suggestion": {
+    "title": "AI closing assistant",
+    "step": {
+      "hook": "First message",
+      "answer": "Answer",
+      "close": "Close"
+    },
+    "use": "Use this text",
+    "sendNow": "Send now",
+    "needsPerson": "A person should answer this one (discount, phone number or a customer ready to sign up). Automation will not send it."
+  },
+  "followUp": {
+    "title": "Follow up today · day {{day}}",
+    "use": "Use this text",
+    "send": "Send the follow-up",
+    "skip": "Skip this one",
+    "free": "Still inside the free 24 h window (can be automatic in settings)",
+    "human": "Needs a person to press send"
+  },
+  "side": {
+    "title": "Customer",
+    "ad": "From ad",
+    "adNone": "Unknown (direct message)",
+    "stage": "Stage",
+    "type": "Shop type",
+    "channel": "Channel",
+    "firstMessage": "First message",
+    "lastMessage": "Customer's last message",
+    "freeEnds": "Free reply until",
+    "humanEnds": "Human send until",
+    "shop": "Trial shop",
+    "noShop": "No shop opened yet",
+    "createTrial": "Open a trial shop",
+    "linkExisting": "Link an existing shop",
+    "pickShop": "Pick a shop",
+    "link": "Link this shop",
+    "linked": "Shop linked to this chat",
+    "openShop": "Open the shop"
+  },
+  "setup": {
+    "title": "Connect CoreUp's Page to this inbox",
+    "body": "Press once: the system subscribes to the Page's messages (and the linked Instagram) and reads the last 30 days. It never messages anyone by itself.",
+    "connect": "Connect the CoreUp Page",
+    "connecting": "Connecting…",
+    "ownerOnly": "Ask the owner to connect the Page first",
+    "tokenMissing": "META_SYSTEM_USER_TOKEN is not set on the server (Railway): the connect button cannot work yet",
+    "webhookMissing": "META_APP_SECRET / IG_WEBHOOK_VERIFY_TOKEN are not set: new messages cannot arrive yet (the 30-day read still works)"
+  },
+  "settings": {
+    "title": "Page inbox settings",
+    "gear": "Settings",
+    "connected": "Connected Page",
+    "instagram": "Instagram linked to the Page",
+    "noInstagram": "No Instagram account is linked to this Page",
+    "webhookUrl": "Webhook callback URL (paste in the Meta App Dashboard)",
+    "lastSync": "Last read",
+    "never": "Never",
+    "sync": "Read the last 30 days again",
+    "synced": "Queued, give it a moment",
+    "reconnect": "Connect again",
+    "autoReply": "Automatic reply",
+    "autoReplyHint": "Always OFF first. When on: answers a customer's NEW message by itself, only inside 24 h, stops the moment the team replies, never answers discounts, phone numbers or people ready to sign up.",
+    "maxPerDay": "Automatic replies per chat per day (max)",
+    "autoFollowUp": "Automatic day-1 follow-up",
+    "autoFollowUpHint": "Always OFF first. Sends the day-1 reminder by itself only while the 24 h window is open. Day 3 and day 6 always need a person to press send.",
+    "saved": "Saved",
+    "ownerOnly": "Only the owner can change the settings",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "errors": {
+    "window_closed": "Meta no longer allows a message (24 h or 7 days passed). Nothing can be sent until the customer writes again.",
+    "no_customer_message": "This chat has no customer message yet, so nothing can be sent",
+    "not_configured": "META_SYSTEM_USER_TOKEN is not set",
+    "not_connected": "Connect the Page before turning this on",
+    "meta_rejected": "Meta rejected this message",
+    "meta_unauthorized": "The Meta token expired or cannot send. Ask the owner to check it.",
+    "meta_unavailable": "Meta is slow or down for a moment. Try again.",
+    "already_linked": "This chat is already linked to another shop",
+    "wrong_facts": "The message contains wrong facts",
+    "generic": "Could not complete that. Try again."
+  }
+}

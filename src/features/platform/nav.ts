@@ -5,6 +5,8 @@ import {
   KanbanSquare,
   LayoutDashboard,
   LifeBuoy,
+  Megaphone,
+  MessagesSquare,
   Package,
   Receipt,
   Rocket,
@@ -14,6 +16,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
+import { usePageNeedsReplyCount } from '../page-inbox/api';
 import { useOnboardingSummary } from './api';
 import { usePendingSlipCount } from './invoice-slip';
 import { useNewLeadBadge } from './new-lead-badge';
@@ -77,6 +80,16 @@ export const navItems: NavItem[] = [
     order: 28,
   },
   {
+    to: '/platform/page-inbox',
+    labelKey: 'nav:pageInbox',
+    icon: MessagesSquare,
+    permission: 'platform:leads',
+    module: 'platform',
+    order: 29,
+    useBadge: usePageNeedsReplyCount,
+    badgeLabel: 'pageInboxCount',
+  },
+  {
     to: '/platform/onboarding',
     labelKey: 'nav:onboarding',
     icon: Rocket,
@@ -113,6 +126,15 @@ export const navItems: NavItem[] = [
     role: 'platform_owner',
     module: 'platform',
     order: 70,
+  },
+  {
+    to: '/platform/ads',
+    labelKey: 'nav:ads',
+    icon: Megaphone,
+    permission: 'platform:revenue',
+    role: 'platform_owner',
+    module: 'platform',
+    order: 72,
   },
   {
     to: '/platform/team',

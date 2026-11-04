@@ -74,10 +74,13 @@ export function OnboardDialog({
   open,
   onOpenChange,
   onCreated,
+  defaults,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreated: (tenantId: string) => void;
+  /** what is already known about the shop (the sales inbox knows the customer's name and shop type) */
+  defaults?: { name?: string; industryKey?: string };
 }) {
   const { t } = useTranslation('platform');
   const { t: tc } = useTranslation('common');
@@ -102,6 +105,12 @@ export function OnboardDialog({
     },
   });
   const branches = useFieldArray({ control: form.control, name: 'branches' });
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fill the known values each time the dialog opens
+  useEffect(() => {
+    if (!open || !defaults) return;
+    if (defaults.name) form.setValue('name', defaults.name);
+    if (defaults.industryKey) form.setValue('industryKey', defaults.industryKey);
+  }, [open]);
   const invalid = useInvalidToast<Values>();
   // only what is sold on the pricing page (never an internal ฿0 plan), starting on Pro
   const sellable = sellablePlans(plans.data);

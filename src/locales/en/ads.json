@@ -1,0 +1,232 @@
+{
+  "title": "Ads",
+  "description": "See what every baht of ad spend returns: spend → chats → trial shops → paid shops → revenue (suggestions only: the system never edits or pauses an ad)",
+  "ownerOnly": "This page is for the CoreUp owner only",
+  "ownerOnlyHint": "It shows ad spend and revenue",
+  "status": {
+    "never": "Never pulled from Meta yet",
+    "syncing": "Pulling from Meta…",
+    "ok": "Connected to Meta",
+    "no_token": "Not connected to Meta yet",
+    "token_error": "Meta refused the token, or it cannot read ads",
+    "rate_limited": "Meta rate limit hit: the next run continues",
+    "error": "Could not pull from Meta",
+    "lastOk": "Last success {{at}}",
+    "lastRun": "Last try {{at}}",
+    "neverOk": "Never succeeded",
+    "usage": "Meta quota used {{pct}}%",
+    "syncNow": "Sync now",
+    "syncQueued": "Sync requested, one moment",
+    "noTokenHint": "Ask the tech team to set META_ADS_TOKEN (a token with ads_read) on the Railway worker, then press “Sync now”. Read-only: no ad is ever changed.",
+    "tokenErrorHint": "Check that META_ADS_TOKEN has not expired and has ads_read on this ad account."
+  },
+  "range": {
+    "thisMonth": "This month",
+    "last7": "7 days",
+    "last30": "30 days",
+    "from": "From",
+    "to": "To"
+  },
+  "cards": {
+    "spend": "Ad spend",
+    "chats": "Chats",
+    "trials": "Trial shops",
+    "paidShops": "Paid shops",
+    "revenue": "Revenue (first invoice)",
+    "roas": "ROAS",
+    "cac": "Cost per paid shop (CAC)",
+    "roasHint": "revenue ÷ spend · 3 months {{value}}",
+    "revenueHint": "MRR won {{mrr}}",
+    "chatsHint": "{{cost}} per chat",
+    "trialsHint": "{{cost}} per trial",
+    "paybackHint": "pays back in {{months}} months",
+    "noData": "No data yet"
+  },
+  "chart": {
+    "title": "Ad spend vs revenue",
+    "day": "Daily",
+    "week": "Weekly",
+    "spend": "Ad spend",
+    "revenue": "Revenue",
+    "empty": "No ad spend in this period yet"
+  },
+  "table": {
+    "campaigns": "Campaigns / ads",
+    "creatives": "Creatives",
+    "shopTypes": "Shop type",
+    "placements": "Placements",
+    "name": "Name",
+    "shopType": "Shop type",
+    "placement": "Placement",
+    "spend": "Spend",
+    "reach": "Reach (sum of daily)",
+    "impressions": "Impressions",
+    "frequency": "Avg daily frequency",
+    "ctr": "CTR",
+    "cpc": "CPC",
+    "cpm": "CPM",
+    "chats": "Chats",
+    "qualified": "Type known",
+    "demoSent": "Demo sent",
+    "trials": "Trials",
+    "paid": "Paid",
+    "revenue": "Revenue",
+    "mrr": "MRR",
+    "costPerChat": "Per chat",
+    "costPerTrial": "Per trial",
+    "cac": "CAC",
+    "roas": "ROAS",
+    "roas3m": "ROAS 3 mo",
+    "payback": "Payback (months)",
+    "budget": "Budget/day",
+    "empty": "No data in this period",
+    "unknownAd": "Unknown ad (chats whose ad is not found)",
+    "expand": "Show the ads of this campaign",
+    "collapse": "Hide ads",
+    "funnel": "{{chats}} chats → {{trials}} trials → {{paid}} paid"
+  },
+  "adStatus": {
+    "ACTIVE": "Active",
+    "PAUSED": "Paused",
+    "CAMPAIGN_PAUSED": "Campaign paused",
+    "ADSET_PAUSED": "Ad set paused",
+    "ARCHIVED": "Archived",
+    "DELETED": "Deleted",
+    "WITH_ISSUES": "With issues",
+    "PENDING_REVIEW": "In review"
+  },
+  "shopType": {
+    "dress": "Dress rental",
+    "dress_rental": "Dress rental",
+    "salon": "Hair / beauty salon",
+    "massage": "Massage / spa",
+    "spa": "Massage / spa",
+    "barber": "Barber",
+    "nail": "Nail",
+    "other": "Other",
+    "unknown": "Not known yet"
+  },
+  "channel": {
+    "meta_ads": "Meta ads",
+    "organic_page": "Page (no ad)",
+    "referral": "Referral",
+    "line": "LINE"
+  },
+  "goals": {
+    "title": "Goals for {{month}}",
+    "edit": "Set goals",
+    "editTitle": "Set goals for {{month}}",
+    "editHint": "Leave empty = no target. Money in baht.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Goals saved",
+    "noTarget": "No target set",
+    "key": {
+      "chats": "New chats",
+      "trials": "Trial shops",
+      "paidShops": "Paid shops",
+      "mrrMinor": "MRR",
+      "adBudgetMinor": "Ad budget"
+    },
+    "of": "{{actual}} of {{target}} ({{pct}}%)",
+    "pace": "Should be at {{expected}} by now",
+    "forecast": "Month-end ~{{forecast}} ({{pct}}%)",
+    "needed": "Need {{n}} more per day",
+    "status": {
+      "no_target": "No target",
+      "reached": "Reached",
+      "ahead": "Spending faster than plan",
+      "on_track": "On track",
+      "behind": "Behind"
+    },
+    "channels": "By channel (this month)",
+    "channelChats": "Chats",
+    "channelTrials": "Trials",
+    "channelPaid": "Paid",
+    "channelMrr": "New MRR",
+    "chatsHint": "Only month {{month}}"
+  },
+  "recs": {
+    "title": "Suggestions",
+    "suggestionOnly": "Suggestions only: the system does not edit or pause any ad",
+    "empty": "Nothing to do right now",
+    "evidence": "Numbers behind it",
+    "severity": {
+      "warn": "Look at",
+      "good": "Opportunity",
+      "info": "Note"
+    },
+    "cost_per_chat_high": {
+      "title": "Cost per chat over the line {{days}} days in a row",
+      "body": "Cost per chat above {{thresholdMinor}} for {{days}} days ({{spendMinor}} spent, {{chats}} chats, last day {{lastDayCostPerChatMinor}} per chat). Consider pausing this ad or refreshing the creative."
+    },
+    "frequency_high": {
+      "title": "People see this ad too often",
+      "body": "Frequency {{avgDailyFrequency}} is above {{threshold}} over the last {{days}} days ({{impressions}} impressions). The creative is getting stale: try a new image/video."
+    },
+    "spend_no_trials": {
+      "title": "Spent, chats came, but no trial shop",
+      "body": "{{spendMinor}} spent in {{days}} days, {{chats}} chats and nobody started a trial. Do not add budget: fix the chat closing first (send the demo shop link, offer a call)."
+    },
+    "best_cost_per_trial": {
+      "title": "This ad gets trial shops the cheapest",
+      "body": "{{trials}} trial shops at {{costPerTrialMinor}} each over {{days}} days, against “{{fromAd}}” ({{fromSpendMinor}} spent, {{fromCostPerTrialMinor}} per trial). Consider moving budget to this ad."
+    },
+    "placement_cheaper": {
+      "title": "Reels is cheaper than feed",
+      "body": "Reels {{reelsCostPerChatMinor}} per chat ({{reelsChats}} chats) vs feed {{feedCostPerChatMinor}} per chat ({{feedChats}} chats) over {{days}} days. Make more 9:16 videos."
+    },
+    "chats_unanswered": {
+      "title": "{{count}} chats waiting more than 1 hour",
+      "body": "Longest wait {{oldestHours}} h. Use the ready message below (a person sends it)."
+    },
+    "chats_stalled": {
+      "title": "{{count}} chats went quiet after our question",
+      "body": "Quiet for up to {{oldestHours}} h. Follow up with the ready message below (a person sends it)."
+    },
+    "ev": {
+      "thresholdMinor": "Line",
+      "threshold": "Line",
+      "days": "Days",
+      "spendMinor": "Spent",
+      "chats": "Chats",
+      "lastDayCostPerChatMinor": "Per chat, last day",
+      "impressions": "Impressions",
+      "trials": "Trial shops",
+      "costPerTrialMinor": "Per trial",
+      "fromAd": "Compared with",
+      "fromSpendMinor": "Spent (compared)",
+      "fromCostPerTrialMinor": "Per trial (compared)",
+      "reelsCostPerChatMinor": "Reels per chat",
+      "reelsChats": "Reels chats",
+      "feedCostPerChatMinor": "Feed per chat",
+      "feedChats": "Feed chats",
+      "count": "Chats",
+      "oldestHours": "Longest (h)",
+      "avgDailyFrequency": "Avg daily frequency"
+    }
+  },
+  "chats": {
+    "title": "Chats still worth closing: ready messages",
+    "hint": "A person can answer in Business Suite for 7 days after the customer's last message. The system sends nothing.",
+    "unanswered": "Customer waiting {{hours}} h",
+    "stalled": "Quiet {{hours}} h after our question",
+    "until": "Can answer until {{at}}",
+    "freeUntil": "Normal sending until {{at}}",
+    "copy": "Copy message",
+    "copied": "Copied",
+    "noName": "(no name)",
+    "fromAd": "From an ad"
+  },
+  "report": {
+    "title": "Weekly marketing summary (AI)",
+    "hint": "Written every Monday from the numbers on this page only",
+    "empty": "No report yet. It is written next Monday, or create one now.",
+    "generate": "Create now",
+    "generating": "Writing… one moment",
+    "capped": "{{n}} reports already this week",
+    "week": "Week starting {{date}}",
+    "timedOut": "No new report within 2 minutes. Do not press again: ask the tech team to check ANTHROPIC_API_KEY and that the week had spend/chats."
+  },
+  "error": "Could not load ad data"
+}

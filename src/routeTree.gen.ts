@@ -24,10 +24,12 @@ import { Route as AppAccountingProductsRouteImport } from './routes/_app/account
 import { Route as AppAccountingReportsRouteImport } from './routes/_app/accounting.reports'
 import { Route as AppAccountingSettingsRouteImport } from './routes/_app/accounting.settings'
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
+import { Route as AppPlatformAdsRouteImport } from './routes/_app/platform.ads'
 import { Route as AppPlatformAiDemoRouteImport } from './routes/_app/platform.ai-demo'
 import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.invoices'
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformOnboardingRouteImport } from './routes/_app/platform.onboarding'
+import { Route as AppPlatformPageInboxRouteImport } from './routes/_app/platform.page-inbox'
 import { Route as AppPlatformPlansRouteImport } from './routes/_app/platform.plans'
 import { Route as AppPlatformRevenueRouteImport } from './routes/_app/platform.revenue'
 import { Route as AppPlatformSalesRouteImport } from './routes/_app/platform.sales'
@@ -133,6 +135,11 @@ const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
   path: '/platform/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPlatformAdsRoute = AppPlatformAdsRouteImport.update({
+  id: '/platform/ads',
+  path: '/platform/ads',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlatformAiDemoRoute = AppPlatformAiDemoRouteImport.update({
   id: '/platform/ai-demo',
   path: '/platform/ai-demo',
@@ -151,6 +158,11 @@ const AppPlatformLeadsRoute = AppPlatformLeadsRouteImport.update({
 const AppPlatformOnboardingRoute = AppPlatformOnboardingRouteImport.update({
   id: '/platform/onboarding',
   path: '/platform/onboarding',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformPageInboxRoute = AppPlatformPageInboxRouteImport.update({
+  id: '/platform/page-inbox',
+  path: '/platform/page-inbox',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlatformPlansRoute = AppPlatformPlansRouteImport.update({
@@ -335,10 +347,12 @@ export interface FileRoutesByFullPath {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
+  '/platform/page-inbox': typeof AppPlatformPageInboxRoute
   '/platform/plans': typeof AppPlatformPlansRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/sales': typeof AppPlatformSalesRoute
@@ -385,10 +399,12 @@ export interface FileRoutesByTo {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
+  '/platform/page-inbox': typeof AppPlatformPageInboxRoute
   '/platform/plans': typeof AppPlatformPlansRoute
   '/platform/revenue': typeof AppPlatformRevenueRoute
   '/platform/sales': typeof AppPlatformSalesRoute
@@ -438,10 +454,12 @@ export interface FileRoutesById {
   '/_app/accounting/products': typeof AppAccountingProductsRoute
   '/_app/accounting/reports': typeof AppAccountingReportsRoute
   '/_app/accounting/settings': typeof AppAccountingSettingsRoute
+  '/_app/platform/ads': typeof AppPlatformAdsRoute
   '/_app/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/_app/platform/invoices': typeof AppPlatformInvoicesRoute
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
   '/_app/platform/onboarding': typeof AppPlatformOnboardingRoute
+  '/_app/platform/page-inbox': typeof AppPlatformPageInboxRoute
   '/_app/platform/plans': typeof AppPlatformPlansRoute
   '/_app/platform/revenue': typeof AppPlatformRevenueRoute
   '/_app/platform/sales': typeof AppPlatformSalesRoute
@@ -490,10 +508,12 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/platform/ads'
     | '/platform/ai-demo'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
+    | '/platform/page-inbox'
     | '/platform/plans'
     | '/platform/revenue'
     | '/platform/sales'
@@ -540,10 +560,12 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/platform/ads'
     | '/platform/ai-demo'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
+    | '/platform/page-inbox'
     | '/platform/plans'
     | '/platform/revenue'
     | '/platform/sales'
@@ -592,10 +614,12 @@ export interface FileRouteTypes {
     | '/_app/accounting/products'
     | '/_app/accounting/reports'
     | '/_app/accounting/settings'
+    | '/_app/platform/ads'
     | '/_app/platform/ai-demo'
     | '/_app/platform/invoices'
     | '/_app/platform/leads'
     | '/_app/platform/onboarding'
+    | '/_app/platform/page-inbox'
     | '/_app/platform/plans'
     | '/_app/platform/revenue'
     | '/_app/platform/sales'
@@ -744,6 +768,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlatformIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/platform/ads': {
+      id: '/_app/platform/ads'
+      path: '/platform/ads'
+      fullPath: '/platform/ads'
+      preLoaderRoute: typeof AppPlatformAdsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/platform/ai-demo': {
       id: '/_app/platform/ai-demo'
       path: '/platform/ai-demo'
@@ -770,6 +801,13 @@ declare module '@tanstack/react-router' {
       path: '/platform/onboarding'
       fullPath: '/platform/onboarding'
       preLoaderRoute: typeof AppPlatformOnboardingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/page-inbox': {
+      id: '/_app/platform/page-inbox'
+      path: '/platform/page-inbox'
+      fullPath: '/platform/page-inbox'
+      preLoaderRoute: typeof AppPlatformPageInboxRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/plans': {
@@ -1000,10 +1038,12 @@ interface AppRouteChildren {
   AppAccountingProductsRoute: typeof AppAccountingProductsRoute
   AppAccountingReportsRoute: typeof AppAccountingReportsRoute
   AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
+  AppPlatformAdsRoute: typeof AppPlatformAdsRoute
   AppPlatformAiDemoRoute: typeof AppPlatformAiDemoRoute
   AppPlatformInvoicesRoute: typeof AppPlatformInvoicesRoute
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
   AppPlatformOnboardingRoute: typeof AppPlatformOnboardingRoute
+  AppPlatformPageInboxRoute: typeof AppPlatformPageInboxRoute
   AppPlatformPlansRoute: typeof AppPlatformPlansRoute
   AppPlatformRevenueRoute: typeof AppPlatformRevenueRoute
   AppPlatformSalesRoute: typeof AppPlatformSalesRoute
@@ -1047,10 +1087,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingProductsRoute: AppAccountingProductsRoute,
   AppAccountingReportsRoute: AppAccountingReportsRoute,
   AppAccountingSettingsRoute: AppAccountingSettingsRoute,
+  AppPlatformAdsRoute: AppPlatformAdsRoute,
   AppPlatformAiDemoRoute: AppPlatformAiDemoRoute,
   AppPlatformInvoicesRoute: AppPlatformInvoicesRoute,
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
   AppPlatformOnboardingRoute: AppPlatformOnboardingRoute,
+  AppPlatformPageInboxRoute: AppPlatformPageInboxRoute,
   AppPlatformPlansRoute: AppPlatformPlansRoute,
   AppPlatformRevenueRoute: AppPlatformRevenueRoute,
   AppPlatformSalesRoute: AppPlatformSalesRoute,

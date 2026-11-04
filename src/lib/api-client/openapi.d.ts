@@ -3041,6 +3041,8 @@ export interface paths {
                                 used: number;
                                 limit: number;
                                 enabled: boolean;
+                                /** @enum {string} */
+                                gateMode: "warn" | "enforce";
                             };
                         };
                     };
@@ -8704,7 +8706,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
-                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "rental_damage" | "rental_id_card" | "other";
+                    purpose: "tenant_logo" | "checklist_photo" | "sop_attachment" | "payment_slip" | "import_csv" | "export" | "avatar" | "expense_receipt" | "accounting_file" | "finance_receipt" | "deposit_slip" | "booking_cover" | "service_image" | "product_image" | "receiving_qr" | "staff_photo" | "clinical_attachment" | "rental_damage" | "rental_id_card" | "chat_media" | "chat_image" | "other";
                     mime: string;
                     size: number;
                     filename?: string;
@@ -9051,6 +9053,134 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/slips/precheck": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Is this uploaded picture a transfer slip? Reads the bank / TrueMoney slip QR and looks for a duplicate in this shop; nothing is stored and no check quota is used
+         * @description Called right after staff pick a slip image (before the save). `ok: false` + `reason`: `no_qr` / `promptpay_qr` / `qr_invalid` = not a transfer slip, `duplicate` = already used in this shop. `canConfirm`: the caller (`bills:void`) may still save it with `slipConfirmed` + `slipNote`. PDFs are not read (always ok). The save runs the same check and is the authority.
+         *
+         *     Requires header `X-Tenant-Id`. Permission: `bills:write`. Module: `checkout`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Verdict */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                ok: boolean;
+                                /** @enum {string|null} */
+                                reason: "no_qr" | "promptpay_qr" | "qr_invalid" | "duplicate" | null;
+                                canConfirm: boolean;
+                                /** @enum {string} */
+                                mode: "warn" | "enforce";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -14641,6 +14771,1223 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/ads/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Connection status of the Meta Marketing API sync (last run, token problems)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                state: "never" | "syncing" | "ok" | "no_token" | "token_error" | "rate_limited" | "error";
+                                lastRunAt: string | null;
+                                lastOkAt: string | null;
+                                error: string | null;
+                                usagePct: number | null;
+                                rowsUpserted: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/ads/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sync now: queue a pull of the latest Meta insights (read-only towards Meta)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Queued */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                queued: true;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/ads/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Spend, funnel (chats → qualified → trials → paid shops → revenue) and metrics by campaign / ad / creative / shop type / placement / day / week
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    from?: string;
+                    to?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Overview */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                from: string;
+                                to: string;
+                                totals: {
+                                    spendMinor: number;
+                                    impressions: number;
+                                    reach: number;
+                                    frequency: number | null;
+                                    clicks: number;
+                                    ctr: number | null;
+                                    cpcMinor: number | null;
+                                    cpmMinor: number | null;
+                                    metaChats: number;
+                                    leads: number;
+                                    funnel: {
+                                        chats: number;
+                                        qualified: number;
+                                        demoSent: number;
+                                        trials: number;
+                                        paidShops: number;
+                                    };
+                                    revenue: {
+                                        firstMinor: number;
+                                        mrrMinor: number;
+                                        projected3mMinor: number;
+                                    };
+                                    metrics: {
+                                        costPerChatMinor: number | null;
+                                        costPerTrialMinor: number | null;
+                                        cacMinor: number | null;
+                                        roasFirst: number | null;
+                                        roas3m: number | null;
+                                        paybackMonths: number | null;
+                                    };
+                                };
+                                days: {
+                                    day: string;
+                                    spendMinor: number;
+                                    chats: number;
+                                    revenueMinor: number;
+                                }[];
+                                weeks: {
+                                    day: string;
+                                    spendMinor: number;
+                                    chats: number;
+                                    revenueMinor: number;
+                                }[];
+                                campaigns: {
+                                    spendMinor: number;
+                                    impressions: number;
+                                    reach: number;
+                                    frequency: number | null;
+                                    clicks: number;
+                                    ctr: number | null;
+                                    cpcMinor: number | null;
+                                    cpmMinor: number | null;
+                                    metaChats: number;
+                                    leads: number;
+                                    funnel: {
+                                        chats: number;
+                                        qualified: number;
+                                        demoSent: number;
+                                        trials: number;
+                                        paidShops: number;
+                                    };
+                                    revenue: {
+                                        firstMinor: number;
+                                        mrrMinor: number;
+                                        projected3mMinor: number;
+                                    };
+                                    metrics: {
+                                        costPerChatMinor: number | null;
+                                        costPerTrialMinor: number | null;
+                                        cacMinor: number | null;
+                                        roasFirst: number | null;
+                                        roas3m: number | null;
+                                        paybackMonths: number | null;
+                                    };
+                                    id: string;
+                                    name: string;
+                                    status: string | null;
+                                    dailyBudgetMinor: number | null;
+                                    creativeName: string | null;
+                                    creativeThumbUrl: string | null;
+                                    ads: {
+                                        spendMinor: number;
+                                        impressions: number;
+                                        reach: number;
+                                        frequency: number | null;
+                                        clicks: number;
+                                        ctr: number | null;
+                                        cpcMinor: number | null;
+                                        cpmMinor: number | null;
+                                        metaChats: number;
+                                        leads: number;
+                                        funnel: {
+                                            chats: number;
+                                            qualified: number;
+                                            demoSent: number;
+                                            trials: number;
+                                            paidShops: number;
+                                        };
+                                        revenue: {
+                                            firstMinor: number;
+                                            mrrMinor: number;
+                                            projected3mMinor: number;
+                                        };
+                                        metrics: {
+                                            costPerChatMinor: number | null;
+                                            costPerTrialMinor: number | null;
+                                            cacMinor: number | null;
+                                            roasFirst: number | null;
+                                            roas3m: number | null;
+                                            paybackMonths: number | null;
+                                        };
+                                        id: string;
+                                        name: string;
+                                        status: string | null;
+                                        dailyBudgetMinor: number | null;
+                                        creativeName: string | null;
+                                        creativeThumbUrl: string | null;
+                                    }[];
+                                }[];
+                                creatives: {
+                                    spendMinor: number;
+                                    impressions: number;
+                                    reach: number;
+                                    frequency: number | null;
+                                    clicks: number;
+                                    ctr: number | null;
+                                    cpcMinor: number | null;
+                                    cpmMinor: number | null;
+                                    metaChats: number;
+                                    leads: number;
+                                    funnel: {
+                                        chats: number;
+                                        qualified: number;
+                                        demoSent: number;
+                                        trials: number;
+                                        paidShops: number;
+                                    };
+                                    revenue: {
+                                        firstMinor: number;
+                                        mrrMinor: number;
+                                        projected3mMinor: number;
+                                    };
+                                    metrics: {
+                                        costPerChatMinor: number | null;
+                                        costPerTrialMinor: number | null;
+                                        cacMinor: number | null;
+                                        roasFirst: number | null;
+                                        roas3m: number | null;
+                                        paybackMonths: number | null;
+                                    };
+                                    id: string;
+                                    name: string;
+                                    status: string | null;
+                                    dailyBudgetMinor: number | null;
+                                    creativeName: string | null;
+                                    creativeThumbUrl: string | null;
+                                }[];
+                                shopTypes: {
+                                    shopType: string;
+                                    spendMinor: number;
+                                    funnel: {
+                                        chats: number;
+                                        qualified: number;
+                                        demoSent: number;
+                                        trials: number;
+                                        paidShops: number;
+                                    };
+                                    revenue: {
+                                        firstMinor: number;
+                                        mrrMinor: number;
+                                        projected3mMinor: number;
+                                    };
+                                    metrics: {
+                                        costPerChatMinor: number | null;
+                                        costPerTrialMinor: number | null;
+                                        cacMinor: number | null;
+                                        roasFirst: number | null;
+                                        roas3m: number | null;
+                                        paybackMonths: number | null;
+                                    };
+                                }[];
+                                placements: {
+                                    placement: string;
+                                    spendMinor: number;
+                                    impressions: number;
+                                    clicks: number;
+                                    chats: number;
+                                    costPerChatMinor: number | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/ads/recommendations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Suggestions with their evidence, and the chats still worth closing with a ready message (suggestion only)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Suggestions */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                suggestionOnly: true;
+                                items: {
+                                    /** @enum {string} */
+                                    code: "cost_per_chat_high" | "frequency_high" | "spend_no_trials" | "best_cost_per_trial" | "placement_cheaper" | "chats_unanswered" | "chats_stalled";
+                                    /** @enum {string} */
+                                    severity: "good" | "info" | "warn";
+                                    /** @enum {string} */
+                                    entityLevel: "account" | "campaign" | "ad" | "placement";
+                                    entityId: string | null;
+                                    entityName: string | null;
+                                    evidence: {
+                                        [key: string]: number | string | null;
+                                    };
+                                }[];
+                                chats: {
+                                    conversationId: string;
+                                    name: string | null;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram";
+                                    shopType: string | null;
+                                    adId: string | null;
+                                    /** @enum {string} */
+                                    kind: "unanswered" | "stalled";
+                                    hoursSince: number;
+                                    lastCustomerAt: string | null;
+                                    freeUntil: string | null;
+                                    humanUntil: string | null;
+                                    closingMessage: string;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/ads/goals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Monthly targets with progress, daily pace, month-end forecast and the split by channel
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    month?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Goals */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                month: string;
+                                dayOfMonth: number;
+                                daysInMonth: number;
+                                targets: {
+                                    chats: number | null;
+                                    trials: number | null;
+                                    paidShops: number | null;
+                                    mrrMinor: number | null;
+                                    adBudgetMinor: number | null;
+                                };
+                                items: {
+                                    /** @enum {string} */
+                                    key: "chats" | "trials" | "paidShops" | "mrrMinor" | "adBudgetMinor";
+                                    target: number | null;
+                                    actual: number;
+                                    expected: number | null;
+                                    pct: number | null;
+                                    forecast: number;
+                                    forecastPct: number | null;
+                                    dailyNeeded: number | null;
+                                    /** @enum {string} */
+                                    status: "no_target" | "reached" | "ahead" | "on_track" | "behind";
+                                }[];
+                                channels: {
+                                    /** @enum {string} */
+                                    channel: "meta_ads" | "organic_page" | "referral" | "line";
+                                    chats: number;
+                                    trials: number;
+                                    paidShops: number;
+                                    newMrrMinor: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Set the targets of one month (chats, trials, paid shops, MRR, ad budget; empty = no target)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        month: string;
+                        targets: {
+                            chats: number | null;
+                            trials: number | null;
+                            paidShops: number | null;
+                            mrrMinor: number | null;
+                            adBudgetMinor: number | null;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Goals */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                month: string;
+                                dayOfMonth: number;
+                                daysInMonth: number;
+                                targets: {
+                                    chats: number | null;
+                                    trials: number | null;
+                                    paidShops: number | null;
+                                    mrrMinor: number | null;
+                                    adBudgetMinor: number | null;
+                                };
+                                items: {
+                                    /** @enum {string} */
+                                    key: "chats" | "trials" | "paidShops" | "mrrMinor" | "adBudgetMinor";
+                                    target: number | null;
+                                    actual: number;
+                                    expected: number | null;
+                                    pct: number | null;
+                                    forecast: number;
+                                    forecastPct: number | null;
+                                    dailyNeeded: number | null;
+                                    /** @enum {string} */
+                                    status: "no_target" | "reached" | "ahead" | "on_track" | "behind";
+                                }[];
+                                channels: {
+                                    /** @enum {string} */
+                                    channel: "meta_ads" | "organic_page" | "referral" | "line";
+                                    chats: number;
+                                    trials: number;
+                                    paidShops: number;
+                                    newMrrMinor: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/ads/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The latest weekly Thai marketing summary (AI) and whether another can be asked for this week
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Report */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                latest: {
+                                    id: string;
+                                    weekStart: string;
+                                    body: string;
+                                    model: string | null;
+                                    createdAt: string;
+                                } | null;
+                                canGenerate: boolean;
+                                generatedThisWeek: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Ask for a fresh weekly summary now (capped per week; cost-capped model call in the worker)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:revenue`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Queued */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                queued: true;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/platform/tenants/{id}/meta-channels": {
         parameters: {
             query?: never;
@@ -19978,6 +21325,1514 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/page-inbox/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Page inbox: connected Page, the owner switches, whether the token and webhook are configured
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                tokenConfigured: boolean;
+                                webhookConfigured: boolean;
+                                settings: {
+                                    /** @default null */
+                                    pageId: string | null;
+                                    /** @default null */
+                                    pageName: string | null;
+                                    /** @default null */
+                                    igId: string | null;
+                                    /** @default null */
+                                    igName: string | null;
+                                    /** @default null */
+                                    igConnectedId: string | null;
+                                    /** @default null */
+                                    connectedAt: string | null;
+                                    /** @default null */
+                                    lastSyncAt: string | null;
+                                    /** @default {} */
+                                    autoReply: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                        /** @default 3 */
+                                        maxPerDay: number;
+                                    };
+                                    /** @default {} */
+                                    autoFollowUp: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                    };
+                                };
+                                webhookUrl: string;
+                                conversations: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Connect CoreUp’s Page (and its Instagram account) with the system-user token: subscribes the app to messages / referrals / postbacks / echoes and reads the last 30 days. Safe to press again
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                tokenConfigured: boolean;
+                                webhookConfigured: boolean;
+                                settings: {
+                                    /** @default null */
+                                    pageId: string | null;
+                                    /** @default null */
+                                    pageName: string | null;
+                                    /** @default null */
+                                    igId: string | null;
+                                    /** @default null */
+                                    igName: string | null;
+                                    /** @default null */
+                                    igConnectedId: string | null;
+                                    /** @default null */
+                                    connectedAt: string | null;
+                                    /** @default null */
+                                    lastSyncAt: string | null;
+                                    /** @default {} */
+                                    autoReply: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                        /** @default 3 */
+                                        maxPerDay: number;
+                                    };
+                                    /** @default {} */
+                                    autoFollowUp: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                    };
+                                };
+                                webhookUrl: string;
+                                conversations: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read the last 30 days of the Conversations API again (queued; already-stored messages are skipped)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Queued */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {boolean} */
+                                ok: true;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Owner switches: automatic reply (default OFF, 24 h window only, max N a day per chat) and the automatic day-1 reminder (default OFF)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        autoReplyEnabled?: boolean;
+                        autoReplyMaxPerDay?: number;
+                        autoFollowUpEnabled?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                tokenConfigured: boolean;
+                                webhookConfigured: boolean;
+                                settings: {
+                                    /** @default null */
+                                    pageId: string | null;
+                                    /** @default null */
+                                    pageName: string | null;
+                                    /** @default null */
+                                    igId: string | null;
+                                    /** @default null */
+                                    igName: string | null;
+                                    /** @default null */
+                                    igConnectedId: string | null;
+                                    /** @default null */
+                                    connectedAt: string | null;
+                                    /** @default null */
+                                    lastSyncAt: string | null;
+                                    /** @default {} */
+                                    autoReply: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                        /** @default 3 */
+                                        maxPerDay: number;
+                                    };
+                                    /** @default {} */
+                                    autoFollowUp: {
+                                        /** @default false */
+                                        enabled: boolean;
+                                    };
+                                };
+                                webhookUrl: string;
+                                conversations: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Conversations (newest first) with counts and the ads they came from; filters: needs reply, hot, follow-up today, stage, ad, shop type, search
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    filter?: "all" | "needs_reply" | "hot" | "follow_up";
+                    stage?: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                    adId?: string;
+                    shopType?: "dress" | "salon" | "massage" | "barber";
+                    q?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                items: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                }[];
+                                counts: {
+                                    all: number;
+                                    needsReply: number;
+                                    hot: number;
+                                    followUp: number;
+                                };
+                                ads: {
+                                    adId: string;
+                                    count: number;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One conversation: messages of both sides, the send windows, the AI closer’s suggested next reply and the drafted reminder
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Conversation */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                conversation: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                }[];
+                                suggestion: {
+                                    text: string;
+                                    /** @enum {string} */
+                                    step: "hook" | "answer" | "close";
+                                    needsPerson: boolean;
+                                };
+                                followUpDraft: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Stage, shop type, hot flag, "ฉันรับต่อเอง" (pause the automatic reply 24 h) or skip the due reminder
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        stage?: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                        /** @enum {string|null} */
+                        shopType?: "dress" | "salon" | "massage" | "barber" | null;
+                        hot?: boolean;
+                        aiPaused?: boolean;
+                        /** @enum {boolean} */
+                        skipFollowUp?: true;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                conversation: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                }[];
+                                suggestion: {
+                                    text: string;
+                                    /** @enum {string} */
+                                    step: "hook" | "answer" | "close";
+                                    needsPerson: boolean;
+                                };
+                                followUpDraft: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a reply as staff: RESPONSE inside 24 h of the customer’s last message, HUMAN_AGENT tag 24 h–7 days (this click is the human), refused after 7 days. A draft with wrong facts is refused (409 wrong_facts) unless `confirmWrongFacts`
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        text: string;
+                        confirmWrongFacts?: boolean;
+                        followUpStep?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Sent */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                }[];
+                                /** @enum {string} */
+                                mode: "response" | "human_agent";
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/link-tenant": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link the shop the team opened for this customer (trial) to the conversation and its sales lead, so trials and payments can be measured
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        tenantId: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Linked */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                conversation: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                }[];
+                                suggestion: {
+                                    text: string;
+                                    /** @enum {string} */
+                                    step: "hook" | "answer" | "close";
+                                    needsPerson: boolean;
+                                };
+                                followUpDraft: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/check-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Wrong facts in a staff draft before sending (expired promo, "30 บัญชี 3 สาขา", ค่าเซ็ท 1,990, password, markdown link …)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        text: string;
+                        /** @enum {string|null} */
+                        shopType?: "dress" | "salon" | "massage" | "barber" | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Issues */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                code: string;
+                                message: string;
+                                /** @enum {string} */
+                                severity: "error" | "warn";
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/platform/rubric": {
         parameters: {
             query?: never;
@@ -25057,6 +27912,137 @@ export interface paths {
                                 month: string;
                                 used: number;
                                 cap: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/slip-gate/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rollout of the staff slip gate (`SLIP_GATE_MODE`): the staff slips of the last `days` days counted by how the reader judged them (`deposits.slip_check`), optionally per shop — the real decode rate before enforcing
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:read`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    days?: number;
+                    perTenant?: "true" | "false";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Counts */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                mode: "warn" | "enforce";
+                                days: number;
+                                total: number;
+                                decodeRate: number | null;
+                                counts: {
+                                    [key: string]: number;
+                                };
+                                tenants?: {
+                                    tenantId: string;
+                                    counts: {
+                                        [key: string]: number;
+                                    };
+                                }[];
                             };
                         };
                     };
@@ -52310,6 +55296,8 @@ export interface paths {
                             reference?: string | null;
                             note?: string | null;
                             slipFileId?: string | null;
+                            slipConfirmed?: boolean;
+                            slipNote?: string | null;
                             confirmAdditional?: boolean;
                         };
                     };
@@ -54066,6 +57054,8 @@ export interface paths {
                                 /** @default false */
                                 paid?: boolean;
                                 slipFileId?: string | null;
+                                slipConfirmed?: boolean;
+                                slipNote?: string | null;
                                 note?: string | null;
                             } | null;
                         };
@@ -59772,6 +62762,8 @@ export interface paths {
                             reference?: string | null;
                             note?: string | null;
                             slipFileId?: string | null;
+                            slipConfirmed?: boolean;
+                            slipNote?: string | null;
                             confirmAdditional?: boolean;
                         };
                         security?: {
@@ -59779,6 +62771,8 @@ export interface paths {
                             method: "cash" | "transfer" | "promptpay" | "other";
                             reference?: string | null;
                             slipFileId?: string | null;
+                            slipConfirmed?: boolean;
+                            slipNote?: string | null;
                             note?: string | null;
                         };
                         discount?: {
@@ -64067,6 +67061,8 @@ export interface paths {
                         method: "cash" | "transfer" | "promptpay" | "other";
                         reference?: string | null;
                         slipFileId?: string | null;
+                        slipConfirmed?: boolean;
+                        slipNote?: string | null;
                         note?: string | null;
                     };
                 };
@@ -64228,6 +67224,7 @@ export interface paths {
                                 settledAt: string;
                                 refundedAt: string | null;
                                 daysPending: number;
+                                cancelled: boolean;
                             }[];
                         };
                     };
@@ -64345,6 +67342,8 @@ export interface paths {
                 content: {
                     "application/json": {
                         slipFileId?: string | null;
+                        slipConfirmed?: boolean;
+                        slipNote?: string | null;
                         note?: string | null;
                     };
                 };
@@ -65798,6 +68797,8 @@ export interface paths {
                                         keywords: string[];
                                     };
                                 };
+                                handoffWhenStuck: boolean;
+                                stuckPauseMinutes: number;
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -65943,6 +68944,8 @@ export interface paths {
                                 keywords?: string[];
                             };
                         };
+                        handoffWhenStuck?: boolean;
+                        stuckPauseMinutes?: number;
                     };
                 };
             };
@@ -65986,6 +68989,8 @@ export interface paths {
                                         keywords: string[];
                                     };
                                 };
+                                handoffWhenStuck: boolean;
+                                stuckPauseMinutes: number;
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -66146,6 +69151,8 @@ export interface paths {
                                         keywords: string[];
                                     };
                                 };
+                                handoffWhenStuck: boolean;
+                                stuckPauseMinutes: number;
                                 month: string;
                                 used: number;
                                 quota: number;
@@ -67309,6 +70316,1435 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ai-chat/inbox/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Inbox settings of the shop (off by default)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                replyPauseMinutes: number;
+                                autoDone: boolean;
+                                lineAlerts: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Turn the inbox on / off, the AI pause after a staff reply, auto-done and the LINE alert to staff
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        enabled?: boolean;
+                        replyPauseMinutes?: number;
+                        autoDone?: boolean;
+                        lineAlerts?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Settings */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                enabled: boolean;
+                                replyPauseMinutes: number;
+                                autoDone: boolean;
+                                lineAlerts: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/prefs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My own switch for the LINE alert (and whether my LINE is linked to the shop’s OA)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Prefs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                lineAlerts: boolean;
+                                lineLinked: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Switch my LINE alert on / off (needs my LINE linked to the shop’s OA)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        lineAlerts: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Prefs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                lineAlerts: boolean;
+                                lineLinked: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Every conversation, newest activity first, with the tab counts. `filter`: needs_action · done · all · unread; `q` = a name or a phone number
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    filter?: "needs_action" | "done" | "all" | "unread";
+                    q?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Conversations */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                items: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    pictureUrl: string | null;
+                                    customerId: string | null;
+                                    lastMessageAt: string;
+                                    lastMessage: string | null;
+                                    /** @enum {string|null} */
+                                    lastRole: "user" | "assistant" | "staff" | "system" | null;
+                                    unread: number;
+                                    /** @enum {string|null} */
+                                    actionState: "needs_action" | "done" | null;
+                                    actionReason: string | null;
+                                    actionAt: string | null;
+                                    actionBy: string | null;
+                                    paused: boolean;
+                                    pausedUntil: string | null;
+                                    /** @enum {string|null} */
+                                    pauseReason: "handoff" | "staff" | null;
+                                    blocked: boolean;
+                                }[];
+                                counts: {
+                                    needsAction: number;
+                                    done: number;
+                                    unread: number;
+                                    all: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * One conversation: the timeline (customer, AI, staff), the customer panel, and whether a reply is free or uses the OA’s quota
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Conversation */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                thread: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    pictureUrl: string | null;
+                                    customerId: string | null;
+                                    lastMessageAt: string;
+                                    lastMessage: string | null;
+                                    /** @enum {string|null} */
+                                    lastRole: "user" | "assistant" | "staff" | "system" | null;
+                                    unread: number;
+                                    /** @enum {string|null} */
+                                    actionState: "needs_action" | "done" | null;
+                                    actionReason: string | null;
+                                    actionAt: string | null;
+                                    actionBy: string | null;
+                                    paused: boolean;
+                                    pausedUntil: string | null;
+                                    /** @enum {string|null} */
+                                    pauseReason: "handoff" | "staff" | null;
+                                    blocked: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    role: "user" | "assistant" | "staff" | "system";
+                                    kind: string | null;
+                                    content: string;
+                                    createdAt: string;
+                                    verdict: string | null;
+                                    media: {
+                                        /** @enum {string} */
+                                        status: "pending" | "ready" | "gone" | "too_big" | "failed" | "external";
+                                        url: string | null;
+                                        mime: string | null;
+                                        stickerUrl: string | null;
+                                        latitude: number | null;
+                                        longitude: number | null;
+                                        address: string | null;
+                                        title: string | null;
+                                        fileName: string | null;
+                                    } | null;
+                                    author: {
+                                        id: string;
+                                        name: string;
+                                    } | null;
+                                    /** @enum {string|null} */
+                                    delivery: "queued" | "sent" | "failed" | null;
+                                    /** @enum {string|null} */
+                                    via: "reply" | "push" | null;
+                                    error: string | null;
+                                    imageUrl: string | null;
+                                }[];
+                                customer: {
+                                    id: string;
+                                    name: string;
+                                    bookings: {
+                                        id: string;
+                                        startAt: string;
+                                        status: string;
+                                        title: string | null;
+                                    }[];
+                                    orders: {
+                                        id: string;
+                                        createdAt: string;
+                                        status: string;
+                                        totalMinor: number;
+                                    }[];
+                                } | null;
+                                canReply: boolean;
+                                /** @enum {string|null} */
+                                replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                freeReplyUntil: string | null;
+                                quota: {
+                                    used: number;
+                                    limit: number | null;
+                                    checkedAt: string | null;
+                                    warn: boolean;
+                                    exhausted: boolean;
+                                } | null;
+                                replyPauseMinutes: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * I have read this conversation (clears my unread count)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Marked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ดำเนินการแล้ว (`done`) or back to ต้องดำเนินการ (`needs_action`); who and when are recorded
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        state: "needs_action" | "done";
+                    };
+                };
+            };
+            responses: {
+                /** @description Conversation */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                /** @enum {string} */
+                                channel: "line" | "instagram" | "messenger";
+                                name: string | null;
+                                pictureUrl: string | null;
+                                customerId: string | null;
+                                lastMessageAt: string;
+                                lastMessage: string | null;
+                                /** @enum {string|null} */
+                                lastRole: "user" | "assistant" | "staff" | "system" | null;
+                                unread: number;
+                                /** @enum {string|null} */
+                                actionState: "needs_action" | "done" | null;
+                                actionReason: string | null;
+                                actionAt: string | null;
+                                actionBy: string | null;
+                                paused: boolean;
+                                pausedUntil: string | null;
+                                /** @enum {string|null} */
+                                pauseReason: "handoff" | "staff" | null;
+                                blocked: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/{id}/reply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reply to the customer through the shop’s LINE OA (text and / or one picture). Queued for the worker: a fresh reply token is used for free, else a push (the OA’s monthly quota). `clientId` makes a repeat the same message. The AI pauses for the shop’s setting (30 minutes by default)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        clientId: string;
+                        text?: string;
+                        imageFileId?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The queued message */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                message: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    role: "user" | "assistant" | "staff" | "system";
+                                    kind: string | null;
+                                    content: string;
+                                    createdAt: string;
+                                    verdict: string | null;
+                                    media: {
+                                        /** @enum {string} */
+                                        status: "pending" | "ready" | "gone" | "too_big" | "failed" | "external";
+                                        url: string | null;
+                                        mime: string | null;
+                                        stickerUrl: string | null;
+                                        latitude: number | null;
+                                        longitude: number | null;
+                                        address: string | null;
+                                        title: string | null;
+                                        fileName: string | null;
+                                    } | null;
+                                    author: {
+                                        id: string;
+                                        name: string;
+                                    } | null;
+                                    /** @enum {string|null} */
+                                    delivery: "queued" | "sent" | "failed" | null;
+                                    /** @enum {string|null} */
+                                    via: "reply" | "push" | null;
+                                    error: string | null;
+                                    imageUrl: string | null;
+                                };
+                                thread: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    pictureUrl: string | null;
+                                    customerId: string | null;
+                                    lastMessageAt: string;
+                                    lastMessage: string | null;
+                                    /** @enum {string|null} */
+                                    lastRole: "user" | "assistant" | "staff" | "system" | null;
+                                    unread: number;
+                                    /** @enum {string|null} */
+                                    actionState: "needs_action" | "done" | null;
+                                    actionReason: string | null;
+                                    actionAt: string | null;
+                                    actionBy: string | null;
+                                    paused: boolean;
+                                    pausedUntil: string | null;
+                                    /** @enum {string|null} */
+                                    pauseReason: "handoff" | "staff" | null;
+                                    blocked: boolean;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ai-chat/inbox/messages/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ส่งใหม่: a failed staff message goes out again with the same LINE retry key (within 23 hours; LINE sends it at most once)
+         * @description Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The queued message */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                message: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    role: "user" | "assistant" | "staff" | "system";
+                                    kind: string | null;
+                                    content: string;
+                                    createdAt: string;
+                                    verdict: string | null;
+                                    media: {
+                                        /** @enum {string} */
+                                        status: "pending" | "ready" | "gone" | "too_big" | "failed" | "external";
+                                        url: string | null;
+                                        mime: string | null;
+                                        stickerUrl: string | null;
+                                        latitude: number | null;
+                                        longitude: number | null;
+                                        address: string | null;
+                                        title: string | null;
+                                        fileName: string | null;
+                                    } | null;
+                                    author: {
+                                        id: string;
+                                        name: string;
+                                    } | null;
+                                    /** @enum {string|null} */
+                                    delivery: "queued" | "sent" | "failed" | null;
+                                    /** @enum {string|null} */
+                                    via: "reply" | "push" | null;
+                                    error: string | null;
+                                    imageUrl: string | null;
+                                };
+                                thread: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "line" | "instagram" | "messenger";
+                                    name: string | null;
+                                    pictureUrl: string | null;
+                                    customerId: string | null;
+                                    lastMessageAt: string;
+                                    lastMessage: string | null;
+                                    /** @enum {string|null} */
+                                    lastRole: "user" | "assistant" | "staff" | "system" | null;
+                                    unread: number;
+                                    /** @enum {string|null} */
+                                    actionState: "needs_action" | "done" | null;
+                                    actionReason: string | null;
+                                    actionAt: string | null;
+                                    actionBy: string | null;
+                                    paused: boolean;
+                                    pausedUntil: string | null;
+                                    /** @enum {string|null} */
+                                    pauseReason: "handoff" | "staff" | null;
+                                    blocked: boolean;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/assistant/ask": {
         parameters: {
             query?: never;
@@ -67752,6 +72188,8 @@ export interface paths {
                                 takenAt: string;
                                 takenBy: string | null;
                                 slipFileId: string | null;
+                                /** @enum {string|null} */
+                                slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                 /** @enum {string} */
                                 source: "shop" | "booking" | "online" | "import" | "security";
                             }[];
@@ -67868,6 +72306,8 @@ export interface paths {
                         reference?: string | null;
                         note?: string | null;
                         slipFileId?: string | null;
+                        slipConfirmed?: boolean;
+                        slipNote?: string | null;
                         confirmAdditional?: boolean;
                     };
                 };
@@ -67907,6 +72347,8 @@ export interface paths {
                                 takenAt: string;
                                 takenBy: string | null;
                                 slipFileId: string | null;
+                                /** @enum {string|null} */
+                                slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                 /** @enum {string} */
                                 source: "shop" | "booking" | "online" | "import" | "security";
                             };
@@ -68049,6 +72491,8 @@ export interface paths {
                                 takenAt: string;
                                 takenBy: string | null;
                                 slipFileId: string | null;
+                                /** @enum {string|null} */
+                                slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                 /** @enum {string} */
                                 source: "shop" | "booking" | "online" | "import" | "security";
                             };
@@ -68308,6 +72752,9 @@ export interface paths {
                         reason: string;
                         /** @enum {string} */
                         method?: "cash" | "transfer" | "promptpay" | "card_external" | "other";
+                        slipFileId?: string | null;
+                        slipConfirmed?: boolean;
+                        slipNote?: string | null;
                     };
                 };
             };
@@ -68346,6 +72793,8 @@ export interface paths {
                                 takenAt: string;
                                 takenBy: string | null;
                                 slipFileId: string | null;
+                                /** @enum {string|null} */
+                                slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                 /** @enum {string} */
                                 source: "shop" | "booking" | "online" | "import" | "security";
                             };
@@ -68502,6 +72951,8 @@ export interface paths {
                                 takenAt: string;
                                 takenBy: string | null;
                                 slipFileId: string | null;
+                                /** @enum {string|null} */
+                                slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                 /** @enum {string} */
                                 source: "shop" | "booking" | "online" | "import" | "security";
                             };
@@ -68648,6 +73099,8 @@ export interface paths {
                                     takenAt: string;
                                     takenBy: string | null;
                                     slipFileId: string | null;
+                                    /** @enum {string|null} */
+                                    slipCheck: "basic_ok" | "no_qr" | "promptpay_qr" | "qr_invalid" | "manual_confirmed" | null;
                                     /** @enum {string} */
                                     source: "shop" | "booking" | "online" | "import" | "security";
                                 }[];
@@ -71639,6 +76092,8 @@ export interface paths {
                             amountMinor: number;
                             reference?: string | null;
                             slipFileId?: string | null;
+                            slipConfirmed?: boolean;
+                            slipNote?: string | null;
                             customerPackageId?: string | null;
                         }[];
                         /** @description integer satang */

@@ -1,0 +1,232 @@
+{
+  "title": "โฆษณา (Ads)",
+  "description": "ดูว่าเงินโฆษณาทุกบาทกลับมาเท่าไหร่: ค่าโฆษณา → แชท → ร้านทดลอง → ร้านที่จ่ายแล้ว → รายได้ (ข้อเสนอแนะเท่านั้น ระบบไม่แก้หรือหยุดโฆษณาให้)",
+  "ownerOnly": "หน้านี้สำหรับเจ้าของ CoreUp เท่านั้น",
+  "ownerOnlyHint": "มีตัวเลขค่าโฆษณาและรายได้",
+  "status": {
+    "never": "ยังไม่เคยดึงข้อมูลจาก Meta",
+    "syncing": "กำลังดึงข้อมูลจาก Meta…",
+    "ok": "เชื่อม Meta แล้ว",
+    "no_token": "ยังไม่ได้เชื่อม Meta",
+    "token_error": "Meta ไม่รับคีย์ หรือคีย์ไม่มีสิทธิ์ดูโฆษณา",
+    "rate_limited": "Meta จำกัดจำนวนครั้ง จะดึงต่อรอบถัดไป",
+    "error": "ดึงข้อมูลจาก Meta ไม่สำเร็จ",
+    "lastOk": "ดึงสำเร็จล่าสุด {{at}}",
+    "lastRun": "ลองล่าสุด {{at}}",
+    "neverOk": "ยังไม่เคยสำเร็จ",
+    "usage": "โควตา Meta ที่ใช้ {{pct}}%",
+    "syncNow": "ดึงข้อมูลตอนนี้",
+    "syncQueued": "สั่งดึงข้อมูลแล้ว รอสักครู่",
+    "noTokenHint": "ให้ทีมเทคนิคตั้งค่า META_ADS_TOKEN (คีย์ที่มีสิทธิ์ ads_read) ใน Railway ของ worker แล้วกด “ดึงข้อมูลตอนนี้” ระบบอ่านอย่างเดียว ไม่แก้โฆษณา",
+    "tokenErrorHint": "ตรวจว่าคีย์ META_ADS_TOKEN ยังไม่หมดอายุ และมีสิทธิ์ ads_read กับบัญชีโฆษณานี้"
+  },
+  "range": {
+    "thisMonth": "เดือนนี้",
+    "last7": "7 วัน",
+    "last30": "30 วัน",
+    "from": "ตั้งแต่",
+    "to": "ถึง"
+  },
+  "cards": {
+    "spend": "ค่าโฆษณา",
+    "chats": "แชท",
+    "trials": "ร้านทดลอง",
+    "paidShops": "ร้านที่จ่ายแล้ว",
+    "revenue": "รายได้ (ใบแจ้งแรก)",
+    "roas": "ROAS",
+    "cac": "ต้นทุนต่อร้านที่จ่าย (CAC)",
+    "roasHint": "รายได้ ÷ ค่าโฆษณา · 3 เดือน {{value}}",
+    "revenueHint": "MRR ที่ได้ {{mrr}}",
+    "chatsHint": "{{cost}} ต่อแชท",
+    "trialsHint": "{{cost}} ต่อร้านทดลอง",
+    "paybackHint": "คืนทุนใน {{months}} เดือน",
+    "noData": "ยังไม่มีข้อมูล"
+  },
+  "chart": {
+    "title": "ค่าโฆษณา เทียบกับ รายได้",
+    "day": "รายวัน",
+    "week": "รายสัปดาห์",
+    "spend": "ค่าโฆษณา",
+    "revenue": "รายได้",
+    "empty": "ยังไม่มีข้อมูลค่าโฆษณาในช่วงนี้"
+  },
+  "table": {
+    "campaigns": "แคมเปญ / โฆษณา",
+    "creatives": "ภาพ/วิดีโอ",
+    "shopTypes": "ประเภทร้าน",
+    "placements": "ตำแหน่งโฆษณา",
+    "name": "ชื่อ",
+    "shopType": "ประเภทร้าน",
+    "placement": "ตำแหน่ง",
+    "spend": "ค่าโฆษณา",
+    "reach": "คนเห็น (รวมรายวัน)",
+    "impressions": "ครั้งที่เห็น",
+    "frequency": "ความถี่เฉลี่ย/วัน",
+    "ctr": "CTR",
+    "cpc": "CPC",
+    "cpm": "CPM",
+    "chats": "แชท",
+    "qualified": "รู้ประเภทร้าน",
+    "demoSent": "ส่งลิงก์ตัวอย่าง",
+    "trials": "ทดลอง",
+    "paid": "จ่ายแล้ว",
+    "revenue": "รายได้",
+    "mrr": "MRR",
+    "costPerChat": "ต่อแชท",
+    "costPerTrial": "ต่อร้านทดลอง",
+    "cac": "CAC",
+    "roas": "ROAS",
+    "roas3m": "ROAS 3 เดือน",
+    "payback": "คืนทุน (เดือน)",
+    "budget": "งบ/วัน",
+    "empty": "ยังไม่มีข้อมูลในช่วงนี้",
+    "unknownAd": "ไม่ทราบโฆษณา (แชทที่ไม่พบโฆษณา)",
+    "expand": "ดูโฆษณาในแคมเปญ",
+    "collapse": "ซ่อนโฆษณา",
+    "funnel": "{{chats}} แชท → {{trials}} ทดลอง → {{paid}} จ่าย"
+  },
+  "adStatus": {
+    "ACTIVE": "เปิดอยู่",
+    "PAUSED": "หยุดอยู่",
+    "CAMPAIGN_PAUSED": "แคมเปญหยุด",
+    "ADSET_PAUSED": "ชุดโฆษณาหยุด",
+    "ARCHIVED": "เก็บแล้ว",
+    "DELETED": "ลบแล้ว",
+    "WITH_ISSUES": "มีปัญหา",
+    "PENDING_REVIEW": "รอตรวจ"
+  },
+  "shopType": {
+    "dress": "ร้านเช่าชุด",
+    "dress_rental": "ร้านเช่าชุด",
+    "salon": "ร้านทำผม/เสริมสวย",
+    "massage": "ร้านนวด/สปา",
+    "spa": "ร้านนวด/สปา",
+    "barber": "ร้านตัดผมชาย",
+    "nail": "ร้านทำเล็บ",
+    "other": "อื่น ๆ",
+    "unknown": "ยังไม่ทราบ"
+  },
+  "channel": {
+    "meta_ads": "โฆษณา Meta",
+    "organic_page": "เพจ (ไม่ผ่านโฆษณา)",
+    "referral": "แนะนำต่อ",
+    "line": "LINE"
+  },
+  "goals": {
+    "title": "เป้าหมายเดือน {{month}}",
+    "edit": "ตั้งเป้าหมาย",
+    "editTitle": "ตั้งเป้าหมายเดือน {{month}}",
+    "editHint": "เว้นว่าง = ไม่ตั้งเป้า เงินเป็นบาท",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "saved": "บันทึกเป้าหมายแล้ว",
+    "noTarget": "ยังไม่ได้ตั้งเป้า",
+    "key": {
+      "chats": "แชทใหม่",
+      "trials": "ร้านทดลอง",
+      "paidShops": "ร้านที่จ่ายแล้ว",
+      "mrrMinor": "MRR",
+      "adBudgetMinor": "งบโฆษณา"
+    },
+    "of": "{{actual}} จาก {{target}} ({{pct}}%)",
+    "pace": "ควรอยู่ที่ {{expected}} ตอนนี้",
+    "forecast": "ถึงสิ้นเดือน ~{{forecast}} ({{pct}}%)",
+    "needed": "ต้องได้เพิ่ม {{n}} ต่อวัน",
+    "status": {
+      "no_target": "ไม่มีเป้า",
+      "reached": "ถึงเป้าแล้ว",
+      "ahead": "ใช้เร็วกว่าแผน",
+      "on_track": "ทันเป้า",
+      "behind": "ตามหลัง"
+    },
+    "channels": "แยกตามช่องทาง (เดือนนี้)",
+    "channelChats": "แชท",
+    "channelTrials": "ทดลอง",
+    "channelPaid": "จ่าย",
+    "channelMrr": "MRR ใหม่",
+    "chatsHint": "เทียบเฉพาะเดือน {{month}}"
+  },
+  "recs": {
+    "title": "คำแนะนำ",
+    "suggestionOnly": "เป็นข้อเสนอแนะเท่านั้น ระบบไม่ได้แก้หรือหยุดโฆษณาให้",
+    "empty": "ตอนนี้ยังไม่มีอะไรต้องทำ",
+    "evidence": "ตัวเลขที่ใช้",
+    "severity": {
+      "warn": "ควรดู",
+      "good": "โอกาส",
+      "info": "ข้อสังเกต"
+    },
+    "cost_per_chat_high": {
+      "title": "ค่าต่อแชทเกินเกณฑ์ {{days}} วันติด",
+      "body": "ค่าต่อแชทเกิน {{thresholdMinor}} ต่อเนื่อง {{days}} วัน (ใช้ไป {{spendMinor}} ได้ {{chats}} แชท วันล่าสุด {{lastDayCostPerChatMinor}} ต่อแชท) ลองพักโฆษณานี้ หรือเปลี่ยนภาพ/วิดีโอใหม่"
+    },
+    "frequency_high": {
+      "title": "คนเห็นโฆษณานี้ซ้ำเกินไป",
+      "body": "ความถี่ {{avgDailyFrequency}} เกิน {{threshold}} ใน {{days}} วันล่าสุด ({{impressions}} ครั้งที่เห็น) ภาพเริ่มน่าเบื่อ ลองเปลี่ยนภาพ/วิดีโอใหม่"
+    },
+    "spend_no_trials": {
+      "title": "ใช้เงินแล้ว มีแชท แต่ยังไม่มีร้านทดลอง",
+      "body": "ใช้ไป {{spendMinor}} ใน {{days}} วัน ได้ {{chats}} แชท แต่ไม่มีใครสมัครทดลอง อย่าเพิ่มงบ ให้แก้การปิดแชทก่อน (ส่งลิงก์ร้านตัวอย่าง ชวนโทรคุย)"
+    },
+    "best_cost_per_trial": {
+      "title": "โฆษณานี้ได้ร้านทดลองถูกที่สุด",
+      "body": "ได้ {{trials}} ร้านทดลอง ต้นทุน {{costPerTrialMinor}} ต่อร้าน ใน {{days}} วัน เทียบกับ “{{fromAd}}” ที่ใช้ไป {{fromSpendMinor}} (ต้นทุนต่อร้าน {{fromCostPerTrialMinor}}) ลองย้ายงบมาที่โฆษณานี้"
+    },
+    "placement_cheaper": {
+      "title": "Reels ถูกกว่าฟีด",
+      "body": "Reels {{reelsCostPerChatMinor}} ต่อแชท ({{reelsChats}} แชท) ฟีด {{feedCostPerChatMinor}} ต่อแชท ({{feedChats}} แชท) ใน {{days}} วัน ทำวิดีโอ 9:16 เพิ่ม"
+    },
+    "chats_unanswered": {
+      "title": "{{count}} แชทที่ลูกค้ารอเกิน 1 ชั่วโมง",
+      "body": "รอนานสุด {{oldestHours}} ชั่วโมง ส่งข้อความพร้อมใช้ด้านล่างได้เลย (ให้คนส่งเอง)"
+    },
+    "chats_stalled": {
+      "title": "{{count}} แชทที่ลูกค้าเงียบหลังเราถาม",
+      "body": "เงียบมานานสุด {{oldestHours}} ชั่วโมง ตามอีกครั้งด้วยข้อความพร้อมใช้ด้านล่าง (ให้คนส่งเอง)"
+    },
+    "ev": {
+      "thresholdMinor": "เกณฑ์",
+      "threshold": "เกณฑ์",
+      "days": "จำนวนวัน",
+      "spendMinor": "ใช้ไป",
+      "chats": "แชท",
+      "lastDayCostPerChatMinor": "ต่อแชทวันล่าสุด",
+      "impressions": "ครั้งที่เห็น",
+      "trials": "ร้านทดลอง",
+      "costPerTrialMinor": "ต่อร้านทดลอง",
+      "fromAd": "เทียบกับ",
+      "fromSpendMinor": "ใช้ไป (ที่เทียบ)",
+      "fromCostPerTrialMinor": "ต่อร้านทดลอง (ที่เทียบ)",
+      "reelsCostPerChatMinor": "Reels ต่อแชท",
+      "reelsChats": "แชท Reels",
+      "feedCostPerChatMinor": "ฟีดต่อแชท",
+      "feedChats": "แชทฟีด",
+      "count": "จำนวนแชท",
+      "oldestHours": "นานสุด (ชม.)",
+      "avgDailyFrequency": "เฉลี่ยความถี่รายวัน"
+    }
+  },
+  "chats": {
+    "title": "แชทที่ยังปิดได้ ข้อความพร้อมส่ง",
+    "hint": "คนตอบเองใน Business Suite ได้ภายใน 7 วันหลังลูกค้าทักล่าสุด ระบบไม่ส่งให้",
+    "unanswered": "ลูกค้ารอ {{hours}} ชม.",
+    "stalled": "เงียบหลังเราถาม {{hours}} ชม.",
+    "until": "ตอบได้ถึง {{at}}",
+    "freeUntil": "ส่งปกติได้ถึง {{at}}",
+    "copy": "คัดลอกข้อความ",
+    "copied": "คัดลอกแล้ว",
+    "noName": "(ไม่มีชื่อ)",
+    "fromAd": "มาจากโฆษณา"
+  },
+  "report": {
+    "title": "สรุปการตลาดประจำสัปดาห์ (AI)",
+    "hint": "เขียนทุกวันจันทร์ จากตัวเลขในหน้านี้เท่านั้น",
+    "empty": "ยังไม่มีรายงาน จะเขียนให้วันจันทร์ถัดไป หรือกดสร้างเลย",
+    "generate": "สร้างตอนนี้",
+    "generating": "กำลังเขียน… รอสักครู่",
+    "capped": "สร้างครบ {{n}} ครั้งแล้วในสัปดาห์นี้",
+    "week": "สัปดาห์ที่เริ่ม {{date}}",
+    "timedOut": "ยังไม่เห็นรายงานใหม่ใน 2 นาที ไม่ต้องกดซ้ำ ให้ทีมเทคนิคตรวจว่าตั้ง ANTHROPIC_API_KEY และมีค่าโฆษณา/แชทในสัปดาห์นั้นหรือยัง"
+  },
+  "error": "โหลดข้อมูลโฆษณาไม่สำเร็จ"
+}
