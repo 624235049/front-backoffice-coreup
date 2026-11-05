@@ -554,3 +554,13 @@ export const useRevokeUserSessions = () =>
       }),
     ),
   );
+
+export const useChangeUserEmail = () =>
+  useUserMut((v: { id: string; newEmail: string; reason: string }) =>
+    unwrap(
+      api.POST('/v1/platform/users/{id}/change-email', {
+        params: { path: { id: v.id } },
+        body: { newEmail: v.newEmail, reason: v.reason },
+      }),
+    ),
+  );

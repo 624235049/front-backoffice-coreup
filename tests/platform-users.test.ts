@@ -76,6 +76,8 @@ describe('API refusal reasons', () => {
   it('maps the specific 409s and leaves everything else generic', () => {
     expect(userActionError(conflict('self'))).toBe('self');
     expect(userActionError(conflict('no_email'))).toBe('noEmail');
+    expect(userActionError(conflict('email_taken'))).toBe('emailTaken');
+    expect(userActionError(conflict('same_email'))).toBe('sameEmail');
     expect(userActionError(conflict('other'))).toBeNull();
     expect(userActionError(new ApiError({ status: 429, code: 'RATE_LIMITED', message: 'x' }))).toBeNull();
     expect(userActionError(new Error('boom'))).toBeNull();

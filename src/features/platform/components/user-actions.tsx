@@ -1,4 +1,4 @@
-import { Check, Copy, Dices, KeyRound, Link2, LogOut, TriangleAlert } from 'lucide-react';
+import { Check, Copy, Dices, KeyRound, Link2, LogOut, Mail, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,7 +16,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useErrorMessage } from '@/lib/query';
 import { cn } from '@/lib/utils';
-import { type UserRow, useCreateUserResetLink, useResetUserPassword, useRevokeUserSessions } from '../api';
+import {
+  type UserRow,
+  useChangeUserEmail,
+  useCreateUserResetLink,
+  useResetUserPassword,
+  useRevokeUserSessions,
+} from '../api';
 import { formatDateTime, useIntlLocale } from '../format';
 import {
   buildPasswordMessage,
@@ -462,6 +468,100 @@ export function RevokeSessionsDialog({
             }
           >
             {revoke.isPending ? t('working') : t('revoke.confirm')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ---------------------------------------------------------------- change login email */
+
+/** Shape check only (the API validates for real): something@something.tld. */
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function ChangeEmailDialog({
+  user,
+  open,
+  onOpenChange,
+}: {
+  user: ActionUser;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const { t } = useTranslation('users');
+  const { t: tc } = useTranslation('common');
+  const change = useChangeUserEmail();
+  const onError = useActionErrorToast();
+  const [email, setEmail] = useState('');
+  const [reason, setReason] = useState('');
+  const newEmail = email.trim().toLowerCase();
+
+  const close = (next: boolean) => {
+    if (!next) {
+      setEmail('');
+      setReason('');
+      change.reset();
+    }
+    onOpenChange(next);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={close}>
+      <DialogContent closeLabel={tc('close')}>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Mail className="size-5" aria-hidden />
+            {t('changeEmail.title', { name: user.name })}
+          </DialogTitle>
+          <DialogDescription>{t('changeEmail.description', { email: user.email ?? '–' })}</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4">
+          <p className="flex items-start gap-2 rounded-md bg-warning/10 p-3 text-sm text-warning" role="note">
+            <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+            {t('changeEmail.warning', { count: user.activeSessions })}
+          </p>
+          <TeamWarning user={user} />
+          <div className="grid gap-1.5">
+            <Label htmlFor="change-email-new">{t('changeEmail.label')}</Label>
+            <Input
+              id="change-email-new"
+              type="email"
+              inputMode="email"
+              autoComplete="off"
+              maxLength={254}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t('changeEmail.placeholder')}
+            />
+          </div>
+          <ReasonField id="change-email-reason" value={reason} onChange={setReason} />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => close(false)} disabled={change.isPending}>
+            {tc('cancel')}
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={change.isPending}
+            blockedReason={
+              (!EMAIL_SHAPE.test(newEmail) && t('changeEmail.needed')) ||
+              (!reasonReady(reason) && t('reason.needed', { min: MIN_REASON }))
+            }
+            onClick={() =>
+              change.mutate(
+                { id: user.id, newEmail, reason: reason.trim() },
+                {
+                  onSuccess: (res) => {
+                    toast.success(t('changeEmail.done', { email: res.data.email }));
+                    close(false);
+                  },
+                  onError,
+                },
+              )
+            }
+          >
+            {change.isPending ? t('working') : t('changeEmail.confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

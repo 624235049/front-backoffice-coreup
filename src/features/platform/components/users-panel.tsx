@@ -1,4 +1,4 @@
-import { Ellipsis, KeyRound, Link2, LogOut, UserRound } from 'lucide-react';
+import { Ellipsis, KeyRound, Link2, LogOut, Mail, UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -14,7 +14,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { UserRow } from '../api';
 import { formatDateTime, useIntlLocale } from '../format';
 import { OwnerPhone } from './owner-phone';
-import { CopyButton, ResetLinkDialog, ResetPasswordDialog, RevokeSessionsDialog } from './user-actions';
+import {
+  ChangeEmailDialog,
+  CopyButton,
+  ResetLinkDialog,
+  ResetPasswordDialog,
+  RevokeSessionsDialog,
+} from './user-actions';
 import { type UserActionKind, UserDetailSheet } from './user-detail-sheet';
 import { UserBadges, UserMemberships } from './user-parts';
 
@@ -70,6 +76,12 @@ export function UsersPanel({
                 onSelect={() => (self ? toast.warning(t('error.self')) : start('revoke', u))}
               >
                 <LogOut /> {t('action.revoke')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={self ? 'opacity-50' : undefined}
+                onSelect={() => (self ? toast.warning(t('error.self')) : start('email', u))}
+              >
+                <Mail /> {t('action.email')}
               </DropdownMenuItem>
             </>
           ) : null}
@@ -181,6 +193,9 @@ export function UsersPanel({
           open
           onOpenChange={(o) => (o ? undefined : setAction(null))}
         />
+      ) : null}
+      {action?.kind === 'email' ? (
+        <ChangeEmailDialog user={action.user} open onOpenChange={(o) => (o ? undefined : setAction(null))} />
       ) : null}
     </>
   );

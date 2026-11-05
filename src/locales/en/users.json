@@ -61,7 +61,8 @@
     "open": "View details",
     "reset": "Reset password",
     "link": "Send set-password link",
-    "revoke": "Sign out everywhere"
+    "revoke": "Sign out everywhere",
+    "email": "Change login email"
   },
   "reason": {
     "label": "Reason (kept in the audit log)",
@@ -72,7 +73,9 @@
   "teamWarning": "This is a CoreUp team account. Changing its password affects sign-in to this back office and is logged.",
   "error": {
     "self": "You cannot do this to your own account; change your password in account security instead",
-    "noEmail": "This account signs in with LINE only and has no real email to set a password for"
+    "noEmail": "This account signs in with LINE only and has no real email to set a password for",
+    "emailTaken": "Another account already uses this email (letter case ignored). Use a different one.",
+    "sameEmail": "This is already the account's current email. Enter a new one."
   },
   "reset": {
     "title": "Reset password for {{name}}",
@@ -113,6 +116,16 @@
     "confirm": "Sign out",
     "done": "Signed out of {{count}} device(s)"
   },
+  "changeEmail": {
+    "title": "Change the login email of {{name}}",
+    "description": "Current email {{email}}. Use it when the customer asked for the change and the team confirmed it with them (phone or LINE). The password stays the same.",
+    "warning": "The user is signed out of every device ({{count}} signed in now) and must sign in again with the new email. A notice is mailed to both the old and the new address.",
+    "label": "New email",
+    "placeholder": "name@example.com",
+    "needed": "Type a valid new email first",
+    "confirm": "Change email",
+    "done": "Email changed to {{email}}; the user was signed out everywhere"
+  },
   "detail": {
     "title": "User details",
     "description": "Shops, recent sign-ins and what the team did to this account (IP addresses are partly hidden)",
@@ -130,7 +143,8 @@
     "actionName": {
       "platform.user_password_reset": "Password reset",
       "platform.user_reset_link_created": "Set-password link created",
-      "platform.user_sessions_revoked": "Signed out everywhere"
+      "platform.user_sessions_revoked": "Signed out everywhere",
+      "platform.user_email_changed": "Login email changed"
     }
   },
   "tab": {

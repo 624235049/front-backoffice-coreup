@@ -1,4 +1,4 @@
-import { KeyRound, Link2, LogOut } from 'lucide-react';
+import { KeyRound, Link2, LogOut, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { QueryState } from '@/components/query-state';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,7 @@ import { OwnerPhone } from './owner-phone';
 import { CopyButton } from './user-actions';
 import { UserBadges, UserMemberships } from './user-parts';
 
-export type UserActionKind = 'reset' | 'link' | 'revoke';
+export type UserActionKind = 'reset' | 'link' | 'revoke' | 'email';
 
 /** Account detail: memberships, recent sign-ins (IP masked by the API) and recent account actions. */
 export function UserDetailSheet({
@@ -95,6 +95,13 @@ export function UserDetailSheet({
                         onClick={() => onAction('revoke', u)}
                       >
                         <LogOut /> {t('action.revoke')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        blockedReason={self && t('error.self')}
+                        onClick={() => onAction('email', u)}
+                      >
+                        <Mail /> {t('action.email')}
                       </Button>
                     </div>
                   </section>

@@ -101,13 +101,18 @@ export function describeUserAgent(ua: string | null | undefined): string | null 
   return parts.length > 0 ? parts.join(' · ') : null;
 }
 
-export type UserActionError = 'self' | 'noEmail';
+export type UserActionError = 'self' | 'noEmail' | 'emailTaken' | 'sameEmail';
+
+const ACTION_ERRORS: Record<string, UserActionError> = {
+  self: 'self',
+  no_email: 'noEmail',
+  email_taken: 'emailTaken',
+  same_email: 'sameEmail',
+};
 
 /** The API's specific 409 reasons for account actions (otherwise null → generic error toast). */
 export function userActionError(e: unknown): UserActionError | null {
   if (!isApiError(e) || e.status !== 409) return null;
   const reason = (e.details as { reason?: string } | undefined)?.reason;
-  if (reason === 'self') return 'self';
-  if (reason === 'no_email') return 'noEmail';
-  return null;
+  return (reason && ACTION_ERRORS[reason]) || null;
 }

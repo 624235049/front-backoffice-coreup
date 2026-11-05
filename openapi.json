@@ -56911,7 +56911,8 @@
                                 "enum": [
                                   "platform.user_password_reset",
                                   "platform.user_reset_link_created",
-                                  "platform.user_sessions_revoked"
+                                  "platform.user_sessions_revoked",
+                                  "platform.user_email_changed"
                                 ]
                               },
                               "actorName": {
@@ -57445,6 +57446,168 @@
                         }
                       },
                       "required": [
+                        "revokedSessions"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/users/{id}/change-email": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Change the login email (verified with the customer by phone or LINE, so stored as verified), keep the password, sign the user out everywhere and mail both addresses. platform_owner only; reason required and audited. 409 `email_taken` / `same_email`",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newEmail": {
+                    "type": "string",
+                    "description": "the new login email"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "newEmail",
+                  "reason"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        },
+                        "revokedSessions": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "email",
                         "revokedSessions"
                       ]
                     }
@@ -147831,6 +147994,9 @@
                         "stuckPauseMinutes": {
                           "type": "integer"
                         },
+                        "readImages": {
+                          "type": "boolean"
+                        },
                         "month": {
                           "type": "string",
                           "pattern": "^\\d{4}-\\d{2}$"
@@ -147893,6 +148059,7 @@
                         "dress",
                         "handoffWhenStuck",
                         "stuckPauseMinutes",
+                        "readImages",
                         "month",
                         "used",
                         "quota",
@@ -148122,6 +148289,9 @@
                     "type": "integer",
                     "minimum": 5,
                     "maximum": 1440
+                  },
+                  "readImages": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -148236,6 +148406,9 @@
                         "stuckPauseMinutes": {
                           "type": "integer"
                         },
+                        "readImages": {
+                          "type": "boolean"
+                        },
                         "month": {
                           "type": "string",
                           "pattern": "^\\d{4}-\\d{2}$"
@@ -148298,6 +148471,7 @@
                         "dress",
                         "handoffWhenStuck",
                         "stuckPauseMinutes",
+                        "readImages",
                         "month",
                         "used",
                         "quota",
@@ -148537,6 +148711,9 @@
                         "stuckPauseMinutes": {
                           "type": "integer"
                         },
+                        "readImages": {
+                          "type": "boolean"
+                        },
                         "month": {
                           "type": "string",
                           "pattern": "^\\d{4}-\\d{2}$"
@@ -148599,6 +148776,7 @@
                         "dress",
                         "handoffWhenStuck",
                         "stuckPauseMinutes",
+                        "readImages",
                         "month",
                         "used",
                         "quota",
@@ -151298,6 +151476,155 @@
         }
       }
     },
+    "/v1/ai-chat/inbox/stickers": {
+      "get": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "The LINE stickers a bot may send (Messaging API sticker list): packages with their sticker id ranges, and the picture url pattern",
+        "description": "Requires header `X-Tenant-Id`. Permission: `ai_chat:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stickers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "packages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "packageId": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "from": {
+                                "type": "integer"
+                              },
+                              "to": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "packageId",
+                              "title",
+                              "from",
+                              "to"
+                            ]
+                          }
+                        },
+                        "imageUrl": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "packages",
+                        "imageUrl"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/ai-chat/inbox/{id}": {
       "get": {
         "tags": [
@@ -151535,6 +151862,42 @@
                                       "null"
                                     ]
                                   },
+                                  "sticker": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "packageId": {
+                                        "type": "string"
+                                      },
+                                      "stickerId": {
+                                        "type": "string"
+                                      },
+                                      "resourceType": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "keywords": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "canSendBack": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "packageId",
+                                      "stickerId",
+                                      "resourceType",
+                                      "keywords",
+                                      "canSendBack"
+                                    ]
+                                  },
                                   "latitude": {
                                     "type": [
                                       "number",
@@ -151571,6 +151934,7 @@
                                   "url",
                                   "mime",
                                   "stickerUrl",
+                                  "sticker",
                                   "latitude",
                                   "longitude",
                                   "address",
@@ -151626,11 +151990,11 @@
                                   "null"
                                 ]
                               },
-                              "imageUrl": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
+                              "imageUrls": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               }
                             },
                             "required": [
@@ -151645,7 +152009,7 @@
                               "delivery",
                               "via",
                               "error",
-                              "imageUrl"
+                              "imageUrls"
                             ]
                           }
                         },
@@ -151727,6 +152091,21 @@
                             "orders"
                           ]
                         },
+                        "chat": {
+                          "type": "object",
+                          "properties": {
+                            "firstSeenAt": {
+                              "type": "string"
+                            },
+                            "messageCount": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "firstSeenAt",
+                            "messageCount"
+                          ]
+                        },
                         "canReply": {
                           "type": "boolean"
                         },
@@ -151792,6 +152171,7 @@
                         "thread",
                         "messages",
                         "customer",
+                        "chat",
                         "canReply",
                         "replyBlock",
                         "freeReplyUntil",
@@ -152300,12 +152680,752 @@
         }
       }
     },
+    "/v1/ai-chat/inbox/{id}/link-customer": {
+      "post": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "Link a LINE chat to an existing customer (found with `GET /customers?q=`): the customer gets this LINE account and the chat history joins them. 409: `already_linked` (the chat has a customer) · `customer_already_linked` (the customer has another LINE account) · `line_already_linked`",
+        "description": "Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  }
+                },
+                "required": [
+                  "customerId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The linked chat and customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "thread": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "channel": {
+                              "type": "string",
+                              "enum": [
+                                "line",
+                                "instagram",
+                                "messenger"
+                              ]
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "customerId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "lastMessageAt": {
+                              "type": "string"
+                            },
+                            "lastMessage": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastRole": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "user",
+                                "assistant",
+                                "staff",
+                                "system",
+                                null
+                              ]
+                            },
+                            "unread": {
+                              "type": "integer"
+                            },
+                            "actionState": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "needs_action",
+                                "done",
+                                null
+                              ]
+                            },
+                            "actionReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "actionAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "actionBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paused": {
+                              "type": "boolean"
+                            },
+                            "pausedUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "pauseReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "handoff",
+                                "staff",
+                                null
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "channel",
+                            "name",
+                            "pictureUrl",
+                            "customerId",
+                            "lastMessageAt",
+                            "lastMessage",
+                            "lastRole",
+                            "unread",
+                            "actionState",
+                            "actionReason",
+                            "actionAt",
+                            "actionBy",
+                            "paused",
+                            "pausedUntil",
+                            "pauseReason",
+                            "blocked"
+                          ]
+                        },
+                        "customer": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "bookings": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "startAt": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  },
+                                  "title": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "startAt",
+                                  "status",
+                                  "title"
+                                ]
+                              }
+                            },
+                            "orders": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "createdAt": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  },
+                                  "totalMinor": {
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "createdAt",
+                                  "status",
+                                  "totalMinor"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "bookings",
+                            "orders"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "thread",
+                        "customer"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ai-chat/inbox/{id}/create-customer": {
+      "post": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "Make a customer from a LINE chat (the name defaults to the LINE name; the CRM’s plan limit and duplicate-phone rules apply) and link it. 409 as `link-customer`",
+        "description": "Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "phone": {
+                    "type": "string",
+                    "maxLength": 30
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The new customer, linked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "thread": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "channel": {
+                              "type": "string",
+                              "enum": [
+                                "line",
+                                "instagram",
+                                "messenger"
+                              ]
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "customerId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "lastMessageAt": {
+                              "type": "string"
+                            },
+                            "lastMessage": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastRole": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "user",
+                                "assistant",
+                                "staff",
+                                "system",
+                                null
+                              ]
+                            },
+                            "unread": {
+                              "type": "integer"
+                            },
+                            "actionState": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "needs_action",
+                                "done",
+                                null
+                              ]
+                            },
+                            "actionReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "actionAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "actionBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "paused": {
+                              "type": "boolean"
+                            },
+                            "pausedUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "pauseReason": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "handoff",
+                                "staff",
+                                null
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "channel",
+                            "name",
+                            "pictureUrl",
+                            "customerId",
+                            "lastMessageAt",
+                            "lastMessage",
+                            "lastRole",
+                            "unread",
+                            "actionState",
+                            "actionReason",
+                            "actionAt",
+                            "actionBy",
+                            "paused",
+                            "pausedUntil",
+                            "pauseReason",
+                            "blocked"
+                          ]
+                        },
+                        "customer": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "bookings": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "startAt": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  },
+                                  "title": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "startAt",
+                                  "status",
+                                  "title"
+                                ]
+                              }
+                            },
+                            "orders": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "createdAt": {
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "type": "string"
+                                  },
+                                  "totalMinor": {
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "createdAt",
+                                  "status",
+                                  "totalMinor"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "bookings",
+                            "orders"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "thread",
+                        "customer"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/ai-chat/inbox/{id}/reply": {
       "post": {
         "tags": [
           "ai-chat"
         ],
-        "summary": "Reply to the customer through the shop’s LINE OA (text and / or one picture). Queued for the worker: a fresh reply token is used for free, else a push (the OA’s monthly quota). `clientId` makes a repeat the same message. The AI pauses for the shop’s setting (30 minutes by default)",
+        "summary": "Reply to the customer through the shop’s LINE OA (text and / or up to 4 pictures, or one sticker). Queued for the worker: a fresh reply token is used for free, else a push (the OA’s monthly quota). `clientId` makes a repeat the same message. The AI pauses for the shop’s setting (30 minutes by default)",
         "description": "Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
@@ -152350,9 +153470,43 @@
                     "type": "string",
                     "maxLength": 5000
                   },
-                  "imageFileId": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "previewFileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "previewFileId"
+                      ]
+                    },
+                    "maxItems": 4
+                  },
+                  "sticker": {
+                    "type": "object",
+                    "properties": {
+                      "packageId": {
+                        "type": "string",
+                        "pattern": "^\\d{1,12}$"
+                      },
+                      "stickerId": {
+                        "type": "string",
+                        "pattern": "^\\d{1,12}$"
+                      }
+                    },
+                    "required": [
+                      "packageId",
+                      "stickerId"
+                    ]
                   }
                 },
                 "required": [
@@ -152442,6 +153596,42 @@
                                     "null"
                                   ]
                                 },
+                                "sticker": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "packageId": {
+                                      "type": "string"
+                                    },
+                                    "stickerId": {
+                                      "type": "string"
+                                    },
+                                    "resourceType": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "keywords": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "canSendBack": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "packageId",
+                                    "stickerId",
+                                    "resourceType",
+                                    "keywords",
+                                    "canSendBack"
+                                  ]
+                                },
                                 "latitude": {
                                   "type": [
                                     "number",
@@ -152478,6 +153668,7 @@
                                 "url",
                                 "mime",
                                 "stickerUrl",
+                                "sticker",
                                 "latitude",
                                 "longitude",
                                 "address",
@@ -152533,11 +153724,11 @@
                                 "null"
                               ]
                             },
-                            "imageUrl": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
+                            "imageUrls": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
                             }
                           },
                           "required": [
@@ -152552,7 +153743,7 @@
                             "delivery",
                             "via",
                             "error",
-                            "imageUrl"
+                            "imageUrls"
                           ]
                         },
                         "thread": {
@@ -152784,6 +153975,169 @@
         }
       }
     },
+    "/v1/ai-chat/inbox/images/{id}/prepare": {
+      "post": {
+        "tags": [
+          "ai-chat"
+        ],
+        "summary": "Make an uploaded picture (`chat_image`, any phone photo up to 25 MB) fit LINE: a JPEG original (kept ≤ 4.8 MB; LINE takes 10 MB) and a JPEG preview (≤ 1 MB). Use the returned ids in `images` of a reply",
+        "description": "Requires header `X-Tenant-Id`. Permission: `ai_chat:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The prepared picture",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "previewFileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "width": {
+                          "type": "integer"
+                        },
+                        "height": {
+                          "type": "integer"
+                        },
+                        "bytes": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "previewFileId",
+                        "width",
+                        "height",
+                        "bytes"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/ai-chat/inbox/messages/{id}/retry": {
       "post": {
         "tags": [
@@ -152899,6 +154253,42 @@
                                     "null"
                                   ]
                                 },
+                                "sticker": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "packageId": {
+                                      "type": "string"
+                                    },
+                                    "stickerId": {
+                                      "type": "string"
+                                    },
+                                    "resourceType": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ]
+                                    },
+                                    "keywords": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "canSendBack": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "packageId",
+                                    "stickerId",
+                                    "resourceType",
+                                    "keywords",
+                                    "canSendBack"
+                                  ]
+                                },
                                 "latitude": {
                                   "type": [
                                     "number",
@@ -152935,6 +154325,7 @@
                                 "url",
                                 "mime",
                                 "stickerUrl",
+                                "sticker",
                                 "latitude",
                                 "longitude",
                                 "address",
@@ -152990,11 +154381,11 @@
                                 "null"
                               ]
                             },
-                            "imageUrl": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
+                            "imageUrls": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
                             }
                           },
                           "required": [
@@ -153009,7 +154400,7 @@
                             "delivery",
                             "via",
                             "error",
-                            "imageUrl"
+                            "imageUrls"
                           ]
                         },
                         "thread": {
