@@ -1088,6 +1088,7 @@
       "members": "User accounts",
       "customers": "Customers",
       "messages_per_month": "LINE messages per month",
+      "items": "Products / services",
       "slip_checks_month": "Automatic slip checks (per month)"
     },
     "err": {

@@ -21654,6 +21654,7 @@
                               "members",
                               "customers",
                               "messages_per_month",
+                              "items",
                               "slip_checks_month"
                             ]
                           },
@@ -21852,6 +21853,7 @@
                       "members",
                       "customers",
                       "messages_per_month",
+                      "items",
                       "slip_checks_month"
                     ]
                   },
@@ -21891,6 +21893,7 @@
                               "members",
                               "customers",
                               "messages_per_month",
+                              "items",
                               "slip_checks_month"
                             ]
                           },
@@ -22125,6 +22128,7 @@
                               "members",
                               "customers",
                               "messages_per_month",
+                              "items",
                               "slip_checks_month"
                             ]
                           },
@@ -52128,6 +52132,10 @@
                         "type": "integer",
                         "minimum": 0
                       },
+                      "items": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
                       "slip_checks_month": {
                         "type": "integer"
                       }
@@ -52640,6 +52648,10 @@
                         "type": "integer",
                         "minimum": 0
                       },
+                      "items": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
                       "slip_checks_month": {
                         "type": "integer"
                       }
@@ -53033,6 +53045,10 @@
                         "minimum": 0
                       },
                       "messages_per_month": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "items": {
                         "type": "integer",
                         "minimum": 0
                       },

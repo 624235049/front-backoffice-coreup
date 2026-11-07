@@ -38,6 +38,7 @@ export const PLAN_LIMITS = [
   'members',
   'customers',
   'messages_per_month',
+  'items',
   'slip_checks_month',
 ] as const satisfies readonly (keyof NonNullable<ApiBody<'/v1/platform/plans', 'post'>['limits']>)[];
 

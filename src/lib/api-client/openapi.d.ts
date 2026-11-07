@@ -11674,7 +11674,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -11784,7 +11784,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         /** @enum {string} */
-                        key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
+                        key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
                         value: number | null;
                     };
                 };
@@ -11799,7 +11799,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -11939,7 +11939,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -26929,6 +26929,7 @@ export interface paths {
                             members?: number;
                             customers?: number;
                             messages_per_month?: number;
+                            items?: number;
                             slip_checks_month?: number;
                         };
                     };
@@ -27123,6 +27124,7 @@ export interface paths {
                             members?: number;
                             customers?: number;
                             messages_per_month?: number;
+                            items?: number;
                             slip_checks_month?: number;
                         };
                         priceMinor: number;
@@ -27296,6 +27298,7 @@ export interface paths {
                             members?: number;
                             customers?: number;
                             messages_per_month?: number;
+                            items?: number;
                             slip_checks_month?: number;
                         };
                         marketing?: {

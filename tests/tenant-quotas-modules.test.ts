@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { limitValue, UNLIMITED_OVERRIDE } from '@/features/platform/components/limits-card';
 import { MODULE_GROUPS, MODULE_MENUS } from '@/features/platform/module-menus';
-import { SHOP_MODULES } from '@/features/platform/plans';
+import { PLAN_LIMITS, SHOP_MODULES } from '@/features/platform/plans';
+import en from '@/locales/en/platform.json';
+import th from '@/locales/th/platform.json';
 
 describe('shop module groups', () => {
   it('lists every switchable module exactly once, `lite` apart', () => {
@@ -24,5 +26,16 @@ describe('quota row value', () => {
     expect(limitValue('1.5', false)).toBeUndefined();
     expect(limitValue('-2', false)).toBeUndefined();
     expect(limitValue('abc', false)).toBeUndefined();
+  });
+});
+
+describe('plan limit keys', () => {
+  it('the plan editor lists the items quota (จำนวนรายการสินค้า/บริการ) and both languages name every key', () => {
+    expect(PLAN_LIMITS).toContain('items');
+    for (const k of PLAN_LIMITS) {
+      expect(th.plans.limit[k]).toBeTruthy();
+      expect(en.plans.limit[k]).toBeTruthy();
+    }
+    expect(th.plans.limit.items).toBe('รายการสินค้า/บริการ');
   });
 });
