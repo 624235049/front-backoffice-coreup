@@ -21655,7 +21655,8 @@
                               "customers",
                               "messages_per_month",
                               "items",
-                              "slip_checks_month"
+                              "slip_checks_month",
+                              "ai_messages_month"
                             ]
                           },
                           "plan": {
@@ -21854,7 +21855,8 @@
                       "customers",
                       "messages_per_month",
                       "items",
-                      "slip_checks_month"
+                      "slip_checks_month",
+                      "ai_messages_month"
                     ]
                   },
                   "value": {
@@ -21894,7 +21896,8 @@
                               "customers",
                               "messages_per_month",
                               "items",
-                              "slip_checks_month"
+                              "slip_checks_month",
+                              "ai_messages_month"
                             ]
                           },
                           "plan": {
@@ -22129,7 +22132,8 @@
                               "customers",
                               "messages_per_month",
                               "items",
-                              "slip_checks_month"
+                              "slip_checks_month",
+                              "ai_messages_month"
                             ]
                           },
                           "plan": {
@@ -25042,8 +25046,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -25134,7 +25142,8 @@
                         "platformBudgetMinor",
                         "budgetReached",
                         "topupRequested",
-                        "pendingTopups"
+                        "pendingTopups",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -25456,8 +25465,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -25548,7 +25561,8 @@
                         "platformBudgetMinor",
                         "budgetReached",
                         "topupRequested",
-                        "pendingTopups"
+                        "pendingTopups",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -25784,8 +25798,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -25876,7 +25894,8 @@
                         "platformBudgetMinor",
                         "budgetReached",
                         "topupRequested",
-                        "pendingTopups"
+                        "pendingTopups",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -52138,6 +52157,9 @@
                       },
                       "slip_checks_month": {
                         "type": "integer"
+                      },
+                      "ai_messages_month": {
+                        "type": "integer"
                       }
                     },
                     "default": {},
@@ -52654,6 +52676,9 @@
                       },
                       "slip_checks_month": {
                         "type": "integer"
+                      },
+                      "ai_messages_month": {
+                        "type": "integer"
                       }
                     },
                     "additionalProperties": false
@@ -53053,6 +53078,9 @@
                         "minimum": 0
                       },
                       "slip_checks_month": {
+                        "type": "integer"
+                      },
+                      "ai_messages_month": {
                         "type": "integer"
                       }
                     },
@@ -148038,8 +148066,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -148087,7 +148119,8 @@
                         "lineConnected",
                         "lineName",
                         "tested",
-                        "topupRequested"
+                        "topupRequested",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -148450,8 +148483,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -148499,7 +148536,8 @@
                         "lineConnected",
                         "lineName",
                         "tested",
-                        "topupRequested"
+                        "topupRequested",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -148755,8 +148793,12 @@
                           "type": "string",
                           "enum": [
                             "addon",
+                            "included",
                             "free"
                           ]
+                        },
+                        "includedMessages": {
+                          "type": "integer"
                         },
                         "enabledUntil": {
                           "type": [
@@ -148804,7 +148846,8 @@
                         "lineConnected",
                         "lineName",
                         "tested",
-                        "topupRequested"
+                        "topupRequested",
+                        "includedMessages"
                       ]
                     }
                   },
@@ -252239,6 +252282,16 @@
                             "receiptUrl"
                           ]
                         },
+                        "blocked": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "ai_included",
+                            null
+                          ]
+                        },
                         "shopName": {
                           "type": "string"
                         },
@@ -252417,6 +252470,7 @@
                       },
                       "required": [
                         "invoice",
+                        "blocked",
                         "shopName",
                         "accounts",
                         "seller",

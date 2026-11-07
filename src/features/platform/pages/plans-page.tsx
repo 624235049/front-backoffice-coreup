@@ -30,7 +30,7 @@ import {
 import { FamilyCard, PlainPlanList } from '../components/plan-cards';
 import { formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
 import { groupPlans } from '../plan-families';
-import { PLAN_LIMITS as LIMITS, SHOP_MODULES as MODULES } from '../plans';
+import { BOUNDED_LIMIT_MAX, PLAN_LIMITS as LIMITS, SHOP_MODULES as MODULES } from '../plans';
 
 // booking-only product: small shop app; LINE reminders from the shop's own OA, capped by the plan's message quota
 const LINE_BOOKING_PRESET = ['core', 'crm', 'booking', 'messaging', 'lite'];
@@ -122,7 +122,7 @@ function OfferDialog({ plan, onClose }: { plan: Plan; onClose: () => void }) {
       (k) =>
         `• ${t(`plans.limit.${k}`)}: ${
           plan.limits[k] === undefined
-            ? t(k === 'slip_checks_month' ? 'plans.offer.none' : 'plans.offer.unlimited')
+            ? t(k in BOUNDED_LIMIT_MAX ? 'plans.offer.none' : 'plans.offer.unlimited')
             : plan.limits[k].toLocaleString(locale)
         }`,
     ),
@@ -349,7 +349,11 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
                     inputMode="numeric"
                     value={limits[k] ?? ''}
                     placeholder={
-                      k === 'slip_checks_month' ? t('plans.slipPlaceholder') : t('plans.unlimited')
+                      k === 'slip_checks_month'
+                        ? t('plans.slipPlaceholder')
+                        : k === 'ai_messages_month'
+                          ? t('plans.aiPlaceholder')
+                          : t('plans.unlimited')
                     }
                     onChange={(e) => setLimits((cur) => ({ ...cur, [k]: e.target.value }))}
                   />

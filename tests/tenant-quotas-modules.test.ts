@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { limitValue, UNLIMITED_OVERRIDE } from '@/features/platform/components/limits-card';
 import { MODULE_GROUPS, MODULE_MENUS } from '@/features/platform/module-menus';
-import { PLAN_LIMITS, SHOP_MODULES } from '@/features/platform/plans';
+import { BOUNDED_LIMIT_MAX, PLAN_LIMITS, SHOP_MODULES } from '@/features/platform/plans';
 import en from '@/locales/en/platform.json';
 import th from '@/locales/th/platform.json';
 
@@ -37,5 +37,12 @@ describe('plan limit keys', () => {
       expect(en.plans.limit[k]).toBeTruthy();
     }
     expect(th.plans.limit.items).toBe('รายการสินค้า/บริการ');
+  });
+});
+
+describe('included AI messages as a plan limit', () => {
+  it('is editable on a plan and capped like slip checks: never unlimited, at most 10,000', () => {
+    expect(PLAN_LIMITS).toContain('ai_messages_month');
+    expect(BOUNDED_LIMIT_MAX).toEqual({ slip_checks_month: 2000, ai_messages_month: 10_000 });
   });
 });

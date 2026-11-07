@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useCan } from '@/lib/permissions';
 import { type TenantLimit, useAddons, useSetTenantExtras, useSetTenantLimit, useTenantLimits } from '../api';
 import { formatDate, formatMoney, useIntlLocale } from '../format';
+import { BOUNDED_LIMIT_MAX } from '../plans';
 
 /** The API stores "unlimited for this shop" as -1; `null` removes the custom value (package value applies). */
 export const UNLIMITED_OVERRIDE = -1;
@@ -70,16 +71,15 @@ function LimitRow({ tenantId, row }: { tenantId: string; row: TenantLimit }) {
   const locale = useIntlLocale();
   const canWrite = useCan('platform:write');
   const save = useSetTenantLimit(tenantId);
-  const [unlimited, setUnlimited] = useState(
-    row.override === UNLIMITED_OVERRIDE && row.key !== 'slip_checks_month',
-  );
+  const max = BOUNDED_LIMIT_MAX[row.key as keyof typeof BOUNDED_LIMIT_MAX];
+  const [unlimited, setUnlimited] = useState(row.override === UNLIMITED_OVERRIDE && max === undefined);
   const [draft, setDraft] = useState(
     row.override === null || row.override === UNLIMITED_OVERRIDE ? '' : String(row.override),
   );
-  // automatic slip checks cost CoreUp money per check: never unlimited, at most 2,000 a shop
-  const capped = row.key === 'slip_checks_month';
+  // slip checks and included AI messages cost CoreUp money per use: never unlimited, capped per shop
+  const capped = max !== undefined;
   const raw = limitValue(draft, unlimited && !capped);
-  const value = capped && typeof raw === 'number' && raw > 2000 ? undefined : raw;
+  const value = capped && typeof raw === 'number' && raw > max ? undefined : raw;
   const name = t(`plans.limit.${row.key}`, { defaultValue: row.key });
   const show = (n: number | null) => (n === null ? t('plans.offer.unlimited') : n.toLocaleString(locale));
 

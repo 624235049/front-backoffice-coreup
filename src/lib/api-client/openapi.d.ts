@@ -11674,7 +11674,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month" | "ai_messages_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -11784,7 +11784,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         /** @enum {string} */
-                        key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
+                        key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month" | "ai_messages_month";
                         value: number | null;
                     };
                 };
@@ -11799,7 +11799,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month" | "ai_messages_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -11939,7 +11939,7 @@ export interface paths {
                         "application/json": {
                             data: {
                                 /** @enum {string} */
-                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month";
+                                key: "branches" | "members" | "customers" | "messages_per_month" | "items" | "slip_checks_month" | "ai_messages_month";
                                 plan: number | null;
                                 override: number | null;
                                 effective: number | null;
@@ -13801,7 +13801,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 freeQuota: number;
@@ -13971,7 +13972,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 freeQuota: number;
@@ -14126,7 +14128,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 freeQuota: number;
@@ -26931,6 +26934,7 @@ export interface paths {
                             messages_per_month?: number;
                             items?: number;
                             slip_checks_month?: number;
+                            ai_messages_month?: number;
                         };
                     };
                 };
@@ -27126,6 +27130,7 @@ export interface paths {
                             messages_per_month?: number;
                             items?: number;
                             slip_checks_month?: number;
+                            ai_messages_month?: number;
                         };
                         priceMinor: number;
                     };
@@ -27300,6 +27305,7 @@ export interface paths {
                             messages_per_month?: number;
                             items?: number;
                             slip_checks_month?: number;
+                            ai_messages_month?: number;
                         };
                         marketing?: {
                             sort: number;
@@ -68936,7 +68942,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 lineConnected: boolean;
@@ -69130,7 +69137,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 lineConnected: boolean;
@@ -69293,7 +69301,8 @@ export interface paths {
                                 /** @enum {string} */
                                 state: "ok" | "near" | "reached";
                                 /** @enum {string} */
-                                allowance: "addon" | "free";
+                                allowance: "addon" | "included" | "free";
+                                includedMessages: number;
                                 enabledUntil: string | null;
                                 free: boolean;
                                 lineConnected: boolean;
@@ -119134,6 +119143,8 @@ export interface paths {
                                     receiptNumber: string | null;
                                     receiptUrl: string | null;
                                 };
+                                /** @enum {string|null} */
+                                blocked: "ai_included" | null;
                                 shopName: string;
                                 accounts: {
                                     id: string;

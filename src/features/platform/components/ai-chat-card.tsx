@@ -71,6 +71,9 @@ function Body({ id, d, demo }: { id: string; d: AiChatAdmin; demo: boolean }) {
   useEffect(() => setKnowledge(d.knowledge), [d.knowledge]);
   const quotaValue = /^\d+$/.test(quota.trim()) ? Number(quota.trim()) : null;
   const n = (v: number) => v.toLocaleString(locale);
+  // the package includes the AI messages (`ai_messages_month`): the AI runs without the add-on switch
+  const included = d.allowance === 'included';
+  const on = d.active || included;
 
   return (
     <>
@@ -118,37 +121,45 @@ function Body({ id, d, demo }: { id: string; d: AiChatAdmin; demo: boolean }) {
         />
       )}
 
-      {d.active ? <AiAudienceCard id={id} settings={d} /> : null}
-      {d.active && demo ? <AiDemoShops id={id} shops={d.demoShops} /> : null}
+      {on ? <AiAudienceCard id={id} settings={d} /> : null}
+      {on && demo ? <AiDemoShops id={id} shops={d.demoShops} /> : null}
 
-      {d.active ? (
+      {on ? (
         <>
-          <div className="flex flex-wrap items-end gap-3">
-            <label htmlFor="ai-chat-quota" className="grid gap-1 text-sm">
-              <span className="font-medium">{t('aiChat.quota')}</span>
-              <Input
-                id="ai-chat-quota"
-                inputMode="numeric"
-                className="w-32"
-                value={quota}
-                disabled={!canWrite}
-                onChange={(e) => setQuota(e.target.value)}
-              />
-            </label>
-            <Button
-              variant="outline"
-              disabled={!canWrite || patch.isPending || quotaValue === null || quotaValue === d.monthlyQuota}
-              onClick={() =>
-                quotaValue !== null &&
-                patch.mutate(
-                  { monthlyQuota: quotaValue },
-                  { onSuccess: () => toast.success(t('aiChat.saved')) },
-                )
-              }
-            >
-              {t('aiChat.save')}
-            </Button>
-          </div>
+          {included ? (
+            <p className="text-sm" data-testid="ai-chat-included">
+              {t('aiChat.included', { n: n(d.monthlyQuota) })}
+            </p>
+          ) : (
+            <div className="flex flex-wrap items-end gap-3">
+              <label htmlFor="ai-chat-quota" className="grid gap-1 text-sm">
+                <span className="font-medium">{t('aiChat.quota')}</span>
+                <Input
+                  id="ai-chat-quota"
+                  inputMode="numeric"
+                  className="w-32"
+                  value={quota}
+                  disabled={!canWrite}
+                  onChange={(e) => setQuota(e.target.value)}
+                />
+              </label>
+              <Button
+                variant="outline"
+                disabled={
+                  !canWrite || patch.isPending || quotaValue === null || quotaValue === d.monthlyQuota
+                }
+                onClick={() =>
+                  quotaValue !== null &&
+                  patch.mutate(
+                    { monthlyQuota: quotaValue },
+                    { onSuccess: () => toast.success(t('aiChat.saved')) },
+                  )
+                }
+              >
+                {t('aiChat.save')}
+              </Button>
+            </div>
+          )}
 
           <dl className="grid gap-2 text-sm sm:grid-cols-2" data-testid="ai-chat-usage">
             <Row label={t('aiChat.free')}>
@@ -163,7 +174,7 @@ function Body({ id, d, demo }: { id: string; d: AiChatAdmin; demo: boolean }) {
               <span className="text-xs text-muted-foreground">{t(`aiChat.allowance.${d.allowance}`)}</span>
             </Row>
             <Row label={t('aiChat.paidQuota')}>
-              {d.active ? `${n(d.monthlyQuota)} + ${n(d.topupMessages)}` : '-'}
+              {on ? `${n(d.monthlyQuota)} + ${n(d.topupMessages)}` : '-'}
             </Row>
             <Row label={t('aiChat.topups')}>{n(d.topupMessages)}</Row>
             <Row label={t('aiChat.tokens')}>
