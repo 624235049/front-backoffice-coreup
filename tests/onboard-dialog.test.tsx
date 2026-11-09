@@ -110,7 +110,7 @@ describe('OnboardDialog', () => {
     }
     const email = screen.getByLabelText('อีเมลเจ้าของ');
     expect(email.getAttribute('type')).toBe('email');
-    expect(email.getAttribute('autocomplete')).toBe('off');
+    expect(email.getAttribute('autocomplete')).toBe('one-time-code');
     expect(screen.getByTestId('phone-dial').textContent).toBe('+66');
     // the internal ฿0 plan is never the default: Pro is
     expect(screen.getByLabelText('แพ็กเกจ').textContent).toContain('Pro');

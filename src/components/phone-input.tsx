@@ -253,7 +253,6 @@ export function PhoneInput({
           id={inputId}
           type="tel"
           inputMode="tel"
-          autoComplete="tel-national"
           value={text}
           disabled={disabled}
           maxLength={24}

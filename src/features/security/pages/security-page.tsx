@@ -263,6 +263,7 @@ function TwoFactorCard({ status }: { status: TwoFactorStatus }) {
               <Label htmlFor="confirm-password">{t('setup.password')}</Label>
               <PasswordInput
                 id="confirm-password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoFocus
