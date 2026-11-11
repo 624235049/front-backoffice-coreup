@@ -38,12 +38,12 @@ export default defineConfig(() => ({
       // registered from main.tsx (virtual:pwa-register) so an open tab reloads itself onto a new deploy
       injectRegister: false,
       includeAssets: [
-        'favicon.ico',
-        'favicon-32-v2.png',
-        'apple-touch-icon-v2.png',
-        'logo-wordmark-v2.png',
-        'logo-wordmark-light-v2.png',
-        'logo-full-v2.png',
+        'favicon-v7.ico',
+        'favicon-32-v7.png',
+        'apple-touch-icon-v7.png',
+        'logo-lockup-v7.png',
+        'logo-lockup-onDark-v7.png',
+        'logo-full-onDark-v7.png',
       ],
       manifest: {
         name: 'CoreUp Team',
@@ -57,9 +57,9 @@ export default defineConfig(() => ({
         theme_color: '#0B2D4F',
         background_color: '#F8F5ED',
         icons: [
-          { src: 'pwa-192-v2.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512-v2.png', sizes: '512x512', type: 'image/png' },
-          { src: 'pwa-512-maskable-v2.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'pwa-192-v7.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512-v7.png', sizes: '512x512', type: 'image/png' },
+          { src: 'pwa-512-maskable-v7.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {

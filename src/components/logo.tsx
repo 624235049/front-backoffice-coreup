@@ -1,20 +1,28 @@
 const SOURCES = {
-  /** square app icon (the teal "UP" arrow on a white tile) for tight spaces */
-  mark: '/pwa-192-v2.png',
-  /** COREUP wordmark (navy CORE + teal UP), for light backgrounds */
-  wordmark: '/logo-wordmark-v2.png',
-  /** wordmark with light letters, for the navy sidebar */
-  'wordmark-light': '/logo-wordmark-light-v2.png',
+  /** emblem + COREUP + GROW TOGETHER side by side, dark lettering, for light backgrounds */
+  lockup: '/logo-lockup-v7.png',
+  /** same lockup with white lettering, for the navy sidebar and brand panels */
+  'lockup-light': '/logo-lockup-onDark-v7.png',
+  /** stacked emblem over COREUP + tagline with white lettering, for large dark brand panels */
+  'full-light': '/logo-full-onDark-v7.png',
 } as const;
 
+/** intrinsic pixel size of each file, so the browser reserves the box before the image loads */
+const SIZES = {
+  lockup: { w: 905, h: 240 },
+  'lockup-light': { w: 829, h: 240 },
+  'full-light': { w: 574, h: 560 },
+} as const;
+
+/** the height is set, the width follows the file's own ratio (never stretched) */
 const DEFAULT_SIZE: Record<keyof typeof SOURCES, string> = {
-  mark: 'size-8 rounded-lg',
-  wordmark: 'h-12 w-auto',
-  'wordmark-light': 'h-12 w-auto',
+  lockup: 'h-12 w-auto',
+  'lockup-light': 'h-14 w-auto',
+  'full-light': 'h-44 w-auto',
 };
 
 export function Logo({
-  variant = 'mark',
+  variant = 'lockup',
   className,
 }: {
   variant?: keyof typeof SOURCES;
@@ -23,6 +31,8 @@ export function Logo({
   return (
     <img
       src={SOURCES[variant]}
+      width={SIZES[variant].w}
+      height={SIZES[variant].h}
       alt="CoreUp"
       className={className ?? DEFAULT_SIZE[variant]}
       decoding="async"

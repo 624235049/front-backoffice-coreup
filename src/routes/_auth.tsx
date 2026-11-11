@@ -22,7 +22,7 @@ function AuthLayout() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-gradient-to-br from-sidebar via-sidebar/85 to-sidebar/30"
         />
-        <Logo variant="wordmark-light" className="h-12 w-auto self-start" />
+        <Logo variant="full-light" className="h-52 w-auto self-start" />
         <div className="max-w-md">
           <p className="text-xs font-medium tracking-[0.28em] text-white/75">{t('panel.kicker')}</p>
           <h2 className="mt-5 text-4xl font-bold leading-tight">
@@ -35,7 +35,7 @@ function AuthLayout() {
       </aside>
       <main className="flex flex-col items-center justify-center gap-6 bg-canvas px-4 py-10">
         <h1 className="lg:hidden">
-          <Logo variant="wordmark" className="h-12 w-auto" />
+          <Logo variant="lockup" className="h-14 w-auto" />
         </h1>
         <div className="w-full max-w-md">
           <Outlet />
