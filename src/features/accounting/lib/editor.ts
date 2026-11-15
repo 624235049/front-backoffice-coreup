@@ -1,5 +1,6 @@
-import type { AccDocument, DocType, DocumentBody, LineBody, VatMode, WhtBp } from '../api';
+import type { AccDocument, Contact, DocType, DocumentBody, LineBody, VatMode, WhtBp } from '../api';
 import { type CalcLine, type CalcTotals, calcTotals } from './calc';
+import { isOptionalEmailOk, isOptionalTaxIdOk } from './tax-id';
 
 /** A line as it lives in the editor: numbers the user types stay strings until the body is built. */
 export type EditorLine = {
@@ -13,9 +14,31 @@ export type EditorLine = {
   vatType: 'vat' | 'none' | 'exempt';
 };
 
+/** The customer typed in the form (all text; the API saves it as a contact, no separate step). */
+export type CustomerFields = {
+  name: string;
+  taxId: string;
+  branchCode: string;
+  address: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+};
+
+export const emptyCustomer = (): CustomerFields => ({
+  name: '',
+  taxId: '',
+  branchCode: '00000',
+  address: '',
+  contactPerson: '',
+  phone: '',
+  email: '',
+});
+
 export type EditorState = {
-  contactId: string | null;
-  contactName: string;
+  customer: CustomerFields;
+  /** a draft's own contact with the fields it had when loaded: sent by id while the typed fields are unchanged */
+  linked: { id: string; fields: CustomerFields } | null;
   docDate: string;
   dueDate: string;
   reference: string;
@@ -74,12 +97,26 @@ export function editorTotals(s: EditorState, vatRateBp: number): CalcTotals {
   });
 }
 
-export type EditorError = 'contact' | 'lines' | 'description' | 'qty' | 'price' | 'discount' | 'dueDate';
+export type EditorError =
+  | 'contact'
+  | 'taxId'
+  | 'branchCode'
+  | 'email'
+  | 'lines'
+  | 'description'
+  | 'qty'
+  | 'price'
+  | 'discount'
+  | 'dueDate';
 
 /** Validation errors by field key; empty when the state can be sent to the API. */
 export function validateEditor(s: EditorState): Partial<Record<EditorError, true>> {
   const errors: Partial<Record<EditorError, true>> = {};
-  if (!s.contactId) errors.contact = true;
+  const c = s.customer;
+  if (c.name.trim() === '') errors.contact = true;
+  if (!isOptionalTaxIdOk(c.taxId)) errors.taxId = true;
+  if (c.branchCode !== '' && !/^\d{5}$/.test(c.branchCode)) errors.branchCode = true;
+  if (!isOptionalEmailOk(c.email)) errors.email = true;
   const filled = s.lines.filter((l) => !isBlankLine(l));
   if (filled.length === 0) errors.lines = true;
   for (const l of filled) {
@@ -108,11 +145,33 @@ export function toLineBody(l: EditorLine): LineBody {
   };
 }
 
+const sameCustomer = (a: CustomerFields, b: CustomerFields): boolean =>
+  (Object.keys(a) as (keyof CustomerFields)[]).every((k) => a[k].trim() === b[k].trim());
+
+/** The customer part of the body: the draft's contact id while untouched, else the typed customer (empty → null). */
+export function customerBody(s: EditorState): Pick<DocumentBody, 'contactId' | 'customer'> {
+  if (s.linked && sameCustomer(s.customer, s.linked.fields)) return { contactId: s.linked.id };
+  const c = s.customer;
+  const text = (v: string) => v.trim() || null;
+  return {
+    customer: {
+      name: c.name.trim(),
+      taxId: text(c.taxId),
+      // a branch only means something next to a tax id
+      branchCode: c.taxId.trim() ? text(c.branchCode) : null,
+      address: text(c.address),
+      contactPerson: text(c.contactPerson),
+      phone: text(c.phone),
+      email: text(c.email),
+    },
+  };
+}
+
 /** Body for create (`type` set) and update (the API ignores `type`/`issue` there). */
 export function toBody(s: EditorState, type: DocType, issue = false): DocumentBody {
   return {
     type,
-    contactId: s.contactId as string,
+    ...customerBody(s),
     docDate: s.docDate,
     dueDate: s.dueDate || null,
     reference: s.reference.trim() || null,
@@ -128,10 +187,25 @@ export function toBody(s: EditorState, type: DocType, issue = false): DocumentBo
   };
 }
 
-export function fromDocument(d: AccDocument): EditorState {
+/** The contact's fields as the form shows them. */
+export const customerOf = (
+  c: Pick<Contact, 'name' | 'taxId' | 'branchCode' | 'address' | 'contactPerson' | 'phone' | 'email'>,
+): CustomerFields => ({
+  name: c.name,
+  taxId: c.taxId ?? '',
+  branchCode: c.branchCode ?? '00000',
+  address: c.address ?? '',
+  contactPerson: c.contactPerson ?? '',
+  phone: c.phone ?? '',
+  email: c.email ?? '',
+});
+
+/** `contact`: the draft's linked contact (phone / email / person are not in the document's snapshot). */
+export function fromDocument(d: AccDocument, contact?: Contact): EditorState {
+  const customer = customerOf(contact ?? { ...d.contact, contactPerson: null, phone: null, email: null });
   return {
-    contactId: d.contactId,
-    contactName: d.contact.name,
+    customer,
+    linked: d.contactId && contact ? { id: d.contactId, fields: customer } : null,
     docDate: d.docDate,
     dueDate: d.dueDate ?? '',
     reference: d.reference ?? '',
@@ -161,8 +235,8 @@ export function newEditorState(opts: {
   defaultNote: string | null;
 }): EditorState {
   return {
-    contactId: null,
-    contactName: '',
+    customer: emptyCustomer(),
+    linked: null,
     docDate: opts.today,
     dueDate: opts.dueDate,
     reference: '',

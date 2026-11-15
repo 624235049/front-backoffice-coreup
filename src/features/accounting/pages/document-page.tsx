@@ -7,7 +7,14 @@ import { QueryState } from '@/components/query-state';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatDate, useIntlLocale } from '@/features/platform/format';
-import { useCompany, useConvertDocument, useDocument, useDocuments } from '../api';
+import {
+  type AccDocument,
+  useCompany,
+  useContact,
+  useConvertDocument,
+  useDocument,
+  useDocuments,
+} from '../api';
 import { Combobox } from '../components/combobox';
 import { type DocKind, detailPath } from '../lib/doc-meta';
 import { formatAmount } from '../lib/format';
@@ -78,6 +85,30 @@ function CreditNoteStart() {
   );
 }
 
+/** A draft is edited with its own contact loaded (phone / email / contact person are not on the document). */
+function DraftEditor({
+  doc,
+  company,
+}: {
+  doc: AccDocument;
+  company: Parameters<typeof DocumentEditor>[0]['company'];
+}) {
+  const contact = useContact(doc.contactId ?? undefined);
+  return (
+    <QueryState query={contact}>
+      {(c) => (
+        <DocumentEditor
+          key={`${doc.id}:${doc.updatedAt}`}
+          type={doc.type}
+          company={company}
+          doc={doc}
+          contact={c}
+        />
+      )}
+    </QueryState>
+  );
+}
+
 /** One page for every document: new draft, edit draft, or read-only view of an issued one. */
 export function DocumentPage({ kind, id }: { kind: DocKind; id?: string }) {
   const company = useCompany();
@@ -90,13 +121,7 @@ export function DocumentPage({ kind, id }: { kind: DocKind; id?: string }) {
       {(c) =>
         id ? (
           <QueryState query={doc}>
-            {(d) =>
-              d.status === 'draft' ? (
-                <DocumentEditor key={`${d.id}:${d.updatedAt}`} type={d.type} company={c} doc={d} />
-              ) : (
-                <DocumentView doc={d} />
-              )
-            }
+            {(d) => (d.status === 'draft' ? <DraftEditor doc={d} company={c} /> : <DocumentView doc={d} />)}
           </QueryState>
         ) : (
           <DocumentEditor

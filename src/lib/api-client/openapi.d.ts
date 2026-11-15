@@ -33720,7 +33720,16 @@ export interface paths {
                     "application/json": {
                         /** @enum {string} */
                         type: "quotation" | "invoice" | "receipt" | "tax_invoice" | "credit_note";
-                        contactId: string;
+                        contactId?: string;
+                        customer?: {
+                            name: string;
+                            taxId?: string | null;
+                            branchCode?: string | null;
+                            address?: string | null;
+                            contactPerson?: string | null;
+                            phone?: string | null;
+                            email?: string | null;
+                        };
                         docDate: string;
                         dueDate?: string | null;
                         reference?: string | null;
@@ -34158,7 +34167,16 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        contactId: string;
+                        contactId?: string;
+                        customer?: {
+                            name: string;
+                            taxId?: string | null;
+                            branchCode?: string | null;
+                            address?: string | null;
+                            contactPerson?: string | null;
+                            phone?: string | null;
+                            email?: string | null;
+                        };
                         docDate: string;
                         dueDate?: string | null;
                         reference?: string | null;

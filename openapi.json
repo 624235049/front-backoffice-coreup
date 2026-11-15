@@ -64766,6 +64766,60 @@
                     "type": "string",
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "taxId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "branchCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^\\d{5}$"
+                      },
+                      "address": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 500
+                      },
+                      "contactPerson": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 120
+                      },
+                      "phone": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 40
+                      },
+                      "email": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  },
                   "docDate": {
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
@@ -64986,7 +65040,6 @@
                 },
                 "required": [
                   "type",
-                  "contactId",
                   "docDate",
                   "vatMode",
                   "lines"
@@ -66220,6 +66273,60 @@
                     "type": "string",
                     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   },
+                  "customer": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "taxId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "branchCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^\\d{5}$"
+                      },
+                      "address": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 500
+                      },
+                      "contactPerson": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 120
+                      },
+                      "phone": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 40
+                      },
+                      "email": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  },
                   "docDate": {
                     "type": "string",
                     "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
@@ -66369,7 +66476,6 @@
                   }
                 },
                 "required": [
-                  "contactId",
                   "docDate",
                   "vatMode",
                   "lines"

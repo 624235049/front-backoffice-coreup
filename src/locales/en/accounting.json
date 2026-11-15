@@ -145,6 +145,8 @@
     "draftTag": "(draft)",
     "editorHint": "Fill in the details; totals update live. Once issued a document cannot be edited (only voided with a reason).",
     "customerSection": "Customer",
+    "customerHint": "Just type the customer. No need to add a contact first: it is saved for you (the same name or tax id is never duplicated).",
+    "customerName": "Customer name",
     "linesSection": "Lines",
     "paymentsSection": "Payments",
     "relatedSection": "Related documents",
@@ -163,7 +165,7 @@
     "docDiscountHint": "Shared pro-rata across lines",
     "wht": "Withholding tax",
     "whtHint": "When the customer withholds tax at source",
-    "pickCustomer": "Please pick a customer",
+    "pickCustomer": "Please enter the customer name",
     "needLine": "At least one line is required",
     "fixErrors": "Fix the highlighted fields before saving",
     "saveDraft": "Save draft",
@@ -213,7 +215,7 @@
       "lastEmpty": "This is the only empty row. Fill it in"
     },
     "reason": {
-      "customer": "No customer yet. Pick one above or add a new customer",
+      "customer": "No customer name yet. Type it in the field above first",
       "lines": "Add at least 1 line first",
       "description": "A line has no description",
       "qty": "A line has an invalid quantity",

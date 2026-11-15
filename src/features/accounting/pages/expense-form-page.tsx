@@ -38,6 +38,7 @@ import { TotalsPanel } from '../components/totals-panel';
 import { calcTotals } from '../lib/calc';
 import {
   type EditorLine,
+  emptyCustomer,
   emptyLine,
   isBlankLine,
   newLineKey,
@@ -158,8 +159,8 @@ function ExpenseForm({ company, expense }: { company: VatInfo; expense?: Expense
   );
 
   const lineErrors = validateEditor({
-    contactId: 'x',
-    contactName: '',
+    customer: { ...emptyCustomer(), name: 'x' },
+    linked: null,
     docDate: f.expenseDate,
     dueDate: '',
     reference: '',

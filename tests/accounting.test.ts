@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { allocateProRata, calcTotals, lineAmount, lineGross } from '@/features/accounting/lib/calc';
 import { isValidNumberFormat, previewDocNumber } from '@/features/accounting/lib/doc-number';
 import {
+  customerBody,
   type EditorState,
+  emptyCustomer,
   emptyLine,
   parseQty,
   toBody,
@@ -219,8 +221,8 @@ describe('document numbering preview and tax id', () => {
 
 describe('editor state → API body', () => {
   const base: EditorState = {
-    contactId: 'c1',
-    contactName: 'ACME',
+    customer: { ...emptyCustomer(), name: 'ACME' },
+    linked: null,
     docDate: '2026-10-15',
     dueDate: '2026-11-14',
     reference: '',
@@ -255,7 +257,7 @@ describe('editor state → API body', () => {
   });
 
   it('flags a missing customer, empty lines, bad quantity and a due date before the document date', () => {
-    expect(validateEditor({ ...base, contactId: null }).contact).toBe(true);
+    expect(validateEditor({ ...base, customer: emptyCustomer() }).contact).toBe(true);
     expect(validateEditor({ ...base, lines: [emptyLine()] }).lines).toBe(true);
     expect(
       validateEditor({
@@ -266,6 +268,59 @@ describe('editor state → API body', () => {
     expect(validateEditor({ ...base, dueDate: '2026-10-01' }).dueDate).toBe(true);
     expect(validateEditor(base)).toEqual({});
     expect(parseQty('0.0005')).toBeNull();
+  });
+
+  it('flags a bad tax id, branch or email on the typed customer; optional fields may stay empty', () => {
+    const typed = (c: Partial<ReturnType<typeof emptyCustomer>>) => ({
+      ...base,
+      customer: { ...emptyCustomer(), name: 'ACME', ...c },
+    });
+    expect(validateEditor(typed({ taxId: '123' })).taxId).toBe(true);
+    expect(validateEditor(typed({ taxId: '0105536012346' })).taxId).toBeUndefined();
+    expect(validateEditor(typed({ branchCode: '1' })).branchCode).toBe(true);
+    expect(validateEditor(typed({ email: 'nope' })).email).toBe(true);
+    expect(validateEditor(typed({}))).toEqual({});
+  });
+
+  it('a typed customer is sent as `customer` (empty → null, branch only with a tax id), never as a contact id', () => {
+    const body = toBody(
+      {
+        ...base,
+        customer: {
+          ...emptyCustomer(),
+          name: '  คุณมานี ',
+          address: ' 1 Rama 9 ',
+          phone: '081',
+        },
+      },
+      'quotation',
+    );
+    expect(body.contactId).toBeUndefined();
+    expect(body.customer).toEqual({
+      name: 'คุณมานี',
+      taxId: null,
+      branchCode: null,
+      address: '1 Rama 9',
+      contactPerson: null,
+      phone: '081',
+      email: null,
+    });
+    const withTax = customerBody({
+      ...base,
+      customer: { ...emptyCustomer(), name: 'A', taxId: '0105536012346' },
+    });
+    expect(withTax.customer).toMatchObject({ taxId: '0105536012346', branchCode: '00000' });
+  });
+
+  it('a draft keeps its contact id while the customer fields are untouched, else sends the typed customer', () => {
+    const fields = { ...emptyCustomer(), name: 'ACME', email: 'a@acme.test' };
+    const draft = { ...base, customer: fields, linked: { id: 'c1', fields } };
+    expect(customerBody(draft)).toEqual({ contactId: 'c1' });
+    expect(customerBody({ ...draft, customer: { ...fields, address: 'New road' } }).customer).toMatchObject({
+      name: 'ACME',
+      email: 'a@acme.test',
+      address: 'New road',
+    });
   });
 });
 

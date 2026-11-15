@@ -70,6 +70,14 @@ export const useContacts = (
     { enabled, placeholderData: (p) => p },
   );
 
+export const useContact = (id: string | undefined) =>
+  useTenantQuery(
+    [part, 'contact', id],
+    async () =>
+      (await unwrap(api.GET(`${B}/contacts/{id}`, { params: { path: { id: id as string } } }))).data,
+    { enabled: id !== undefined },
+  );
+
 export const useItems = (query: { q?: string; active?: boolean; limit?: number }, enabled = true) =>
   useTenantQuery(
     [part, 'items', query],

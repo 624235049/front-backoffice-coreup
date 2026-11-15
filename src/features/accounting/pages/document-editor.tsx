@@ -14,6 +14,7 @@ import { todayBangkok } from '@/features/platform/format';
 import {
   type AccDocument,
   type Company,
+  type Contact,
   type DocType,
   type PaymentInput,
   useCreateDocument,
@@ -24,7 +25,6 @@ import {
   type WhtBp,
 } from '../api';
 import { A4Link } from '../components/a4-actions';
-import { ContactPicker } from '../components/contact-picker';
 import { DateField } from '../components/date-pickers';
 import { FormField } from '../components/form-field';
 import { LinesEditor } from '../components/lines-editor';
@@ -34,6 +34,7 @@ import { TotalsPanel } from '../components/totals-panel';
 import { DOC_KINDS, detailPath, kindOf, listPath } from '../lib/doc-meta';
 import {
   addDays,
+  type CustomerFields,
   type EditorState,
   editorTotals,
   fromDocument,
@@ -53,10 +54,13 @@ export function DocumentEditor({
   type,
   company,
   doc,
+  contact,
 }: {
   type: DocType;
   company: Company;
   doc?: AccDocument;
+  /** the draft's own contact: its phone / email / contact person fill the customer fields */
+  contact?: Contact;
 }) {
   const { t } = useTranslation('accounting');
   const navigate = useNavigate();
@@ -66,7 +70,7 @@ export function DocumentEditor({
   const vatEnabled = company.vatRegistered;
 
   const [state, setState] = useState<EditorState>(() => {
-    if (doc) return fromDocument(doc);
+    if (doc) return fromDocument(doc, contact);
     const today = todayBangkok();
     const days = isQuotation ? company.quotationValidDays : company.defaultDueDays;
     return newEditorState({
@@ -90,6 +94,9 @@ export function DocumentEditor({
   const totals = useMemo(() => editorTotals(state, company.vatRateBp), [state, company.vatRateBp]);
   const errors = validateEditor(state);
   const set = <K extends keyof EditorState>(k: K, v: EditorState[K]) => setState((s) => ({ ...s, [k]: v }));
+  const setCustomer = (k: keyof CustomerFields, v: string) =>
+    setState((s) => ({ ...s, customer: { ...s.customer, [k]: v } }));
+  const customer = state.customer;
   const defaultVat = vatEnabled && state.vatMode !== 'none' ? 'vat' : 'none';
 
   const goTo = (saved: { id: string; type: DocType }) =>
@@ -108,6 +115,9 @@ export function DocumentEditor({
   /** Why the document cannot be saved / issued right now (most important first), or null when it is fine. */
   const blockReason = (issuing: boolean): string | null => {
     if (errors.contact) return t('doc.reason.customer');
+    if (errors.taxId) return t('validation.taxId');
+    if (errors.branchCode) return t('validation.branchCode');
+    if (errors.email) return t('validation.email');
     if (errors.lines) return t('doc.reason.lines');
     if (errors.description) return t('doc.reason.description');
     if (errors.qty) return t('doc.reason.qty');
@@ -174,21 +184,95 @@ export function DocumentEditor({
               <CardTitle className="text-base">{t('doc.customerSection')}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
+              <p className="text-sm text-muted-foreground">{t('doc.customerHint')}</p>
               <FormField
-                label={t('contacts.customer')}
+                label={t('doc.customerName')}
+                htmlFor="cu-name"
                 required
                 error={touched && errors.contact ? t('doc.pickCustomer') : undefined}
               >
-                <ContactPicker
-                  kind="customer"
-                  value={state.contactId}
-                  label={state.contactName}
-                  invalid={touched && Boolean(errors.contact)}
-                  onChange={(c) =>
-                    setState((s) => ({ ...s, contactId: c?.id ?? null, contactName: c?.name ?? '' }))
-                  }
+                <Input
+                  id="cu-name"
+                  value={customer.name}
+                  maxLength={200}
+                  autoFocus={!doc}
+                  aria-invalid={touched && Boolean(errors.contact)}
+                  onChange={(e) => setCustomer('name', e.target.value)}
                 />
               </FormField>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  label={t('contacts.taxId')}
+                  htmlFor="cu-tax"
+                  error={touched && errors.taxId ? t('validation.taxId') : undefined}
+                  hint={
+                    customer.taxId ? t('contacts.taxIdCount', { count: customer.taxId.length }) : undefined
+                  }
+                >
+                  <Input
+                    id="cu-tax"
+                    inputMode="numeric"
+                    maxLength={13}
+                    value={customer.taxId}
+                    onChange={(e) => setCustomer('taxId', e.target.value.replace(/\D/g, ''))}
+                  />
+                </FormField>
+                <FormField
+                  label={t('contacts.branchCode')}
+                  htmlFor="cu-branch"
+                  error={touched && errors.branchCode ? t('validation.branchCode') : undefined}
+                  hint={t('contacts.branchHint')}
+                >
+                  <Input
+                    id="cu-branch"
+                    inputMode="numeric"
+                    maxLength={5}
+                    value={customer.branchCode}
+                    onChange={(e) => setCustomer('branchCode', e.target.value.replace(/\D/g, ''))}
+                  />
+                </FormField>
+              </div>
+              <FormField label={t('contacts.address')} htmlFor="cu-addr">
+                <Textarea
+                  id="cu-addr"
+                  rows={2}
+                  maxLength={500}
+                  value={customer.address}
+                  onChange={(e) => setCustomer('address', e.target.value)}
+                />
+              </FormField>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <FormField label={t('contacts.contactPerson')} htmlFor="cu-person">
+                  <Input
+                    id="cu-person"
+                    maxLength={120}
+                    value={customer.contactPerson}
+                    onChange={(e) => setCustomer('contactPerson', e.target.value)}
+                  />
+                </FormField>
+                <FormField label={t('contacts.phone')} htmlFor="cu-phone">
+                  <Input
+                    id="cu-phone"
+                    type="tel"
+                    maxLength={40}
+                    value={customer.phone}
+                    onChange={(e) => setCustomer('phone', e.target.value)}
+                  />
+                </FormField>
+                <FormField
+                  label={t('contacts.email')}
+                  htmlFor="cu-email"
+                  error={touched && errors.email ? t('validation.email') : undefined}
+                >
+                  <Input
+                    id="cu-email"
+                    type="email"
+                    maxLength={200}
+                    value={customer.email}
+                    onChange={(e) => setCustomer('email', e.target.value)}
+                  />
+                </FormField>
+              </div>
               <div className="grid gap-4 sm:grid-cols-3">
                 <FormField label={t('doc.docDate')} htmlFor="doc-date" required>
                   <DateField
