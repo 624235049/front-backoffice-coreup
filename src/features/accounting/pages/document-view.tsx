@@ -16,6 +16,7 @@ import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate, useIntlLocale } from '@/features/platform/format';
+import { useCan } from '@/lib/permissions';
 import { cn } from '@/lib/utils';
 import {
   type AccDocument,
@@ -61,12 +62,15 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
   const quotationStatus = useQuotationStatus();
   const recordPayment = useRecordPayment();
 
+  // sales may issue quotations and invoices only: money-in and correction stay with accounting (the API says 403 too)
+  const accounting = useCan('platform:accounting');
   const isVoid = doc.status === 'void';
   const isInvoice = doc.type === 'invoice';
   const isQuotation = doc.type === 'quotation';
-  const canVoid = !isVoid && doc.status !== 'draft';
-  const canPay = isInvoice && (doc.status === 'issued' || doc.status === 'partially_paid');
-  const canCredit = (isInvoice || doc.type === 'tax_invoice') && !isVoid && doc.status !== 'draft';
+  const canVoid = accounting && !isVoid && doc.status !== 'draft';
+  const canPay = accounting && isInvoice && (doc.status === 'issued' || doc.status === 'partially_paid');
+  const canCredit =
+    accounting && (isInvoice || doc.type === 'tax_invoice') && !isVoid && doc.status !== 'draft';
   const canConvertQuotation = isQuotation && (doc.status === 'sent' || doc.status === 'accepted');
   const canMarkQuotation = isQuotation && (doc.status === 'sent' || doc.status === 'accepted');
   const hasActivePayments = isInvoice && doc.payments.some((p) => p.status === 'active');
@@ -351,7 +355,7 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
                           </span>
                         </DtCell>
                         <DtCell>
-                          {p.status === 'active' && !isVoid ? (
+                          {accounting && p.status === 'active' && !isVoid ? (
                             <Button
                               variant="ghost"
                               className="text-destructive"

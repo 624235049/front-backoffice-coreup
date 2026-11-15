@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
+import { useCan } from '@/lib/permissions';
 import { type Invoice, useConfirmPayment, usePlans, useRejectSlip } from '../api';
 import { dmyBE } from '../billing-docs';
 import { formatDate, formatDateTime, formatMoney, useIntlLocale } from '../format';
@@ -130,6 +131,8 @@ function Review({
   const confirm = useConfirmPayment();
   const reject = useRejectSlip();
   const plans = usePlans();
+  // sales issues bills; confirming money, rejecting a slip and voiding stay with `platform:billing` (the API says 403 too)
+  const canBilling = useCan('platform:billing');
   const [note, setNote] = useState('');
   const [dialog, setDialog] = useState<'send' | 'void' | 'delete' | 'edit' | 'pay' | null>(null);
   const busy = confirm.isPending || reject.isPending;
@@ -251,7 +254,7 @@ function Review({
           </div>
         </div>
       ) : null}
-      {pending ? (
+      {canBilling && pending ? (
         <>
           {invoice.slipCheck ? (
             <SlipCheckBox check={invoice.slipCheck} totalMinor={invoice.totalMinor} />
@@ -299,7 +302,7 @@ function Review({
           </div>
         </>
       ) : null}
-      {draft || open || invoice.status === 'paid' ? (
+      {canBilling && (draft || open || invoice.status === 'paid') ? (
         <div className="border-t pt-4">
           <Button
             variant="outline"

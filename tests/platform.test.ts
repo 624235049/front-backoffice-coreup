@@ -79,7 +79,7 @@ describe('platform access', () => {
     const consultant = {
       ...base,
       roles: ['platform_consultant'],
-      permissions: ['platform:read', 'platform:audits'],
+      permissions: ['platform:read', 'platform:shops', 'platform:audits'],
     };
     expect(routes(consultant)).toEqual(expect.arrayContaining(['/platform', '/platform/tenants']));
     expect(routes(consultant)).not.toContain('/platform/audits'); // consulting pages are hidden from the menu
@@ -87,7 +87,7 @@ describe('platform access', () => {
     expect(routes(consultant)).not.toContain('/platform/invoices');
   });
 
-  it('gives sales shops, leads, expenses and contacts but no company revenue, billing or accounting reports', () => {
+  it('gives sales new shops, leads, quotations, bills, expenses and contacts but not the dashboard, shops, usage report, company revenue or accounting reports', () => {
     const sales = membership({
       tenant: { ...membership().tenant, slug: 'coreup' },
       modules: ['platform'],
@@ -95,10 +95,10 @@ describe('platform access', () => {
       permissions: [
         'platform:read',
         'platform:write',
-        'platform:impersonate',
         'platform:leads',
         'platform:audits',
         'platform:expenses',
+        'platform:billing_issue',
       ],
     });
     const routes = buildNav([...accountingNav, ...navItems], sales, 'full').flatMap((g) =>
@@ -106,19 +106,23 @@ describe('platform access', () => {
     );
     expect(routes).toEqual(
       expect.arrayContaining([
-        '/platform/tenants',
+        '/platform/onboarding',
         '/platform/leads',
+        '/platform/invoices',
+        '/accounting/quotations',
         '/accounting/expenses',
         '/accounting/contacts',
       ]),
     );
     for (const hidden of [
+      '/platform',
+      '/platform/tenants',
+      '/platform/usage',
       '/accounting',
       '/accounting/invoices',
       '/accounting/reports',
       '/accounting/settings',
       '/accounting/products',
-      '/platform/invoices',
       '/platform/revenue',
       '/platform/team',
       '/platform/plans',

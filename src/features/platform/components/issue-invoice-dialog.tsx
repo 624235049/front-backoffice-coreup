@@ -20,7 +20,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { type Invoice, type Plan, type TenantRow, useCreateInvoice, usePlans, useTenants } from '../api';
+import {
+  type Invoice,
+  type Plan,
+  type ShopChoice,
+  type TenantRow,
+  useCreateInvoice,
+  usePlans,
+  useShopPicker,
+} from '../api';
 import { dmyBE, prorateDifference, renewalLineMessage } from '../billing-docs';
 import { formatMoney, parseBahtToMinor, todayBangkok, useIntlLocale, usePlanLabel } from '../format';
 import { orderPlans } from '../plan-families';
@@ -68,14 +76,14 @@ export function IssueInvoiceDialog({
   const locale = useIntlLocale();
   const planLabel = usePlanLabel();
   const plans = usePlans();
-  const shops = useTenants({});
+  const shops = useShopPicker();
   const create = useCreateInvoice();
   const [pickedShop, setPickedShop] = useState('');
   const [planCode, setPlanCode] = useState('');
   const [kind, setKind] = useState<Kind>('renewal');
   const [amount, setAmount] = useState('');
 
-  const shop = tenant ?? (shops.data ?? []).find((s) => s.id === pickedShop);
+  const shop: ShopChoice | undefined = tenant ?? (shops.data ?? []).find((s) => s.id === pickedShop);
   const all = plans.data ?? [];
   const { sold, rest } = orderPlans(all.filter((p) => p.active && p.priceMinor > 0));
   const plan = all.find((p) => p.code === planCode);

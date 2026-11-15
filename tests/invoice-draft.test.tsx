@@ -14,6 +14,7 @@ const h = vi.hoisted(() => ({
 }));
 
 vi.mock('sonner', () => ({ toast: h.toast }));
+vi.mock('@/lib/membership', () => ({ useMembership: () => ({ permissions: ['platform:billing'] }) }));
 // keys + their interpolation values, so a test can see WHICH email / total a dialog shows
 vi.mock('react-i18next', async (orig) => ({
   ...(await orig<typeof ReactI18next>()),
@@ -25,7 +26,7 @@ vi.mock('react-i18next', async (orig) => ({
 vi.mock('@/features/accounting/components/a4-actions', () => ({ A4Link: () => null }));
 vi.mock('@/features/platform/api', () => ({
   useInvoices: () => ({ isPending: false, isError: false, data: h.invoices }),
-  useTenants: () => ({ data: [] }),
+  useShopPicker: () => ({ data: [] }),
   usePlans: () => ({ data: [] }),
   useAddons: () => ({ data: undefined }),
   useConfirmPayment: () => ({ mutate: h.confirm, isPending: false }),

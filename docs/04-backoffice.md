@@ -116,13 +116,13 @@ Layout: `/_auth/*` (ไม่ต้องล็อกอิน), `/_app/*` (ต�
 | `/rules/queue` · `/rules/compensation` | ตั้งกติกา (มีตัวจำลอง) | rules:write | คอม |
 | `/kpi` | Dashboard | kpi:read · kpi | คอม/มือถือ |
 | `/settings/*` | ร้าน สาขา ห้อง ตำแหน่ง role terminology custom fields LINE OA แพ็กเกจ | tenant:write | คอม |
-| `/platform` | ภาพรวมธุรกิจ CoreUp | platform:* | คอม |
-| `/platform/tenants` · `/:id` | ร้านลูกค้า, โมดูล, impersonate | platform_admin | |
+| `/platform` | ภาพรวมธุรกิจ CoreUp | platform:shops (ทีมขายไม่เห็น: เมนูซ่อม + เปิด URL ตรงได้หน้า "ไม่มีสิทธิ์ดูหน้านี้" + ลิงก์กลับหน้าหลักของตัวเอง; ทีมขายลงหน้า `/platform/leads`) | คอม |
+| `/platform/tenants` · `/:id` · `/platform/usage` | ร้านลูกค้า, โมดูล, impersonate, รายงานการใช้งาน | platform:shops | |
 | `/platform/leads` | CRM การขาย (kanban 6 stage) | platform_sales | |
 | `/platform/audits` · `/:id` | ออดิท: rubric, findings, แผน 90 วัน, สร้างรายงาน | platform_consultant | |
 | `/platform/templates` · `/question-bank` · `/plans` | ตั้งค่ากลาง | platform_admin | |
 | `/accounting` | บัญชีบริษัท CoreUp: ภาพรวม (รายรับ/รายจ่าย/กำไร, ลูกหนี้, กราฟ 12 เดือน) | platform:accounting | คอม/มือถือ |
-| `/accounting/quotations` · `/invoices` · `/receipts` · `/credit-notes` (+ `/new` · `/:id`) | ใบเสนอราคา / ใบแจ้งหนี้ / ใบเสร็จ-ใบกำกับภาษี / ใบลดหนี้ — ตัวแก้ไขเอกสารร่วมกัน, รับชำระ (หัก ณ ที่จ่าย), ยกเลิกพร้อมเหตุผล, PDF | platform:accounting | คอม/มือถือ |
+| `/accounting/quotations` · `/invoices` · `/receipts` · `/credit-notes` (+ `/new` · `/:id`) | ใบเสนอราคา / ใบแจ้งหนี้ / ใบเสร็จ-ใบกำกับภาษี / ใบลดหนี้ — ตัวแก้ไขเอกสารร่วมกัน, รับชำระ (หัก ณ ที่จ่าย), ยกเลิกพร้อมเหตุผล, PDF | platform:accounting (ใบเสนอราคาเปิดให้ platform:billing_issue ของทีมขายด้วย: ออกได้ ไม่มีรับชำระ/ยกเลิก/ใบลดหนี้) | คอม/มือถือ |
 | `/accounting/expenses` (+ `/new` · `/:id`) | ค่าใช้จ่าย + แนบใบเสร็จ + หมวดค่าใช้จ่าย (การ์ดใต้ตาราง) | platform:accounting หรือ platform:expenses | แบบหลัง (ทีมขาย) ไม่มีสวิตช์ VAT เพราะอ่านข้อมูลบริษัทไม่ได้ — server คิด VAT ตอนบันทึก |
 | `/accounting/contacts` · `/products` | ผู้ติดต่อ (platform:accounting หรือ platform:expenses) / สินค้า-บริการ (platform:accounting) | platform:accounting | |
 | `/accounting/reports` | กำไรขาดทุน, ลูกหนี้คงค้าง, ภาษีขาย/ซื้อ, หัก ณ ที่จ่าย, ค่าใช้จ่ายตามหมวด (ส่งออก .xlsx) | platform:accounting | คอม |

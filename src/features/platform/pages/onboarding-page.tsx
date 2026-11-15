@@ -15,7 +15,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { Can } from '@/lib/permissions';
+import { Can, useCan } from '@/lib/permissions';
 import { cn } from '@/lib/utils';
 import {
   type OnboardingQuery,
@@ -154,12 +154,18 @@ function ShopList({ rows, onLog }: { rows: OnboardingRow[]; onLog: (t: Target) =
 function ShopInfo({ r }: { r: OnboardingRow }) {
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
+  // the shop page is not for every role (sales sees the board, not the shop)
+  const canOpenShop = useCan('platform:shops');
   const age = daysAgo(r.createdAt);
   return (
     <div className="grid gap-1">
-      <Link to="/platform/tenants/$id" params={{ id: r.id }} className="font-medium hover:underline">
-        {r.name}
-      </Link>
+      {canOpenShop ? (
+        <Link to="/platform/tenants/$id" params={{ id: r.id }} className="font-medium hover:underline">
+          {r.name}
+        </Link>
+      ) : (
+        <span className="font-medium">{r.name}</span>
+      )}
       <div className="text-xs text-muted-foreground">
         {r.industryKey ? t(`industry.${r.industryKey}`, { defaultValue: r.industryKey }) : '–'} ·{' '}
         {age === 0 ? t('onboarding.signedUpToday') : t('onboarding.signedUp', { count: age })}

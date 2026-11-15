@@ -22,6 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { A4Link } from '@/features/accounting/components/a4-actions';
 import { downloadXlsx } from '@/features/accounting/lib/xlsx';
+import { useCan } from '@/lib/permissions';
 import { type Invoice, useConfirmPayment, useGenerateInvoices, useInvoices, usePatchInvoice } from '../api';
 import { dmyBE } from '../billing-docs';
 import {
@@ -112,6 +113,8 @@ export function InvoicesPage() {
   });
   const patch = usePatchInvoice();
   const confirm = useConfirmPayment();
+  // sales issues bills; marking paid, voiding and the billing run stay with `platform:billing` (the API says 403 too)
+  const canBilling = useCan('platform:billing');
   const numberLabel = useNumberLabel();
   const [voiding, setVoiding] = useState<Invoice | null>(null);
   const [sending, setSending] = useState<Invoice | null>(null);
@@ -167,12 +170,14 @@ export function InvoicesPage() {
           <Button size="sm" data-testid="row-send" onClick={() => setSending(i)}>
             {t('invoices.draft.send')}
           </Button>{' '}
-          <Button size="sm" variant="ghost" onClick={() => setVoiding(i)}>
-            {t('invoices.void')}
-          </Button>
+          {canBilling ? (
+            <Button size="sm" variant="ghost" onClick={() => setVoiding(i)}>
+              {t('invoices.void')}
+            </Button>
+          ) : null}
         </>
       ) : null}
-      {i.status === 'issued' || i.status === 'overdue' ? (
+      {canBilling && (i.status === 'issued' || i.status === 'overdue') ? (
         <>
           <Button
             size="sm"
@@ -187,7 +192,7 @@ export function InvoicesPage() {
           </Button>
         </>
       ) : null}
-      {i.status === 'paid' ? (
+      {canBilling && i.status === 'paid' ? (
         <Button size="sm" variant="ghost" data-testid="row-void-paid" onClick={() => setVoiding(i)}>
           {t('invoices.void')}
         </Button>
@@ -257,9 +262,11 @@ export function InvoicesPage() {
             >
               <Download /> {t('exportExcel', { ns: 'accounting' })}
             </Button>
-            <Button variant="outline" onClick={() => setRunning(true)}>
-              {t('invoices.run')}
-            </Button>
+            {canBilling ? (
+              <Button variant="outline" onClick={() => setRunning(true)}>
+                {t('invoices.run')}
+              </Button>
+            ) : null}
             <Button variant="outline" onClick={() => setCreatingOther(true)}>
               <Plus /> {t('invoices.addOther')}
             </Button>

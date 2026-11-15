@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useInvalidToast } from '@/lib/form-errors';
 import { useCan } from '@/lib/permissions';
-import { type Engagement, useCreateEngagement, useEngagements, useTenants } from '../api';
+import { type Engagement, useCreateEngagement, useEngagements, useShopPicker } from '../api';
 import { formatDate, formatMoney, parseBahtToMinor, useIntlLocale } from '../format';
 
 export const ENGAGEMENT_TYPES = [
@@ -197,7 +197,7 @@ function CreateEngagementDialog({
   const { t } = useTranslation('platform');
   const { t: tc } = useTranslation('common');
   const navigate = useNavigate();
-  const tenants = useTenants({});
+  const tenants = useShopPicker();
   const create = useCreateEngagement();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

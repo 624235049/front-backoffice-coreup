@@ -21,7 +21,7 @@ import {
   useCreateOtherInvoice,
   usePatchInvoice,
   usePlans,
-  useTenants,
+  useShopPicker,
 } from '../api';
 import { formatMoney, parseBahtToMinor, useIntlLocale, usePlanLabel } from '../format';
 
@@ -79,7 +79,7 @@ export function OtherInvoiceDialog({
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   const planLabel = usePlanLabel();
-  const shops = useTenants({});
+  const shops = useShopPicker();
   const plans = usePlans();
   const addons = useAddons();
   const create = useCreateOtherInvoice();

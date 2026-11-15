@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { type Audit, useAudits, useCreateAudit, useTenants } from '../api';
+import { type Audit, useAudits, useCreateAudit, useShopPicker } from '../api';
 import { formatDate, useIntlLocale } from '../format';
 
 export function AuditStatusBadge({ status }: { status: Audit['status'] }) {
@@ -102,7 +102,7 @@ function CreateAuditDialog({ open, onOpenChange }: { open: boolean; onOpenChange
   const { t } = useTranslation('platform');
   const { t: tc } = useTranslation('common');
   const navigate = useNavigate();
-  const tenants = useTenants({});
+  const tenants = useShopPicker();
   const create = useCreateAudit();
   const [tenantId, setTenantId] = useState('');
   return (

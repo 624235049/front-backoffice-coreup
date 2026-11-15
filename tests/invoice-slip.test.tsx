@@ -12,10 +12,11 @@ const h = vi.hoisted(() => ({
 }));
 
 vi.mock('sonner', () => ({ toast: h.toast }));
+vi.mock('@/lib/membership', () => ({ useMembership: () => ({ permissions: ['platform:billing'] }) }));
 vi.mock('@/features/accounting/components/a4-actions', () => ({ A4Link: () => null }));
 vi.mock('@/features/platform/api', () => ({
   useInvoices: () => ({ isPending: false, isError: false, data: h.invoices }),
-  useTenants: () => ({ data: [] }),
+  useShopPicker: () => ({ data: [] }),
   usePlans: () => ({ data: [] }),
   useConfirmPayment: () => ({ mutate: h.confirm, isPending: false }),
   useRejectSlip: () => ({ mutate: h.reject, isPending: false }),

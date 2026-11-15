@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useTenants } from '@/features/platform/api';
+import { useShopPicker } from '@/features/platform/api';
 import { type Contact, fetchContactPrefill, useCreateContact, usePatchContact } from '../api';
 import { isOptionalEmailOk, isOptionalTaxIdOk } from '../lib/tax-id';
 import { useDebounced } from '../lib/use-debounced';
@@ -88,7 +88,7 @@ export function ContactDialog({
   const patch = usePatchContact();
   const [shopQ, setShopQ] = useState('');
   const shopQuery = useDebounced(shopQ, 250);
-  const shops = useTenants({ q: shopQuery || undefined, limit: 8 });
+  const shops = useShopPicker({ q: shopQuery || undefined, limit: 8 });
 
   useEffect(() => {
     if (open) {

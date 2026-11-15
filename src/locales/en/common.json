@@ -35,6 +35,11 @@
     "forbidden": "This account can't view this. Ask the owner or a manager to add the permission.",
     "notFound": "This may have been deleted or moved. Go back and open it again."
   },
+  "noPermission": {
+    "title": "You do not have permission to view this page",
+    "body": "This account is not allowed to open this page. Ask the CoreUp owner to add the permission if you need it.",
+    "home": "Go to my home page"
+  },
   "showPassword": "Show password",
   "hidePassword": "Hide password",
   "phoneInput": {

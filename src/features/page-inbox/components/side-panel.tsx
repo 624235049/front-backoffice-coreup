@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { useTenants } from '@/features/platform/api';
+import { useShopPicker } from '@/features/platform/api';
 import { OnboardDialog } from '@/features/platform/components/onboard-dialog';
 import { useCan } from '@/lib/permissions';
 import type { PageConversation, PageShopType } from '../api';
@@ -41,7 +41,7 @@ export function SidePanel({ conversation: c }: { conversation: PageConversation 
   const link = useLinkTenant();
   const [onboard, setOnboard] = useState(false);
   const [pick, setPick] = useState('');
-  const shops = useTenants({ limit: 200 } as never);
+  const shops = useShopPicker({ limit: 200 });
   const linkTo = (tenantId: string) =>
     link.mutate({ id: c.id, tenantId }, { onSuccess: () => toast.success(t('side.linked')) });
   return (

@@ -2,6 +2,7 @@ import { toast } from 'sonner';
 import { useReasonMessage } from '@/features/reason-errors';
 import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } from '@/lib/api';
 import type { paths } from '@/lib/api-client';
+import { useCan } from '@/lib/permissions';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
 import { rememberPlanNames } from './plan-families';
 
@@ -52,6 +53,28 @@ export const useTenants = (query: TenantsQuery) =>
     [part, 'tenants', query],
     async () => (await unwrap(api.GET('/v1/platform/tenants', { params: { query } }))).data,
   );
+
+/** A shop in a form's picker. Roles without `platform:shops` (sales) only get the minimal picker: id, name, owner. */
+export type ShopChoice = Pick<TenantRow, 'id' | 'name'> &
+  Partial<Pick<TenantRow, 'slug' | 'planCode' | 'periodStart' | 'periodEnd'>>;
+
+/** Shops to choose from in the quotation / invoice / contact forms: the full list where the role may see it, else the minimal picker. */
+export function useShopPicker(query: { q?: string; limit?: number } = {}) {
+  const full = useCan('platform:shops');
+  const shops = useTenantQuery(
+    [part, 'tenants', query],
+    async () => (await unwrap(api.GET('/v1/platform/tenants', { params: { query } }))).data,
+    { enabled: full },
+  );
+  const options = useTenantQuery(
+    [part, 'shop-options', query],
+    async () => (await unwrap(api.GET('/v1/platform/billing/shop-options', { params: { query } }))).data,
+    { enabled: !full },
+  );
+  const current = full ? shops : options;
+  const data: ShopChoice[] | undefined = current.data;
+  return { data, isPending: current.isPending, isFetching: current.isFetching };
+}
 
 export const useUsageReport = (query: UsageReportQuery) =>
   useTenantQuery(

@@ -6,7 +6,7 @@ const h = vi.hoisted(() => ({ create: vi.fn(), patch: vi.fn(), warning: vi.fn() 
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn(), warning: h.warning } }));
 vi.mock('@/features/platform/api', () => ({
-  useTenants: () => ({
+  useShopPicker: () => ({
     data: [
       { id: 'shop-1', name: 'ร้านสปา' },
       { id: 'shop-2', name: 'ร้านกาแฟ' },

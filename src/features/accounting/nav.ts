@@ -22,9 +22,16 @@ const expenses = {
   section: 'accounting',
 } as const;
 
+/** Quotations are also open to `platform:billing_issue` (sales): issue only, no payments, void or credit notes. */
+const quotations = {
+  anyPermission: ['platform:accounting', 'platform:billing_issue'],
+  module: 'platform',
+  section: 'accounting',
+} as const;
+
 export const navItems: NavItem[] = [
   { ...base, to: '/accounting', labelKey: 'nav:accOverview', icon: Calculator, exact: true, order: 10 },
-  { ...base, to: '/accounting/quotations', labelKey: 'nav:accQuotations', icon: FileText, order: 20 },
+  { ...quotations, to: '/accounting/quotations', labelKey: 'nav:accQuotations', icon: FileText, order: 20 },
   { ...base, to: '/accounting/invoices', labelKey: 'nav:accInvoices', icon: ReceiptText, order: 30 },
   { ...base, to: '/accounting/receipts', labelKey: 'nav:accReceipts', icon: FileCheck2, order: 40 },
   { ...base, to: '/accounting/credit-notes', labelKey: 'nav:accCreditNotes', icon: FileMinus2, order: 50 },
