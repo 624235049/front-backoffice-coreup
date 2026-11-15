@@ -55,6 +55,8 @@
                   "PACKAGE_NOT_USABLE",
                   "IF_MATCH_REQUIRED",
                   "PIN_INVALID",
+                  "ISSUE_PIN_REQUIRED",
+                  "ISSUE_PIN_WRONG",
                   "PERIOD_CLOSED",
                   "RECORD_LOCKED",
                   "LEDGER_PENDING",
@@ -51252,8 +51254,8 @@
         "tags": [
           "platform"
         ],
-        "summary": "Issue a draft: it gets its INV number, becomes visible and payable for the shop and the bill is mailed to the shop owners (once — 409 `invoice_not_draft` when it is not a draft). Body `{confirm: true}` is required (400 without it): only the team app's confirm dialog sends it",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "summary": "Issue a draft: it gets its INV number, becomes visible and payable for the shop and the bill is mailed to the shop owners (once — 409 `invoice_not_draft` when it is not a draft). Body `{confirm: true, pin}` is required: `confirm` (400 without it) is only sent by the team app's confirm dialog; `pin` is the team's issue PIN (403 `ISSUE_PIN_REQUIRED` / `ISSUE_PIN_WRONG`, 429 after 5 wrong in 15 min)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:billing|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -51294,6 +51296,10 @@
                     "enum": [
                       true
                     ]
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 32
                   }
                 },
                 "required": [
@@ -64230,7 +64236,7 @@
           "accounting"
         ],
         "summary": "Documents (quotations, invoices, receipts, tax invoices, credit notes) with a totals row",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.",
         "security": [
           {
             "cookieAuth": []
@@ -64725,7 +64731,7 @@
           "accounting"
         ],
         "summary": "Create a draft document (issue:true also issues it and allocates the number)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -65036,6 +65042,10 @@
                       "method",
                       "amountMinor"
                     ]
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 32
                   }
                 },
                 "required": [
@@ -67189,7 +67199,7 @@
           "accounting"
         ],
         "summary": "Issue a draft: allocates the next gap-free number; a direct receipt / tax invoice also takes the payment",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -67290,6 +67300,10 @@
                       "method",
                       "amountMinor"
                     ]
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 32
                   }
                 }
               }
@@ -69152,7 +69166,7 @@
           "accounting"
         ],
         "summary": "Convert a quotation to an invoice, or an invoice / tax invoice to a credit note (copies the lines)",
-        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
             "cookieAuth": []
@@ -69198,6 +69212,10 @@
                   "issue": {
                     "type": "boolean",
                     "default": false
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 32
                   }
                 },
                 "required": [
@@ -313716,6 +313734,310 @@
                         "createdBy",
                         "createdAt",
                         "finishedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/billing/issue-pin": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Status of the PIN that issues bills (set / still the initial one): never the PIN or its hash. platform_owner only",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "isSet": {
+                          "type": "boolean"
+                        },
+                        "isDefault": {
+                          "type": "boolean"
+                        },
+                        "updatedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "isSet",
+                        "isDefault",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Set / change the PIN that issues bills (4–8 digits, stored hashed; body `{confirm: true}` required). platform_owner only",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pin": {
+                    "type": "string",
+                    "pattern": "^\\d{4,8}$"
+                  },
+                  "confirm": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                },
+                "required": [
+                  "pin",
+                  "confirm"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "isSet": {
+                          "type": "boolean"
+                        },
+                        "isDefault": {
+                          "type": "boolean"
+                        },
+                        "updatedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "isSet",
+                        "isDefault",
+                        "updatedAt"
                       ]
                     }
                   },

@@ -15,6 +15,8 @@ import { type Invoice, useDeleteInvoice, useInvoices, usePatchInvoice, useSendIn
 import { dmyBE } from '../billing-docs';
 import { formatDate, formatMoney, useIntlLocale } from '../format';
 import { isOtherInvoice, mailsBill } from '../invoice-slip';
+import { isIssuePinError } from '../issue-pin';
+import { IssuePinDialog } from './issue-pin-dialog';
 
 /** A draft has no INV number yet (its stored number is a placeholder), so the screens say "ฉบับร่าง" instead. */
 export function useNumberLabel() {
@@ -175,34 +177,32 @@ export function SendInvoiceDialog({
   // money may be on its way for an old invoice with a slip: voiding it is refused (same rule as a shop's own checkout)
   const inReview = older.some((i) => i.slipUploadedAt !== null);
 
+  const onSubmit = async (pin: string) => {
+    const res = await send.mutateAsync({ id: invoice.id, pin });
+    let failed = 0;
+    if (voidOlder)
+      for (const i of older) {
+        try {
+          await patch.mutateAsync({ id: i.id, body: { status: 'void' } });
+        } catch {
+          failed++; // the mutation already toasted the API's reason
+        }
+      }
+    toast.success(t('invoices.draft.sentToast', { number: res.data.number }));
+    if (failed > 0) toast.error(t('invoices.draft.voidOlderFailed', { count: failed }));
+    onSent?.(res.data);
+    onClose();
+  };
+
   return (
-    <ConfirmDialog
+    <IssuePinDialog
       testId="send-invoice"
       title={t('invoices.draft.sendTitle')}
       description={t('invoices.draft.sendHint')}
       confirmLabel={t('invoices.draft.send')}
-      pending={send.isPending}
       blockedReason={voidOlder && inReview && t('invoices.draft.paymentInReview')}
       onClose={onClose}
-      onConfirm={() =>
-        send.mutate(invoice.id, {
-          onSuccess: async (res) => {
-            let failed = 0;
-            if (voidOlder)
-              for (const i of older) {
-                try {
-                  await patch.mutateAsync({ id: i.id, body: { status: 'void' } });
-                } catch {
-                  failed++; // the mutation already toasted the API's reason
-                }
-              }
-            toast.success(t('invoices.draft.sentToast', { number: res.data.number }));
-            if (failed > 0) toast.error(t('invoices.draft.voidOlderFailed', { count: failed }));
-            onSent?.(res.data);
-            onClose();
-          },
-        })
-      }
+      onSubmit={onSubmit}
     >
       <InvoiceFacts invoice={invoice} recipients />
       {older.length > 0 ? (
@@ -228,7 +228,7 @@ export function SendInvoiceDialog({
             : 'invoices.draft.sendWarningNoMail',
         )}
       </p>
-    </ConfirmDialog>
+    </IssuePinDialog>
   );
 }
 
@@ -272,7 +272,10 @@ export function VoidInvoiceDialog({
         {t('invoices.voidNoMail')}
       </p>
       {invoice.status === 'paid' ? (
-        <p className="rounded-md bg-destructive/10 p-2 text-xs text-destructive" data-testid="void-paid-warning">
+        <p
+          className="rounded-md bg-destructive/10 p-2 text-xs text-destructive"
+          data-testid="void-paid-warning"
+        >
           {t('invoices.voidPaidWarning', { receipt: invoice.receiptNumber ?? '-' })}
         </p>
       ) : null}
@@ -374,21 +377,23 @@ export function BulkSendDialog({
   const { t } = useTranslation('platform');
   const locale = useIntlLocale();
   const send = useSendInvoice();
-  const [busy, setBusy] = useState(false);
   const total = invoices.reduce((s, i) => s + i.totalMinor, 0);
 
-  const run = async () => {
-    setBusy(true);
+  const run = async (pin: string) => {
     let ok = 0;
     for (const i of invoices) {
       try {
-        await send.mutateAsync(i.id);
+        await send.mutateAsync({ id: i.id, pin });
         ok++;
-      } catch {
-        // the failed one shows its own reason (toast from the mutation) and stays a draft
+      } catch (e) {
+        // a PIN problem stops the run: shown in the dialog when nothing was sent yet, else the rest stay drafts
+        if (isIssuePinError(e)) {
+          if (ok === 0) throw e;
+          break;
+        }
+        // any other failure shows its own reason (toast from the mutation) and that one stays a draft
       }
     }
-    setBusy(false);
     const done = t('invoices.draft.bulkDone', { ok, total: invoices.length });
     if (ok === invoices.length) toast.success(done);
     else toast.warning(done);
@@ -397,14 +402,13 @@ export function BulkSendDialog({
   };
 
   return (
-    <ConfirmDialog
+    <IssuePinDialog
       testId="bulk-send"
       title={t('invoices.draft.bulkTitle', { count: invoices.length })}
       description={t('invoices.draft.bulkHint')}
       confirmLabel={t('invoices.draft.bulkSend', { count: invoices.length })}
-      pending={busy}
       onClose={onClose}
-      onConfirm={() => void run()}
+      onSubmit={run}
     >
       <ul className="grid max-h-[40dvh] gap-2 overflow-y-auto text-sm" data-testid="bulk-list">
         {invoices.map((i) => (
@@ -427,6 +431,6 @@ export function BulkSendDialog({
         {t('invoices.draft.bulkTotal', { total: formatMoney(total, locale) })}
       </p>
       <p className="rounded-md bg-muted p-2 text-xs">{t('invoices.draft.sendWarning')}</p>
-    </ConfirmDialog>
+    </IssuePinDialog>
   );
 }

@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { isIssuePinError } from '@/features/platform/issue-pin';
 import { useReasonMessage } from '@/features/reason-errors';
 import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } from '@/lib/api';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
@@ -234,7 +235,10 @@ function useMut<TData, TVars>(fn: (v: TVars) => Promise<TData>) {
     mutationFn: fn,
     onSuccess: () => invalidate(part),
     // the API's real cause (`details.reason`) in plain Thai instead of the generic "invalid data"
-    onError: (e) => toast.error(message(e)),
+    // a PIN problem is shown by the PIN dialog itself
+    onError: (e) => {
+      if (!isIssuePinError(e)) toast.error(message(e));
+    },
   });
 }
 
@@ -298,12 +302,12 @@ export const useDeleteDocument = () =>
 
 export const useIssueDocument = () =>
   useMut(
-    async (v: { id: string; payment?: PaymentInput | null }) =>
+    async (v: { id: string; payment?: PaymentInput | null; pin?: string }) =>
       (
         await unwrap(
           api.POST(`${B}/documents/{id}/issue`, {
             params: { path: { id: v.id } },
-            body: { payment: v.payment ?? null },
+            body: { payment: v.payment ?? null, pin: v.pin },
           }),
         )
       ).data,

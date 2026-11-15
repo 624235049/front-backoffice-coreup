@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import type * as ReactI18next from 'react-i18next';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InvoicesPage } from '@/features/platform/pages/invoices-page';
+import { ApiError } from '@/lib/api';
 
 const h = vi.hoisted(() => ({
   send: vi.fn(),
@@ -72,6 +73,12 @@ const invoice = (over: Record<string, unknown> = {}) => ({
   ...over,
 });
 
+/** The send dialogs ask for the team PIN: a masked numeric field; the confirm stays off until 4–8 digits are in. */
+const typePin = (dialogId: string, pin = '1111') =>
+  fireEvent.change(screen.getByTestId(`${dialogId}-pin`), { target: { value: pin } });
+const pinError = (code: string, status: number, details: unknown) =>
+  new ApiError({ status, code, message: code, details });
+
 const clickAll = (name: string) =>
   fireEvent.click(screen.getAllByRole('button', { name: new RegExp(name) })[0] as HTMLElement);
 
@@ -96,12 +103,62 @@ describe('draft invoice: nothing is sent until the team confirms', () => {
     expect(items).toContain('ค่าพัฒนาเพิ่ม × 2');
     expect(within(dlg).getByTestId('send-warning').textContent).toContain('invoices.draft.sendWarning');
     // opening the dialog sent nothing
-    expect(h.send).not.toHaveBeenCalled();
+    expect(h.sendAsync).not.toHaveBeenCalled();
+  });
+
+  it('sending needs the team PIN: masked numeric field, confirm off until 4–8 digits; Enter or the button sends once', async () => {
+    h.sendAsync.mockImplementationOnce(() => new Promise(() => {})); // stays pending: the dialog stays open
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByTestId('row-send')[0] as HTMLElement);
+    const pin = screen.getByTestId('send-invoice-pin') as HTMLInputElement;
+    const confirm = screen.getByTestId('send-invoice-confirm') as HTMLButtonElement;
+    expect(pin.type).toBe('password');
+    expect(pin.inputMode).toBe('numeric');
+    expect(confirm.disabled).toBe(true);
+    typePin('send-invoice', '12a');
+    expect(pin.value).toBe('12'); // digits only
+    expect(confirm.disabled).toBe(true);
+    fireEvent.keyDown(pin, { key: 'Enter' });
+    expect(h.sendAsync).not.toHaveBeenCalled();
+    typePin('send-invoice');
+    expect(confirm.disabled).toBe(false);
+    fireEvent.keyDown(pin, { key: 'Enter' });
+    expect(h.sendAsync).toHaveBeenCalledWith({ id: 'inv-1', pin: '1111' });
+    // a fast second go never sends twice
+    fireEvent.click(confirm);
+    fireEvent.keyDown(pin, { key: 'Enter' });
+    expect(h.sendAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('a wrong PIN stays in the dialog with the attempts left, clears the field and sends nothing else', async () => {
+    h.sendAsync.mockRejectedValueOnce(
+      pinError('ISSUE_PIN_WRONG', 403, { reason: 'pin_wrong', attemptsLeft: 3 }),
+    );
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByTestId('row-send')[0] as HTMLElement);
+    typePin('send-invoice', '9999');
     fireEvent.click(screen.getByTestId('send-invoice-confirm'));
-    expect(h.send).toHaveBeenCalledWith('inv-1', expect.anything());
-    // a fast second click never sends twice
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('send-invoice-pin-msg').textContent).toContain('"count":3'),
+    );
+    expect(screen.getByTestId('send-invoice-pin-msg').textContent).toContain('issuePin.wrong');
+    expect((screen.getByTestId('send-invoice-pin') as HTMLInputElement).value).toBe('');
+    expect(screen.getByTestId('send-invoice')).toBeTruthy(); // still open, the draft is still a draft
+    expect(h.toast.error).not.toHaveBeenCalled();
+  });
+
+  it('after too many wrong PINs the lock (429) is explained with the minutes to wait', async () => {
+    h.sendAsync.mockRejectedValueOnce(
+      pinError('RATE_LIMITED', 429, { reason: 'pin_locked', retryAfterSeconds: 600 }),
+    );
+    render(<InvoicesPage />);
+    fireEvent.click(screen.getAllByTestId('row-send')[0] as HTMLElement);
+    typePin('send-invoice');
     fireEvent.click(screen.getByTestId('send-invoice-confirm'));
-    expect(h.send).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('send-invoice-pin-msg').textContent).toContain('issuePin.locked'),
+    );
+    expect(screen.getByTestId('send-invoice-pin-msg').textContent).toContain('"minutes":10');
   });
 
   it('cancel closes the confirm without sending', () => {
@@ -181,7 +238,7 @@ describe('send: voiding the older notice is opt-in', () => {
       ...over,
     });
 
-  it('the box starts unticked; with a slip in review, ticking it blocks the send with a visible reason', () => {
+  it('the box starts unticked; with a slip in review, ticking it blocks the send with a visible reason', async () => {
     h.invoices = [pkgDraft(), old({ slipUploadedAt: '2026-11-01T03:00:00.000Z' })];
     render(<InvoicesPage />);
     fireEvent.click(screen.getAllByTestId('row-send')[0] as HTMLElement);
@@ -191,11 +248,12 @@ describe('send: voiding the older notice is opt-in', () => {
     // unticked: sending is allowed even though the old notice has a slip
     fireEvent.click(box);
     expect(screen.getByTestId('older-in-review').textContent).toContain('invoices.draft.paymentInReview');
+    typePin('send-invoice');
     fireEvent.click(screen.getByTestId('send-invoice-confirm'));
-    expect(h.send).not.toHaveBeenCalled();
+    expect(h.sendAsync).not.toHaveBeenCalled();
     fireEvent.click(box);
     fireEvent.click(screen.getByTestId('send-invoice-confirm'));
-    expect(h.send).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(h.sendAsync).toHaveBeenCalledTimes(1));
   });
 });
 
@@ -262,8 +320,35 @@ describe('send several drafts at once', () => {
     expect(within(dlg).getByTestId('bulk-total').textContent).toContain('3,500');
     expect(h.sendAsync).not.toHaveBeenCalled();
 
+    // one PIN for the whole batch
+    expect((screen.getByTestId('bulk-send-confirm') as HTMLButtonElement).disabled).toBe(true);
+    typePin('bulk-send');
     fireEvent.click(screen.getByTestId('bulk-send-confirm'));
     await vi.waitFor(() => expect(h.sendAsync).toHaveBeenCalledTimes(2));
-    expect(h.sendAsync.mock.calls.map((c) => (c as unknown as [string])[0])).toEqual(['a', 'b']);
+    expect(h.sendAsync.mock.calls.map((c) => (c as unknown as [{ id: string; pin: string }])[0])).toEqual([
+      { id: 'a', pin: '1111' },
+      { id: 'b', pin: '1111' },
+    ]);
+  });
+
+  it('a wrong PIN on the first one stops the batch: nothing else is sent and the dialog shows why', async () => {
+    h.invoices = two();
+    h.sendAsync.mockRejectedValueOnce(
+      pinError('ISSUE_PIN_WRONG', 403, { reason: 'pin_wrong', attemptsLeft: 4 }),
+    );
+    render(<InvoicesPage />);
+    fireEvent.click(
+      screen.getAllByRole('checkbox', { name: /invoices.draft.pick.*ร้าน ก/ })[0] as HTMLElement,
+    );
+    fireEvent.click(
+      screen.getAllByRole('checkbox', { name: /invoices.draft.pick.*ร้าน ข/ })[0] as HTMLElement,
+    );
+    fireEvent.click(screen.getByTestId('bulk-send-open'));
+    typePin('bulk-send', '0000');
+    fireEvent.click(screen.getByTestId('bulk-send-confirm'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('bulk-send-pin-msg').textContent).toContain('issuePin.wrong'),
+    );
+    expect(h.sendAsync).toHaveBeenCalledTimes(1);
   });
 });

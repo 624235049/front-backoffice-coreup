@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { IssuePinDialog } from '@/features/platform/components/issue-pin-dialog';
 import { todayBangkok } from '@/features/platform/format';
 import {
   type AccDocument,
@@ -103,13 +104,13 @@ export function DocumentEditor({
     void navigate({ to: detailPath(saved.type, saved.id) as never, replace: true });
 
   /** Persist the draft. Returns the saved document (create or update). */
-  const save = async (issueNow: boolean, payment?: PaymentInput | null) => {
+  const save = async (issueNow: boolean, payment?: PaymentInput | null, pin?: string) => {
     const body = toBody(state, type, issueNow);
     if (!doc) {
-      return create.mutateAsync({ ...body, payment: payment ?? null });
+      return create.mutateAsync({ ...body, payment: payment ?? null, pin });
     }
     const updated = await update.mutateAsync({ id: doc.id, body });
-    return issueNow ? issue.mutateAsync({ id: doc.id, payment: payment ?? null }) : updated;
+    return issueNow ? issue.mutateAsync({ id: doc.id, payment: payment ?? null, pin }) : updated;
   };
 
   /** Why the document cannot be saved / issued right now (most important first), or null when it is fine. */
@@ -145,8 +146,8 @@ export function DocumentEditor({
     else setConfirmIssue(true);
   };
 
-  const doIssue = async (payment?: PaymentInput | null) => {
-    const saved = await save(true, payment);
+  const doIssue = async (payment?: PaymentInput | null, pin?: string) => {
+    const saved = await save(true, payment, pin);
     toast.success(t('doc.issued', { number: saved.number ?? '' }));
     setConfirmIssue(false);
     setPaying(false);
@@ -439,8 +440,19 @@ export function DocumentEditor({
         </aside>
       </div>
 
+      {/* an invoice is a bill the customer pays: issuing it asks for the team PIN; a quotation does not */}
+      {confirmIssue && type === 'invoice' ? (
+        <IssuePinDialog
+          testId="issue-invoice"
+          title={t('doc.confirmIssueTitle')}
+          description={t('doc.confirmIssueBody')}
+          confirmLabel={t('doc.issue')}
+          onClose={() => setConfirmIssue(false)}
+          onSubmit={(pin) => doIssue(undefined, pin)}
+        />
+      ) : null}
       <ConfirmDialog
-        open={confirmIssue}
+        open={confirmIssue && type !== 'invoice'}
         onOpenChange={setConfirmIssue}
         title={isQuotation ? t('doc.confirmSendTitle') : t('doc.confirmIssueTitle')}
         description={isQuotation ? t('doc.confirmSendBody') : t('doc.confirmIssueBody')}

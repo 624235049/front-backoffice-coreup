@@ -19,8 +19,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ApiBody } from '@/lib/api';
+import { useMembership } from '@/lib/membership';
 import { type Plan, useCreatePlan, usePatchPlan, usePlans } from '../api';
 import { AddonsCard } from '../components/addons-card';
+import { IssuePinCard } from '../components/issue-pin-card';
 import {
   cleanMarketing,
   type Marketing,
@@ -40,6 +42,7 @@ const CODE_RE = /^[a-z0-9][a-z0-9_-]{1,30}$/;
 /** `/platform/plans` — the team creates and edits the packages sold to shops (permission `platform:manage`). */
 export function PlansPage() {
   const { t } = useTranslation('platform');
+  const isOwner = useMembership().roles.includes('platform_owner');
   const plans = usePlans();
   // `null` = closed, `'new'` = create, a plan = edit
   const [editing, setEditing] = useState<Plan | 'new' | null>(null);
@@ -76,6 +79,7 @@ export function PlansPage() {
                 </section>
               ) : null}
               <AddonsCard />
+              {isOwner ? <IssuePinCard /> : null}
               {internal.length > 0 ? (
                 <details>
                   <summary className="cursor-pointer text-sm font-semibold">

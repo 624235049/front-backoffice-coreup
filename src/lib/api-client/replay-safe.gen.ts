@@ -428,6 +428,7 @@ export const REPLAY_SAFE_OPERATIONS: readonly string[] = [
   'PUT /v1/platform/addons',
   'PUT /v1/platform/ads/goals',
   'PUT /v1/platform/audits/{id}/action-plan',
+  'PUT /v1/platform/billing/issue-pin',
   'PUT /v1/platform/sales-ai/config',
   'PUT /v1/platform/tenants/{id}/extras',
   'PUT /v1/platform/tenants/{id}/limits',

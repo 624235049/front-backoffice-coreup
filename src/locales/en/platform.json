@@ -1506,5 +1506,30 @@
     "active": "Let this shop connect Facebook/IG",
     "enabledToast": "This shop can now connect Facebook/IG",
     "disabledToast": "Facebook/IG connection switched off for this shop"
+  },
+  "issuePin": {
+    "label": "PIN to issue a bill",
+    "hint": "Enter the 4–8 digit PIN set by the owner",
+    "required": "Enter the PIN before issuing a bill",
+    "wrong": "Wrong PIN. {{count}} attempts left",
+    "exhausted": "Wrong PIN, and 5 wrong tries are used up. Locked for 15 minutes",
+    "locked": "Too many wrong PINs. Locked, try again in {{minutes}} minutes",
+    "card": {
+      "title": "PIN to issue a bill",
+      "isSet": "Set",
+      "notSet": "Not set",
+      "about": "Everyone types this PIN before issuing a payment bill to a customer (quotations do not need it)",
+      "defaultHint": "This is still the initial PIN set by the system. Change it to your own number now",
+      "set": "Set PIN",
+      "change": "Change PIN",
+      "dialogTitle": "Set the PIN to issue a bill",
+      "dialogHint": "4–8 digits, stored encrypted and never shown again. Type it twice to confirm",
+      "new": "New PIN",
+      "again": "New PIN again",
+      "save": "Save PIN",
+      "saved": "PIN saved",
+      "errFormat": "The PIN must be 4–8 digits",
+      "errMismatch": "The two PINs do not match"
+    }
   }
 }

@@ -4,6 +4,7 @@ import { type ApiBody, type ApiData, type ApiItem, api, type ListItem, unwrap } 
 import type { paths } from '@/lib/api-client';
 import { useCan } from '@/lib/permissions';
 import { useApiMutation, useInvalidate, useTenantQuery } from '@/lib/query';
+import { isIssuePinError } from './issue-pin';
 import { rememberPlanNames } from './plan-families';
 
 /* Types come from the OpenAPI document only (never hand-written). */
@@ -305,7 +306,10 @@ function useMut<TData, TVars>(fn: (v: TVars) => Promise<TData>) {
     mutationFn: fn,
     onSuccess: () => invalidate(part),
     // the API's real cause (`details.reason`) in plain Thai instead of the generic "invalid data"
-    onError: (e) => toast.error(message(e)),
+    // a PIN problem is shown by the PIN dialog itself
+    onError: (e) => {
+      if (!isIssuePinError(e)) toast.error(message(e));
+    },
   });
 }
 
@@ -386,6 +390,18 @@ export const useCreatePlan = () =>
 export const usePatchPlan = () =>
   useMut((v: { id: string; body: ApiBody<'/v1/platform/plans/{id}', 'patch'> }) =>
     unwrap(api.PATCH('/v1/platform/plans/{id}', { params: { path: { id: v.id } }, body: v.body })),
+  );
+
+/** Owner only: whether the PIN that issues bills is set / still the initial one (never the PIN itself). */
+export const useIssuePin = () =>
+  useTenantQuery(
+    [part, 'issue-pin'],
+    async () => (await unwrap(api.GET('/v1/platform/billing/issue-pin'))).data,
+  );
+
+export const useSetIssuePin = () =>
+  useMut((pin: string) =>
+    unwrap(api.PUT('/v1/platform/billing/issue-pin', { body: { pin, confirm: true } })),
   );
 
 export const useSaveAddons = () =>
@@ -484,11 +500,14 @@ export const usePatchInvoice = () =>
     unwrap(api.PATCH('/v1/platform/invoices/{id}', { params: { path: { id: v.id } }, body: v.body })),
   );
 
-/** The only way a draft reaches the shop: issues it and queues the bill email. Called only from the confirm dialogs. */
+/** The only way a draft reaches the shop: issues it and queues the bill email. Called only from the PIN dialogs (`pin` = the team's issue PIN). */
 export const useSendInvoice = () =>
-  useMut((id: string) =>
+  useMut((v: { id: string; pin: string }) =>
     unwrap(
-      api.POST('/v1/platform/invoices/{id}/send', { params: { path: { id } }, body: { confirm: true } }),
+      api.POST('/v1/platform/invoices/{id}/send', {
+        params: { path: { id: v.id } },
+        body: { confirm: true, pin: v.pin },
+      }),
     ),
   );
 

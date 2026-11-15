@@ -26787,8 +26787,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Issue a draft: it gets its INV number, becomes visible and payable for the shop and the bill is mailed to the shop owners (once — 409 `invoice_not_draft` when it is not a draft). Body `{confirm: true}` is required (400 without it): only the team app's confirm dialog sends it
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         * Issue a draft: it gets its INV number, becomes visible and payable for the shop and the bill is mailed to the shop owners (once — 409 `invoice_not_draft` when it is not a draft). Body `{confirm: true, pin}` is required: `confirm` (400 without it) is only sent by the team app's confirm dialog; `pin` is the team's issue PIN (403 `ISSUE_PIN_REQUIRED` / `ISSUE_PIN_WRONG`, 429 after 5 wrong in 15 min)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing|platform:billing_issue`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -26809,6 +26809,7 @@ export interface paths {
                     "application/json": {
                         /** @enum {boolean} */
                         confirm: true;
+                        pin?: string;
                     };
                 };
             };
@@ -33536,7 +33537,7 @@ export interface paths {
         };
         /**
          * Documents (quotations, invoices, receipts, tax invoices, credit notes) with a totals row
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.
          */
         get: {
             parameters: {
@@ -33701,7 +33702,7 @@ export interface paths {
         put?: never;
         /**
          * Create a draft document (issue:true also issues it and allocates the number)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -33770,6 +33771,7 @@ export interface paths {
                             whtCertificateFileId?: string | null;
                             note?: string | null;
                         } | null;
+                        pin?: string;
                     };
                 };
             };
@@ -34497,7 +34499,7 @@ export interface paths {
         put?: never;
         /**
          * Issue a draft: allocates the next gap-free number; a direct receipt / tax invoice also takes the payment
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -34528,6 +34530,7 @@ export interface paths {
                             whtCertificateFileId?: string | null;
                             note?: string | null;
                         } | null;
+                        pin?: string;
                     };
                 };
             };
@@ -35148,7 +35151,7 @@ export interface paths {
         put?: never;
         /**
          * Convert a quotation to an invoice, or an invoice / tax invoice to a credit note (copies the lines)
-         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting`. Module: `platform`.
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
          */
@@ -35171,6 +35174,7 @@ export interface paths {
                         to: "invoice" | "credit_note";
                         /** @default false */
                         issue?: boolean;
+                        pin?: string;
                     };
                 };
             };
@@ -147483,6 +147487,237 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/platform/billing/issue-pin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Status of the PIN that issues bills (set / still the initial one): never the PIN or its hash. platform_owner only
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                isSet: boolean;
+                                isDefault: boolean;
+                                updatedAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Set / change the PIN that issues bills (4–8 digits, stored hashed; body `{confirm: true}` required). platform_owner only
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:billing`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        pin: string;
+                        /** @enum {boolean} */
+                        confirm: true;
+                    };
+                };
+            };
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                isSet: boolean;
+                                isDefault: boolean;
+                                updatedAt: string | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -147490,7 +147725,7 @@ export interface components {
         ErrorBody: {
             error: {
                 /** @enum {string} */
-                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "NOT_A_RENTAL_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "ATTACHMENTS_REQUIRED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "SUBSCRIPTION_REQUIRED" | "INTERNAL";
+                code: "VALIDATION_FAILED" | "UNAUTHENTICATED" | "FORBIDDEN" | "MODULE_DISABLED" | "PLAN_LIMIT_REACHED" | "PLAN_FEATURE_REQUIRED" | "TENANT_REQUIRED" | "TENANT_ACCESS_DENIED" | "NOT_FOUND" | "CONFLICT" | "APPOINTMENT_SLOT_TAKEN" | "IDEMPOTENCY_KEY_REQUIRED" | "IDEMPOTENCY_IN_PROGRESS" | "IDEMPOTENCY_KEY_REUSED" | "VERSION_MISMATCH" | "INVITE_INVALID" | "INVITE_EXPIRED" | "INVITE_ALREADY_ACCEPTED" | "TURNSTILE_FAILED" | "RULE_INVALID" | "ANONYMITY_THRESHOLD" | "RATE_LIMITED" | "INVALID_TRANSITION" | "SLOT_NOT_BOOKABLE" | "PACKAGE_NOT_USABLE" | "IF_MATCH_REQUIRED" | "PIN_INVALID" | "ISSUE_PIN_REQUIRED" | "ISSUE_PIN_WRONG" | "PERIOD_CLOSED" | "RECORD_LOCKED" | "LEDGER_PENDING" | "CLOSE_BLOCKED" | "ALREADY_CLOSED" | "BILL_NOT_EDITABLE" | "APPROVAL_PENDING" | "APPROVAL_REQUIRED" | "APPROVAL_INVALID" | "APPROVAL_EXPIRED" | "APPROVAL_USED" | "APPROVAL_MISMATCH" | "APPROVAL_PIN_LOCKED" | "CHECKOUT_RULE" | "PRODUCT_CODE_TAKEN" | "PRODUCT_IN_USE" | "PRODUCT_UNIT_LOCKED" | "STOCK_INSUFFICIENT" | "PERFORMER_REQUIRED" | "CLINICAL_CONSENT_REQUIRED" | "CLINICAL_RECORD_LOCKED" | "CASH_SESSION_REQUIRED" | "CASH_SESSION_OPEN" | "DEPOSIT_ALREADY_TAKEN" | "NOT_A_DEMO_TENANT" | "NOT_A_RENTAL_TENANT" | "DEMO_PREREQUISITE_MISSING" | "PROMPTPAY_NOT_CONFIGURED" | "TWO_FACTOR_REQUIRED" | "TWO_FACTOR_INVALID" | "EMAIL_NOT_VERIFIED" | "IMPORT_INVALID" | "CHANNEL_NOT_CONFIGURED" | "AI_NOT_CONFIGURED" | "AI_TEST_LIMIT_REACHED" | "AI_UNAVAILABLE" | "CHANNEL_VERIFY_FAILED" | "CANCELLATION_WINDOW_PASSED" | "LIFF_LINK_FAILED" | "ONLINE_BOOKING_DISABLED" | "WALK_IN_DISABLED" | "CONSENT_REQUIRED" | "TERMS_NOT_ACCEPTED" | "ATTACHMENTS_REQUIRED" | "TEMPLATE_INVALID" | "PAY_TERMS_REQUIRED" | "PAYMENT_FAILED" | "SUBSCRIPTION_REQUIRED" | "INTERNAL";
                 message: string;
                 details?: unknown;
                 requestId: string;
