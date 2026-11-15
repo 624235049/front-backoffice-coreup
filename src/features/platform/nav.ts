@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   Megaphone,
+  MessageCircleWarning,
   MessagesSquare,
   Package,
   Receipt,
@@ -18,6 +19,7 @@ import {
 import type { NavItem } from '@/lib/navigation';
 import { usePageNeedsReplyCount } from '../page-inbox/api';
 import { useOnboardingSummary } from './api';
+import { useOpenChatCaseCount } from './chat-cases-api';
 import { usePendingSlipCount } from './invoice-slip';
 import { useNewLeadBadge } from './new-lead-badge';
 import { useOpenSupportCaseCount } from './support-cases-api';
@@ -46,6 +48,16 @@ export const navItems: NavItem[] = [
     order: 24,
     useBadge: useOpenSupportCaseCount,
     badgeLabel: 'supportCaseCount',
+  },
+  {
+    to: '/platform/chat-cases',
+    labelKey: 'nav:chatCases',
+    icon: MessageCircleWarning,
+    permission: 'platform:read',
+    module: 'platform',
+    order: 25,
+    useBadge: useOpenChatCaseCount,
+    badgeLabel: 'chatCaseCount',
   },
   {
     to: '/platform/tenants',

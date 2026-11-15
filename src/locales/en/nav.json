@@ -56,6 +56,8 @@
   "aiDemo": "AI demo LINE",
   "supportCases": "Shop cases",
   "supportCaseCount": "{{count}} shop cases waiting",
+  "chatCases": "Chat cases",
+  "chatCaseCount": "{{count}} chat cases waiting",
   "pageInbox": "Page chats",
   "pageInboxCount": "{{count}} page chats waiting for a reply"
 }

@@ -1,0 +1,38 @@
+{
+  "title": "Chat cases",
+  "description": "What the AI could not finish when a shop already using CoreUp wrote on LINE / Facebook / Instagram, queued for the team. Emergencies come first. Answer the shop in its chat, then press “Close case”.",
+  "filter": { "label": "Status", "open": "Waiting", "done": "Closed", "all": "All" },
+  "status": { "open": "Waiting", "done": "Closed" },
+  "urgency": { "emergency": "Urgent", "normal": "Waiting" },
+  "category": {
+    "bug": "Problem",
+    "setup": "Setup help",
+    "feature": "Feature request",
+    "data_fix": "Data fix",
+    "billing": "Invoice / document",
+    "payment": "Money / transfer",
+    "outage": "Cannot work",
+    "other": "Other"
+  },
+  "channel": { "line": "LINE", "messenger": "Facebook", "instagram": "Instagram" },
+  "columns": {
+    "urgency": "Matter",
+    "shop": "Shop",
+    "message": "Customer's message",
+    "channel": "Channel",
+    "at": "When",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "No chat cases waiting",
+    "description": "When a shop using CoreUp reports a problem or asks for help in chat, it shows up here."
+  },
+  "followUps": "{{count}} more message(s)",
+  "weakMatch": "Shop matched by the name typed (identity not verified)",
+  "invoice": "Attached to invoice {{number}}",
+  "picture": "Open the picture",
+  "openChat": "Open chat",
+  "markDone": "Close case",
+  "reopen": "Reopen",
+  "loadMore": "Load more"
+}

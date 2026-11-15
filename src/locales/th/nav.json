@@ -56,6 +56,8 @@
   "aiDemo": "LINE เดโม AI",
   "supportCases": "เคสจากร้าน",
   "supportCaseCount": "เคสจากร้านรอรับเรื่อง {{count}}",
+  "chatCases": "เคสรอตอบ",
+  "chatCaseCount": "เคสรอตอบจากแชท {{count}}",
   "pageInbox": "แชทลูกค้าจากเพจ",
   "pageInboxCount": "แชทลูกค้าจากเพจรอตอบ {{count}}"
 }

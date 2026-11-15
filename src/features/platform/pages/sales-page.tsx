@@ -593,6 +593,16 @@ function Settings() {
   return <SettingsForm view={q.data} onSave={(c) => save.mutate(c)} pending={save.isPending} />;
 }
 
+const SUPPORT_DAYS = [
+  [1, 'จ.'],
+  [2, 'อ.'],
+  [3, 'พ.'],
+  [4, 'พฤ.'],
+  [5, 'ศ.'],
+  [6, 'ส.'],
+  [7, 'อา.'],
+] as const;
+
 function SettingsForm({
   view,
   onSave,
@@ -624,6 +634,17 @@ function SettingsForm({
       .join('\n'),
   );
   const [caps, setCaps] = useState({ push: String(c.lineDailyPushCap), alert: String(c.alertDailyCap) });
+  const [support, setSupport] = useState(c.support);
+  const toggleDay = (d: number) =>
+    setSupport({
+      ...support,
+      hours: {
+        ...support.hours,
+        days: support.hours.days.includes(d)
+          ? support.hours.days.filter((x) => x !== d)
+          : [...support.hours.days, d].sort(),
+      },
+    });
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setF({ ...f, [k]: e.target.value });
   const u = view.usage;
@@ -699,6 +720,48 @@ function SettingsForm({
               />
             </label>
           </div>
+          <div className="grid gap-2 rounded-lg border p-3" data-testid="support-settings">
+            <label className="flex items-center gap-2 font-medium">
+              <Switch
+                checked={support.enabled}
+                onCheckedChange={(enabled) => setSupport({ ...support, enabled })}
+              />{' '}
+              โหมดซัพพอร์ต: ร้านที่จ่ายเงินแล้วได้รับความช่วยเหลือ ไม่ใช่การขาย
+            </label>
+            <p className="text-xs text-muted-foreground">
+              ข้อความ “รับเรื่องแล้ว ทีมงานจะติดต่อกลับ…” ใช้เวลาทำการนี้ (เวลาไทย): ในเวลา = “ภายในวันนี้ (ช่วงเย็น)” นอกเวลา
+              = “วันนี้หรือพรุ่งนี้” คืนก่อนวันหยุด = “วันทำการถัดไป”
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <Input
+                aria-label="เริ่มเวลาทำการ"
+                type="time"
+                className="w-28"
+                value={support.hours.start}
+                onChange={(e) =>
+                  setSupport({ ...support, hours: { ...support.hours, start: e.target.value } })
+                }
+              />
+              <span>ถึง</span>
+              <Input
+                aria-label="เลิกเวลาทำการ"
+                type="time"
+                className="w-28"
+                value={support.hours.end}
+                onChange={(e) => setSupport({ ...support, hours: { ...support.hours, end: e.target.value } })}
+              />
+              {SUPPORT_DAYS.map(([d, label]) => (
+                <label key={d} className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    checked={support.hours.days.includes(d)}
+                    onChange={() => toggleDay(d)}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </div>
           <p className="text-xs text-muted-foreground">
             วันนี้ใช้ push ตามลูกค้า/บรอดแคสต์ {u.followUpPushes}/{u.pushCap} · แจ้งเตือนเจ้าของ {u.alertPushes}/
             {u.alertCap}
@@ -721,6 +784,7 @@ function SettingsForm({
                 ),
                 lineDailyPushCap: Number(caps.push || 0),
                 alertDailyCap: Number(caps.alert || 0),
+                support,
               })
             }
           >

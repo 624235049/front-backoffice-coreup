@@ -26,6 +26,7 @@ import { Route as AppAccountingSettingsRouteImport } from './routes/_app/account
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
 import { Route as AppPlatformAdsRouteImport } from './routes/_app/platform.ads'
 import { Route as AppPlatformAiDemoRouteImport } from './routes/_app/platform.ai-demo'
+import { Route as AppPlatformChatCasesRouteImport } from './routes/_app/platform.chat-cases'
 import { Route as AppPlatformInvoicesRouteImport } from './routes/_app/platform.invoices'
 import { Route as AppPlatformLeadsRouteImport } from './routes/_app/platform.leads'
 import { Route as AppPlatformOnboardingRouteImport } from './routes/_app/platform.onboarding'
@@ -143,6 +144,11 @@ const AppPlatformAdsRoute = AppPlatformAdsRouteImport.update({
 const AppPlatformAiDemoRoute = AppPlatformAiDemoRouteImport.update({
   id: '/platform/ai-demo',
   path: '/platform/ai-demo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformChatCasesRoute = AppPlatformChatCasesRouteImport.update({
+  id: '/platform/chat-cases',
+  path: '/platform/chat-cases',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlatformInvoicesRoute = AppPlatformInvoicesRouteImport.update({
@@ -349,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
+  '/platform/chat-cases': typeof AppPlatformChatCasesRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -401,6 +408,7 @@ export interface FileRoutesByTo {
   '/accounting/settings': typeof AppAccountingSettingsRoute
   '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
+  '/platform/chat-cases': typeof AppPlatformChatCasesRoute
   '/platform/invoices': typeof AppPlatformInvoicesRoute
   '/platform/leads': typeof AppPlatformLeadsRoute
   '/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -456,6 +464,7 @@ export interface FileRoutesById {
   '/_app/accounting/settings': typeof AppAccountingSettingsRoute
   '/_app/platform/ads': typeof AppPlatformAdsRoute
   '/_app/platform/ai-demo': typeof AppPlatformAiDemoRoute
+  '/_app/platform/chat-cases': typeof AppPlatformChatCasesRoute
   '/_app/platform/invoices': typeof AppPlatformInvoicesRoute
   '/_app/platform/leads': typeof AppPlatformLeadsRoute
   '/_app/platform/onboarding': typeof AppPlatformOnboardingRoute
@@ -510,6 +519,7 @@ export interface FileRouteTypes {
     | '/accounting/settings'
     | '/platform/ads'
     | '/platform/ai-demo'
+    | '/platform/chat-cases'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
@@ -562,6 +572,7 @@ export interface FileRouteTypes {
     | '/accounting/settings'
     | '/platform/ads'
     | '/platform/ai-demo'
+    | '/platform/chat-cases'
     | '/platform/invoices'
     | '/platform/leads'
     | '/platform/onboarding'
@@ -616,6 +627,7 @@ export interface FileRouteTypes {
     | '/_app/accounting/settings'
     | '/_app/platform/ads'
     | '/_app/platform/ai-demo'
+    | '/_app/platform/chat-cases'
     | '/_app/platform/invoices'
     | '/_app/platform/leads'
     | '/_app/platform/onboarding'
@@ -780,6 +792,13 @@ declare module '@tanstack/react-router' {
       path: '/platform/ai-demo'
       fullPath: '/platform/ai-demo'
       preLoaderRoute: typeof AppPlatformAiDemoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/platform/chat-cases': {
+      id: '/_app/platform/chat-cases'
+      path: '/platform/chat-cases'
+      fullPath: '/platform/chat-cases'
+      preLoaderRoute: typeof AppPlatformChatCasesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/invoices': {
@@ -1040,6 +1059,7 @@ interface AppRouteChildren {
   AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
   AppPlatformAdsRoute: typeof AppPlatformAdsRoute
   AppPlatformAiDemoRoute: typeof AppPlatformAiDemoRoute
+  AppPlatformChatCasesRoute: typeof AppPlatformChatCasesRoute
   AppPlatformInvoicesRoute: typeof AppPlatformInvoicesRoute
   AppPlatformLeadsRoute: typeof AppPlatformLeadsRoute
   AppPlatformOnboardingRoute: typeof AppPlatformOnboardingRoute
@@ -1089,6 +1109,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingSettingsRoute: AppAccountingSettingsRoute,
   AppPlatformAdsRoute: AppPlatformAdsRoute,
   AppPlatformAiDemoRoute: AppPlatformAiDemoRoute,
+  AppPlatformChatCasesRoute: AppPlatformChatCasesRoute,
   AppPlatformInvoicesRoute: AppPlatformInvoicesRoute,
   AppPlatformLeadsRoute: AppPlatformLeadsRoute,
   AppPlatformOnboardingRoute: AppPlatformOnboardingRoute,
