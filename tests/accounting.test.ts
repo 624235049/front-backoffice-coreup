@@ -4,6 +4,7 @@ import { isValidNumberFormat, previewDocNumber } from '@/features/accounting/lib
 import {
   customerBody,
   type EditorState,
+  editorTotals,
   emptyCustomer,
   emptyLine,
   parseQty,
@@ -236,6 +237,8 @@ describe('editor state → API body', () => {
     note: '',
     internalNote: '',
     refDocumentId: null,
+    project: '',
+    discountLines: [],
   };
 
   it('drops blank spare rows, trims text and converts typed values', () => {
@@ -253,6 +256,43 @@ describe('editor state → API body', () => {
       dueDate: '2026-11-14',
       discountMinor: 0,
       issue: false,
+    });
+  });
+
+  it('named discounts become the document discount: IMPRERA 24,900 − 2,500 − 5,500 = 16,900, project is sent', () => {
+    const imprera: EditorState = {
+      ...base,
+      project: ' Advanced Recovery Lounge ',
+      discountMinor: 123_00, // an old single discount typed before: ignored once names are used
+      discountLines: [
+        { key: 'a', label: 'First-Time Customer Discount', amountMinor: 250_000 },
+        { key: 'b', label: ' Special Discount ', amountMinor: 550_000 },
+        { key: 'c', label: '', amountMinor: null }, // a blank spare row is dropped
+      ],
+      lines: [
+        { ...emptyLine('none'), description: 'Core\n- QR', qty: '1', unitPriceMinor: 1_790_000 },
+        { ...emptyLine('none'), description: 'Optional', qty: '1', unitPriceMinor: 450_000 },
+        { ...emptyLine('none'), description: 'Capacity', qty: '1', unitPriceMinor: 250_000 },
+      ],
+    };
+    const body = toBody(imprera, 'quotation');
+    expect(body.project).toBe('Advanced Recovery Lounge');
+    expect(body.discountMinor).toBe(0);
+    expect(body.discountLines).toEqual([
+      { label: 'First-Time Customer Discount', amountMinor: 250_000 },
+      { label: 'Special Discount', amountMinor: 550_000 },
+    ]);
+    expect(body.lines[0]?.description).toBe('Core\n- QR');
+    expect(validateEditor(imprera)).toEqual({});
+    expect(editorTotals(imprera, 700).totalMinor).toBe(1_690_000);
+    // an amount without a name is an error; no named discounts → the single field is sent as before
+    expect(
+      validateEditor({ ...imprera, discountLines: [{ key: 'x', label: '', amountMinor: 100 }] })
+        .discountLabel,
+    ).toBe(true);
+    expect(toBody({ ...base, discountMinor: 5_000 }, 'quotation')).toMatchObject({
+      discountMinor: 5_000,
+      discountLines: [],
     });
   });
 

@@ -171,6 +171,8 @@ function ExpenseForm({ company, expense }: { company: VatInfo; expense?: Expense
     note: '',
     internalNote: '',
     refDocumentId: null,
+    project: '',
+    discountLines: [],
   });
   const errors = {
     vendor: !f.contactId && f.vendorName.trim() === '' ? t('expense.pickVendor') : undefined,

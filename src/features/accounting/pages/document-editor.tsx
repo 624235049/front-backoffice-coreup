@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Save, Send, Trash2 } from 'lucide-react';
+import { Plus, Save, Send, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -36,10 +36,12 @@ import { DOC_KINDS, detailPath, kindOf, listPath } from '../lib/doc-meta';
 import {
   addDays,
   type CustomerFields,
+  type DiscountRow,
   type EditorState,
   editorTotals,
   fromDocument,
   newEditorState,
+  newLineKey,
   toBody,
   validateEditor,
 } from '../lib/editor';
@@ -103,6 +105,24 @@ export function DocumentEditor({
   const goTo = (saved: { id: string; type: DocType }) =>
     void navigate({ to: detailPath(saved.type, saved.id) as never, replace: true });
 
+  const setDiscount = (key: string, patch: Partial<DiscountRow>) =>
+    setState((s) => ({
+      ...s,
+      discountLines: s.discountLines.map((x) => (x.key === key ? { ...x, ...patch } : x)),
+    }));
+  /** The first named discount takes over a single unnamed one already typed, so nothing typed is lost. */
+  const addDiscount = () =>
+    setState((s) => ({
+      ...s,
+      discountMinor: null,
+      discountLines: [
+        ...(s.discountLines.length === 0 && s.discountMinor
+          ? [{ key: newLineKey(), label: t('doc.discountDefaultLabel'), amountMinor: s.discountMinor }]
+          : []),
+        ...s.discountLines,
+        { key: newLineKey(), label: '', amountMinor: null },
+      ],
+    }));
   /** Persist the draft. Returns the saved document (create or update). */
   const save = async (issueNow: boolean, payment?: PaymentInput | null, pin?: string) => {
     const body = toBody(state, type, issueNow);
@@ -124,6 +144,7 @@ export function DocumentEditor({
     if (errors.qty) return t('doc.reason.qty');
     if (errors.price) return t('doc.reason.price');
     if (errors.discount) return t('doc.reason.discount');
+    if (errors.discountLabel) return t('doc.reason.discountLabel');
     if (errors.dueDate) return t('doc.dueBeforeDate');
     if (totals.totalMinor <= 0 && (!isQuotation || issuing)) return t('doc.reason.zeroTotal');
     return null;
@@ -309,6 +330,16 @@ export function DocumentEditor({
                   />
                 </FormField>
               </div>
+              {isQuotation ? (
+                <FormField label={t('doc.project')} htmlFor="doc-project" hint={t('doc.projectHint')}>
+                  <Input
+                    id="doc-project"
+                    value={state.project}
+                    maxLength={200}
+                    onChange={(e) => set('project', e.target.value)}
+                  />
+                </FormField>
+              ) : null}
             </CardContent>
           </Card>
 
@@ -388,14 +419,60 @@ export function DocumentEditor({
                   </Select>
                 </FormField>
               ) : null}
-              <FormField label={t('doc.docDiscount')} htmlFor="doc-discount" hint={t('doc.docDiscountHint')}>
-                <MoneyInput
-                  id="doc-discount"
-                  value={state.discountMinor}
-                  placeholder="0.00"
-                  onChange={(v) => set('discountMinor', v)}
-                />
-              </FormField>
+              <div className="grid gap-2" data-testid="named-discounts">
+                <span className="text-sm font-medium">{t('doc.docDiscount')}</span>
+                {state.discountLines.length === 0 ? (
+                  <MoneyInput
+                    id="doc-discount"
+                    value={state.discountMinor}
+                    placeholder="0.00"
+                    onChange={(v) => set('discountMinor', v)}
+                  />
+                ) : (
+                  state.discountLines.map((x) => (
+                    <div key={x.key} className="grid grid-cols-[minmax(0,1fr)_8rem_auto] items-center gap-2">
+                      <Input
+                        value={x.label}
+                        maxLength={120}
+                        aria-label={t('doc.discountLabel')}
+                        placeholder={t('doc.discountLabelPlaceholder')}
+                        aria-invalid={(touched && errors.discountLabel && !x.label.trim()) || undefined}
+                        onChange={(e) => setDiscount(x.key, { label: e.target.value })}
+                      />
+                      <MoneyInput
+                        value={x.amountMinor}
+                        placeholder="0.00"
+                        onChange={(v) => setDiscount(x.key, { amountMinor: v })}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive"
+                        aria-label={t('doc.discountRemove')}
+                        onClick={() =>
+                          setState((s) => ({
+                            ...s,
+                            discountLines: s.discountLines.filter((d) => d.key !== x.key),
+                          }))
+                        }
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  ))
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="justify-self-start"
+                  onClick={addDiscount}
+                >
+                  <Plus /> {t('doc.discountAdd')}
+                </Button>
+                <p className="text-xs text-muted-foreground">{t('doc.docDiscountHint')}</p>
+              </div>
               <FormField label={t('doc.wht')} htmlFor="doc-wht" hint={t('doc.whtHint')}>
                 <Select value={String(state.whtBp)} onValueChange={(v) => set('whtBp', Number(v) as WhtBp)}>
                   <SelectTrigger id="doc-wht">

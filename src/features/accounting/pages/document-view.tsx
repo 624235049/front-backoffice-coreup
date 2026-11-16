@@ -32,6 +32,7 @@ import { DocStatusBadge } from '../components/badges';
 import { DataTable, DtCell, DtHead, DtRow, DtTh } from '../components/data-table';
 import { openFile } from '../components/file-field';
 import { PaymentDialog } from '../components/payment-dialog';
+import { QuoteLinkCard } from '../components/quote-link-card';
 import { TotalsPanel } from '../components/totals-panel';
 import { VoidDialog } from '../components/void-dialog';
 import { detailPath, kindOf, listPath } from '../lib/doc-meta';
@@ -197,6 +198,8 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
         </div>
       ) : null}
 
+      {isQuotation && doc.status !== 'draft' && !isVoid ? <QuoteLinkCard doc={doc} /> : null}
+
       <div className="grid items-start gap-5 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">
           <Card>
@@ -226,6 +229,7 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
                   </InfoRow>
                 ) : null}
                 {doc.reference ? <InfoRow label={t('doc.reference')}>{doc.reference}</InfoRow> : null}
+                {doc.project ? <InfoRow label={t('doc.project')}>{doc.project}</InfoRow> : null}
                 {doc.refDocumentNumber && doc.refDocumentId ? (
                   <InfoRow label={t('doc.refDocument')}>
                     <Link
@@ -283,6 +287,19 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
                   <div className="text-xs text-muted-foreground">{t('doc.note')}</div>
                   <p className="whitespace-pre-wrap">{doc.note}</p>
                 </div>
+              ) : null}
+              {doc.discountLines.length > 0 ? (
+                <dl className="mt-4 grid gap-1 text-sm" data-testid="view-discount-lines">
+                  {doc.discountLines.map((x) => (
+                    <div
+                      key={`${x.label}-${x.amountMinor}`}
+                      className="flex justify-between gap-4 text-destructive"
+                    >
+                      <dt>{x.label}</dt>
+                      <dd className="tabular-nums">-{formatAmount(x.amountMinor, locale)}</dd>
+                    </div>
+                  ))}
+                </dl>
               ) : null}
               {doc.internalNote ? (
                 <div className="mt-3 text-sm">

@@ -45,11 +45,24 @@ export type EditorState = {
   vatMode: VatMode;
   whtBp: WhtBp;
   discountMinor: number | null;
+  project: string;
+  discountLines: DiscountRow[];
   lines: EditorLine[];
   note: string;
   internalNote: string;
   refDocumentId: string | null;
 };
+
+/** A named discount line ("ส่วนลดลูกค้าใหม่ −2,500") as it lives in the editor. */
+export type DiscountRow = { key: string; label: string; amountMinor: number | null };
+
+export const isBlankDiscount = (x: DiscountRow): boolean => x.label.trim() === '' && !x.amountMinor;
+/** The rows that are filled in (blank spare rows are dropped when saving). */
+export const filledDiscounts = (s: Pick<EditorState, 'discountLines'>): DiscountRow[] =>
+  s.discountLines.filter((x) => !isBlankDiscount(x) && x.label.trim() !== '' && x.amountMinor);
+/** Σ of the named discounts; 0 when none is used (then the single discount field counts). */
+export const namedDiscountTotal = (s: Pick<EditorState, 'discountLines'>): number =>
+  filledDiscounts(s).reduce((sum, x) => sum + (x.amountMinor ?? 0), 0);
 
 let seq = 0;
 export const newLineKey = (): string => `l${Date.now().toString(36)}${(seq++).toString(36)}`;
@@ -90,7 +103,7 @@ export function toCalcLines(lines: readonly EditorLine[]): CalcLine[] {
 export function editorTotals(s: EditorState, vatRateBp: number): CalcTotals {
   return calcTotals({
     lines: toCalcLines(s.lines),
-    discountMinor: s.discountMinor ?? 0,
+    discountMinor: namedDiscountTotal(s) || (s.discountMinor ?? 0),
     vatMode: s.vatMode,
     vatRateBp,
     whtBp: s.whtBp,
@@ -107,6 +120,7 @@ export type EditorError =
   | 'qty'
   | 'price'
   | 'discount'
+  | 'discountLabel'
   | 'dueDate';
 
 /** Validation errors by field key; empty when the state can be sent to the API. */
@@ -129,6 +143,8 @@ export function validateEditor(s: EditorState): Partial<Record<EditorError, true
       if (l.discountMinor > gross) errors.discount = true;
     }
   }
+  if (s.discountLines.some((x) => !isBlankDiscount(x) && (x.label.trim() === '' || !x.amountMinor)))
+    errors.discountLabel = true;
   if (s.dueDate && s.docDate && s.dueDate < s.docDate) errors.dueDate = true;
   return errors;
 }
@@ -177,7 +193,12 @@ export function toBody(s: EditorState, type: DocType, issue = false): DocumentBo
     reference: s.reference.trim() || null,
     vatMode: s.vatMode,
     whtBp: s.whtBp,
-    discountMinor: s.discountMinor ?? 0,
+    project: s.project.trim() || null,
+    discountMinor: filledDiscounts(s).length > 0 ? 0 : (s.discountMinor ?? 0),
+    discountLines: filledDiscounts(s).map((x) => ({
+      label: x.label.trim(),
+      amountMinor: x.amountMinor ?? 0,
+    })),
     lines: s.lines.filter((l) => !isBlankLine(l)).map(toLineBody),
     note: s.note.trim() || null,
     internalNote: s.internalNote.trim() || null,
@@ -211,7 +232,13 @@ export function fromDocument(d: AccDocument, contact?: Contact): EditorState {
     reference: d.reference ?? '',
     vatMode: d.vatMode,
     whtBp: d.whtBp as WhtBp,
-    discountMinor: d.discountMinor === 0 ? null : d.discountMinor,
+    discountMinor: d.discountMinor === 0 || d.discountLines.length > 0 ? null : d.discountMinor,
+    project: d.project ?? '',
+    discountLines: d.discountLines.map((x) => ({
+      key: newLineKey(),
+      label: x.label,
+      amountMinor: x.amountMinor,
+    })),
     lines: d.lines.map((l) => ({
       key: newLineKey(),
       itemId: l.itemId,
@@ -243,6 +270,8 @@ export function newEditorState(opts: {
     vatMode: opts.vatRegistered ? 'exclusive' : 'none',
     whtBp: 0,
     discountMinor: null,
+    project: '',
+    discountLines: [],
     lines: [emptyLine(opts.vatRegistered ? 'vat' : 'none')],
     note: opts.defaultNote ?? '',
     internalNote: '',

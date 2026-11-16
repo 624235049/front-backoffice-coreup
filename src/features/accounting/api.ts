@@ -339,6 +339,16 @@ export const useQuotationStatus = () =>
       ).data,
   );
 
+/** Issue the customer link of a quotation, or replace it (the old URL stops working). No PIN. */
+export const useCreateQuoteLink = () =>
+  useMut(
+    async (id: string) =>
+      (await unwrap(api.POST(`${B}/documents/{id}/link`, { params: { path: { id } } }))).data,
+  );
+
+export const useRevokeQuoteLink = () =>
+  useMut((id: string) => unwrap(api.DELETE(`${B}/documents/{id}/link`, { params: { path: { id } } })));
+
 export const useConvertDocument = () =>
   useMut(
     async (v: { id: string; to: 'invoice' | 'credit_note'; issue?: boolean }) =>
