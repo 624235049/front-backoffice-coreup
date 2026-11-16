@@ -25,7 +25,7 @@ export function downloadUrl(url: string, filename: string | null): void {
   toast.success(i18n.t('accounting:fileSaved'));
 }
 
-const MODES: readonly PdfMode[] = ['both', 'original', 'copy'];
+const MODES: readonly PdfMode[] = ['original', 'copy', 'both'];
 
 /** "Download PDF" with the original / copy / both choice: the worker renders it, the file downloads when ready. */
 export function PdfDownloadButton({ source }: { source: A4Source }) {

@@ -58,7 +58,8 @@ function Sheets({ html, frame }: { html: string; frame: React.RefObject<HTMLIFra
 /** In-app A4 view of an accounting document or a shop invoice, with print / PDF / Excel. */
 export function A4Page({ source }: { source: A4Source }) {
   const { t } = useTranslation('accounting');
-  const [mode, setMode] = useState<PdfMode>('both');
+  // the original only by default: two identical sheets on screen read as a duplicate (the copy is a print choice)
+  const [mode, setMode] = useState<PdfMode>('original');
   const frame = useRef<HTMLIFrameElement>(null);
   const preview = useA4Preview(source, mode);
   const doc = useDocument(source.kind === 'document' ? source.id : undefined);
@@ -95,7 +96,7 @@ export function A4Page({ source }: { source: A4Source }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {(['both', 'original', 'copy'] as const).map((m) => (
+                {(['original', 'copy', 'both'] as const).map((m) => (
                   <SelectItem key={m} value={m}>
                     {t(`pdf.mode.${m}`)}
                   </SelectItem>
