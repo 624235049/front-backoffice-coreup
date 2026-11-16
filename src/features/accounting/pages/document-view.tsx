@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DocumentMailCard } from '@/features/mail/components/document-mail-card';
 import { formatDate, useIntlLocale } from '@/features/platform/format';
 import { useCan } from '@/lib/permissions';
 import { cn } from '@/lib/utils';
@@ -199,6 +200,9 @@ export function DocumentView({ doc }: { doc: AccDocument }) {
       ) : null}
 
       {isQuotation && doc.status !== 'draft' && !isVoid ? <QuoteLinkCard doc={doc} /> : null}
+      {(isQuotation || isInvoice) && doc.status !== 'draft' && !isVoid ? (
+        <DocumentMailCard doc={{ id: doc.id, type: doc.type as 'quotation' | 'invoice' }} />
+      ) : null}
 
       <div className="grid items-start gap-5 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">

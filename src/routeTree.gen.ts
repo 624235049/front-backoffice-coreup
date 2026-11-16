@@ -23,6 +23,8 @@ import { Route as AppAccountingContactsRouteImport } from './routes/_app/account
 import { Route as AppAccountingProductsRouteImport } from './routes/_app/accounting.products'
 import { Route as AppAccountingReportsRouteImport } from './routes/_app/accounting.reports'
 import { Route as AppAccountingSettingsRouteImport } from './routes/_app/accounting.settings'
+import { Route as AppMailIndexRouteImport } from './routes/_app/mail.index'
+import { Route as AppMailSettingsRouteImport } from './routes/_app/mail.settings'
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform.index'
 import { Route as AppPlatformAdsRouteImport } from './routes/_app/platform.ads'
 import { Route as AppPlatformAiDemoRouteImport } from './routes/_app/platform.ai-demo'
@@ -129,6 +131,16 @@ const AppAccountingReportsRoute = AppAccountingReportsRouteImport.update({
 const AppAccountingSettingsRoute = AppAccountingSettingsRouteImport.update({
   id: '/accounting/settings',
   path: '/accounting/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMailIndexRoute = AppMailIndexRouteImport.update({
+  id: '/mail/',
+  path: '/mail/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMailSettingsRoute = AppMailSettingsRouteImport.update({
+  id: '/mail/settings',
+  path: '/mail/settings',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
@@ -353,6 +365,7 @@ export interface FileRoutesByFullPath {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/mail/settings': typeof AppMailSettingsRoute
   '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/chat-cases': typeof AppPlatformChatCasesRoute
@@ -368,6 +381,7 @@ export interface FileRoutesByFullPath {
   '/platform/usage': typeof AppPlatformUsageRoute
   '/platform/users': typeof AppPlatformUsersRoute
   '/accounting/': typeof AppAccountingIndexRoute
+  '/mail/': typeof AppMailIndexRoute
   '/platform/': typeof AppPlatformIndexRoute
   '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
   '/accounting/a4/$id': typeof AppAccountingA4IdRoute
@@ -406,6 +420,7 @@ export interface FileRoutesByTo {
   '/accounting/products': typeof AppAccountingProductsRoute
   '/accounting/reports': typeof AppAccountingReportsRoute
   '/accounting/settings': typeof AppAccountingSettingsRoute
+  '/mail/settings': typeof AppMailSettingsRoute
   '/platform/ads': typeof AppPlatformAdsRoute
   '/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/platform/chat-cases': typeof AppPlatformChatCasesRoute
@@ -421,6 +436,7 @@ export interface FileRoutesByTo {
   '/platform/usage': typeof AppPlatformUsageRoute
   '/platform/users': typeof AppPlatformUsersRoute
   '/accounting': typeof AppAccountingIndexRoute
+  '/mail': typeof AppMailIndexRoute
   '/platform': typeof AppPlatformIndexRoute
   '/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
   '/accounting/a4/$id': typeof AppAccountingA4IdRoute
@@ -462,6 +478,7 @@ export interface FileRoutesById {
   '/_app/accounting/products': typeof AppAccountingProductsRoute
   '/_app/accounting/reports': typeof AppAccountingReportsRoute
   '/_app/accounting/settings': typeof AppAccountingSettingsRoute
+  '/_app/mail/settings': typeof AppMailSettingsRoute
   '/_app/platform/ads': typeof AppPlatformAdsRoute
   '/_app/platform/ai-demo': typeof AppPlatformAiDemoRoute
   '/_app/platform/chat-cases': typeof AppPlatformChatCasesRoute
@@ -477,6 +494,7 @@ export interface FileRoutesById {
   '/_app/platform/usage': typeof AppPlatformUsageRoute
   '/_app/platform/users': typeof AppPlatformUsersRoute
   '/_app/accounting/': typeof AppAccountingIndexRoute
+  '/_app/mail/': typeof AppMailIndexRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
   '/_app/accounting/a4-shop/$id': typeof AppAccountingA4ShopIdRoute
   '/_app/accounting/a4/$id': typeof AppAccountingA4IdRoute
@@ -517,6 +535,7 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/mail/settings'
     | '/platform/ads'
     | '/platform/ai-demo'
     | '/platform/chat-cases'
@@ -532,6 +551,7 @@ export interface FileRouteTypes {
     | '/platform/usage'
     | '/platform/users'
     | '/accounting/'
+    | '/mail/'
     | '/platform/'
     | '/accounting/a4-shop/$id'
     | '/accounting/a4/$id'
@@ -570,6 +590,7 @@ export interface FileRouteTypes {
     | '/accounting/products'
     | '/accounting/reports'
     | '/accounting/settings'
+    | '/mail/settings'
     | '/platform/ads'
     | '/platform/ai-demo'
     | '/platform/chat-cases'
@@ -585,6 +606,7 @@ export interface FileRouteTypes {
     | '/platform/usage'
     | '/platform/users'
     | '/accounting'
+    | '/mail'
     | '/platform'
     | '/accounting/a4-shop/$id'
     | '/accounting/a4/$id'
@@ -625,6 +647,7 @@ export interface FileRouteTypes {
     | '/_app/accounting/products'
     | '/_app/accounting/reports'
     | '/_app/accounting/settings'
+    | '/_app/mail/settings'
     | '/_app/platform/ads'
     | '/_app/platform/ai-demo'
     | '/_app/platform/chat-cases'
@@ -640,6 +663,7 @@ export interface FileRouteTypes {
     | '/_app/platform/usage'
     | '/_app/platform/users'
     | '/_app/accounting/'
+    | '/_app/mail/'
     | '/_app/platform/'
     | '/_app/accounting/a4-shop/$id'
     | '/_app/accounting/a4/$id'
@@ -771,6 +795,20 @@ declare module '@tanstack/react-router' {
       path: '/accounting/settings'
       fullPath: '/accounting/settings'
       preLoaderRoute: typeof AppAccountingSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mail/': {
+      id: '/_app/mail/'
+      path: '/mail'
+      fullPath: '/mail/'
+      preLoaderRoute: typeof AppMailIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mail/settings': {
+      id: '/_app/mail/settings'
+      path: '/mail/settings'
+      fullPath: '/mail/settings'
+      preLoaderRoute: typeof AppMailSettingsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/platform/': {
@@ -1057,6 +1095,7 @@ interface AppRouteChildren {
   AppAccountingProductsRoute: typeof AppAccountingProductsRoute
   AppAccountingReportsRoute: typeof AppAccountingReportsRoute
   AppAccountingSettingsRoute: typeof AppAccountingSettingsRoute
+  AppMailSettingsRoute: typeof AppMailSettingsRoute
   AppPlatformAdsRoute: typeof AppPlatformAdsRoute
   AppPlatformAiDemoRoute: typeof AppPlatformAiDemoRoute
   AppPlatformChatCasesRoute: typeof AppPlatformChatCasesRoute
@@ -1072,6 +1111,7 @@ interface AppRouteChildren {
   AppPlatformUsageRoute: typeof AppPlatformUsageRoute
   AppPlatformUsersRoute: typeof AppPlatformUsersRoute
   AppAccountingIndexRoute: typeof AppAccountingIndexRoute
+  AppMailIndexRoute: typeof AppMailIndexRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
   AppAccountingA4ShopIdRoute: typeof AppAccountingA4ShopIdRoute
   AppAccountingA4IdRoute: typeof AppAccountingA4IdRoute
@@ -1107,6 +1147,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountingProductsRoute: AppAccountingProductsRoute,
   AppAccountingReportsRoute: AppAccountingReportsRoute,
   AppAccountingSettingsRoute: AppAccountingSettingsRoute,
+  AppMailSettingsRoute: AppMailSettingsRoute,
   AppPlatformAdsRoute: AppPlatformAdsRoute,
   AppPlatformAiDemoRoute: AppPlatformAiDemoRoute,
   AppPlatformChatCasesRoute: AppPlatformChatCasesRoute,
@@ -1122,6 +1163,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPlatformUsageRoute: AppPlatformUsageRoute,
   AppPlatformUsersRoute: AppPlatformUsersRoute,
   AppAccountingIndexRoute: AppAccountingIndexRoute,
+  AppMailIndexRoute: AppMailIndexRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
   AppAccountingA4ShopIdRoute: AppAccountingA4ShopIdRoute,
   AppAccountingA4IdRoute: AppAccountingA4IdRoute,

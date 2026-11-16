@@ -437,7 +437,7 @@ export const fetchA4Document = async (src: A4Source): Promise<AccDocument> => {
   return (await unwrap(api.GET('/v1/platform/invoices/{id}', { params: { path } }))).data;
 };
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Poll a started worker job until the file is ready. Throws PDF_FAILED / PDF_TIMEOUT. */
 async function pollPdf(

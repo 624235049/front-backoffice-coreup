@@ -59,5 +59,6 @@
   "chatCases": "เคสรอตอบ",
   "chatCaseCount": "เคสรอตอบจากแชท {{count}}",
   "pageInbox": "แชทลูกค้าจากเพจ",
-  "pageInboxCount": "แชทลูกค้าจากเพจรอตอบ {{count}}"
+  "pageInboxCount": "แชทลูกค้าจากเพจรอตอบ {{count}}",
+  "mail": "Email ที่ส่ง"
 }

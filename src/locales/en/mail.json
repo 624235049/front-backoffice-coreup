@@ -1,0 +1,145 @@
+{
+  "close": "Close",
+  "cancel": "Cancel",
+  "send": "Send to customer",
+  "testBadge": "Sample",
+  "testPrefix": "[Sample] ",
+  "replyNote": "Replies go to sales@coreup.pro (Gmail CoreUp) — they do not appear in this system",
+  "linkLine": "View the quotation online:",
+  "title": {
+    "quotation": "Email the quotation to the customer",
+    "invoice": "Email the invoice to the customer",
+    "free": "New email"
+  },
+  "subtitle": "{{number}} · {{customer}} — sent from sales@coreup.pro",
+  "subtitleFree": "Sent from sales@coreup.pro, not tied to a document",
+  "field": {
+    "from": "From",
+    "to": "To",
+    "cc": "CC (optional)",
+    "subject": "Subject",
+    "body": "Message"
+  },
+  "hint": {
+    "cc": "Separate several addresses with commas",
+    "body": "Edit any line. URLs and emails in the text become links automatically",
+    "noContactEmail": "This customer has no email on file. Type the recipient's address"
+  },
+  "attach": {
+    "title": "Attachments",
+    "pdf": "Attach the PDF of {{number}} (original)",
+    "retry": "Retry",
+    "pdfState": {
+      "rendering": "Making the PDF…",
+      "ready": "Ready to attach",
+      "failed": "Could not make the PDF"
+    }
+  },
+  "file": {
+    "add": "Attach a file",
+    "remove": "Remove file",
+    "limit": "10 MB in total",
+    "tooLarge": "Attachments must be 10 MB or less in total",
+    "uploadFailed": "Could not upload the file. Try again"
+  },
+  "link": {
+    "have": "The online quotation link exists (it is in the message)",
+    "none": "No online quotation link yet",
+    "make": "Create link"
+  },
+  "preview": {
+    "title": "What the customer will receive",
+    "updating": "Updating…",
+    "frame": "Email body",
+    "bccHidden": "record copy, hidden from the customer"
+  },
+  "test": {
+    "label": "Send a sample to your own email first (only to your own address)",
+    "button": "Send sample to myself"
+  },
+  "problem": {
+    "noRecipient": "Enter the recipient's email first",
+    "badAddress": "Invalid email: {{list}}",
+    "empty": "Enter a subject and a message first",
+    "pdfRendering": "The PDF is still being made. Wait a moment or turn the PDF off",
+    "pdfFailed": "The PDF failed. Press “Retry” or turn the PDF off",
+    "uploading": "A file is uploading. Wait a moment",
+    "previewFirst": "Wait for the preview on the right to show the latest text before sending",
+    "testAddress": "Your account has no email, so a sample cannot be sent"
+  },
+  "confirm": {
+    "title": "Send this email to the customer?",
+    "body": "Check the recipients once more. A sent email cannot be taken back",
+    "pinBody": "An invoice is a bill the customer pays. Enter the team PIN to send it",
+    "testTitle": "Send the sample to yourself?",
+    "testBody": "An invoice needs the team PIN even as a sample",
+    "bcc": "A record copy goes to {{bcc}} (hidden from the customer)"
+  },
+  "sentOk": "Email sent to {{to}}",
+  "alreadySent": "This email was already sent (not sent twice)",
+  "sentTest": "Sample sent to {{to}}",
+  "rateLimited": "Too many emails (30 per hour per person). Wait a moment and try again",
+  "card": {
+    "title": "Email to customer",
+    "send": "Email the customer",
+    "empty": "This document has not been emailed yet",
+    "loadFailed": "Could not load the sending history",
+    "all": "All sent emails"
+  },
+  "history": {
+    "sent": "Emailed",
+    "queued": "Sending",
+    "sentTest": "Sample sent"
+  },
+  "status": {
+    "queued": "Queued",
+    "sent": "Sent",
+    "delivered": "Delivered",
+    "opened": "Opened",
+    "bounced": "Bounced",
+    "complained": "Marked as spam",
+    "failed": "Failed"
+  },
+  "kind": {
+    "free": "General email"
+  },
+  "page": {
+    "title": "Sent emails",
+    "new": "New email",
+    "settings": "Email settings",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "empty": "No emails sent yet",
+    "emptyHint": "Emails sent to customers from a quotation, an invoice or “New email” will appear here with their delivery status",
+    "more": "Load more"
+  },
+  "col": {
+    "when": "Time",
+    "to": "To",
+    "subject": "Subject",
+    "document": "Document",
+    "sender": "Sent by",
+    "status": "Status",
+    "error": "Error"
+  },
+  "settings": {
+    "title": "Customer email settings",
+    "ownerOnly": "Only the owner can change these",
+    "sender": "Sender and record copy",
+    "senderName": "Sender name the customer sees",
+    "senderHint": "The customer sees “{{name}} <sales@coreup.pro>”",
+    "bcc": "Record copy address (BCC)",
+    "bccHint": "Every real email to a customer is also copied here, hidden. Leave empty for none (samples are never copied)",
+    "bccBad": "The record copy address is not valid",
+    "signature": "Signature (end of the email)",
+    "template": {
+      "quotation": "Template: quotation",
+      "invoice": "Template: invoice",
+      "free": "Template: general email"
+    },
+    "variables": "Variables you can use:",
+    "save": "Save",
+    "saved": "Email settings saved"
+  },
+  "failedBefore": "This email failed ({{reason}}). Press send to try again"
+}

@@ -1531,6 +1531,9 @@
                                         "minItems": 1,
                                         "maxItems": 12
                                       },
+                                      "tierLock": {
+                                        "type": "boolean"
+                                      },
                                       "dayMinor": {
                                         "type": "integer",
                                         "minimum": 0,
@@ -2995,6 +2998,48 @@
                                       }
                                     },
                                     "additionalProperties": false
+                                  },
+                                  "promos": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "string",
+                                          "pattern": "^[a-z0-9_-]{1,40}$"
+                                        },
+                                        "label": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 60
+                                        },
+                                        "categoryId": {
+                                          "type": "string",
+                                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                        },
+                                        "percent": {
+                                          "type": "integer",
+                                          "minimum": 1,
+                                          "maximum": 90
+                                        },
+                                        "startDate": {
+                                          "type": "string",
+                                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                                        },
+                                        "endDate": {
+                                          "type": "string",
+                                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                                        }
+                                      },
+                                      "required": [
+                                        "id",
+                                        "label",
+                                        "categoryId",
+                                        "percent",
+                                        "startDate",
+                                        "endDate"
+                                      ]
+                                    }
                                   }
                                 },
                                 "required": [
@@ -3011,7 +3056,8 @@
                                   "messages",
                                   "alerts",
                                   "documents",
-                                  "ui"
+                                  "ui",
+                                  "promos"
                                 ]
                               },
                               "payMethod": {
@@ -15336,6 +15382,7 @@
                 "avatar",
                 "expense_receipt",
                 "accounting_file",
+                "sales_mail_attachment",
                 "finance_receipt",
                 "deposit_slip",
                 "booking_cover",
@@ -60404,6 +60451,2277 @@
                   },
                   "required": [
                     "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/context": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Composer start: sender, the contact email, subject and body from the template filled with the document (an issued quotation / invoice), the link when one exists. 403 unless owner / sales (quotation, free-form)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "quotation",
+                "invoice",
+                "free"
+              ]
+            },
+            "required": true,
+            "name": "kind",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "documentId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "quotation",
+                            "invoice",
+                            "free"
+                          ]
+                        },
+                        "from": {
+                          "type": "string"
+                        },
+                        "replyTo": {
+                          "type": "string"
+                        },
+                        "bcc": {
+                          "type": "string"
+                        },
+                        "me": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "email"
+                          ]
+                        },
+                        "document": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "quotation",
+                                "invoice"
+                              ]
+                            },
+                            "number": {
+                              "type": "string"
+                            },
+                            "customerName": {
+                              "type": "string"
+                            },
+                            "project": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "totalMinor": {
+                              "type": "integer"
+                            },
+                            "status": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "type",
+                            "number",
+                            "customerName",
+                            "project",
+                            "totalMinor",
+                            "status"
+                          ]
+                        },
+                        "to": {
+                          "type": "string"
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "body": {
+                          "type": "string"
+                        },
+                        "shareUrl": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "canMakeLink": {
+                          "type": "boolean"
+                        },
+                        "needsPin": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "from",
+                        "replyTo",
+                        "bcc",
+                        "me",
+                        "document",
+                        "to",
+                        "subject",
+                        "body",
+                        "shareUrl",
+                        "canMakeLink",
+                        "needsPin"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/preview": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "The email exactly as the customer receives it (sender, subject, rendered HTML with clickable links, attachment names, record copy); sends nothing",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "quotation",
+                      "invoice",
+                      "free"
+                    ]
+                  },
+                  "documentId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "to": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 254
+                    },
+                    "minItems": 1,
+                    "maxItems": 5
+                  },
+                  "cc": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 254
+                    },
+                    "maxItems": 5,
+                    "default": []
+                  },
+                  "subject": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000
+                  },
+                  "attachPdf": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "pdfJobId": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "name"
+                      ]
+                    },
+                    "maxItems": 5,
+                    "default": []
+                  },
+                  "test": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "kind",
+                  "to",
+                  "subject",
+                  "body"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "from": {
+                          "type": "string"
+                        },
+                        "replyTo": {
+                          "type": "string"
+                        },
+                        "to": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "cc": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "bcc": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "html": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "attachments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "size": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "size"
+                            ]
+                          }
+                        },
+                        "isTest": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "from",
+                        "replyTo",
+                        "to",
+                        "cc",
+                        "bcc",
+                        "subject",
+                        "html",
+                        "text",
+                        "attachments",
+                        "isTest"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/send": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Queue a customer email from sales@coreup.pro (the worker sends it; the Resend id lands in the log). `test: true` = a sample to the caller's own address (subject \"[ตัวอย่าง]\", only to the caller's own email, record copy kept). Idempotent per `idempotencyKey`; 30/hour and 100 recipients/day per user; an invoice needs the team PIN; 403 unless owner / sales (quotation, free-form)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "quotation",
+                      "invoice",
+                      "free"
+                    ]
+                  },
+                  "documentId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "to": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 254
+                    },
+                    "minItems": 1,
+                    "maxItems": 5
+                  },
+                  "cc": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 254
+                    },
+                    "maxItems": 5,
+                    "default": []
+                  },
+                  "subject": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20000
+                  },
+                  "attachPdf": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "pdfJobId": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "name"
+                      ]
+                    },
+                    "maxItems": 5,
+                    "default": []
+                  },
+                  "test": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 100
+                  },
+                  "pin": {
+                    "type": "string",
+                    "maxLength": 100
+                  }
+                },
+                "required": [
+                  "kind",
+                  "to",
+                  "subject",
+                  "body",
+                  "idempotencyKey"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued (or the first result of the same key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "quotation",
+                                "invoice",
+                                "free"
+                              ]
+                            },
+                            "isTest": {
+                              "type": "boolean"
+                            },
+                            "documentId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "documentNumber": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "from": {
+                              "type": "string"
+                            },
+                            "to": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "cc": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "bcc": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "subject": {
+                              "type": "string"
+                            },
+                            "attachments": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "size": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "size"
+                                ]
+                              }
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "queued",
+                                "sent",
+                                "delivered",
+                                "opened",
+                                "bounced",
+                                "complained",
+                                "failed"
+                              ]
+                            },
+                            "error": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "sentBy": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name"
+                              ]
+                            },
+                            "resendId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            },
+                            "sentAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "deliveredAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "openedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "failedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "isTest",
+                            "documentId",
+                            "documentNumber",
+                            "from",
+                            "to",
+                            "cc",
+                            "bcc",
+                            "subject",
+                            "attachments",
+                            "status",
+                            "error",
+                            "sentBy",
+                            "resendId",
+                            "createdAt",
+                            "sentAt",
+                            "deliveredAt",
+                            "openedAt",
+                            "failedAt"
+                          ]
+                        },
+                        "duplicate": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "email",
+                        "duplicate"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/outbox": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "The sent log, newest first (filter by document, kind, status)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": false,
+            "name": "documentId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "quotation",
+                "invoice",
+                "free"
+              ]
+            },
+            "required": false,
+            "name": "kind",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "sent",
+                "delivered",
+                "opened",
+                "bounced",
+                "complained",
+                "failed"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent emails",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "quotation",
+                              "invoice",
+                              "free"
+                            ]
+                          },
+                          "isTest": {
+                            "type": "boolean"
+                          },
+                          "documentId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "documentNumber": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "from": {
+                            "type": "string"
+                          },
+                          "to": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "cc": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "bcc": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "subject": {
+                            "type": "string"
+                          },
+                          "attachments": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "size": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "size"
+                              ]
+                            }
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "queued",
+                              "sent",
+                              "delivered",
+                              "opened",
+                              "bounced",
+                              "complained",
+                              "failed"
+                            ]
+                          },
+                          "error": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "sentBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          },
+                          "resendId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "sentAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "deliveredAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "openedAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "failedAt": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "kind",
+                          "isTest",
+                          "documentId",
+                          "documentNumber",
+                          "from",
+                          "to",
+                          "cc",
+                          "bcc",
+                          "subject",
+                          "attachments",
+                          "status",
+                          "error",
+                          "sentBy",
+                          "resendId",
+                          "createdAt",
+                          "sentAt",
+                          "deliveredAt",
+                          "openedAt",
+                          "failedAt"
+                        ]
+                      }
+                    },
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "nextCursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "hasMore": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "nextCursor",
+                        "hasMore"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/outbox/{id}": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "One sent email with the body as it was sent",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:accounting|platform:billing_issue`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "quotation",
+                            "invoice",
+                            "free"
+                          ]
+                        },
+                        "isTest": {
+                          "type": "boolean"
+                        },
+                        "documentId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "documentNumber": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "from": {
+                          "type": "string"
+                        },
+                        "to": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "cc": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "bcc": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "attachments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "size": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "size"
+                            ]
+                          }
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "queued",
+                            "sent",
+                            "delivered",
+                            "opened",
+                            "bounced",
+                            "complained",
+                            "failed"
+                          ]
+                        },
+                        "error": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "sentBy": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ]
+                        },
+                        "resendId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "sentAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "deliveredAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "openedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "failedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "html": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "kind",
+                        "isTest",
+                        "documentId",
+                        "documentNumber",
+                        "from",
+                        "to",
+                        "cc",
+                        "bcc",
+                        "subject",
+                        "attachments",
+                        "status",
+                        "error",
+                        "sentBy",
+                        "resendId",
+                        "createdAt",
+                        "sentAt",
+                        "deliveredAt",
+                        "openedAt",
+                        "failedAt",
+                        "html",
+                        "text"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/sales-mail/settings": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Sender name, signature, record-copy address and the templates (owner only)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "senderName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "signature": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "bccRecord": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "maxLength": 254
+                            }
+                          ]
+                        },
+                        "templates": {
+                          "type": "object",
+                          "properties": {
+                            "quotation": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            },
+                            "invoice": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            },
+                            "free": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "quotation",
+                            "invoice",
+                            "free"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "senderName",
+                        "signature",
+                        "bccRecord",
+                        "templates"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Save the settings (owner only; audited)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:manage`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "senderName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "signature": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "bccRecord": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          ""
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "maxLength": 254
+                      }
+                    ]
+                  },
+                  "templates": {
+                    "type": "object",
+                    "properties": {
+                      "quotation": {
+                        "type": "object",
+                        "properties": {
+                          "subject": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 8000
+                          }
+                        },
+                        "required": [
+                          "subject",
+                          "body"
+                        ]
+                      },
+                      "invoice": {
+                        "type": "object",
+                        "properties": {
+                          "subject": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 8000
+                          }
+                        },
+                        "required": [
+                          "subject",
+                          "body"
+                        ]
+                      },
+                      "free": {
+                        "type": "object",
+                        "properties": {
+                          "subject": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 8000
+                          }
+                        },
+                        "required": [
+                          "subject",
+                          "body"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "quotation",
+                      "invoice",
+                      "free"
+                    ]
+                  }
+                },
+                "required": [
+                  "senderName",
+                  "signature",
+                  "bccRecord",
+                  "templates"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "senderName": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "signature": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "bccRecord": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                ""
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "maxLength": 254
+                            }
+                          ]
+                        },
+                        "templates": {
+                          "type": "object",
+                          "properties": {
+                            "quotation": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            },
+                            "invoice": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            },
+                            "free": {
+                              "type": "object",
+                              "properties": {
+                                "subject": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                },
+                                "body": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 8000
+                                }
+                              },
+                              "required": [
+                                "subject",
+                                "body"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "quotation",
+                            "invoice",
+                            "free"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "senderName",
+                        "signature",
+                        "bccRecord",
+                        "templates"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhooks/resend": {
+      "post": {
+        "tags": [
+          "webhooks"
+        ],
+        "summary": "Resend delivery events (Svix-signed with RESEND_WEBHOOK_SECRET)",
+        "description": "Add this URL in Resend → Webhooks (events: email.sent, delivered, bounced, complained, opened, failed) and put the signing secret (`whsec_…`) in `RESEND_WEBHOOK_SECRET` on the API. 401 on a wrong signature; 503 while no secret is set (sent mails then stay `sent`).\n\nPublic endpoint (no authentication).",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ok"
                   ]
                 }
               }
@@ -128266,6 +130584,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -128303,6 +130624,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -128329,7 +130656,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -129273,6 +131601,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -129310,6 +131641,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -129336,7 +131673,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -130280,6 +132618,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -130317,6 +132658,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -130343,7 +132690,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -131287,6 +133635,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -131324,6 +133675,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -131350,7 +133707,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -132294,6 +134652,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -132331,6 +134692,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -132357,7 +134724,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -133301,6 +135669,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -133338,6 +135709,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -133364,7 +135741,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -134308,6 +136686,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -134345,6 +136726,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -134371,7 +136758,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -135315,6 +137703,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -135352,6 +137743,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -135378,7 +137775,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -136322,6 +138720,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -136359,6 +138760,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -136385,7 +138792,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         }
@@ -137593,6 +140001,9 @@
                                     },
                                     "reason": {
                                       "type": "string"
+                                    },
+                                    "promoId": {
+                                      "type": "string"
                                     }
                                   },
                                   "required": [
@@ -137630,6 +140041,12 @@
                                     "string",
                                     "null"
                                   ]
+                                },
+                                "openedOn": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
                                 }
                               },
                               "required": [
@@ -137656,7 +140073,8 @@
                                 "returnAt",
                                 "returnMethod",
                                 "parcel",
-                                "discount"
+                                "discount",
+                                "openedOn"
                               ]
                             }
                           },
@@ -138649,6 +141067,9 @@
                                     "paidDays",
                                     "freeDays"
                                   ]
+                                },
+                                "tierLock": {
+                                  "type": "boolean"
                                 }
                               },
                               "required": [
@@ -138669,7 +141090,8 @@
                                 "securityWithRent",
                                 "securityWhen",
                                 "lostDepositRule",
-                                "promoFreeDays"
+                                "promoFreeDays",
+                                "tierLock"
                               ]
                             },
                             "trip": {
@@ -138690,6 +141112,28 @@
                                 "pickupBeforeDays",
                                 "returnAfterDays"
                               ]
+                            },
+                            "promo": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                },
+                                "percent": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "percent"
+                              ]
                             }
                           },
                           "required": [
@@ -138707,7 +141151,8 @@
                             "latestPickup",
                             "fullDays",
                             "pickupSlots",
-                            "terms"
+                            "terms",
+                            "promo"
                           ]
                         },
                         "bookings": {
@@ -139650,6 +142095,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -139687,6 +142135,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -139713,7 +142167,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         },
@@ -140223,6 +142678,13 @@
                   "pickedUpAt": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "skipPromo": {
+                    "type": "boolean"
+                  },
+                  "openedOn": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
                   }
                 },
                 "required": [
@@ -141182,6 +143644,9 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "promoId": {
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -141220,6 +143685,12 @@
                             "null"
                           ]
                         },
+                        "openedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "siblingIds": {
                           "type": "array",
                           "items": {
@@ -141253,6 +143724,7 @@
                         "returnMethod",
                         "parcel",
                         "discount",
+                        "openedOn",
                         "siblingIds"
                       ]
                     }
@@ -142631,6 +145103,9 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "promoId": {
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -142664,6 +145139,12 @@
                           "type": "integer"
                         },
                         "staffNote": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "openedOn": {
                           "type": [
                             "string",
                             "null"
@@ -142704,6 +145185,7 @@
                         "returnMethod",
                         "parcel",
                         "discount",
+                        "openedOn",
                         "previousPriceMinor",
                         "priceReset"
                       ]
@@ -144335,6 +146817,9 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "promoId": {
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -144372,6 +146857,12 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "openedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
@@ -144398,7 +146889,8 @@
                         "returnAt",
                         "returnMethod",
                         "parcel",
-                        "discount"
+                        "discount",
+                        "openedOn"
                       ]
                     }
                   },
@@ -145498,6 +147990,9 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "promoId": {
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -145535,6 +148030,12 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "openedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
@@ -145561,7 +148062,8 @@
                         "returnAt",
                         "returnMethod",
                         "parcel",
-                        "discount"
+                        "discount",
+                        "openedOn"
                       ]
                     }
                   },
@@ -147122,6 +149624,9 @@
                                   },
                                   "reason": {
                                     "type": "string"
+                                  },
+                                  "promoId": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -147159,6 +149664,12 @@
                                   "string",
                                   "null"
                                 ]
+                              },
+                              "openedOn": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                               }
                             },
                             "required": [
@@ -147185,7 +149696,8 @@
                               "returnAt",
                               "returnMethod",
                               "parcel",
-                              "discount"
+                              "discount",
+                              "openedOn"
                             ]
                           }
                         }
@@ -149926,6 +152438,9 @@
                         "minItems": 1,
                         "maxItems": 12
                       },
+                      "tierLock": {
+                        "type": "boolean"
+                      },
                       "dayMinor": {
                         "type": "integer",
                         "minimum": 0,
@@ -150299,6 +152814,9 @@
                         },
                         "minItems": 1,
                         "maxItems": 12
+                      },
+                      "tierLock": {
+                        "type": "boolean"
                       },
                       "dayMinor": {
                         "type": "integer",
@@ -156563,6 +159081,9 @@
                                     },
                                     "reason": {
                                       "type": "string"
+                                    },
+                                    "promoId": {
+                                      "type": "string"
                                     }
                                   },
                                   "required": [
@@ -156600,6 +159121,12 @@
                                     "string",
                                     "null"
                                   ]
+                                },
+                                "openedOn": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
                                 }
                               },
                               "required": [
@@ -156626,7 +159153,8 @@
                                 "returnAt",
                                 "returnMethod",
                                 "parcel",
-                                "discount"
+                                "discount",
+                                "openedOn"
                               ]
                             }
                           },
@@ -158031,6 +160559,9 @@
                             },
                             "reason": {
                               "type": "string"
+                            },
+                            "promoId": {
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -158068,6 +160599,12 @@
                             "string",
                             "null"
                           ]
+                        },
+                        "openedOn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         }
                       },
                       "required": [
@@ -158094,7 +160631,8 @@
                         "returnAt",
                         "returnMethod",
                         "parcel",
-                        "discount"
+                        "discount",
+                        "openedOn"
                       ]
                     }
                   },
@@ -267959,6 +270497,9 @@
                                   "minItems": 1,
                                   "maxItems": 12
                                 },
+                                "tierLock": {
+                                  "type": "boolean"
+                                },
                                 "dayMinor": {
                                   "type": "integer",
                                   "minimum": 0,
@@ -269164,6 +271705,21 @@
                                             "freeDays"
                                           ]
                                         },
+                                        "promo": {
+                                          "type": "object",
+                                          "properties": {
+                                            "label": {
+                                              "type": "string"
+                                            },
+                                            "percent": {
+                                              "type": "integer"
+                                            }
+                                          },
+                                          "required": [
+                                            "label",
+                                            "percent"
+                                          ]
+                                        },
                                         "ships": {
                                           "type": "boolean"
                                         },
@@ -269741,6 +272297,26 @@
                         "securityMinor": {
                           "type": "integer",
                           "minimum": 0
+                        },
+                        "promo": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string"
+                            },
+                            "percent": {
+                              "type": "integer"
+                            },
+                            "discountMinor": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "percent",
+                            "discountMinor"
+                          ]
                         }
                       },
                       "required": [
@@ -271030,6 +273606,9 @@
                                 "paidDays",
                                 "freeDays"
                               ]
+                            },
+                            "tierLock": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -271050,7 +273629,8 @@
                             "securityWithRent",
                             "securityWhen",
                             "lostDepositRule",
-                            "promoFreeDays"
+                            "promoFreeDays",
+                            "tierLock"
                           ]
                         },
                         "trip": {
@@ -271071,6 +273651,28 @@
                             "pickupBeforeDays",
                             "returnAfterDays"
                           ]
+                        },
+                        "promo": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "percent": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "label",
+                            "percent"
+                          ]
                         }
                       },
                       "required": [
@@ -271088,7 +273690,8 @@
                         "latestPickup",
                         "fullDays",
                         "pickupSlots",
-                        "terms"
+                        "terms",
+                        "promo"
                       ]
                     }
                   },
@@ -285131,6 +287734,21 @@
                                       "freeDays"
                                     ]
                                   },
+                                  "promo": {
+                                    "type": "object",
+                                    "properties": {
+                                      "label": {
+                                        "type": "string"
+                                      },
+                                      "percent": {
+                                        "type": "integer"
+                                      }
+                                    },
+                                    "required": [
+                                      "label",
+                                      "percent"
+                                    ]
+                                  },
                                   "ships": {
                                     "type": "boolean"
                                   },
@@ -285810,6 +288428,21 @@
                               "required": [
                                 "paidDays",
                                 "freeDays"
+                              ]
+                            },
+                            "promo": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "percent": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "percent"
                               ]
                             },
                             "ships": {
@@ -320452,6 +323085,9 @@
                                 "minItems": 1,
                                 "maxItems": 12
                               },
+                              "tierLock": {
+                                "type": "boolean"
+                              },
                               "dayMinor": {
                                 "type": "integer",
                                 "minimum": 0,
@@ -321359,6 +323995,9 @@
                         "minItems": 1,
                         "maxItems": 12
                       },
+                      "tierLock": {
+                        "type": "boolean"
+                      },
                       "dayMinor": {
                         "type": "integer",
                         "minimum": 0,
@@ -322069,6 +324708,9 @@
                               },
                               "minItems": 1,
                               "maxItems": 12
+                            },
+                            "tierLock": {
+                              "type": "boolean"
                             },
                             "dayMinor": {
                               "type": "integer",
@@ -322921,6 +325563,9 @@
                               },
                               "minItems": 1,
                               "maxItems": 12
+                            },
+                            "tierLock": {
+                              "type": "boolean"
                             },
                             "dayMinor": {
                               "type": "integer",
@@ -323792,6 +326437,9 @@
                         "minItems": 1,
                         "maxItems": 12
                       },
+                      "tierLock": {
+                        "type": "boolean"
+                      },
                       "dayMinor": {
                         "type": "integer",
                         "minimum": 0,
@@ -324499,6 +327147,9 @@
                               },
                               "minItems": 1,
                               "maxItems": 12
+                            },
+                            "tierLock": {
+                              "type": "boolean"
                             },
                             "dayMinor": {
                               "type": "integer",
@@ -325649,6 +328300,9 @@
                               },
                               "minItems": 1,
                               "maxItems": 12
+                            },
+                            "tierLock": {
+                              "type": "boolean"
                             },
                             "dayMinor": {
                               "type": "integer",
