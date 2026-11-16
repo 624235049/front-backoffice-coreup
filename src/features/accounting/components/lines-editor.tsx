@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { useIntlLocale } from '@/features/platform/format';
 import { cn } from '@/lib/utils';
 import { type Item, useItems } from '../api';
@@ -32,9 +33,9 @@ function DescriptionInput({
   const { t } = useTranslation('accounting');
   const locale = useIntlLocale();
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
-  const q = useDebounced(value.trim(), 200);
+  const q = useDebounced(value.split('\n')[0]?.trim() ?? '', 200);
   const items = useItems({ q: q || undefined, active: true, limit: 6 }, open && suggest);
   const options = items.data ?? [];
 
@@ -49,17 +50,20 @@ function DescriptionInput({
 
   return (
     <div ref={ref} className="relative">
-      <Input
+      <Textarea
         value={value}
+        rows={2}
+        maxLength={suggest ? 2000 : 500}
         placeholder={placeholder}
         aria-label={t('doc.line.description')}
         aria-invalid={invalid || undefined}
         autoComplete="off"
+        className="min-h-11 resize-y"
         onFocus={() => setOpen(true)}
         onChange={(e) => {
           onChange(e.target.value);
           setOpen(true);
-          setActive(0);
+          setActive(-1);
         }}
         onKeyDown={(e) => {
           if (!open || options.length === 0) return;
@@ -70,6 +74,7 @@ function DescriptionInput({
             e.preventDefault();
             setActive((i) => Math.max(i - 1, 0));
           } else if (e.key === 'Enter') {
+            // Enter is a new line (title + bullets) until a suggestion was chosen with the arrow keys
             const o = options[active];
             if (o) {
               e.preventDefault();
