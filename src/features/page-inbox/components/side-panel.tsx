@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { Store } from 'lucide-react';
+import { Store, UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { useShopPicker } from '@/features/platform/api';
 import { OnboardDialog } from '@/features/platform/components/onboard-dialog';
 import { useCan } from '@/lib/permissions';
-import type { PageConversation, PageShopType } from '../api';
+import type { PageConversation, PageDetail, PageShopType } from '../api';
 import { useLinkTenant } from '../api';
 import { useChatTime } from '../lib/time';
+import { ChannelIcon } from './channel-icon';
 import { StageChip } from './thread-list';
 
 /** What the dress / salon / massage / barber lead most likely wants as a trial shop (the template keys of the onboarding dialog). */
@@ -34,7 +35,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
  * "เปิดร้านทดลอง" reuses the team's onboarding dialog (the real create-shop flow) and links the new shop to this chat and its lead;
  * an existing shop can be linked by hand.
  */
-export function SidePanel({ conversation: c }: { conversation: PageConversation }) {
+function MetaPanel({ conversation: c }: { conversation: PageConversation }) {
   const { t } = useTranslation('pageInbox');
   const clock = useChatTime(t);
   const canWrite = useCan('platform:write');
@@ -123,5 +124,72 @@ export function SidePanel({ conversation: c }: { conversation: PageConversation 
         onCreated={(tenantId) => linkTo(tenantId)}
       />
     </aside>
+  );
+}
+
+type Lead = NonNullable<NonNullable<PageDetail['line']>['lead']>;
+
+/** A LINE chat: the sales lead and the shop it is matched to, and when it started. */
+function LinePanel({ conversation: c, lead }: { conversation: PageConversation; lead: Lead | null }) {
+  const { t } = useTranslation('pageInbox');
+  const clock = useChatTime(t);
+  return (
+    <aside
+      className="hidden w-[17rem] shrink-0 overflow-y-auto border-l bg-[var(--card)] p-3 lg:block"
+      data-testid="side-panel"
+    >
+      <h2 className="mb-3 text-sm font-semibold">{t('side.title')}</h2>
+      <dl className="grid gap-3">
+        <Row label={t('side.channel')}>
+          <span className="inline-flex items-center gap-1.5">
+            <ChannelIcon channel="line" /> {t('channelFilter.line')}
+          </span>
+        </Row>
+        <Row label={t('side.stage')}>
+          <StageChip stage={c.stage} />
+        </Row>
+        <Row label={t('side.lead')}>
+          {lead ? (
+            <Link
+              to="/platform/sales"
+              search={{ lead: lead.id }}
+              className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline"
+              data-testid="side-lead"
+            >
+              <UserRound className="size-3.5" aria-hidden />
+              {lead.name ?? lead.ref}
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{t('side.noLead')}</span>
+          )}
+        </Row>
+        <Row label={t('side.shopOpened')}>
+          {c.tenantId ? (
+            <Link
+              to="/platform/tenants/$id"
+              params={{ id: c.tenantId }}
+              className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline"
+            >
+              <Store className="size-3.5" aria-hidden />
+              {c.tenantName ?? t('side.openShop')}
+            </Link>
+          ) : (
+            <span className="text-muted-foreground">{t('side.noShop')}</span>
+          )}
+        </Row>
+        <Row label={t('side.lastMessage')}>
+          {c.lastCustomerMessageAt ? clock.full(c.lastCustomerMessageAt) : '—'}
+        </Row>
+        {c.blocked ? <Row label={t('side.status')}>{t('row.blocked')}</Row> : null}
+      </dl>
+    </aside>
+  );
+}
+
+export function SidePanel({ conversation, lead }: { conversation: PageConversation; lead: Lead | null }) {
+  return conversation.channel === 'line' ? (
+    <LinePanel conversation={conversation} lead={lead} />
+  ) : (
+    <MetaPanel conversation={conversation} />
   );
 }

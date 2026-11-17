@@ -1,10 +1,11 @@
 import { Flame, Inbox, Search } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import {
+  CHANNEL_FILTERS,
   PAGE_STAGES,
   type PageConversation,
   type PageFilter,
@@ -14,6 +15,8 @@ import {
   SHOP_TYPES,
 } from '../api';
 import { useChatTime, useNow } from '../lib/time';
+import { ChannelIcon } from './channel-icon';
+import { LineQuotaStrip } from './line-quota';
 import { WindowBadge } from './window-badge';
 
 const TABS: PageFilter[] = ['all', 'needs_reply', 'hot', 'follow_up'];
@@ -56,11 +59,16 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
       >
         <span className="relative mt-0.5 shrink-0">
           <Avatar className="size-11">
+            {c.pictureUrl ? <AvatarImage src={c.pictureUrl} alt="" /> : null}
             <AvatarFallback className="bg-muted text-base text-muted-foreground">
               {name.slice(0, 1)}
             </AvatarFallback>
           </Avatar>
-          {c.needsReply ? (
+          <ChannelIcon
+            channel={c.channel}
+            className="absolute -bottom-0.5 -right-0.5 ring-2 ring-[var(--background)]"
+          />
+          {c.needsReply && c.channel !== 'line' ? (
             <span
               className="absolute -right-0.5 -top-0.5 size-3.5 rounded-full border-2 border-[var(--background)] bg-warning"
               role="img"
@@ -82,14 +90,31 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
             {c.hot ? (
               <Flame className="size-4 shrink-0 self-center text-warning" aria-label={t('row.hot')} />
             ) : null}
-            <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-              {c.lastMessageAt ? clock.listTime(c.lastMessageAt, now) : ''}
+            <span className="flex shrink-0 flex-col items-end gap-1 self-center">
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {c.lastMessageAt ? clock.listTime(c.lastMessageAt, now) : ''}
+              </span>
+              {c.unread > 0 ? (
+                <span
+                  className="min-w-5 rounded-full bg-[#06C755] px-1.5 text-center text-[0.7rem] font-semibold tabular-nums leading-5 text-white"
+                  role="img"
+                  aria-label={t('row.unread', { n: c.unread })}
+                  data-testid="unread-badge"
+                >
+                  {c.unread}
+                </span>
+              ) : null}
             </span>
           </span>
           <span className="truncate text-sm text-muted-foreground">{c.preview ?? ''}</span>
           <span className="flex flex-wrap items-center gap-1.5">
             <StageChip stage={c.stage} />
-            <WindowBadge conversation={c} />
+            {c.channel !== 'line' ? <WindowBadge conversation={c} /> : null}
+            {c.blocked ? (
+              <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[0.7rem] font-medium text-destructive">
+                {t('row.blocked')}
+              </span>
+            ) : null}
             {c.followUpStep ? (
               <span
                 className="rounded-full bg-primary/10 px-2 py-0.5 text-[0.7rem] font-medium text-primary"
@@ -139,6 +164,7 @@ export function ThreadList({
 }) {
   const { t } = useTranslation('pageInbox');
   const filter = query.filter ?? 'all';
+  const channel = query.channel ?? 'all';
   const count = (f: PageFilter) =>
     data
       ? {
@@ -150,6 +176,9 @@ export function ThreadList({
       : null;
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-[var(--background)]">
+      {data?.line && channel !== 'messenger' && channel !== 'instagram' ? (
+        <LineQuotaStrip line={data.line} />
+      ) : null}
       <div className="px-2 pb-1 pt-2">
         <div
           role="tablist"
@@ -184,6 +213,35 @@ export function ThreadList({
         </div>
       </div>
       <fieldset className="m-0 flex min-w-0 gap-1 overflow-x-auto border-0 px-2 pb-1">
+        <legend className="sr-only">{t('filters.channel')}</legend>
+        {CHANNEL_FILTERS.map((ch) => (
+          <button
+            key={ch}
+            type="button"
+            aria-pressed={channel === ch}
+            onClick={() => onQuery({ ...query, channel: ch === 'all' ? undefined : ch })}
+            data-testid={`channel-filter-${ch}`}
+            className={cn(
+              'inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-1 text-xs',
+              channel === ch
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {ch !== 'all' ? <ChannelIcon channel={ch} className="size-3.5" /> : null}
+            {t(`channelFilter.${ch}`)}
+            {ch === 'line' && (data?.counts.unread ?? 0) > 0 ? (
+              <span
+                className="rounded-full bg-[#06C755] px-1.5 text-[0.65rem] font-semibold tabular-nums text-white"
+                data-testid="count-unread"
+              >
+                {data?.counts.unread}
+              </span>
+            ) : null}
+          </button>
+        ))}
+      </fieldset>
+      <fieldset className="m-0 flex min-w-0 gap-1 overflow-x-auto border-0 px-2 pb-1">
         <legend className="sr-only">{t('filters.stage')}</legend>
         {[undefined, ...PAGE_STAGES].map((s) => (
           <button
@@ -202,36 +260,38 @@ export function ThreadList({
           </button>
         ))}
       </fieldset>
-      <div className="flex gap-1.5 px-2 pb-1">
-        <select
-          className={selectCls}
-          aria-label={t('filters.adLabel')}
-          value={query.adId ?? ''}
-          onChange={(e) => onQuery({ ...query, adId: e.target.value || undefined })}
-        >
-          <option value="">{t('filters.allAds')}</option>
-          {(data?.ads ?? []).map((a) => (
-            <option key={a.adId} value={a.adId}>
-              {t('filters.ad', { id: a.adId, count: a.count })}
-            </option>
-          ))}
-        </select>
-        <select
-          className={selectCls}
-          aria-label={t('filters.typeLabel')}
-          value={query.shopType ?? ''}
-          onChange={(e) =>
-            onQuery({ ...query, shopType: (e.target.value || undefined) as PageQuery['shopType'] })
-          }
-        >
-          <option value="">{t('filters.allTypes')}</option>
-          {SHOP_TYPES.map((s) => (
-            <option key={s} value={s}>
-              {t(`shopType.${s}`)}
-            </option>
-          ))}
-        </select>
-      </div>
+      {channel !== 'line' ? (
+        <div className="flex gap-1.5 px-2 pb-1">
+          <select
+            className={selectCls}
+            aria-label={t('filters.adLabel')}
+            value={query.adId ?? ''}
+            onChange={(e) => onQuery({ ...query, adId: e.target.value || undefined })}
+          >
+            <option value="">{t('filters.allAds')}</option>
+            {(data?.ads ?? []).map((a) => (
+              <option key={a.adId} value={a.adId}>
+                {t('filters.ad', { id: a.adId, count: a.count })}
+              </option>
+            ))}
+          </select>
+          <select
+            className={selectCls}
+            aria-label={t('filters.typeLabel')}
+            value={query.shopType ?? ''}
+            onChange={(e) =>
+              onQuery({ ...query, shopType: (e.target.value || undefined) as PageQuery['shopType'] })
+            }
+          >
+            <option value="">{t('filters.allTypes')}</option>
+            {SHOP_TYPES.map((s) => (
+              <option key={s} value={s}>
+                {t(`shopType.${s}`)}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
       <div className="flex items-center gap-1.5 px-2 pb-2">
         <div className="relative min-w-0 flex-1">
           <Search

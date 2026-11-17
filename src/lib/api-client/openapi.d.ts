@@ -22126,6 +22126,7 @@ export interface paths {
                                 };
                                 webhookUrl: string;
                                 conversations: number;
+                                lineConnected: boolean;
                             };
                         };
                     };
@@ -22279,6 +22280,7 @@ export interface paths {
                                 };
                                 webhookUrl: string;
                                 conversations: number;
+                                lineConnected: boolean;
                             };
                         };
                     };
@@ -22563,6 +22565,7 @@ export interface paths {
                                 };
                                 webhookUrl: string;
                                 conversations: number;
+                                lineConnected: boolean;
                             };
                         };
                     };
@@ -22658,6 +22661,7 @@ export interface paths {
             parameters: {
                 query?: {
                     filter?: "all" | "needs_reply" | "hot" | "follow_up";
+                    channel?: "all" | "line" | "messenger" | "instagram";
                     stage?: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
                     adId?: string;
                     shopType?: "dress" | "salon" | "massage" | "barber";
@@ -22681,7 +22685,7 @@ export interface paths {
                                 items: {
                                     id: string;
                                     /** @enum {string} */
-                                    channel: "messenger" | "instagram";
+                                    channel: "messenger" | "instagram" | "line";
                                     name: string | null;
                                     adId: string | null;
                                     /** @enum {string|null} */
@@ -22703,13 +22707,28 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
+                                    unread: number;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
                                 }[];
                                 counts: {
                                     all: number;
                                     needsReply: number;
                                     hot: number;
                                     followUp: number;
+                                    unread: number;
                                 };
+                                line: {
+                                    accountName: string;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                } | null;
                                 ads: {
                                     adId: string;
                                     count: number;
@@ -22833,7 +22852,7 @@ export interface paths {
                                 conversation: {
                                     id: string;
                                     /** @enum {string} */
-                                    channel: "messenger" | "instagram";
+                                    channel: "messenger" | "instagram" | "line";
                                     name: string | null;
                                     adId: string | null;
                                     /** @enum {string|null} */
@@ -22855,27 +22874,57 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
+                                    unread: number;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
                                 };
                                 messages: {
                                     id: string;
                                     /** @enum {string} */
                                     direction: "in" | "out";
                                     /** @enum {string} */
-                                    sender: "customer" | "page" | "staff" | "ai";
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
                                     text: string | null;
                                     imageUrl: string | null;
                                     sentAt: string;
                                     authorName: string | null;
                                     /** @enum {string|null} */
-                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
                                 }[];
                                 suggestion: {
                                     text: string;
                                     /** @enum {string} */
                                     step: "hook" | "answer" | "close";
                                     needsPerson: boolean;
-                                };
+                                } | null;
                                 followUpDraft: string | null;
+                                line?: {
+                                    canReply: boolean;
+                                    /** @enum {string|null} */
+                                    replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                    freeReplyUntil: string | null;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                    lead: {
+                                        id: string;
+                                        ref: string;
+                                        name: string | null;
+                                        stage: string;
+                                    } | null;
+                                } | null;
                             };
                         };
                     };
@@ -23003,7 +23052,7 @@ export interface paths {
                                 conversation: {
                                     id: string;
                                     /** @enum {string} */
-                                    channel: "messenger" | "instagram";
+                                    channel: "messenger" | "instagram" | "line";
                                     name: string | null;
                                     adId: string | null;
                                     /** @enum {string|null} */
@@ -23025,27 +23074,57 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
+                                    unread: number;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
                                 };
                                 messages: {
                                     id: string;
                                     /** @enum {string} */
                                     direction: "in" | "out";
                                     /** @enum {string} */
-                                    sender: "customer" | "page" | "staff" | "ai";
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
                                     text: string | null;
                                     imageUrl: string | null;
                                     sentAt: string;
                                     authorName: string | null;
                                     /** @enum {string|null} */
-                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
                                 }[];
                                 suggestion: {
                                     text: string;
                                     /** @enum {string} */
                                     step: "hook" | "answer" | "close";
                                     needsPerson: boolean;
-                                };
+                                } | null;
                                 followUpDraft: string | null;
+                                line?: {
+                                    canReply: boolean;
+                                    /** @enum {string|null} */
+                                    replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                    freeReplyUntil: string | null;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                    lead: {
+                                        id: string;
+                                        ref: string;
+                                        name: string | null;
+                                        stage: string;
+                                    } | null;
+                                } | null;
                             };
                         };
                     };
@@ -23159,6 +23238,11 @@ export interface paths {
                         text: string;
                         confirmWrongFacts?: boolean;
                         followUpStep?: number;
+                        images?: {
+                            fileId: string;
+                            previewFileId: string;
+                        }[];
+                        clientId?: string;
                     };
                 };
             };
@@ -23176,16 +23260,23 @@ export interface paths {
                                     /** @enum {string} */
                                     direction: "in" | "out";
                                     /** @enum {string} */
-                                    sender: "customer" | "page" | "staff" | "ai";
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
                                     text: string | null;
                                     imageUrl: string | null;
                                     sentAt: string;
                                     authorName: string | null;
                                     /** @enum {string|null} */
-                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
                                 }[];
                                 /** @enum {string} */
-                                mode: "response" | "human_agent";
+                                mode: "response" | "human_agent" | "line";
                             };
                         };
                     };
@@ -23316,7 +23407,7 @@ export interface paths {
                                 conversation: {
                                     id: string;
                                     /** @enum {string} */
-                                    channel: "messenger" | "instagram";
+                                    channel: "messenger" | "instagram" | "line";
                                     name: string | null;
                                     adId: string | null;
                                     /** @enum {string|null} */
@@ -23338,27 +23429,57 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
+                                    unread: number;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
                                 };
                                 messages: {
                                     id: string;
                                     /** @enum {string} */
                                     direction: "in" | "out";
                                     /** @enum {string} */
-                                    sender: "customer" | "page" | "staff" | "ai";
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
                                     text: string | null;
                                     imageUrl: string | null;
                                     sentAt: string;
                                     authorName: string | null;
                                     /** @enum {string|null} */
-                                    via: "response" | "human_agent" | "echo" | "backfill" | null;
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
                                 }[];
                                 suggestion: {
                                     text: string;
                                     /** @enum {string} */
                                     step: "hook" | "answer" | "close";
                                     needsPerson: boolean;
-                                };
+                                } | null;
                                 followUpDraft: string | null;
+                                line?: {
+                                    canReply: boolean;
+                                    /** @enum {string|null} */
+                                    replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                    freeReplyUntil: string | null;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                    lead: {
+                                        id: string;
+                                        ref: string;
+                                        name: string | null;
+                                        stage: string;
+                                    } | null;
+                                } | null;
                             };
                         };
                     };
@@ -23491,6 +23612,391 @@ export interface paths {
                                 /** @enum {string} */
                                 severity: "error" | "warn";
                             }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * I have read this LINE chat (clears my unread count); nothing to do on Facebook / Instagram
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Marked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/line-images/{id}/prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Make an uploaded picture (`chat_image`, up to 25 MB) fit LINE: a JPEG original and a JPEG preview. Use the returned ids in `images` of a LINE send
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The prepared picture */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                fileId: string;
+                                previewFileId: string;
+                                width: number;
+                                height: number;
+                                bytes: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/line-messages/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ส่งใหม่: a LINE message that failed goes out again with the same LINE retry key (within 23 hours; LINE sends it at most once)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Queued */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
+                                }[];
+                                /** @enum {string} */
+                                mode: "response" | "human_agent" | "line";
+                            };
                         };
                     };
                 };
@@ -77519,6 +78025,7 @@ export interface paths {
                                     limit: number | null;
                                     checkedAt: string | null;
                                     warn: boolean;
+                                    low: boolean;
                                     exhausted: boolean;
                                 } | null;
                                 replyPauseMinutes: number;

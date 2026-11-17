@@ -41272,6 +41272,9 @@
                         },
                         "conversations": {
                           "type": "integer"
+                        },
+                        "lineConnected": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -41279,7 +41282,8 @@
                         "webhookConfigured",
                         "settings",
                         "webhookUrl",
-                        "conversations"
+                        "conversations",
+                        "lineConnected"
                       ]
                     }
                   },
@@ -41501,6 +41505,9 @@
                         },
                         "conversations": {
                           "type": "integer"
+                        },
+                        "lineConnected": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -41508,7 +41515,8 @@
                         "webhookConfigured",
                         "settings",
                         "webhookUrl",
-                        "conversations"
+                        "conversations",
+                        "lineConnected"
                       ]
                     }
                   },
@@ -41892,6 +41900,9 @@
                         },
                         "conversations": {
                           "type": "integer"
+                        },
+                        "lineConnected": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -41899,7 +41910,8 @@
                         "webhookConfigured",
                         "settings",
                         "webhookUrl",
-                        "conversations"
+                        "conversations",
+                        "lineConnected"
                       ]
                     }
                   },
@@ -42025,6 +42037,21 @@
             "schema": {
               "type": "string",
               "enum": [
+                "all",
+                "line",
+                "messenger",
+                "instagram"
+              ],
+              "default": "all"
+            },
+            "required": false,
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
                 "new",
                 "talking",
                 "sample_sent",
@@ -42105,7 +42132,8 @@
                                 "type": "string",
                                 "enum": [
                                   "messenger",
-                                  "instagram"
+                                  "instagram",
+                                  "line"
                                 ]
                               },
                               "name": {
@@ -42224,6 +42252,18 @@
                               },
                               "aiPaused": {
                                 "type": "boolean"
+                              },
+                              "unread": {
+                                "type": "integer"
+                              },
+                              "pictureUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "blocked": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -42246,7 +42286,10 @@
                               "windowFreeEndsAt",
                               "windowHumanEndsAt",
                               "followUpStep",
-                              "aiPaused"
+                              "aiPaused",
+                              "unread",
+                              "pictureUrl",
+                              "blocked"
                             ]
                           }
                         },
@@ -42264,13 +42307,72 @@
                             },
                             "followUp": {
                               "type": "integer"
+                            },
+                            "unread": {
+                              "type": "integer"
                             }
                           },
                           "required": [
                             "all",
                             "needsReply",
                             "hot",
-                            "followUp"
+                            "followUp",
+                            "unread"
+                          ]
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "accountName": {
+                              "type": "string"
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "accountName",
+                            "quota"
                           ]
                         },
                         "ads": {
@@ -42295,6 +42397,7 @@
                       "required": [
                         "items",
                         "counts",
+                        "line",
                         "ads"
                       ]
                     }
@@ -42434,7 +42537,8 @@
                               "type": "string",
                               "enum": [
                                 "messenger",
-                                "instagram"
+                                "instagram",
+                                "line"
                               ]
                             },
                             "name": {
@@ -42553,6 +42657,18 @@
                             },
                             "aiPaused": {
                               "type": "boolean"
+                            },
+                            "unread": {
+                              "type": "integer"
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -42575,7 +42691,10 @@
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
                             "followUpStep",
-                            "aiPaused"
+                            "aiPaused",
+                            "unread",
+                            "pictureUrl",
+                            "blocked"
                           ]
                         },
                         "messages": {
@@ -42600,7 +42719,8 @@
                                   "customer",
                                   "page",
                                   "staff",
-                                  "ai"
+                                  "ai",
+                                  "system"
                                 ]
                               },
                               "text": {
@@ -42634,7 +42754,51 @@
                                   "human_agent",
                                   "echo",
                                   "backfill",
+                                  "reply",
+                                  "push",
                                   null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -42651,7 +42815,10 @@
                           }
                         },
                         "suggestion": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "text": {
                               "type": "string"
@@ -42678,6 +42845,112 @@
                           "type": [
                             "string",
                             "null"
+                          ]
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "canReply": {
+                              "type": "boolean"
+                            },
+                            "replyBlock": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "impersonating",
+                                "no_account",
+                                "not_line",
+                                null
+                              ]
+                            },
+                            "freeReplyUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            },
+                            "lead": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ref": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "stage": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "ref",
+                                "name",
+                                "stage"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "canReply",
+                            "replyBlock",
+                            "freeReplyUntil",
+                            "quota",
+                            "lead"
                           ]
                         }
                       },
@@ -42882,7 +43155,8 @@
                               "type": "string",
                               "enum": [
                                 "messenger",
-                                "instagram"
+                                "instagram",
+                                "line"
                               ]
                             },
                             "name": {
@@ -43001,6 +43275,18 @@
                             },
                             "aiPaused": {
                               "type": "boolean"
+                            },
+                            "unread": {
+                              "type": "integer"
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -43023,7 +43309,10 @@
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
                             "followUpStep",
-                            "aiPaused"
+                            "aiPaused",
+                            "unread",
+                            "pictureUrl",
+                            "blocked"
                           ]
                         },
                         "messages": {
@@ -43048,7 +43337,8 @@
                                   "customer",
                                   "page",
                                   "staff",
-                                  "ai"
+                                  "ai",
+                                  "system"
                                 ]
                               },
                               "text": {
@@ -43082,7 +43372,51 @@
                                   "human_agent",
                                   "echo",
                                   "backfill",
+                                  "reply",
+                                  "push",
                                   null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -43099,7 +43433,10 @@
                           }
                         },
                         "suggestion": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "text": {
                               "type": "string"
@@ -43126,6 +43463,112 @@
                           "type": [
                             "string",
                             "null"
+                          ]
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "canReply": {
+                              "type": "boolean"
+                            },
+                            "replyBlock": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "impersonating",
+                                "no_account",
+                                "not_line",
+                                null
+                              ]
+                            },
+                            "freeReplyUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            },
+                            "lead": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ref": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "stage": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "ref",
+                                "name",
+                                "stage"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "canReply",
+                            "replyBlock",
+                            "freeReplyUntil",
+                            "quota",
+                            "lead"
                           ]
                         }
                       },
@@ -43271,7 +43714,6 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "minLength": 1,
                     "maxLength": 4000
                   },
                   "confirmWrongFacts": {
@@ -43281,6 +43723,31 @@
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 3
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "previewFileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "previewFileId"
+                      ]
+                    },
+                    "maxItems": 4
+                  },
+                  "clientId": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
                   }
                 },
                 "required": [
@@ -43323,7 +43790,8 @@
                                   "customer",
                                   "page",
                                   "staff",
-                                  "ai"
+                                  "ai",
+                                  "system"
                                 ]
                               },
                               "text": {
@@ -43357,7 +43825,51 @@
                                   "human_agent",
                                   "echo",
                                   "backfill",
+                                  "reply",
+                                  "push",
                                   null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -43377,7 +43889,8 @@
                           "type": "string",
                           "enum": [
                             "response",
-                            "human_agent"
+                            "human_agent",
+                            "line"
                           ]
                         }
                       },
@@ -43553,7 +44066,8 @@
                               "type": "string",
                               "enum": [
                                 "messenger",
-                                "instagram"
+                                "instagram",
+                                "line"
                               ]
                             },
                             "name": {
@@ -43672,6 +44186,18 @@
                             },
                             "aiPaused": {
                               "type": "boolean"
+                            },
+                            "unread": {
+                              "type": "integer"
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -43694,7 +44220,10 @@
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
                             "followUpStep",
-                            "aiPaused"
+                            "aiPaused",
+                            "unread",
+                            "pictureUrl",
+                            "blocked"
                           ]
                         },
                         "messages": {
@@ -43719,7 +44248,8 @@
                                   "customer",
                                   "page",
                                   "staff",
-                                  "ai"
+                                  "ai",
+                                  "system"
                                 ]
                               },
                               "text": {
@@ -43753,7 +44283,51 @@
                                   "human_agent",
                                   "echo",
                                   "backfill",
+                                  "reply",
+                                  "push",
                                   null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
                                 ]
                               }
                             },
@@ -43770,7 +44344,10 @@
                           }
                         },
                         "suggestion": {
-                          "type": "object",
+                          "type": [
+                            "object",
+                            "null"
+                          ],
                           "properties": {
                             "text": {
                               "type": "string"
@@ -43797,6 +44374,112 @@
                           "type": [
                             "string",
                             "null"
+                          ]
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "canReply": {
+                              "type": "boolean"
+                            },
+                            "replyBlock": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "impersonating",
+                                "no_account",
+                                "not_line",
+                                null
+                              ]
+                            },
+                            "freeReplyUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            },
+                            "lead": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ref": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "stage": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "ref",
+                                "name",
+                                "stage"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "canReply",
+                            "replyBlock",
+                            "freeReplyUntil",
+                            "quota",
+                            "lead"
                           ]
                         }
                       },
@@ -43989,6 +44672,559 @@
                           "severity"
                         ]
                       }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/conversations/{id}/read": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "I have read this LINE chat (clears my unread count); nothing to do on Facebook / Instagram",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Marked"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/line-images/{id}/prepare": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Make an uploaded picture (`chat_image`, up to 25 MB) fit LINE: a JPEG original and a JPEG preview. Use the returned ids in `images` of a LINE send",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The prepared picture",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "fileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "previewFileId": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                        },
+                        "width": {
+                          "type": "integer"
+                        },
+                        "height": {
+                          "type": "integer"
+                        },
+                        "bytes": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "fileId",
+                        "previewFileId",
+                        "width",
+                        "height",
+                        "bytes"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/line-messages/{id}/retry": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "ส่งใหม่: a LINE message that failed goes out again with the same LINE retry key (within 23 hours; LINE sends it at most once)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "messages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "sender": {
+                                "type": "string",
+                                "enum": [
+                                  "customer",
+                                  "page",
+                                  "staff",
+                                  "ai",
+                                  "system"
+                                ]
+                              },
+                              "text": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "imageUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "sentAt": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "via": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "response",
+                                  "human_agent",
+                                  "echo",
+                                  "backfill",
+                                  "reply",
+                                  "push",
+                                  null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "direction",
+                              "sender",
+                              "text",
+                              "imageUrl",
+                              "sentAt",
+                              "authorName",
+                              "via"
+                            ]
+                          }
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "response",
+                            "human_agent",
+                            "line"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "messages",
+                        "mode"
+                      ]
                     }
                   },
                   "required": [
@@ -166921,6 +168157,9 @@
                             "warn": {
                               "type": "boolean"
                             },
+                            "low": {
+                              "type": "boolean"
+                            },
                             "exhausted": {
                               "type": "boolean"
                             }
@@ -166930,6 +168169,7 @@
                             "limit",
                             "checkedAt",
                             "warn",
+                            "low",
                             "exhausted"
                           ]
                         },

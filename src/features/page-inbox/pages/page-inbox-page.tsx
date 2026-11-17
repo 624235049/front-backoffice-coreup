@@ -129,7 +129,7 @@ export function PageInboxPage() {
   const status = usePageStatus();
   return (
     <QueryState query={status} skeleton={<Skeleton className="h-64 w-full" />}>
-      {(s) => (s.settings.pageId ? <Inbox status={s} /> : <Setup status={s} />)}
+      {(s) => (s.settings.pageId || s.lineConnected ? <Inbox status={s} /> : <Setup status={s} />)}
     </QueryState>
   );
 }

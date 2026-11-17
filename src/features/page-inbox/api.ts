@@ -21,9 +21,15 @@ export type PageQuery = NonNullable<
 export type DraftIssue = ApiItem<'/v1/platform/page-inbox/check-draft', 'post'>[number];
 export type SettingsPatch = ApiBody<'/v1/platform/page-inbox/settings', 'patch'>;
 export type ConversationPatch = ApiBody<'/v1/platform/page-inbox/conversations/{id}', 'patch'>;
+export type PageChannel = PageConversation['channel'];
+export type ChannelFilter = NonNullable<PageQuery['channel']>;
+export type LineInfo = NonNullable<PageDetail['line']>;
+export type LineQuota = NonNullable<NonNullable<PageList['line']>['quota']>;
+export type PreparedImage = ApiItem<'/v1/platform/page-inbox/line-images/{id}/prepare', 'post'>;
 
 export const PAGE_STAGES: PageStage[] = ['new', 'talking', 'sample_sent', 'trial', 'paid', 'lost'];
 export const SHOP_TYPES: PageShopType[] = ['dress', 'salon', 'massage', 'barber'];
+export const CHANNEL_FILTERS: ChannelFilter[] = ['all', 'line', 'messenger', 'instagram'];
 
 const part = 'page-inbox';
 
@@ -124,4 +130,80 @@ export const checkDraft = async (text: string, shopType: PageShopType | null): P
 export function usePageNeedsReplyCount(): number {
   const q = usePageList({ filter: 'needs_reply', limit: 1 });
   return q.data?.counts.needsReply ?? 0;
+}
+
+/** Presign (purpose `chat_image`) → PUT the photo as it is → the server makes the LINE copies (JPEG original + preview). A failure shows in the composer; the person attaches it again. */
+export async function uploadLineImage(file: File): Promise<PreparedImage> {
+  const target = (
+    await unwrap(
+      api.GET('/v1/files/upload-url', {
+        params: { query: { purpose: 'chat_image', mime: file.type, size: file.size, filename: file.name } },
+      }),
+    )
+  ).data;
+  const put = await fetch(target.uploadUrl, { method: target.method, headers: target.headers, body: file });
+  if (!put.ok) throw new Error(`UPLOAD_FAILED_${put.status}`);
+  return (
+    await unwrap(
+      api.POST('/v1/platform/page-inbox/line-images/{id}/prepare', {
+        params: { path: { id: target.fileId } },
+      }),
+    )
+  ).data;
+}
+
+/** I have read this LINE chat: its unread badge goes (nothing happens on Facebook / Instagram). */
+export function useMarkRead() {
+  const invalidate = useInvalidate();
+  return useApiMutation({
+    mutationFn: (id: string) =>
+      unwrap(api.POST('/v1/platform/page-inbox/conversations/{id}/read', { params: { path: { id } } })),
+    onError: () => undefined,
+    onSuccess: () => invalidate(part),
+  });
+}
+
+/** A LINE reply: the composer shows a refusal (quota used up …) itself, so no automatic toast. */
+export function useSendLine() {
+  const invalidate = useInvalidate();
+  return useApiMutation({
+    mutationFn: ({
+      id,
+      text,
+      images,
+      clientId,
+    }: {
+      id: string;
+      text: string;
+      images: PreparedImage[];
+      clientId: string;
+    }) =>
+      unwrap(
+        api.POST('/v1/platform/page-inbox/conversations/{id}/send', {
+          params: { path: { id } },
+          body: {
+            text,
+            clientId,
+            ...(images.length > 0
+              ? { images: images.map((i) => ({ fileId: i.fileId, previewFileId: i.previewFileId })) }
+              : {}),
+          },
+        }),
+      ),
+    onError: () => undefined,
+    onSuccess: () => invalidate(part),
+  });
+}
+
+/** "ส่งใหม่": a LINE message that failed goes out again. */
+export function useRetryLine() {
+  const invalidate = useInvalidate();
+  return useApiMutation({
+    mutationFn: (messageId: string) =>
+      unwrap(
+        api.POST('/v1/platform/page-inbox/line-messages/{id}/retry', { params: { path: { id: messageId } } }),
+      ),
+    onError: () => undefined,
+    onSuccess: () => invalidate(part),
+  });
 }

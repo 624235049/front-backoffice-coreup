@@ -1,6 +1,6 @@
 {
   "title": "Page chats",
-  "description": "Talk to people who message CoreUp's own Facebook Page / Instagram: reply in time, send the sample shop, then offer a trial shop.",
+  "description": "Talk to the people who message CoreUp's own Facebook Page, Instagram and LINE OA: reply before time runs out, send a sample shop, then invite them to a trial shop",
   "tabs": {
     "all": "All",
     "needs_reply": "Needs reply",
@@ -24,7 +24,8 @@
   },
   "channel": {
     "messenger": "Messenger",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "line": "LINE"
   },
   "filters": {
     "allStages": "All stages",
@@ -34,7 +35,8 @@
     "search": "Search name or message",
     "stage": "Stage",
     "adLabel": "From ad",
-    "typeLabel": "Shop type"
+    "typeLabel": "Shop type",
+    "channel": "Channel"
   },
   "window": {
     "free": "Free reply: {{time}} left",
@@ -58,7 +60,9 @@
     "followUp": "Follow up day {{day}}",
     "paused": "Team took over",
     "you": "Team: ",
-    "noName": "{{channel}} customer"
+    "noName": "{{channel}} customer",
+    "unread": "{{n}} unread",
+    "blocked": "Blocked"
   },
   "list": {
     "empty": "No chats in this group",
@@ -79,7 +83,17 @@
     "handBack": "Let AI reply again",
     "aiPaused": "Automatic reply is paused (the team answered)",
     "hot": "Hot lead",
-    "loadError": "Could not open the chat"
+    "loadError": "Could not open the chat",
+    "sticker": "Sticker",
+    "retry": "Send again",
+    "sending": "Sending…",
+    "viaReply": "free reply",
+    "viaPush": "sent as push",
+    "openLead": "Open sales lead",
+    "openFile": "[Open file]",
+    "open_video": "[Open video]",
+    "open_audio": "[Open audio]",
+    "open_file": "[Open file]"
   },
   "composer": {
     "placeholder": "Write to the customer",
@@ -95,7 +109,17 @@
     "confirmTitle": "This message has wrong facts. Send anyway?",
     "confirmBody": "The customer would see information that does not match the real system. Please fix it first.",
     "confirmSend": "Send anyway",
-    "edit": "Back to edit"
+    "edit": "Back to edit",
+    "freeHint": "Free reply: the customer just wrote (does not use the push quota)",
+    "pushHint": "Sent as a push: uses {{n}} of the quota (if the customer writes again within 1 minute the reply is free)",
+    "quotaLow": "Push quota left: {{left}} of {{limit}} (under 10%). This message will be counted",
+    "quotaExhausted": "The push quota is used up. Nothing can be sent until the customer writes again or the month turns",
+    "blockedNote": "The customer blocked the LINE OA, so a message may not reach them",
+    "attach": "Attach a picture",
+    "removePicture": "Remove picture",
+    "quotaConfirmTitle": "Push quota is low. Send anyway?",
+    "quotaConfirmBody": "This message uses {{n}} of the quota; {{left}} of {{limit}} are left. A reply within 1 minute of the customer's message costs nothing",
+    "quotaConfirmSend": "Send now"
   },
   "suggestion": {
     "title": "AI closing assistant",
@@ -134,7 +158,11 @@
     "pickShop": "Pick a shop",
     "link": "Link this shop",
     "linked": "Shop linked to this chat",
-    "openShop": "Open the shop"
+    "openShop": "Open the shop",
+    "lead": "Sales lead (AI sales)",
+    "noLead": "Not on the sales board yet",
+    "shopOpened": "Customer's shop",
+    "status": "Status"
   },
   "setup": {
     "title": "Connect CoreUp's Page to this inbox",
@@ -178,5 +206,45 @@
     "already_linked": "This chat is already linked to another shop",
     "wrong_facts": "The message contains wrong facts",
     "generic": "Could not complete that. Try again."
+  },
+  "channelFilter": {
+    "all": "All",
+    "line": "LINE",
+    "messenger": "Facebook",
+    "instagram": "Instagram"
+  },
+  "quota": {
+    "label": "This month's push quota",
+    "usedOf": "Push this month {{used}} / {{limit}}",
+    "usedNoCap": "Push this month {{used}} (no cap)",
+    "unknown": "No quota data yet",
+    "low": "Under 10% left · replying to a message the customer just sent (within 1 minute) is free",
+    "exhausted": "Push quota used up · you can only reply to a message the customer just sent (within 1 minute)",
+    "oaManagerNote": "Messages typed in LINE OA Manager are not shown here (LINE does not send them to us)"
+  },
+  "lineEvent": {
+    "follow": "Customer added the OA as a friend",
+    "unfollow": "Customer blocked / removed the OA",
+    "postback": "Customer tapped a button in the chat"
+  },
+  "lineBlock": {
+    "no_account": "CoreUp's LINE OA is not connected, so replies are off",
+    "not_line": "This chat is not on LINE",
+    "impersonating": "Cannot reply as a shop"
+  },
+  "lineErrors": {
+    "generic": "Could not send. Try again",
+    "upload": "The picture could not be uploaded. Attach it again",
+    "quota_exhausted": "The push quota is used up",
+    "not_friend": "The customer blocked or is not a friend of the OA; it cannot be delivered",
+    "rate_limited": "LINE is limiting the rate. Try again",
+    "channel_unauthorized": "LINE rejected the OA token. Check the connection",
+    "rejected": "LINE did not accept this message",
+    "unavailable": "LINE is temporarily unavailable. Send again",
+    "image_unavailable": "The attached picture was not found. Attach it again",
+    "line_not_connected": "The LINE OA is not connected",
+    "too_old": "The message is too old. Write it again",
+    "not_failed": "This message did not fail",
+    "channel_not_supported": "This channel cannot be answered from here"
   }
 }

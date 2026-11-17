@@ -167,7 +167,7 @@ export function Composer({ detail }: { detail: PageDetail }) {
         </div>
       ) : null}
 
-      {suggestion.text ? (
+      {suggestion?.text ? (
         <div
           className="grid gap-1.5 rounded-lg border bg-[var(--chat-ai)] p-2.5 text-sm text-[var(--chat-ai-fg)]"
           data-testid="suggestion-card"
