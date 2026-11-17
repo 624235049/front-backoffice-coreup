@@ -201,7 +201,15 @@ export function LineComposer({ detail }: { detail: PageDetail }) {
         </Button>
         <Textarea
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            setText(e.target.value);
+            // a send that failed may have reached the server after all: an edited message needs its own id, or the
+            // server answers with the message that was stored (the shop reply box does the same)
+            if (problem !== null) {
+              setProblem(null);
+              clientId.current = crypto.randomUUID();
+            }
+          }}
           placeholder={t('composer.placeholder')}
           aria-label={t('composer.placeholder')}
           disabled={blocked}

@@ -280,6 +280,22 @@ describe('the LINE reply box', () => {
     );
   });
 
+  it('a message edited after a failed send gets its own id, so the server cannot answer with the stored one', () => {
+    h.send.mockImplementation((_v, o) =>
+      o.onError(new ApiError({ status: 503, code: 'UNAVAILABLE', message: 'x' })),
+    );
+    render(<LineComposer detail={detail()} />);
+    type('ข้อความแรก');
+    fireEvent.click(screen.getByTestId('send-button'));
+    const first = h.send.mock.calls[0]?.[0] as { clientId: string };
+    h.send.mockImplementation(() => undefined);
+    type('ข้อความที่แก้แล้ว');
+    fireEvent.click(screen.getByTestId('send-button'));
+    const second = h.send.mock.calls[1]?.[0] as { clientId: string; text: string };
+    expect(second.text).toBe('ข้อความที่แก้แล้ว');
+    expect(second.clientId).not.toBe(first.clientId);
+  });
+
   it('an OA that is not connected cannot be answered', () => {
     render(<LineComposer detail={detail({ canReply: false, replyBlock: 'no_account' })} />);
     expect(screen.getByTestId('line-push').textContent).toBe('lineBlock.no_account');
