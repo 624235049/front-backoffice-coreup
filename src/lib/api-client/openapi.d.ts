@@ -20265,7 +20265,27 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                                     *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                     *         "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                                     *       },
+                                     *       {
+                                     *         "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                                     *         "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                                     *       },
+                                     *       {
+                                     *         "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                                     *         "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                                     *         "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                                     *       },
+                                     *       {
+                                     *         "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                                     *         "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "อยากคุยกับเจ้าหน้าที่",
+                                     *         "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                                      *       },
                                      *       {
                                      *         "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -20281,7 +20301,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -20547,7 +20567,27 @@ export interface paths {
                          *       },
                          *       {
                          *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                         *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                         *         "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                         *       },
+                         *       {
+                         *         "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                         *         "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                         *       },
+                         *       {
+                         *         "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                         *         "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                         *       },
+                         *       {
+                         *         "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                         *         "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                         *       },
+                         *       {
+                         *         "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                         *         "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                         *       },
+                         *       {
+                         *         "q": "อยากคุยกับเจ้าหน้าที่",
+                         *         "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                          *       },
                          *       {
                          *         "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -20563,7 +20603,7 @@ export interface paths {
                          *       },
                          *       {
                          *         "q": "มี AI ตอบแชทไหม",
-                         *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                         *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                          *       },
                          *       {
                          *         "q": "ตรวจสลิปได้ไหม",
@@ -20731,7 +20771,27 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                                     *         "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                     *         "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                                     *       },
+                                     *       {
+                                     *         "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                                     *         "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                                     *       },
+                                     *       {
+                                     *         "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                                     *         "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                                     *         "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                                     *       },
+                                     *       {
+                                     *         "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                                     *         "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                                     *       },
+                                     *       {
+                                     *         "q": "อยากคุยกับเจ้าหน้าที่",
+                                     *         "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                                      *       },
                                      *       {
                                      *         "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -20747,7 +20807,7 @@ export interface paths {
                                      *       },
                                      *       {
                                      *         "q": "มี AI ตอบแชทไหม",
-                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                     *         "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                      *       },
                                      *       {
                                      *         "q": "ตรวจสลิปได้ไหม",
@@ -22660,7 +22720,7 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    filter?: "all" | "needs_reply" | "hot" | "follow_up";
+                    filter?: "all" | "needs_reply" | "needs_staff" | "hot" | "follow_up";
                     channel?: "all" | "line" | "messenger" | "instagram";
                     stage?: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
                     adId?: string;
@@ -22701,6 +22761,7 @@ export interface paths {
                                     lastCustomerMessageAt: string | null;
                                     lastPageMessageAt: string | null;
                                     needsReply: boolean;
+                                    needsStaff: boolean;
                                     /** @enum {string} */
                                     window: "free" | "human" | "closed";
                                     windowFreeEndsAt: string | null;
@@ -22714,6 +22775,7 @@ export interface paths {
                                 counts: {
                                     all: number;
                                     needsReply: number;
+                                    needsStaff: number;
                                     hot: number;
                                     followUp: number;
                                     unread: number;
@@ -22868,6 +22930,7 @@ export interface paths {
                                     lastCustomerMessageAt: string | null;
                                     lastPageMessageAt: string | null;
                                     needsReply: boolean;
+                                    needsStaff: boolean;
                                     /** @enum {string} */
                                     window: "free" | "human" | "closed";
                                     windowFreeEndsAt: string | null;
@@ -23037,6 +23100,8 @@ export interface paths {
                         aiPaused?: boolean;
                         /** @enum {boolean} */
                         skipFollowUp?: true;
+                        /** @enum {boolean} */
+                        staffDone?: true;
                     };
                 };
             };
@@ -23068,6 +23133,7 @@ export interface paths {
                                     lastCustomerMessageAt: string | null;
                                     lastPageMessageAt: string | null;
                                     needsReply: boolean;
+                                    needsStaff: boolean;
                                     /** @enum {string} */
                                     window: "free" | "human" | "closed";
                                     windowFreeEndsAt: string | null;
@@ -23423,6 +23489,7 @@ export interface paths {
                                     lastCustomerMessageAt: string | null;
                                     lastPageMessageAt: string | null;
                                     needsReply: boolean;
+                                    needsStaff: boolean;
                                     /** @enum {string} */
                                     window: "free" | "human" | "closed";
                                     windowFreeEndsAt: string | null;
@@ -70210,6 +70277,145 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rentals/items/{id}/sizes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add sizes to a rental item: one new item per size (own code, quantity and availability) that copies the item (name, pictures, price, terms) and shares its model; 409 size_taken / code_taken
+         * @description Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        sizes: {
+                            size: string;
+                            /** @default 1 */
+                            quantity?: number;
+                            code?: string | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                modelKey: string;
+                                items: {
+                                    id: string;
+                                    size: string;
+                                    quantity: number;
+                                    code: string | null;
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/rentals/imports/preview": {
         parameters: {
             query?: never;
@@ -75612,6 +75818,8 @@ export interface paths {
                                 noReplyResumeMinutes: number;
                                 handoffInChat: boolean;
                                 readImages: boolean;
+                                goodsShop: boolean;
+                                productCards: boolean;
                                 autoTakeOnReply?: boolean;
                                 caseHoldHours?: number;
                                 month: string;
@@ -75767,6 +75975,7 @@ export interface paths {
                         noReplyResumeMinutes?: number;
                         handoffInChat?: boolean;
                         readImages?: boolean;
+                        productCards?: boolean;
                         autoTakeOnReply?: boolean;
                         caseHoldHours?: number;
                     };
@@ -75819,6 +76028,8 @@ export interface paths {
                                 noReplyResumeMinutes: number;
                                 handoffInChat: boolean;
                                 readImages: boolean;
+                                goodsShop: boolean;
+                                productCards: boolean;
                                 autoTakeOnReply?: boolean;
                                 caseHoldHours?: number;
                                 month: string;
@@ -75989,6 +76200,8 @@ export interface paths {
                                 noReplyResumeMinutes: number;
                                 handoffInChat: boolean;
                                 readImages: boolean;
+                                goodsShop: boolean;
+                                productCards: boolean;
                                 autoTakeOnReply?: boolean;
                                 caseHoldHours?: number;
                                 month: string;
@@ -101481,12 +101694,15 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Picture of a menu product served directly (JPEG / PNG bytes, long cache; for LINE cards)
+         * Picture of a menu product served directly (JPEG / PNG bytes, long cache; for LINE cards). `w` = a resized copy (WebP; `f=jpg` for JPEG, the LINE card picture)
          * @description Public endpoint (no authentication).
          */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    w?: "240" | "480";
+                    f?: "jpg";
+                };
                 header?: never;
                 path: {
                     slug: string;
@@ -102427,7 +102643,7 @@ export interface paths {
                                     descEn: string | null;
                                     descZh: string | null;
                                     /** @enum {string} */
-                                    mode: "slot" | "queue";
+                                    mode: "slot" | "queue" | "checkin";
                                     slotMin: number;
                                     resources: {
                                         key: string;
@@ -102438,6 +102654,9 @@ export interface paths {
                                     days: string[];
                                     maxPerDay: number | null;
                                     cancelBeforeMin: number;
+                                    /** @enum {string} */
+                                    cancelUntil: "before_round" | "checkin";
+                                    bookGraceMin: number | null;
                                     depositMinor: number;
                                     requiresHealth: boolean;
                                     accounts: {
@@ -102500,6 +102719,11 @@ export interface paths {
                                     duplicateOf?: "health" | "marketing" | null;
                                 }[];
                                 phoneOptional: boolean;
+                                nameLabel: string;
+                                nameLabelEn: string;
+                                nameLabelZh: string;
+                                singleService: boolean;
+                                requireBooking: boolean;
                                 consent: {
                                     text: string | null;
                                     textEn: string | null;
@@ -103049,6 +103273,8 @@ export interface paths {
                                         /** @enum {string} */
                                         source: "online" | "walk_in" | "staff";
                                         canCancel: boolean;
+                                        /** @enum {string} */
+                                        state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                         depositMinor: number;
                                         /** @enum {string} */
                                         slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -103586,6 +103812,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -103698,6 +103926,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -104038,6 +104268,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -104257,6 +104489,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -104421,6 +104655,9 @@ export interface paths {
                                         key: string;
                                         free: boolean;
                                     }[] | null;
+                                    started: boolean;
+                                    /** @description ISO timestamp */
+                                    bookableUntil: string;
                                 }[];
                             };
                         };
@@ -104760,6 +104997,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -104872,6 +105111,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -104998,7 +105239,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Cancel my booking (booked, or its slip still pending) until `cancelBeforeMin` before the round (409 too_late after; 409 bad_move for another status). The seat is free at once; a deposit slip handed in is marked to be paid back
+         * Cancel my booking (booked, or its slip still pending): until `cancelBeforeMin` before the round, or — with the service’s `cancelUntil: checkin` — until it is checked in (a round missed is closed by the auto no-show; 409 too_late after; 409 bad_move for another status). The seat is free at once; a deposit slip handed in is marked to be paid back
          * @description Public endpoint (no authentication).
          */
         post: {
@@ -105090,6 +105331,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -105317,6 +105560,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -105535,7 +105780,7 @@ export interface paths {
                                     prefix: string;
                                     prefixOnNumber?: boolean;
                                     /** @enum {string} */
-                                    mode: "slot" | "queue";
+                                    mode: "slot" | "queue" | "checkin";
                                     /** @default 15 */
                                     slotMin: number;
                                     /** @default 1 */
@@ -105575,6 +105820,13 @@ export interface paths {
                                     walkInReservePerSlot: number;
                                     /** @default false */
                                     checkInStarts: boolean;
+                                    /** @default false */
+                                    bookGrace: boolean;
+                                    /**
+                                     * @default before_round
+                                     * @enum {string}
+                                     */
+                                    cancelUntil: "before_round" | "checkin";
                                     /** @default null */
                                     stations: number | null;
                                     /** @default null */
@@ -105734,6 +105986,16 @@ export interface paths {
                                 };
                                 /** @default false */
                                 selfCheckIn: boolean;
+                                /** @default null */
+                                nameLabel: string | null;
+                                /** @default null */
+                                nameLabelEn: string | null;
+                                /** @default null */
+                                nameLabelZh: string | null;
+                                /** @default false */
+                                singleService: boolean;
+                                /** @default false */
+                                requireBooking: boolean;
                             };
                         };
                     };
@@ -105905,7 +106167,7 @@ export interface paths {
                             prefix: string;
                             prefixOnNumber?: boolean;
                             /** @enum {string} */
-                            mode: "slot" | "queue";
+                            mode: "slot" | "queue" | "checkin";
                             /** @default 15 */
                             slotMin?: number;
                             /** @default 1 */
@@ -105945,6 +106207,13 @@ export interface paths {
                             walkInReservePerSlot?: number;
                             /** @default false */
                             checkInStarts?: boolean;
+                            /** @default false */
+                            bookGrace?: boolean;
+                            /**
+                             * @default before_round
+                             * @enum {string}
+                             */
+                            cancelUntil?: "before_round" | "checkin";
                             /** @default null */
                             stations?: number | null;
                             /** @default null */
@@ -106104,6 +106373,16 @@ export interface paths {
                         };
                         /** @default false */
                         selfCheckIn?: boolean;
+                        /** @default null */
+                        nameLabel?: string | null;
+                        /** @default null */
+                        nameLabelEn?: string | null;
+                        /** @default null */
+                        nameLabelZh?: string | null;
+                        /** @default false */
+                        singleService?: boolean;
+                        /** @default false */
+                        requireBooking?: boolean;
                     };
                 };
             };
@@ -106190,7 +106469,7 @@ export interface paths {
                                     prefix: string;
                                     prefixOnNumber?: boolean;
                                     /** @enum {string} */
-                                    mode: "slot" | "queue";
+                                    mode: "slot" | "queue" | "checkin";
                                     /** @default 15 */
                                     slotMin: number;
                                     /** @default 1 */
@@ -106230,6 +106509,13 @@ export interface paths {
                                     walkInReservePerSlot: number;
                                     /** @default false */
                                     checkInStarts: boolean;
+                                    /** @default false */
+                                    bookGrace: boolean;
+                                    /**
+                                     * @default before_round
+                                     * @enum {string}
+                                     */
+                                    cancelUntil: "before_round" | "checkin";
                                     /** @default null */
                                     stations: number | null;
                                     /** @default null */
@@ -106389,6 +106675,16 @@ export interface paths {
                                 };
                                 /** @default false */
                                 selfCheckIn: boolean;
+                                /** @default null */
+                                nameLabel: string | null;
+                                /** @default null */
+                                nameLabelEn: string | null;
+                                /** @default null */
+                                nameLabelZh: string | null;
+                                /** @default false */
+                                singleService: boolean;
+                                /** @default false */
+                                requireBooking: boolean;
                             };
                         };
                     };
@@ -106564,7 +106860,7 @@ export interface paths {
                             prefix: string;
                             prefixOnNumber?: boolean;
                             /** @enum {string} */
-                            mode: "slot" | "queue";
+                            mode: "slot" | "queue" | "checkin";
                             /** @default 15 */
                             slotMin?: number;
                             /** @default 1 */
@@ -106604,6 +106900,13 @@ export interface paths {
                             walkInReservePerSlot?: number;
                             /** @default false */
                             checkInStarts?: boolean;
+                            /** @default false */
+                            bookGrace?: boolean;
+                            /**
+                             * @default before_round
+                             * @enum {string}
+                             */
+                            cancelUntil?: "before_round" | "checkin";
                             /** @default null */
                             stations?: number | null;
                             /** @default null */
@@ -106763,6 +107066,16 @@ export interface paths {
                         };
                         /** @default false */
                         selfCheckIn?: boolean;
+                        /** @default null */
+                        nameLabel?: string | null;
+                        /** @default null */
+                        nameLabelEn?: string | null;
+                        /** @default null */
+                        nameLabelZh?: string | null;
+                        /** @default false */
+                        singleService?: boolean;
+                        /** @default false */
+                        requireBooking?: boolean;
                     };
                 };
             };
@@ -106849,7 +107162,7 @@ export interface paths {
                                     prefix: string;
                                     prefixOnNumber?: boolean;
                                     /** @enum {string} */
-                                    mode: "slot" | "queue";
+                                    mode: "slot" | "queue" | "checkin";
                                     /** @default 15 */
                                     slotMin: number;
                                     /** @default 1 */
@@ -106889,6 +107202,13 @@ export interface paths {
                                     walkInReservePerSlot: number;
                                     /** @default false */
                                     checkInStarts: boolean;
+                                    /** @default false */
+                                    bookGrace: boolean;
+                                    /**
+                                     * @default before_round
+                                     * @enum {string}
+                                     */
+                                    cancelUntil: "before_round" | "checkin";
                                     /** @default null */
                                     stations: number | null;
                                     /** @default null */
@@ -107048,6 +107368,16 @@ export interface paths {
                                 };
                                 /** @default false */
                                 selfCheckIn: boolean;
+                                /** @default null */
+                                nameLabel: string | null;
+                                /** @default null */
+                                nameLabelEn: string | null;
+                                /** @default null */
+                                nameLabelZh: string | null;
+                                /** @default false */
+                                singleService: boolean;
+                                /** @default false */
+                                requireBooking: boolean;
                             };
                         };
                     };
@@ -107959,7 +108289,7 @@ export interface paths {
         };
         put?: never;
         /**
-         * Staff add someone on the spot (no phone when allowed); they join today’s queue at once (409 already_queued). Marked `staff_added` (no consent recorded); a known bib / phone reuses that profile
+         * Staff add someone on the spot (no phone when allowed). Without `booking` they join today’s queue at once (409 already_queued; `join: false` = the pass only); with `booking` {activityKey, slotStart (null = the next free round of today), resourceKey, override, late} the round of a slot / check-in service is booked in the same step (409 slot_full / resource_taken / limit_reached / slot_closed / overlap; nothing is created when it is refused), or the queue service is joined. Marked `staff_added` (no consent recorded); a known bib / phone reuses that profile
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -108004,6 +108334,21 @@ export interface paths {
                         slipFileId?: string | null;
                         /** @default true */
                         join?: boolean;
+                        /** @default null */
+                        booking?: {
+                            activityKey: string;
+                            /**
+                             * Format: date-time
+                             * @default null
+                             */
+                            slotStart?: string | null;
+                            /** @default null */
+                            resourceKey?: string | null;
+                            /** @default false */
+                            override?: boolean;
+                            /** @default false */
+                            late?: boolean;
+                        } | null;
                         /** @enum {boolean} */
                         consentConfirmed: true;
                         healthEvidence?: string;
@@ -108941,6 +109286,8 @@ export interface paths {
                                     noShowAfterMin: number;
                                     checkInEarlyMin: number;
                                     checkInStarts: boolean;
+                                    /** @enum {string} */
+                                    mode: "slot" | "checkin";
                                     capacity: number;
                                     resources: {
                                         key: string;
@@ -108954,6 +109301,7 @@ export interface paths {
                                         end: string;
                                         booked: number;
                                         checkedIn: number;
+                                        left: number;
                                         bookings: {
                                             id: string;
                                             registrationId: string;
@@ -109024,6 +109372,8 @@ export interface paths {
                                                 /** @description ISO timestamp */
                                                 dueAt: string | null;
                                             };
+                                            /** @enum {string} */
+                                            state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                             extendMin: number;
                                             autoDone: boolean;
                                         }[];
@@ -109218,6 +109568,8 @@ export interface paths {
                                         /** @description ISO timestamp */
                                         dueAt: string | null;
                                     };
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     extendMin: number;
                                     autoDone: boolean;
                                 }[];
@@ -109452,9 +109804,17 @@ export interface paths {
                                         /** @description ISO timestamp */
                                         dueAt: string | null;
                                     };
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     extendMin: number;
                                     autoDone: boolean;
                                 }[];
+                                /** @default null */
+                                scanned: {
+                                    bookingId: string;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
+                                } | null;
                             };
                         };
                     };
@@ -109933,7 +110293,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Find the person of a scanned Recovery Pass: `token` = the pass link `/e/<slug>/r/<token>` the QR carries (or the bare token). Answers like the single-person call (entry + every booking) and never gives the token back; every call is audited (`event_queue.pass_scanned`). 422 bad_code (not a pass), 404 other_shop (a link of another shop) / not found / erased
+         * Find the person of a scanned Recovery Pass: `token` = the pass link `/e/<slug>/r/<token>` the QR carries (or the bare token). A booking QR carries `?b=<bookingId>`: the answer then has `scanned` = that booking and its `state` (booked / checked_in / serving / done / cancelled / no_show / expired). Answers like the single-person call (entry + every booking) and never gives the token back; every call is audited (`event_queue.pass_scanned`). 422 bad_code (not a pass), 404 other_shop (a link of another shop) / not found / erased
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.
          */
         get: {
@@ -110069,9 +110429,17 @@ export interface paths {
                                         /** @description ISO timestamp */
                                         dueAt: string | null;
                                     };
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     extendMin: number;
                                     autoDone: boolean;
                                 }[];
+                                /** @default null */
+                                scanned: {
+                                    bookingId: string;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
+                                } | null;
                             };
                         };
                     };
@@ -110280,6 +110648,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -110483,6 +110853,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -110682,6 +111054,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -110778,7 +111152,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Call a booked / checked-in person ("เรียก"): stamps `times.calledAt` (a second press = a call again). The call display shows the number, the runner’s pass shows the call banner. 409 bad_move from any other status
+         * Call a booked / checked-in person ("เรียก"): stamps `times.calledAt` (a second press = a call again). The call display shows the number, the runner’s pass shows the call banner. 409 bad_move from any other status (a check-in-only service has no call); today only: 409 other_day for another day’s round
          * @description Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -110874,6 +111248,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -111077,6 +111453,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -111276,6 +111654,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -111832,6 +112212,8 @@ export interface paths {
                                     /** @description ISO timestamp */
                                     dueAt: string | null;
                                 };
+                                /** @enum {string} */
+                                state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                 extendMin: number;
                                 autoDone: boolean;
                             };
@@ -112456,6 +112838,8 @@ export interface paths {
                                     /** @enum {string} */
                                     source: "online" | "walk_in" | "staff";
                                     canCancel: boolean;
+                                    /** @enum {string} */
+                                    state: "booked" | "checked_in" | "serving" | "done" | "cancelled" | "no_show" | "expired";
                                     depositMinor: number;
                                     /** @enum {string} */
                                     slip: "none" | "pending" | "approved" | "rejected" | "cancelled";
@@ -140613,6 +140997,7 @@ export interface paths {
                                     payUrl: string;
                                     /** @enum {string|null} */
                                     channel: "card" | "promptpay" | "other" | null;
+                                    cardAllowed: boolean;
                                 }[];
                                 aiChatQuote: {
                                     days: number | null;
@@ -140962,6 +141347,7 @@ export interface paths {
                                 payUrl: string;
                                 /** @enum {string|null} */
                                 channel: "card" | "promptpay" | "other" | null;
+                                cardAllowed: boolean;
                             };
                         };
                     };
@@ -141691,6 +142077,355 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/support-link/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A one-time code (15 minutes) that proves a LINE user is this shop’s: send it to CoreUp’s LINE OA
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Code (shown once) */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                code: string;
+                                expiresAt: string;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/support-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The LINE users linked to this shop for the support desk
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Links */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                createdAt: string;
+                                lineTail: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/support-link/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Unlink a LINE user: the support desk no longer answers it about this shop
+         * @description Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Unlinked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -153253,6 +153988,7 @@ export interface paths {
                             }[];
                         }[];
                         force?: boolean;
+                        applyToSizes?: boolean;
                     };
                 };
             };

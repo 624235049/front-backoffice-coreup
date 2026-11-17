@@ -19,7 +19,7 @@ import { ChannelIcon } from './channel-icon';
 import { LineQuotaStrip } from './line-quota';
 import { WindowBadge } from './window-badge';
 
-const TABS: PageFilter[] = ['all', 'needs_reply', 'hot', 'follow_up'];
+const TABS: PageFilter[] = ['all', 'needs_reply', 'needs_staff', 'hot', 'follow_up'];
 const FOLLOW_DAY = { 1: 1, 2: 3, 3: 6 } as const;
 
 export const stageTone: Record<PageStage, string> = {
@@ -110,6 +110,14 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
           <span className="flex flex-wrap items-center gap-1.5">
             <StageChip stage={c.stage} />
             {c.channel !== 'line' ? <WindowBadge conversation={c} /> : null}
+            {c.needsStaff ? (
+              <span
+                className="rounded-full bg-destructive/10 px-2 py-0.5 text-[0.7rem] font-semibold text-destructive"
+                data-testid="needs-staff-chip"
+              >
+                {t('row.needsStaff')}
+              </span>
+            ) : null}
             {c.blocked ? (
               <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[0.7rem] font-medium text-destructive">
                 {t('row.blocked')}
@@ -170,6 +178,7 @@ export function ThreadList({
       ? {
           all: data.counts.all,
           needs_reply: data.counts.needsReply,
+          needs_staff: data.counts.needsStaff,
           hot: data.counts.hot,
           follow_up: data.counts.followUp,
         }[f]
@@ -183,7 +192,7 @@ export function ThreadList({
         <div
           role="tablist"
           aria-label={t('title')}
-          className="grid grid-cols-4 gap-0.5 rounded-lg bg-muted p-0.5"
+          className="grid grid-cols-5 gap-0.5 rounded-lg bg-muted p-0.5"
         >
           {TABS.map((f) => (
             <button

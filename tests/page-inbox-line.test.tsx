@@ -8,6 +8,7 @@ const h = vi.hoisted(() => ({
   send: vi.fn(),
   retry: vi.fn(),
   read: vi.fn(),
+  patch: vi.fn(),
   detail: null as unknown,
 }));
 
@@ -46,7 +47,7 @@ vi.mock('@/features/page-inbox/api', async (orig) => ({
   useRetryLine: () => ({ mutate: h.retry, isPending: false }),
   useMarkRead: () => ({ mutate: h.read }),
   usePageConversation: () => ({ isPending: false, isError: false, data: h.detail }),
-  usePatchConversation: () => ({ mutate: vi.fn() }),
+  usePatchConversation: () => ({ mutate: h.patch, isPending: false }),
   uploadLineImage: vi.fn(),
 }));
 
@@ -72,6 +73,7 @@ const conv = (over: Partial<PageConversation> = {}): PageConversation => ({
   lastCustomerMessageAt: NOW,
   lastPageMessageAt: null,
   needsReply: true,
+  needsStaff: false,
   window: 'free',
   windowFreeEndsAt: null,
   windowHumanEndsAt: null,
@@ -92,7 +94,14 @@ const quota = (used: number, limit: number | null = 1000) => ({
 });
 const list = (items: PageConversation[], q = quota(120)): PageList => ({
   items,
-  counts: { all: items.length, needsReply: 1, hot: 0, followUp: 0, unread: 2 },
+  counts: {
+    all: items.length,
+    needsReply: 1,
+    needsStaff: items.filter((i) => i.needsStaff).length,
+    hot: 0,
+    followUp: 0,
+    unread: 2,
+  },
   line: { accountName: 'CoreUP.Pro', quota: q },
   ads: [],
 });
@@ -131,6 +140,17 @@ describe('one list for LINE, Facebook and Instagram', () => {
     expect(within(rows[1] as HTMLElement).queryByTestId('unread-badge')).toBeNull();
     expect(within(rows[2] as HTMLElement).getByTestId('channel-instagram')).toBeTruthy();
     expect(rows[3]?.textContent).toContain('row.blocked');
+  });
+
+  it('a chat that asked for a person has the red chip; the "needs staff" tab carries its count and filters', () => {
+    const onQuery = render_(list([conv({ id: 'a', needsStaff: true }), conv({ id: 'b' })]));
+    const rows = screen.getAllByTestId('page-row');
+    expect(within(rows[0] as HTMLElement).getByTestId('needs-staff-chip').textContent).toBe('row.needsStaff');
+    expect(within(rows[1] as HTMLElement).queryByTestId('needs-staff-chip')).toBeNull();
+    const tab = screen.getByRole('tab', { name: /tabs\.needs_staff/ });
+    expect(tab.textContent).toContain('1');
+    fireEvent.click(tab);
+    expect(onQuery).toHaveBeenLastCalledWith({ filter: 'needs_staff' });
   });
 
   it('the channel filter picks one channel (all clears it); the LINE tab carries the unread count', () => {
@@ -320,6 +340,18 @@ describe('the LINE conversation', () => {
   beforeEach(() => {
     h.read.mockReset();
     h.retry.mockReset();
+  });
+
+  it('a chat that needs staff: the banner, and the done button gives the chat back to the AI', () => {
+    h.patch.mockReset();
+    h.detail = {
+      ...detail({}, { needsStaff: true, aiPaused: true }),
+      messages: [msg({ id: 'a', kind: 'text', text: 'ขอคุยคน' })],
+    };
+    render(<Conversation id="c1" onBack={vi.fn()} panelOpen={false} onPanel={vi.fn()} />);
+    expect(screen.getByTestId('needs-staff-banner').textContent).toBe('conversation.needsStaff');
+    fireEvent.click(screen.getByRole('button', { name: /conversation\.staffDone/ }));
+    expect(h.patch).toHaveBeenCalledWith({ id: 'c1', body: { staffDone: true } });
   });
 
   it('shows text, a sticker picture, pictures, the follow event, the team’s sent message and how it went out', () => {

@@ -4,6 +4,7 @@
   "tabs": {
     "all": "All",
     "needs_reply": "Needs reply",
+    "needs_staff": "Needs staff",
     "hot": "Hot leads",
     "follow_up": "Follow up today"
   },
@@ -56,6 +57,7 @@
   },
   "row": {
     "needsReply": "Needs reply",
+    "needsStaff": "Needs staff",
     "hot": "Hot",
     "followUp": "Follow up day {{day}}",
     "paused": "Team took over",
@@ -81,6 +83,8 @@
     "image": "[image]",
     "takeover": "I'll take over",
     "handBack": "Let AI reply again",
+    "staffDone": "Done · let AI reply again",
+    "needsStaff": "The customer tapped “Contact staff” · the AI is silent in this chat until you press Done, or 15 quiet minutes after your reply",
     "aiPaused": "Automatic reply is paused (the team answered)",
     "hot": "Hot lead",
     "loadError": "Could not open the chat",

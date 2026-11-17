@@ -303,7 +303,17 @@ export function Conversation({
           >
             <HandHelping aria-hidden /> {c.aiPaused ? t('conversation.handBack') : t('conversation.takeover')}
           </Button>
-        ) : null}
+        ) : (
+          <Button
+            type="button"
+            variant={c.aiPaused || c.needsStaff ? 'secondary' : 'outline'}
+            size="sm"
+            disabled={!(c.aiPaused || c.needsStaff) || patch.isPending}
+            onClick={() => patch.mutate({ id, body: { staffDone: true } })}
+          >
+            <HandHelping aria-hidden /> {t('conversation.staffDone')}
+          </Button>
+        )}
         <Button
           type="button"
           variant="ghost"
@@ -315,7 +325,14 @@ export function Conversation({
           <PanelRight aria-hidden />
         </Button>
       </div>
-      {c.aiPaused ? (
+      {c.needsStaff ? (
+        <p
+          className="bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive"
+          data-testid="needs-staff-banner"
+        >
+          {t('conversation.needsStaff')}
+        </p>
+      ) : c.aiPaused ? (
         <p className="bg-muted px-3 py-1 text-xs text-muted-foreground">{t('conversation.aiPaused')}</p>
       ) : null}
       <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_auto]">

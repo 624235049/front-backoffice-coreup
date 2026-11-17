@@ -38106,7 +38106,27 @@
                                 },
                                 {
                                   "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                                  "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                  "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                                },
+                                {
+                                  "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                                  "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                                },
+                                {
+                                  "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                                  "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                                },
+                                {
+                                  "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                                  "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                                },
+                                {
+                                  "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                                  "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                                },
+                                {
+                                  "q": "อยากคุยกับเจ้าหน้าที่",
+                                  "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                                 },
                                 {
                                   "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -38122,7 +38142,7 @@
                                 },
                                 {
                                   "q": "มี AI ตอบแชทไหม",
-                                  "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                  "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                 },
                                 {
                                   "q": "ตรวจสลิปได้ไหม",
@@ -38608,7 +38628,27 @@
                       },
                       {
                         "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                        "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                        "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                      },
+                      {
+                        "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                        "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                      },
+                      {
+                        "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                        "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                      },
+                      {
+                        "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                        "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                      },
+                      {
+                        "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                        "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                      },
+                      {
+                        "q": "อยากคุยกับเจ้าหน้าที่",
+                        "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                       },
                       {
                         "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -38624,7 +38664,7 @@
                       },
                       {
                         "q": "มี AI ตอบแชทไหม",
-                        "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                        "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                       },
                       {
                         "q": "ตรวจสลิปได้ไหม",
@@ -38944,7 +38984,27 @@
                                 },
                                 {
                                   "q": "ชำระเงินยังไง ใช้บัตรไหม",
-                                  "a": "ชำระผ่านหน้าระบบของร้านค่ะ โอนแล้วแนบสลิป ไม่ต้องใช้บัตรเครดิต เจ้าของตรวจยอดและยืนยันเอง"
+                                  "a": "จ่ายบนเว็บได้เลยค่ะ บัตรเครดิต/เดบิต Apple Pay Google Pay หรือพร้อมเพย์ ยืนยันทันที หรือโอนแล้วแนบสลิปที่เมนู แพ็กเกจและชำระเงิน ทีมงานตรวจแล้วเปิดแพ็กเกจให้ ไม่ต้องผูกบัตรตอนทดลอง"
+                                },
+                                {
+                                  "q": "ยกเลิกเมื่อไหร่ก็ได้ไหม",
+                                  "a": "ได้ค่ะ ถ้าตั้งต่ออายุอัตโนมัติด้วยบัตรไว้ ปิดได้ทุกเมื่อที่เมนู แพ็กเกจและชำระเงิน แล้วใช้ต่อได้ถึงสิ้นรอบที่จ่ายไว้ ไม่มีสัญญาผูกมัด"
+                                },
+                                {
+                                  "q": "ย้ายข้อมูลลูกค้าเดิมให้ไหม",
+                                  "a": "ได้ค่ะ ส่งไฟล์รายชื่อมา ทีมย้ายให้ ราคาตามจำนวนรายชื่อลูกค้า แอดมินแจ้งราคาให้ค่ะ หรือร้านนำเข้าจากไฟล์ Excel เองฟรีก็ได้"
+                                },
+                                {
+                                  "q": "ข้อมูลปลอดภัยไหม รองรับ PDPA ไหม",
+                                  "a": "ข้อมูลแต่ละร้านแยกกัน เบอร์ลูกค้าเก็บแบบเข้ารหัส เปิดยืนยันตัวตนสองขั้นตอนได้ ร้านส่งออก/ลบข้อมูลลูกค้ารายคนตามคำขอได้ และส่งข้อความเฉพาะลูกค้าที่ยินยอมค่ะ"
+                                },
+                                {
+                                  "q": "ระบบเป็นภาษาไทยไหม ใช้ในมือถือได้ไหม",
+                                  "a": "เป็นภาษาไทยค่ะ (สลับอังกฤษได้) ใช้บนมือถือได้เต็มที่ และเพิ่มไอคอนไว้หน้าจอให้เปิดเหมือนแอปได้"
+                                },
+                                {
+                                  "q": "อยากคุยกับเจ้าหน้าที่",
+                                  "a": "กดปุ่ม \"ติดต่อเจ้าหน้าที่\" ใต้ข้อความได้เลยค่ะ เจ้าหน้าที่จะตอบกลับโดยเร็วที่สุด (ทีมตอบ 09:00–20:00 น.)"
                                 },
                                 {
                                   "q": "ร้านเช่าชุดใช้ได้ไหม",
@@ -38960,7 +39020,7 @@
                                 },
                                 {
                                   "q": "มี AI ตอบแชทไหม",
-                                  "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อแพ็กเกจ AI ได้ในหน้าแพ็กเกจของร้าน AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
+                                  "a": "มีค่ะ ทุกร้านได้ AI ตอบแชทฟรี 100 ข้อความแรก (ครั้งเดียว ต้องเชื่อม LINE OA ของร้านก่อน) จากนั้นซื้อบริการ AI ตอบแชทเพิ่มได้ (ราคาดูที่หน้าแพ็กเกจ) ส่วน Business รวม AI 1,000 ข้อความต่อเดือนไว้ในแพ็กเกจแล้ว AI ตอบราคา คิวว่าง และส่งลิงก์จองจากข้อมูลจริงของร้าน"
                                 },
                                 {
                                   "q": "ตรวจสลิปได้ไหม",
@@ -42024,6 +42084,7 @@
               "enum": [
                 "all",
                 "needs_reply",
+                "needs_staff",
                 "hot",
                 "follow_up"
               ],
@@ -42222,6 +42283,9 @@
                               "needsReply": {
                                 "type": "boolean"
                               },
+                              "needsStaff": {
+                                "type": "boolean"
+                              },
                               "window": {
                                 "type": "string",
                                 "enum": [
@@ -42282,6 +42346,7 @@
                               "lastCustomerMessageAt",
                               "lastPageMessageAt",
                               "needsReply",
+                              "needsStaff",
                               "window",
                               "windowFreeEndsAt",
                               "windowHumanEndsAt",
@@ -42302,6 +42367,9 @@
                             "needsReply": {
                               "type": "integer"
                             },
+                            "needsStaff": {
+                              "type": "integer"
+                            },
                             "hot": {
                               "type": "integer"
                             },
@@ -42315,6 +42383,7 @@
                           "required": [
                             "all",
                             "needsReply",
+                            "needsStaff",
                             "hot",
                             "followUp",
                             "unread"
@@ -42627,6 +42696,9 @@
                             "needsReply": {
                               "type": "boolean"
                             },
+                            "needsStaff": {
+                              "type": "boolean"
+                            },
                             "window": {
                               "type": "string",
                               "enum": [
@@ -42687,6 +42759,7 @@
                             "lastCustomerMessageAt",
                             "lastPageMessageAt",
                             "needsReply",
+                            "needsStaff",
                             "window",
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
@@ -43127,6 +43200,12 @@
                     "enum": [
                       true
                     ]
+                  },
+                  "staffDone": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
                   }
                 }
               }
@@ -43245,6 +43324,9 @@
                             "needsReply": {
                               "type": "boolean"
                             },
+                            "needsStaff": {
+                              "type": "boolean"
+                            },
                             "window": {
                               "type": "string",
                               "enum": [
@@ -43305,6 +43387,7 @@
                             "lastCustomerMessageAt",
                             "lastPageMessageAt",
                             "needsReply",
+                            "needsStaff",
                             "window",
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
@@ -44156,6 +44239,9 @@
                             "needsReply": {
                               "type": "boolean"
                             },
+                            "needsStaff": {
+                              "type": "boolean"
+                            },
                             "window": {
                               "type": "string",
                               "enum": [
@@ -44216,6 +44302,7 @@
                             "lastCustomerMessageAt",
                             "lastPageMessageAt",
                             "needsReply",
+                            "needsStaff",
                             "window",
                             "windowFreeEndsAt",
                             "windowHumanEndsAt",
@@ -151899,6 +151986,229 @@
         }
       }
     },
+    "/v1/rentals/items/{id}/sizes": {
+      "post": {
+        "tags": [
+          "rentals"
+        ],
+        "summary": "Add sizes to a rental item: one new item per size (own code, quantity and availability) that copies the item (name, pictures, price, terms) and shares its model; 409 size_taken / code_taken",
+        "description": "Requires header `X-Tenant-Id`. Permission: `services:write`. Module: `crm`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sizes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "size": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 40
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 50,
+                          "default": 1
+                        },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 30
+                        }
+                      },
+                      "required": [
+                        "size"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 30
+                  }
+                },
+                "required": [
+                  "sizes"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "modelKey": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "size": {
+                                "type": "string"
+                              },
+                              "quantity": {
+                                "type": "integer"
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "size",
+                              "quantity",
+                              "code"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "modelKey",
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/rentals/imports/preview": {
       "post": {
         "tags": [
@@ -163803,6 +164113,12 @@
                         "readImages": {
                           "type": "boolean"
                         },
+                        "goodsShop": {
+                          "type": "boolean"
+                        },
+                        "productCards": {
+                          "type": "boolean"
+                        },
                         "autoTakeOnReply": {
                           "type": "boolean"
                         },
@@ -163880,6 +164196,8 @@
                         "noReplyResumeMinutes",
                         "handoffInChat",
                         "readImages",
+                        "goodsShop",
+                        "productCards",
                         "month",
                         "used",
                         "quota",
@@ -164128,6 +164446,9 @@
                   "readImages": {
                     "type": "boolean"
                   },
+                  "productCards": {
+                    "type": "boolean"
+                  },
                   "autoTakeOnReply": {
                     "type": "boolean"
                   },
@@ -164264,6 +164585,12 @@
                         "readImages": {
                           "type": "boolean"
                         },
+                        "goodsShop": {
+                          "type": "boolean"
+                        },
+                        "productCards": {
+                          "type": "boolean"
+                        },
                         "autoTakeOnReply": {
                           "type": "boolean"
                         },
@@ -164341,6 +164668,8 @@
                         "noReplyResumeMinutes",
                         "handoffInChat",
                         "readImages",
+                        "goodsShop",
+                        "productCards",
                         "month",
                         "used",
                         "quota",
@@ -164596,6 +164925,12 @@
                         "readImages": {
                           "type": "boolean"
                         },
+                        "goodsShop": {
+                          "type": "boolean"
+                        },
+                        "productCards": {
+                          "type": "boolean"
+                        },
                         "autoTakeOnReply": {
                           "type": "boolean"
                         },
@@ -164673,6 +165008,8 @@
                         "noReplyResumeMinutes",
                         "handoffInChat",
                         "readImages",
+                        "goodsShop",
+                        "productCards",
                         "month",
                         "used",
                         "quota",
@@ -218970,7 +219307,7 @@
         "tags": [
           "table-ordering"
         ],
-        "summary": "Picture of a menu product served directly (JPEG / PNG bytes, long cache; for LINE cards)",
+        "summary": "Picture of a menu product served directly (JPEG / PNG bytes, long cache; for LINE cards). `w` = a resized copy (WebP; `f=jpg` for JPEG, the LINE card picture)",
         "description": "Public endpoint (no authentication).",
         "security": [],
         "parameters": [
@@ -218993,6 +219330,29 @@
             "required": true,
             "name": "fileId",
             "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "240",
+                "480"
+              ]
+            },
+            "required": false,
+            "name": "w",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "jpg"
+              ]
+            },
+            "required": false,
+            "name": "f",
+            "in": "query"
           }
         ],
         "responses": {
@@ -220888,7 +221248,8 @@
                                 "type": "string",
                                 "enum": [
                                   "slot",
-                                  "queue"
+                                  "queue",
+                                  "checkin"
                                 ]
                               },
                               "slotMin": {
@@ -220941,6 +221302,19 @@
                               },
                               "cancelBeforeMin": {
                                 "type": "integer"
+                              },
+                              "cancelUntil": {
+                                "type": "string",
+                                "enum": [
+                                  "before_round",
+                                  "checkin"
+                                ]
+                              },
+                              "bookGraceMin": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
                               },
                               "depositMinor": {
                                 "type": "integer"
@@ -221101,6 +221475,8 @@
                               "days",
                               "maxPerDay",
                               "cancelBeforeMin",
+                              "cancelUntil",
+                              "bookGraceMin",
                               "depositMinor",
                               "requiresHealth",
                               "accounts"
@@ -221246,6 +221622,21 @@
                           }
                         },
                         "phoneOptional": {
+                          "type": "boolean"
+                        },
+                        "nameLabel": {
+                          "type": "string"
+                        },
+                        "nameLabelEn": {
+                          "type": "string"
+                        },
+                        "nameLabelZh": {
+                          "type": "string"
+                        },
+                        "singleService": {
+                          "type": "boolean"
+                        },
+                        "requireBooking": {
                           "type": "boolean"
                         },
                         "consent": {
@@ -221504,6 +221895,11 @@
                         "walkIn",
                         "fields",
                         "phoneOptional",
+                        "nameLabel",
+                        "nameLabelEn",
+                        "nameLabelZh",
+                        "singleService",
+                        "requireBooking",
                         "consent",
                         "privacy",
                         "languages",
@@ -222546,6 +222942,18 @@
                                   "canCancel": {
                                     "type": "boolean"
                                   },
+                                  "state": {
+                                    "type": "string",
+                                    "enum": [
+                                      "booked",
+                                      "checked_in",
+                                      "serving",
+                                      "done",
+                                      "cancelled",
+                                      "no_show",
+                                      "expired"
+                                    ]
+                                  },
                                   "depositMinor": {
                                     "type": "integer"
                                   },
@@ -222655,6 +223063,7 @@
                                   "status",
                                   "source",
                                   "canCancel",
+                                  "state",
                                   "depositMinor",
                                   "slip",
                                   "rejectReason",
@@ -223767,6 +224176,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -223876,6 +224297,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -224285,6 +224707,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -224394,6 +224828,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -225078,6 +225513,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -225187,6 +225634,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -225711,6 +226159,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -225820,6 +226280,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -226101,6 +226562,13 @@
                                     "free"
                                   ]
                                 }
+                              },
+                              "started": {
+                                "type": "boolean"
+                              },
+                              "bookableUntil": {
+                                "type": "string",
+                                "description": "ISO timestamp"
                               }
                             },
                             "required": [
@@ -226109,7 +226577,9 @@
                               "left",
                               "capacity",
                               "past",
-                              "resources"
+                              "resources",
+                              "started",
+                              "bookableUntil"
                             ]
                           }
                         }
@@ -226803,6 +227273,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -226912,6 +227394,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -227321,6 +227804,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -227430,6 +227925,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -227608,7 +228104,7 @@
         "tags": [
           "event-queue"
         ],
-        "summary": "Cancel my booking (booked, or its slip still pending) until `cancelBeforeMin` before the round (409 too_late after; 409 bad_move for another status). The seat is free at once; a deposit slip handed in is marked to be paid back",
+        "summary": "Cancel my booking (booked, or its slip still pending): until `cancelBeforeMin` before the round, or — with the service’s `cancelUntil: checkin` — until it is checked in (a round missed is closed by the auto no-show; 409 too_late after; 409 bad_move for another status). The seat is free at once; a deposit slip handed in is marked to be paid back",
         "description": "Public endpoint (no authentication).",
         "security": [],
         "parameters": [
@@ -227963,6 +228459,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -228072,6 +228580,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -228632,6 +229141,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -228741,6 +229262,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -229263,7 +229785,8 @@
                                 "type": "string",
                                 "enum": [
                                   "slot",
-                                  "queue"
+                                  "queue",
+                                  "checkin"
                                 ]
                               },
                               "slotMin": {
@@ -229405,6 +229928,18 @@
                               "checkInStarts": {
                                 "type": "boolean",
                                 "default": false
+                              },
+                              "bookGrace": {
+                                "type": "boolean",
+                                "default": false
+                              },
+                              "cancelUntil": {
+                                "type": "string",
+                                "enum": [
+                                  "before_round",
+                                  "checkin"
+                                ],
+                                "default": "before_round"
                               },
                               "stations": {
                                 "type": [
@@ -229820,6 +230355,41 @@
                           }
                         },
                         "selfCheckIn": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "nameLabel": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelEn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelZh": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "singleService": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "requireBooking": {
                           "type": "boolean",
                           "default": false
                         }
@@ -230284,7 +230854,8 @@
                           "type": "string",
                           "enum": [
                             "slot",
-                            "queue"
+                            "queue",
+                            "checkin"
                           ]
                         },
                         "slotMin": {
@@ -230426,6 +230997,18 @@
                         "checkInStarts": {
                           "type": "boolean",
                           "default": false
+                        },
+                        "bookGrace": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "cancelUntil": {
+                          "type": "string",
+                          "enum": [
+                            "before_round",
+                            "checkin"
+                          ],
+                          "default": "before_round"
                         },
                         "stations": {
                           "type": [
@@ -230843,6 +231426,41 @@
                   "selfCheckIn": {
                     "type": "boolean",
                     "default": false
+                  },
+                  "nameLabel": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "nameLabelEn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "nameLabelZh": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "singleService": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "requireBooking": {
+                    "type": "boolean",
+                    "default": false
                   }
                 },
                 "required": [
@@ -231197,7 +231815,8 @@
                                 "type": "string",
                                 "enum": [
                                   "slot",
-                                  "queue"
+                                  "queue",
+                                  "checkin"
                                 ]
                               },
                               "slotMin": {
@@ -231339,6 +231958,18 @@
                               "checkInStarts": {
                                 "type": "boolean",
                                 "default": false
+                              },
+                              "bookGrace": {
+                                "type": "boolean",
+                                "default": false
+                              },
+                              "cancelUntil": {
+                                "type": "string",
+                                "enum": [
+                                  "before_round",
+                                  "checkin"
+                                ],
+                                "default": "before_round"
                               },
                               "stations": {
                                 "type": [
@@ -231754,6 +232385,41 @@
                           }
                         },
                         "selfCheckIn": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "nameLabel": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelEn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelZh": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "singleService": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "requireBooking": {
                           "type": "boolean",
                           "default": false
                         }
@@ -232218,7 +232884,8 @@
                           "type": "string",
                           "enum": [
                             "slot",
-                            "queue"
+                            "queue",
+                            "checkin"
                           ]
                         },
                         "slotMin": {
@@ -232360,6 +233027,18 @@
                         "checkInStarts": {
                           "type": "boolean",
                           "default": false
+                        },
+                        "bookGrace": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "cancelUntil": {
+                          "type": "string",
+                          "enum": [
+                            "before_round",
+                            "checkin"
+                          ],
+                          "default": "before_round"
                         },
                         "stations": {
                           "type": [
@@ -232777,6 +233456,41 @@
                   "selfCheckIn": {
                     "type": "boolean",
                     "default": false
+                  },
+                  "nameLabel": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "nameLabelEn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "nameLabelZh": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "default": null
+                  },
+                  "singleService": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "requireBooking": {
+                    "type": "boolean",
+                    "default": false
                   }
                 }
               }
@@ -233120,7 +233834,8 @@
                                 "type": "string",
                                 "enum": [
                                   "slot",
-                                  "queue"
+                                  "queue",
+                                  "checkin"
                                 ]
                               },
                               "slotMin": {
@@ -233262,6 +233977,18 @@
                               "checkInStarts": {
                                 "type": "boolean",
                                 "default": false
+                              },
+                              "bookGrace": {
+                                "type": "boolean",
+                                "default": false
+                              },
+                              "cancelUntil": {
+                                "type": "string",
+                                "enum": [
+                                  "before_round",
+                                  "checkin"
+                                ],
+                                "default": "before_round"
                               },
                               "stations": {
                                 "type": [
@@ -233677,6 +234404,41 @@
                           }
                         },
                         "selfCheckIn": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "nameLabel": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelEn": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "nameLabelZh": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "minLength": 1,
+                          "maxLength": 40,
+                          "default": null
+                        },
+                        "singleService": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "requireBooking": {
                           "type": "boolean",
                           "default": false
                         }
@@ -235643,7 +236405,7 @@
         "tags": [
           "event-queue"
         ],
-        "summary": "Staff add someone on the spot (no phone when allowed); they join today’s queue at once (409 already_queued). Marked `staff_added` (no consent recorded); a known bib / phone reuses that profile",
+        "summary": "Staff add someone on the spot (no phone when allowed). Without `booking` they join today’s queue at once (409 already_queued; `join: false` = the pass only); with `booking` {activityKey, slotStart (null = the next free round of today), resourceKey, override, late} the round of a slot / check-in service is booked in the same step (409 slot_full / resource_taken / limit_reached / slot_closed / overlap; nothing is created when it is refused), or the queue service is joined. Marked `staff_added` (no consent recorded); a known bib / phone reuses that profile",
         "description": "Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
@@ -235752,6 +236514,46 @@
                   "join": {
                     "type": "boolean",
                     "default": true
+                  },
+                  "booking": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "activityKey": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]{0,23}$"
+                      },
+                      "slotStart": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "format": "date-time",
+                        "default": null
+                      },
+                      "resourceKey": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "maxLength": 24,
+                        "default": null
+                      },
+                      "override": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "late": {
+                        "type": "boolean",
+                        "default": false
+                      }
+                    },
+                    "default": null,
+                    "required": [
+                      "activityKey"
+                    ]
                   },
                   "consentConfirmed": {
                     "type": "boolean",
@@ -237981,6 +238783,13 @@
                               "checkInStarts": {
                                 "type": "boolean"
                               },
+                              "mode": {
+                                "type": "string",
+                                "enum": [
+                                  "slot",
+                                  "checkin"
+                                ]
+                              },
                               "capacity": {
                                 "type": "integer"
                               },
@@ -238026,6 +238835,9 @@
                                       "type": "integer"
                                     },
                                     "checkedIn": {
+                                      "type": "integer"
+                                    },
+                                    "left": {
                                       "type": "integer"
                                     },
                                     "bookings": {
@@ -238350,6 +239162,18 @@
                                               "dueAt"
                                             ]
                                           },
+                                          "state": {
+                                            "type": "string",
+                                            "enum": [
+                                              "booked",
+                                              "checked_in",
+                                              "serving",
+                                              "done",
+                                              "cancelled",
+                                              "no_show",
+                                              "expired"
+                                            ]
+                                          },
                                           "extendMin": {
                                             "type": "integer"
                                           },
@@ -238383,6 +239207,7 @@
                                           "refundNote",
                                           "createdAt",
                                           "times",
+                                          "state",
                                           "extendMin",
                                           "autoDone"
                                         ]
@@ -238394,6 +239219,7 @@
                                     "end",
                                     "booked",
                                     "checkedIn",
+                                    "left",
                                     "bookings"
                                   ]
                                 }
@@ -238408,6 +239234,7 @@
                               "noShowAfterMin",
                               "checkInEarlyMin",
                               "checkInStarts",
+                              "mode",
                               "capacity",
                               "resources",
                               "slots"
@@ -238893,6 +239720,18 @@
                                   "dueAt"
                                 ]
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "extendMin": {
                                 "type": "integer"
                               },
@@ -238926,6 +239765,7 @@
                               "refundNote",
                               "createdAt",
                               "times",
+                              "state",
                               "extendMin",
                               "autoDone"
                             ]
@@ -239588,6 +240428,18 @@
                                   "dueAt"
                                 ]
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "extendMin": {
                                 "type": "integer"
                               },
@@ -239621,10 +240473,40 @@
                               "refundNote",
                               "createdAt",
                               "times",
+                              "state",
                               "extendMin",
                               "autoDone"
                             ]
                           }
+                        },
+                        "scanned": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "booked",
+                                "checked_in",
+                                "serving",
+                                "done",
+                                "cancelled",
+                                "no_show",
+                                "expired"
+                              ]
+                            }
+                          },
+                          "default": null,
+                          "required": [
+                            "bookingId",
+                            "state"
+                          ]
                         }
                       },
                       "required": [
@@ -240395,7 +241277,7 @@
         "tags": [
           "event-queue"
         ],
-        "summary": "Find the person of a scanned Recovery Pass: `token` = the pass link `/e/<slug>/r/<token>` the QR carries (or the bare token). Answers like the single-person call (entry + every booking) and never gives the token back; every call is audited (`event_queue.pass_scanned`). 422 bad_code (not a pass), 404 other_shop (a link of another shop) / not found / erased",
+        "summary": "Find the person of a scanned Recovery Pass: `token` = the pass link `/e/<slug>/r/<token>` the QR carries (or the bare token). A booking QR carries `?b=<bookingId>`: the answer then has `scanned` = that booking and its `state` (booked / checked_in / serving / done / cancelled / no_show / expired). Answers like the single-person call (entry + every booking) and never gives the token back; every call is audited (`event_queue.pass_scanned`). 422 bad_code (not a pass), 404 other_shop (a link of another shop) / not found / erased",
         "description": "Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.",
         "security": [
           {
@@ -240948,6 +241830,18 @@
                                   "dueAt"
                                 ]
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "extendMin": {
                                 "type": "integer"
                               },
@@ -240981,10 +241875,40 @@
                               "refundNote",
                               "createdAt",
                               "times",
+                              "state",
                               "extendMin",
                               "autoDone"
                             ]
                           }
+                        },
+                        "scanned": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bookingId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "booked",
+                                "checked_in",
+                                "serving",
+                                "done",
+                                "cancelled",
+                                "no_show",
+                                "expired"
+                              ]
+                            }
+                          },
+                          "default": null,
+                          "required": [
+                            "bookingId",
+                            "state"
+                          ]
                         }
                       },
                       "required": [
@@ -241485,6 +242409,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -241518,6 +242454,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -242018,6 +242955,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -242051,6 +243000,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -242527,6 +243477,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -242560,6 +243522,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -242660,7 +243623,7 @@
         "tags": [
           "event-queue"
         ],
-        "summary": "Call a booked / checked-in person (\"เรียก\"): stamps `times.calledAt` (a second press = a call again). The call display shows the number, the runner’s pass shows the call banner. 409 bad_move from any other status",
+        "summary": "Call a booked / checked-in person (\"เรียก\"): stamps `times.calledAt` (a second press = a call again). The call display shows the number, the runner’s pass shows the call banner. 409 bad_move from any other status (a check-in-only service has no call); today only: 409 other_day for another day’s round",
         "description": "Requires header `X-Tenant-Id`. Permission: `appointments:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
@@ -243018,6 +243981,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -243051,6 +244026,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -243554,6 +244530,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -243587,6 +244575,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -244065,6 +245054,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -244098,6 +245099,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -244877,6 +245879,18 @@
                             "dueAt"
                           ]
                         },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "booked",
+                            "checked_in",
+                            "serving",
+                            "done",
+                            "cancelled",
+                            "no_show",
+                            "expired"
+                          ]
+                        },
                         "extendMin": {
                           "type": "integer"
                         },
@@ -244910,6 +245924,7 @@
                         "refundNote",
                         "createdAt",
                         "times",
+                        "state",
                         "extendMin",
                         "autoDone"
                       ]
@@ -246342,6 +247357,18 @@
                               "canCancel": {
                                 "type": "boolean"
                               },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "booked",
+                                  "checked_in",
+                                  "serving",
+                                  "done",
+                                  "cancelled",
+                                  "no_show",
+                                  "expired"
+                                ]
+                              },
                               "depositMinor": {
                                 "type": "integer"
                               },
@@ -246451,6 +247478,7 @@
                               "status",
                               "source",
                               "canCancel",
+                              "state",
                               "depositMinor",
                               "slip",
                               "rejectReason",
@@ -303175,6 +304203,9 @@
                                   "other",
                                   null
                                 ]
+                              },
+                              "cardAllowed": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -303193,7 +304224,8 @@
                               "periodStart",
                               "periodEnd",
                               "payUrl",
-                              "channel"
+                              "channel",
+                              "cardAllowed"
                             ]
                           }
                         },
@@ -304001,6 +305033,9 @@
                             "other",
                             null
                           ]
+                        },
+                        "cardAllowed": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -304019,7 +305054,8 @@
                         "periodStart",
                         "periodEnd",
                         "payUrl",
-                        "channel"
+                        "channel",
+                        "cardAllowed"
                       ]
                     }
                   },
@@ -304986,6 +306022,388 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/support-link/code": {
+      "post": {
+        "tags": [
+          "support-link"
+        ],
+        "summary": "A one-time code (15 minutes) that proves a LINE user is this shop’s: send it to CoreUp’s LINE OA",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Code (shown once)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/support-link": {
+      "get": {
+        "tags": [
+          "support-link"
+        ],
+        "summary": "The LINE users linked to this shop for the support desk",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "lineTail": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "createdAt",
+                          "lineTail"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/support-link/{id}": {
+      "delete": {
+        "tags": [
+          "support-link"
+        ],
+        "summary": "Unlink a LINE user: the support desk no longer answers it about this shop",
+        "description": "Requires header `X-Tenant-Id`. Permission: `tenant:manage`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Unlinked"
           },
           "400": {
             "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
@@ -327910,6 +329328,9 @@
                     "maxItems": 10
                   },
                   "force": {
+                    "type": "boolean"
+                  },
+                  "applyToSizes": {
                     "type": "boolean"
                   }
                 }
