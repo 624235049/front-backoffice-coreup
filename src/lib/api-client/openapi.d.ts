@@ -22720,9 +22720,10 @@ export interface paths {
         get: {
             parameters: {
                 query?: {
-                    filter?: "all" | "needs_reply" | "needs_staff" | "hot" | "follow_up";
+                    filter?: "all" | "unread" | "needs_reply" | "needs_staff" | "hot" | "follow_up";
                     channel?: "all" | "line" | "messenger" | "instagram";
                     stage?: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                    status?: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
                     adId?: string;
                     shopType?: "dress" | "salon" | "massage" | "barber";
                     q?: string;
@@ -22768,7 +22769,19 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
-                                    unread: number;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
                                     pictureUrl: string | null;
                                     blocked: boolean;
                                 }[];
@@ -22779,6 +22792,10 @@ export interface paths {
                                     hot: number;
                                     followUp: number;
                                     unread: number;
+                                    new: number;
+                                    inProgress: number;
+                                    waitingCustomer: number;
+                                    done: number;
                                 };
                                 line: {
                                     accountName: string;
@@ -22937,7 +22954,19 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
-                                    unread: number;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
                                     pictureUrl: string | null;
                                     blocked: boolean;
                                 };
@@ -22968,6 +22997,12 @@ export interface paths {
                                     needsPerson: boolean;
                                 } | null;
                                 followUpDraft: string | null;
+                                notes: {
+                                    id: string;
+                                    text: string;
+                                    authorName: string;
+                                    createdAt: string;
+                                }[];
                                 line?: {
                                     canReply: boolean;
                                     /** @enum {string|null} */
@@ -23072,7 +23107,7 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Stage, shop type, hot flag, "ฉันรับต่อเอง" (pause the automatic reply 24 h) or skip the due reminder
+         * Stage, shop type, hot flag, "ฉันรับต่อเอง" (pause the automatic reply 24 h), skip the due reminder, or the work status (new · in progress · waiting for the customer · done; audited)
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -23102,6 +23137,8 @@ export interface paths {
                         skipFollowUp?: true;
                         /** @enum {boolean} */
                         staffDone?: true;
+                        /** @enum {string} */
+                        workStatus?: "new" | "in_progress" | "waiting_customer" | "done";
                     };
                 };
             };
@@ -23140,7 +23177,19 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
-                                    unread: number;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
                                     pictureUrl: string | null;
                                     blocked: boolean;
                                 };
@@ -23171,6 +23220,12 @@ export interface paths {
                                     needsPerson: boolean;
                                 } | null;
                                 followUpDraft: string | null;
+                                notes: {
+                                    id: string;
+                                    text: string;
+                                    authorName: string;
+                                    createdAt: string;
+                                }[];
                                 line?: {
                                     canReply: boolean;
                                     /** @enum {string|null} */
@@ -23496,7 +23551,19 @@ export interface paths {
                                     windowHumanEndsAt: string | null;
                                     followUpStep: number | null;
                                     aiPaused: boolean;
-                                    unread: number;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
                                     pictureUrl: string | null;
                                     blocked: boolean;
                                 };
@@ -23527,6 +23594,12 @@ export interface paths {
                                     needsPerson: boolean;
                                 } | null;
                                 followUpDraft: string | null;
+                                notes: {
+                                    id: string;
+                                    text: string;
+                                    authorName: string;
+                                    createdAt: string;
+                                }[];
                                 line?: {
                                     canReply: boolean;
                                     /** @enum {string|null} */
@@ -23772,7 +23845,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * I have read this LINE chat (clears my unread count); nothing to do on Facebook / Instagram
+         * The team has read this chat: one mark for everybody (who and when are shown), cleared again by the customer's next message
          * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
          *
          *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
@@ -23797,6 +23870,687 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/unread": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ทำเป็นยังไม่อ่าน: the chat is unread again for the whole team
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Marked */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/shop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * The shop this chat is about: one of our customer shops (`tenantId`) or a typed name for a prospect (`shopName`); both null removes it. Audited
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        tenantId: string | null;
+                        shopName: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Updated */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                conversation: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram" | "line";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    needsStaff: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
+                                }[];
+                                suggestion: {
+                                    text: string;
+                                    /** @enum {string} */
+                                    step: "hook" | "answer" | "close";
+                                    needsPerson: boolean;
+                                } | null;
+                                followUpDraft: string | null;
+                                notes: {
+                                    id: string;
+                                    text: string;
+                                    authorName: string;
+                                    createdAt: string;
+                                }[];
+                                line?: {
+                                    canReply: boolean;
+                                    /** @enum {string|null} */
+                                    replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                    freeReplyUntil: string | null;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                    lead: {
+                                        id: string;
+                                        ref: string;
+                                        name: string | null;
+                                        stage: string;
+                                    } | null;
+                                } | null;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/shops": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search our customer shops by name or slug for "ร้านที่เกี่ยวข้อง" (only the shops the caller may see)
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    q?: string;
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Shops */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                slug: string;
+                                name: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/platform/page-inbox/conversations/{id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * An internal note on the chat (author and time kept): staff only, never sent to the customer
+         * @description Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        text: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Conversation with the notes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                conversation: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    channel: "messenger" | "instagram" | "line";
+                                    name: string | null;
+                                    adId: string | null;
+                                    /** @enum {string|null} */
+                                    shopType: "dress" | "salon" | "massage" | "barber" | null;
+                                    /** @enum {string} */
+                                    stage: "new" | "talking" | "sample_sent" | "trial" | "paid" | "lost";
+                                    hot: boolean;
+                                    leadId: string | null;
+                                    tenantId: string | null;
+                                    tenantName: string | null;
+                                    preview: string | null;
+                                    lastMessageAt: string | null;
+                                    lastCustomerMessageAt: string | null;
+                                    lastPageMessageAt: string | null;
+                                    needsReply: boolean;
+                                    needsStaff: boolean;
+                                    /** @enum {string} */
+                                    window: "free" | "human" | "closed";
+                                    windowFreeEndsAt: string | null;
+                                    windowHumanEndsAt: string | null;
+                                    followUpStep: number | null;
+                                    aiPaused: boolean;
+                                    unread: boolean;
+                                    readAt: string | null;
+                                    readBy: string | null;
+                                    /** @enum {string} */
+                                    status: "new" | "needs_staff" | "in_progress" | "waiting_customer" | "done";
+                                    statusAt: string | null;
+                                    assignee: string | null;
+                                    shop: {
+                                        tenantId: string | null;
+                                        name: string;
+                                        /** @enum {string} */
+                                        source: "linked" | "typed" | "lead" | "verified";
+                                    } | null;
+                                    pictureUrl: string | null;
+                                    blocked: boolean;
+                                };
+                                messages: {
+                                    id: string;
+                                    /** @enum {string} */
+                                    direction: "in" | "out";
+                                    /** @enum {string} */
+                                    sender: "customer" | "page" | "staff" | "ai" | "system";
+                                    text: string | null;
+                                    imageUrl: string | null;
+                                    sentAt: string;
+                                    authorName: string | null;
+                                    /** @enum {string|null} */
+                                    via: "response" | "human_agent" | "echo" | "backfill" | "reply" | "push" | null;
+                                    kind?: string | null;
+                                    images?: string[];
+                                    stickerUrl?: string | null;
+                                    mediaUrl?: string | null;
+                                    /** @enum {string|null} */
+                                    delivery?: "queued" | "sent" | "failed" | null;
+                                    error?: string | null;
+                                }[];
+                                suggestion: {
+                                    text: string;
+                                    /** @enum {string} */
+                                    step: "hook" | "answer" | "close";
+                                    needsPerson: boolean;
+                                } | null;
+                                followUpDraft: string | null;
+                                notes: {
+                                    id: string;
+                                    text: string;
+                                    authorName: string;
+                                    createdAt: string;
+                                }[];
+                                line?: {
+                                    canReply: boolean;
+                                    /** @enum {string|null} */
+                                    replyBlock: "impersonating" | "no_account" | "not_line" | null;
+                                    freeReplyUntil: string | null;
+                                    quota: {
+                                        used: number;
+                                        limit: number | null;
+                                        checkedAt: string | null;
+                                        warn: boolean;
+                                        low: boolean;
+                                        exhausted: boolean;
+                                    } | null;
+                                    lead: {
+                                        id: string;
+                                        ref: string;
+                                        name: string | null;
+                                        stage: string;
+                                    } | null;
+                                } | null;
+                            };
+                        };
+                    };
                 };
                 /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
                 400: {
@@ -108035,6 +108789,802 @@ export interface paths {
                                 extendMin: number;
                                 autoDone: boolean;
                             }[];
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/event-queue/runner-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The organizer runner list: who uploaded it, when, the file and the row count, and how the registrations stand against it (matched / name differs / other language / bib not on the list / no bib; race differs only when the list has a race column)
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                uploaded: boolean;
+                                fileName: string | null;
+                                /** @description ISO timestamp */
+                                uploadedAt: string | null;
+                                uploadedBy: string | null;
+                                rowCount: number;
+                                skippedDuplicates: number;
+                                skippedNoBib: number;
+                                hasRace: boolean;
+                                registered: number;
+                                matched: number;
+                                nameMismatch: number;
+                                scriptDiffers: number;
+                                notFound: number;
+                                noBib: number;
+                                raceMismatch: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        /**
+         * Replace the whole runner list (the same call the check-in page makes; a re-upload of the same rows gives the same list). Body: `fileName` and `rows` (≤20,000) of `{bib, prefix?, name, race?, nationality?, gender?, age?, birthYear?}`; the bib is looked up with leading zeros / spaces / Thai digits ignored, the first row of a bib is kept, rows with no bib or name are counted and skipped. 422 no_usable_rows
+         * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fileName: string;
+                        rows: {
+                            bib?: string | number | null;
+                            prefix?: string | number | null;
+                            name?: string | number | null;
+                            race?: string | number | null;
+                            nationality?: string | number | null;
+                            gender?: string | number | null;
+                            age?: string | number | null;
+                            birthYear?: string | number | null;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Replaced */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                imported: number;
+                                duplicates: number;
+                                skipped: number;
+                                status: {
+                                    uploaded: boolean;
+                                    fileName: string | null;
+                                    /** @description ISO timestamp */
+                                    uploadedAt: string | null;
+                                    uploadedBy: string | null;
+                                    rowCount: number;
+                                    skippedDuplicates: number;
+                                    skippedNoBib: number;
+                                    hasRace: boolean;
+                                    registered: number;
+                                    matched: number;
+                                    nameMismatch: number;
+                                    scriptDiffers: number;
+                                    notFound: number;
+                                    noBib: number;
+                                    raceMismatch: number;
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /**
+         * Delete the whole runner list (the badges go back to "no list uploaded"). Done by itself with the event data cleanup
+         * @description Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `core`.
+         *
+         *     Optional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Optional; unique per logical operation. Makes the request safe to retry */
+                    "idempotency-key"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Deleted */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                deleted: number;
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/event-queue/runner-list/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The registrations behind one count of the runner-list summary (`filter` empty = all), in registration order
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    filter?: "matched" | "name_mismatch" | "script_differs" | "not_found" | "no_bib" | "race_mismatch";
+                    limit?: number;
+                    offset?: number | null;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Registrations */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                total: number;
+                                items: {
+                                    id: string;
+                                    code: string;
+                                    name: string;
+                                    bib: string | null;
+                                    race: string | null;
+                                    check: {
+                                        /** @enum {string} */
+                                        status: "matched" | "name_mismatch" | "script_differs" | "not_found" | "no_bib" | "no_list";
+                                        listed: {
+                                            bib: string;
+                                            prefix: string | null;
+                                            name: string;
+                                            race: string | null;
+                                            nationality: string | null;
+                                            gender: string | null;
+                                            age: number | null;
+                                            birthYear: number | null;
+                                        } | null;
+                                        raceOk: boolean | null;
+                                        registeredRace: string | null;
+                                    };
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/event-queue/runner-list/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search the runner list by the start of a bib or the words of a name (for a runner with no QR): up to 30 rows, each with the registration that has that bib (null = not registered) and its badge
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query: {
+                    q: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rows */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                items: {
+                                    listed: {
+                                        bib: string;
+                                        prefix: string | null;
+                                        name: string;
+                                        race: string | null;
+                                        nationality: string | null;
+                                        gender: string | null;
+                                        age: number | null;
+                                        birthYear: number | null;
+                                    };
+                                    registration: {
+                                        id: string;
+                                        code: string;
+                                        name: string;
+                                        race: string | null;
+                                    } | null;
+                                    check: {
+                                        /** @enum {string} */
+                                        status: "matched" | "name_mismatch" | "script_differs" | "not_found" | "no_bib" | "no_list";
+                                        listed: {
+                                            bib: string;
+                                            prefix: string | null;
+                                            name: string;
+                                            race: string | null;
+                                            nationality: string | null;
+                                            gender: string | null;
+                                            age: number | null;
+                                            birthYear: number | null;
+                                        } | null;
+                                        raceOk: boolean | null;
+                                        registeredRace: string | null;
+                                    };
+                                }[];
+                            };
+                        };
+                    };
+                };
+                /** @description VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description UNAUTHENTICATED */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open) */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description NOT_FOUND */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description RATE_LIMITED */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+                /** @description INTERNAL */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorBody"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/event-queue/runner-list/check/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The runner-list badge of one registration (the check-in card). 404 when it is not a live registration of this shop
+         * @description Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Badge */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                status: "matched" | "name_mismatch" | "script_differs" | "not_found" | "no_bib" | "no_list";
+                                listed: {
+                                    bib: string;
+                                    prefix: string | null;
+                                    name: string;
+                                    race: string | null;
+                                    nationality: string | null;
+                                    gender: string | null;
+                                    age: number | null;
+                                    birthYear: number | null;
+                                } | null;
+                                raceOk: boolean | null;
+                                registeredRace: string | null;
+                            };
                         };
                     };
                 };

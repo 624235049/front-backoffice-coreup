@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Flame, HandHelping, PanelRight, Store, UserRound } from 'lucide-react';
+import { ArrowLeft, Flame, HandHelping, MailOpen, PanelRight, Store, UserRound } from 'lucide-react';
 import { Fragment, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import {
   type PageStage,
   SHOP_TYPES,
   useMarkRead,
+  useMarkUnread,
   usePageConversation,
   usePatchConversation,
   useRetryLine,
@@ -20,6 +21,7 @@ import { ChannelIcon } from './channel-icon';
 import { Composer } from './composer';
 import { LineComposer } from './line-composer';
 import { SidePanel } from './side-panel';
+import { StatusSelect } from './status';
 import { StageChip } from './thread-list';
 import { WindowBadge } from './window-badge';
 
@@ -183,16 +185,17 @@ export function Conversation({
     if (atEnd.current) end.current?.scrollIntoView({ block: 'end' });
   };
   const last = q.data?.messages.at(-1)?.id;
-  const unread = q.data?.conversation.unread ?? 0;
+  const unread = q.data?.conversation.unread ?? false;
   const markRead = useMarkRead();
+  const markUnread = useMarkUnread();
   // biome-ignore lint/correctness/useExhaustiveDependencies: scroll when a new message arrives or another chat opens
   useEffect(() => {
     end.current?.scrollIntoView({ block: 'end' });
   }, [last, id]);
-  // opening a LINE chat reads it; a message that arrives while it is open is read again (the badge never sticks)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only when the unread count or the chat changes
+  // opening a chat reads it for the whole team; a message that arrives while it is open is read again (the badge never sticks)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only when the unread flag or the chat changes
   useEffect(() => {
-    if (unread > 0) markRead.mutate(id);
+    if (unread) markRead.mutate(id);
   }, [unread, id]);
 
   if (q.isPending)
@@ -244,12 +247,32 @@ export function Conversation({
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <ChannelIcon channel={c.channel} />
             {t(`channelFilter.${c.channel}`)}
+            {c.readAt ? (
+              <span data-testid="read-info">
+                · {t('row.readBy', { name: c.readBy ?? t('row.someone'), time: clock.time(c.readAt) })}
+              </span>
+            ) : null}
           </div>
         </div>
+        <StatusSelect
+          status={c.status}
+          disabled={patch.isPending}
+          onChange={(workStatus) => patch.mutate({ id, body: { workStatus } })}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={markUnread.isPending}
+          onClick={() => markUnread.mutate(id, { onSuccess: onBack })}
+          data-testid="mark-unread"
+        >
+          <MailOpen aria-hidden /> {t('conversation.markUnread')}
+        </Button>
         {!isLine ? <WindowBadge conversation={c} /> : null}
         {isLine ? (
           <>
-            <StageChip stage={c.stage} />
+            <StageChip stage={c.stage} labelled />
             {d.line?.lead ? (
               <Button asChild variant="outline" size="sm" data-testid="open-lead">
                 <Link to="/platform/sales" search={{ lead: d.line.lead.id }}>
@@ -257,10 +280,10 @@ export function Conversation({
                 </Link>
               </Button>
             ) : null}
-            {c.tenantId ? (
+            {c.shop?.tenantId ? (
               <Button asChild variant="outline" size="sm" data-testid="open-shop">
-                <Link to="/platform/tenants/$id" params={{ id: c.tenantId }}>
-                  <Store aria-hidden /> {c.tenantName ?? t('side.openShop')}
+                <Link to="/platform/tenants/$id" params={{ id: c.shop.tenantId }}>
+                  <Store aria-hidden /> {c.shop.name || t('side.openShop')}
                 </Link>
               </Button>
             ) : null}
@@ -335,8 +358,8 @@ export function Conversation({
       ) : c.aiPaused ? (
         <p className="bg-muted px-3 py-1 text-xs text-muted-foreground">{t('conversation.aiPaused')}</p>
       ) : null}
-      <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="flex min-h-0 min-w-0 flex-col">
+      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] overflow-hidden lg:grid-cols-[minmax(0,1fr)_auto]">
+        <div className={cn('flex min-h-0 min-w-0 flex-col', panelOpen && 'max-lg:hidden')}>
           <div
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3"
             data-testid="message-list"
@@ -372,7 +395,7 @@ export function Conversation({
           </div>
           {isLine ? <LineComposer detail={d} /> : <Composer detail={d} />}
         </div>
-        {panelOpen ? <SidePanel conversation={c} lead={d.line?.lead ?? null} /> : null}
+        {panelOpen ? <SidePanel conversation={c} lead={d.line?.lead ?? null} notes={d.notes} /> : null}
       </div>
     </>
   );

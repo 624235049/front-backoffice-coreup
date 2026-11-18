@@ -17,7 +17,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { NavItem } from '@/lib/navigation';
-import { usePageNeedsReplyCount } from '../page-inbox/api';
+import { usePageUnreadCount } from '../page-inbox/api';
 import { useOnboardingSummary } from './api';
 import { useOpenChatCaseCount } from './chat-cases-api';
 import { usePendingSlipCount } from './invoice-slip';
@@ -98,7 +98,7 @@ export const navItems: NavItem[] = [
     permission: 'platform:leads',
     module: 'platform',
     order: 29,
-    useBadge: usePageNeedsReplyCount,
+    useBadge: usePageUnreadCount,
     badgeLabel: 'pageInboxCount',
   },
   {

@@ -42083,6 +42083,7 @@
               "type": "string",
               "enum": [
                 "all",
+                "unread",
                 "needs_reply",
                 "needs_staff",
                 "hot",
@@ -42123,6 +42124,21 @@
             },
             "required": false,
             "name": "stage",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "new",
+                "needs_staff",
+                "in_progress",
+                "waiting_customer",
+                "done"
+              ]
+            },
+            "required": false,
+            "name": "status",
             "in": "query"
           },
           {
@@ -42318,7 +42334,73 @@
                                 "type": "boolean"
                               },
                               "unread": {
-                                "type": "integer"
+                                "type": "boolean"
+                              },
+                              "readAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "readBy": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "new",
+                                  "needs_staff",
+                                  "in_progress",
+                                  "waiting_customer",
+                                  "done"
+                                ]
+                              },
+                              "statusAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "assignee": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "shop": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "tenantId": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "source": {
+                                    "type": "string",
+                                    "enum": [
+                                      "linked",
+                                      "typed",
+                                      "lead",
+                                      "verified"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "tenantId",
+                                  "name",
+                                  "source"
+                                ]
                               },
                               "pictureUrl": {
                                 "type": [
@@ -42353,6 +42435,12 @@
                               "followUpStep",
                               "aiPaused",
                               "unread",
+                              "readAt",
+                              "readBy",
+                              "status",
+                              "statusAt",
+                              "assignee",
+                              "shop",
                               "pictureUrl",
                               "blocked"
                             ]
@@ -42378,6 +42466,18 @@
                             },
                             "unread": {
                               "type": "integer"
+                            },
+                            "new": {
+                              "type": "integer"
+                            },
+                            "inProgress": {
+                              "type": "integer"
+                            },
+                            "waitingCustomer": {
+                              "type": "integer"
+                            },
+                            "done": {
+                              "type": "integer"
                             }
                           },
                           "required": [
@@ -42386,7 +42486,11 @@
                             "needsStaff",
                             "hot",
                             "followUp",
-                            "unread"
+                            "unread",
+                            "new",
+                            "inProgress",
+                            "waitingCustomer",
+                            "done"
                           ]
                         },
                         "line": {
@@ -42731,7 +42835,73 @@
                               "type": "boolean"
                             },
                             "unread": {
-                              "type": "integer"
+                              "type": "boolean"
+                            },
+                            "readAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "readBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "needs_staff",
+                                "in_progress",
+                                "waiting_customer",
+                                "done"
+                              ]
+                            },
+                            "statusAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "assignee": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shop": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "tenantId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "linked",
+                                    "typed",
+                                    "lead",
+                                    "verified"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "tenantId",
+                                "name",
+                                "source"
+                              ]
                             },
                             "pictureUrl": {
                               "type": [
@@ -42766,6 +42936,12 @@
                             "followUpStep",
                             "aiPaused",
                             "unread",
+                            "readAt",
+                            "readBy",
+                            "status",
+                            "statusAt",
+                            "assignee",
+                            "shop",
                             "pictureUrl",
                             "blocked"
                           ]
@@ -42920,6 +43096,33 @@
                             "null"
                           ]
                         },
+                        "notes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "authorName",
+                              "createdAt"
+                            ]
+                          }
+                        },
                         "line": {
                           "type": [
                             "object",
@@ -43031,7 +43234,8 @@
                         "conversation",
                         "messages",
                         "suggestion",
-                        "followUpDraft"
+                        "followUpDraft",
+                        "notes"
                       ]
                     }
                   },
@@ -43128,7 +43332,7 @@
         "tags": [
           "platform"
         ],
-        "summary": "Stage, shop type, hot flag, \"ฉันรับต่อเอง\" (pause the automatic reply 24 h) or skip the due reminder",
+        "summary": "Stage, shop type, hot flag, \"ฉันรับต่อเอง\" (pause the automatic reply 24 h), skip the due reminder, or the work status (new · in progress · waiting for the customer · done; audited)",
         "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
@@ -43205,6 +43409,15 @@
                     "type": "boolean",
                     "enum": [
                       true
+                    ]
+                  },
+                  "workStatus": {
+                    "type": "string",
+                    "enum": [
+                      "new",
+                      "in_progress",
+                      "waiting_customer",
+                      "done"
                     ]
                   }
                 }
@@ -43359,7 +43572,73 @@
                               "type": "boolean"
                             },
                             "unread": {
-                              "type": "integer"
+                              "type": "boolean"
+                            },
+                            "readAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "readBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "needs_staff",
+                                "in_progress",
+                                "waiting_customer",
+                                "done"
+                              ]
+                            },
+                            "statusAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "assignee": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shop": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "tenantId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "linked",
+                                    "typed",
+                                    "lead",
+                                    "verified"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "tenantId",
+                                "name",
+                                "source"
+                              ]
                             },
                             "pictureUrl": {
                               "type": [
@@ -43394,6 +43673,12 @@
                             "followUpStep",
                             "aiPaused",
                             "unread",
+                            "readAt",
+                            "readBy",
+                            "status",
+                            "statusAt",
+                            "assignee",
+                            "shop",
                             "pictureUrl",
                             "blocked"
                           ]
@@ -43548,6 +43833,33 @@
                             "null"
                           ]
                         },
+                        "notes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "authorName",
+                              "createdAt"
+                            ]
+                          }
+                        },
                         "line": {
                           "type": [
                             "object",
@@ -43659,7 +43971,8 @@
                         "conversation",
                         "messages",
                         "suggestion",
-                        "followUpDraft"
+                        "followUpDraft",
+                        "notes"
                       ]
                     }
                   },
@@ -44274,7 +44587,73 @@
                               "type": "boolean"
                             },
                             "unread": {
-                              "type": "integer"
+                              "type": "boolean"
+                            },
+                            "readAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "readBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "needs_staff",
+                                "in_progress",
+                                "waiting_customer",
+                                "done"
+                              ]
+                            },
+                            "statusAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "assignee": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shop": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "tenantId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "linked",
+                                    "typed",
+                                    "lead",
+                                    "verified"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "tenantId",
+                                "name",
+                                "source"
+                              ]
                             },
                             "pictureUrl": {
                               "type": [
@@ -44309,6 +44688,12 @@
                             "followUpStep",
                             "aiPaused",
                             "unread",
+                            "readAt",
+                            "readBy",
+                            "status",
+                            "statusAt",
+                            "assignee",
+                            "shop",
                             "pictureUrl",
                             "blocked"
                           ]
@@ -44463,6 +44848,33 @@
                             "null"
                           ]
                         },
+                        "notes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "authorName",
+                              "createdAt"
+                            ]
+                          }
+                        },
                         "line": {
                           "type": [
                             "object",
@@ -44574,7 +44986,8 @@
                         "conversation",
                         "messages",
                         "suggestion",
-                        "followUpDraft"
+                        "followUpDraft",
+                        "notes"
                       ]
                     }
                   },
@@ -44856,7 +45269,7 @@
         "tags": [
           "platform"
         ],
-        "summary": "I have read this LINE chat (clears my unread count); nothing to do on Facebook / Instagram",
+        "summary": "The team has read this chat: one mark for everybody (who and when are shown), cleared again by the customer's next message",
         "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
         "security": [
           {
@@ -44889,6 +45302,1687 @@
         "responses": {
           "204": {
             "description": "Marked"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/conversations/{id}/unread": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "ทำเป็นยังไม่อ่าน: the chat is unread again for the whole team",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Marked"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/conversations/{id}/shop": {
+      "put": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "The shop this chat is about: one of our customer shops (`tenantId`) or a typed name for a prospect (`shopName`); both null removes it. Audited",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tenantId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                  },
+                  "shopName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1,
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "tenantId",
+                  "shopName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "conversation": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "channel": {
+                              "type": "string",
+                              "enum": [
+                                "messenger",
+                                "instagram",
+                                "line"
+                              ]
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "adId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shopType": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "dress",
+                                "salon",
+                                "massage",
+                                "barber",
+                                null
+                              ]
+                            },
+                            "stage": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "talking",
+                                "sample_sent",
+                                "trial",
+                                "paid",
+                                "lost"
+                              ]
+                            },
+                            "hot": {
+                              "type": "boolean"
+                            },
+                            "leadId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "tenantId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "tenantName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "preview": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastCustomerMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastPageMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "needsReply": {
+                              "type": "boolean"
+                            },
+                            "needsStaff": {
+                              "type": "boolean"
+                            },
+                            "window": {
+                              "type": "string",
+                              "enum": [
+                                "free",
+                                "human",
+                                "closed"
+                              ]
+                            },
+                            "windowFreeEndsAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "windowHumanEndsAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "followUpStep": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "minimum": 1,
+                              "maximum": 3
+                            },
+                            "aiPaused": {
+                              "type": "boolean"
+                            },
+                            "unread": {
+                              "type": "boolean"
+                            },
+                            "readAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "readBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "needs_staff",
+                                "in_progress",
+                                "waiting_customer",
+                                "done"
+                              ]
+                            },
+                            "statusAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "assignee": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shop": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "tenantId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "linked",
+                                    "typed",
+                                    "lead",
+                                    "verified"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "tenantId",
+                                "name",
+                                "source"
+                              ]
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "channel",
+                            "name",
+                            "adId",
+                            "shopType",
+                            "stage",
+                            "hot",
+                            "leadId",
+                            "tenantId",
+                            "tenantName",
+                            "preview",
+                            "lastMessageAt",
+                            "lastCustomerMessageAt",
+                            "lastPageMessageAt",
+                            "needsReply",
+                            "needsStaff",
+                            "window",
+                            "windowFreeEndsAt",
+                            "windowHumanEndsAt",
+                            "followUpStep",
+                            "aiPaused",
+                            "unread",
+                            "readAt",
+                            "readBy",
+                            "status",
+                            "statusAt",
+                            "assignee",
+                            "shop",
+                            "pictureUrl",
+                            "blocked"
+                          ]
+                        },
+                        "messages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "sender": {
+                                "type": "string",
+                                "enum": [
+                                  "customer",
+                                  "page",
+                                  "staff",
+                                  "ai",
+                                  "system"
+                                ]
+                              },
+                              "text": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "imageUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "sentAt": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "via": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "response",
+                                  "human_agent",
+                                  "echo",
+                                  "backfill",
+                                  "reply",
+                                  "push",
+                                  null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "direction",
+                              "sender",
+                              "text",
+                              "imageUrl",
+                              "sentAt",
+                              "authorName",
+                              "via"
+                            ]
+                          }
+                        },
+                        "suggestion": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "step": {
+                              "type": "string",
+                              "enum": [
+                                "hook",
+                                "answer",
+                                "close"
+                              ]
+                            },
+                            "needsPerson": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "text",
+                            "step",
+                            "needsPerson"
+                          ]
+                        },
+                        "followUpDraft": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "notes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "authorName",
+                              "createdAt"
+                            ]
+                          }
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "canReply": {
+                              "type": "boolean"
+                            },
+                            "replyBlock": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "impersonating",
+                                "no_account",
+                                "not_line",
+                                null
+                              ]
+                            },
+                            "freeReplyUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            },
+                            "lead": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ref": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "stage": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "ref",
+                                "name",
+                                "stage"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "canReply",
+                            "replyBlock",
+                            "freeReplyUntil",
+                            "quota",
+                            "lead"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "conversation",
+                        "messages",
+                        "suggestion",
+                        "followUpDraft",
+                        "notes"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/shops": {
+      "get": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "Search our customer shops by name or slug for \"ร้านที่เกี่ยวข้อง\" (only the shops the caller may see)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shops",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "slug",
+                          "name"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/platform/page-inbox/conversations/{id}/notes": {
+      "post": {
+        "tags": [
+          "platform"
+        ],
+        "summary": "An internal note on the chat (author and time kept): staff only, never sent to the customer",
+        "description": "Requires header `X-Tenant-Id`. Permission: `platform:leads`. Module: `platform`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conversation with the notes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "conversation": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "channel": {
+                              "type": "string",
+                              "enum": [
+                                "messenger",
+                                "instagram",
+                                "line"
+                              ]
+                            },
+                            "name": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "adId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shopType": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "dress",
+                                "salon",
+                                "massage",
+                                "barber",
+                                null
+                              ]
+                            },
+                            "stage": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "talking",
+                                "sample_sent",
+                                "trial",
+                                "paid",
+                                "lost"
+                              ]
+                            },
+                            "hot": {
+                              "type": "boolean"
+                            },
+                            "leadId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "tenantId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                            },
+                            "tenantName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "preview": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastCustomerMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "lastPageMessageAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "needsReply": {
+                              "type": "boolean"
+                            },
+                            "needsStaff": {
+                              "type": "boolean"
+                            },
+                            "window": {
+                              "type": "string",
+                              "enum": [
+                                "free",
+                                "human",
+                                "closed"
+                              ]
+                            },
+                            "windowFreeEndsAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "windowHumanEndsAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "followUpStep": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ],
+                              "minimum": 1,
+                              "maximum": 3
+                            },
+                            "aiPaused": {
+                              "type": "boolean"
+                            },
+                            "unread": {
+                              "type": "boolean"
+                            },
+                            "readAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "readBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": [
+                                "new",
+                                "needs_staff",
+                                "in_progress",
+                                "waiting_customer",
+                                "done"
+                              ]
+                            },
+                            "statusAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "assignee": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "shop": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "tenantId": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "source": {
+                                  "type": "string",
+                                  "enum": [
+                                    "linked",
+                                    "typed",
+                                    "lead",
+                                    "verified"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "tenantId",
+                                "name",
+                                "source"
+                              ]
+                            },
+                            "pictureUrl": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "blocked": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "channel",
+                            "name",
+                            "adId",
+                            "shopType",
+                            "stage",
+                            "hot",
+                            "leadId",
+                            "tenantId",
+                            "tenantName",
+                            "preview",
+                            "lastMessageAt",
+                            "lastCustomerMessageAt",
+                            "lastPageMessageAt",
+                            "needsReply",
+                            "needsStaff",
+                            "window",
+                            "windowFreeEndsAt",
+                            "windowHumanEndsAt",
+                            "followUpStep",
+                            "aiPaused",
+                            "unread",
+                            "readAt",
+                            "readBy",
+                            "status",
+                            "statusAt",
+                            "assignee",
+                            "shop",
+                            "pictureUrl",
+                            "blocked"
+                          ]
+                        },
+                        "messages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "in",
+                                  "out"
+                                ]
+                              },
+                              "sender": {
+                                "type": "string",
+                                "enum": [
+                                  "customer",
+                                  "page",
+                                  "staff",
+                                  "ai",
+                                  "system"
+                                ]
+                              },
+                              "text": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "imageUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "sentAt": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "via": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "response",
+                                  "human_agent",
+                                  "echo",
+                                  "backfill",
+                                  "reply",
+                                  "push",
+                                  null
+                                ]
+                              },
+                              "kind": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "images": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "stickerUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "mediaUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "delivery": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "enum": [
+                                  "queued",
+                                  "sent",
+                                  "failed",
+                                  null
+                                ]
+                              },
+                              "error": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "direction",
+                              "sender",
+                              "text",
+                              "imageUrl",
+                              "sentAt",
+                              "authorName",
+                              "via"
+                            ]
+                          }
+                        },
+                        "suggestion": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "text": {
+                              "type": "string"
+                            },
+                            "step": {
+                              "type": "string",
+                              "enum": [
+                                "hook",
+                                "answer",
+                                "close"
+                              ]
+                            },
+                            "needsPerson": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "text",
+                            "step",
+                            "needsPerson"
+                          ]
+                        },
+                        "followUpDraft": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "notes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "authorName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "text",
+                              "authorName",
+                              "createdAt"
+                            ]
+                          }
+                        },
+                        "line": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "canReply": {
+                              "type": "boolean"
+                            },
+                            "replyBlock": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "enum": [
+                                "impersonating",
+                                "no_account",
+                                "not_line",
+                                null
+                              ]
+                            },
+                            "freeReplyUntil": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "quota": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "used": {
+                                  "type": "integer"
+                                },
+                                "limit": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ]
+                                },
+                                "checkedAt": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "warn": {
+                                  "type": "boolean"
+                                },
+                                "low": {
+                                  "type": "boolean"
+                                },
+                                "exhausted": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "used",
+                                "limit",
+                                "checkedAt",
+                                "warn",
+                                "low",
+                                "exhausted"
+                              ]
+                            },
+                            "lead": {
+                              "type": [
+                                "object",
+                                "null"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                },
+                                "ref": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "stage": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "ref",
+                                "name",
+                                "stage"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "canReply",
+                            "replyBlock",
+                            "freeReplyUntil",
+                            "quota",
+                            "lead"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "conversation",
+                        "messages",
+                        "suggestion",
+                        "followUpDraft",
+                        "notes"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
@@ -236308,6 +238402,1530 @@
                           "autoDone"
                         ]
                       }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/event-queue/runner-list": {
+      "get": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "The organizer runner list: who uploaded it, when, the file and the row count, and how the registrations stand against it (matched / name differs / other language / bib not on the list / no bib; race differs only when the list has a race column)",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "uploaded": {
+                          "type": "boolean"
+                        },
+                        "fileName": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "uploadedAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "ISO timestamp"
+                        },
+                        "uploadedBy": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "rowCount": {
+                          "type": "integer"
+                        },
+                        "skippedDuplicates": {
+                          "type": "integer"
+                        },
+                        "skippedNoBib": {
+                          "type": "integer"
+                        },
+                        "hasRace": {
+                          "type": "boolean"
+                        },
+                        "registered": {
+                          "type": "integer"
+                        },
+                        "matched": {
+                          "type": "integer"
+                        },
+                        "nameMismatch": {
+                          "type": "integer"
+                        },
+                        "scriptDiffers": {
+                          "type": "integer"
+                        },
+                        "notFound": {
+                          "type": "integer"
+                        },
+                        "noBib": {
+                          "type": "integer"
+                        },
+                        "raceMismatch": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "uploaded",
+                        "fileName",
+                        "uploadedAt",
+                        "uploadedBy",
+                        "rowCount",
+                        "skippedDuplicates",
+                        "skippedNoBib",
+                        "hasRace",
+                        "registered",
+                        "matched",
+                        "nameMismatch",
+                        "scriptDiffers",
+                        "notFound",
+                        "noBib",
+                        "raceMismatch"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "Replace the whole runner list (the same call the check-in page makes; a re-upload of the same rows gives the same list). Body: `fileName` and `rows` (≤20,000) of `{bib, prefix?, name, race?, nationality?, gender?, age?, birthYear?}`; the bib is looked up with leading zeros / spaces / Thai digits ignored, the first row of a bib is kept, rows with no bib or name are counted and skipped. 422 no_usable_rows",
+        "description": "Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "rows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "bib": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "prefix": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "name": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "race": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "nationality": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "gender": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "age": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "birthYear": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "maxLength": 400
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "minItems": 1,
+                    "maxItems": 20000
+                  }
+                },
+                "required": [
+                  "fileName",
+                  "rows"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Replaced",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "imported": {
+                          "type": "integer"
+                        },
+                        "duplicates": {
+                          "type": "integer"
+                        },
+                        "skipped": {
+                          "type": "integer"
+                        },
+                        "status": {
+                          "type": "object",
+                          "properties": {
+                            "uploaded": {
+                              "type": "boolean"
+                            },
+                            "fileName": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "uploadedAt": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "description": "ISO timestamp"
+                            },
+                            "uploadedBy": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "rowCount": {
+                              "type": "integer"
+                            },
+                            "skippedDuplicates": {
+                              "type": "integer"
+                            },
+                            "skippedNoBib": {
+                              "type": "integer"
+                            },
+                            "hasRace": {
+                              "type": "boolean"
+                            },
+                            "registered": {
+                              "type": "integer"
+                            },
+                            "matched": {
+                              "type": "integer"
+                            },
+                            "nameMismatch": {
+                              "type": "integer"
+                            },
+                            "scriptDiffers": {
+                              "type": "integer"
+                            },
+                            "notFound": {
+                              "type": "integer"
+                            },
+                            "noBib": {
+                              "type": "integer"
+                            },
+                            "raceMismatch": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "uploaded",
+                            "fileName",
+                            "uploadedAt",
+                            "uploadedBy",
+                            "rowCount",
+                            "skippedDuplicates",
+                            "skippedNoBib",
+                            "hasRace",
+                            "registered",
+                            "matched",
+                            "nameMismatch",
+                            "scriptDiffers",
+                            "notFound",
+                            "noBib",
+                            "raceMismatch"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "imported",
+                        "duplicates",
+                        "skipped",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "Delete the whole runner list (the badges go back to \"no list uploaded\"). Done by itself with the event data cleanup",
+        "description": "Requires header `X-Tenant-Id`. Permission: `customers:write`. Module: `core`.\n\nOptional header `Idempotency-Key`: when sent, a retry with the same key and body replays the stored response (24h) instead of repeating the change.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "x-replay-safe": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "Optional; unique per logical operation. Makes the request safe to retry"
+            },
+            "required": false,
+            "description": "Optional; unique per logical operation. Makes the request safe to retry",
+            "name": "idempotency-key",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deleted": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "deleted"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/event-queue/runner-list/review": {
+      "get": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "The registrations behind one count of the runner-list summary (`filter` empty = all), in registration order",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "matched",
+                "name_mismatch",
+                "script_differs",
+                "not_found",
+                "no_bib",
+                "race_mismatch"
+              ]
+            },
+            "required": false,
+            "name": "filter",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 300,
+              "default": 100
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100000,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registrations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                              },
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "bib": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "race": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "check": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "matched",
+                                      "name_mismatch",
+                                      "script_differs",
+                                      "not_found",
+                                      "no_bib",
+                                      "no_list"
+                                    ]
+                                  },
+                                  "listed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bib": {
+                                        "type": "string"
+                                      },
+                                      "prefix": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "race": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "nationality": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "gender": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "age": {
+                                        "type": [
+                                          "integer",
+                                          "null"
+                                        ]
+                                      },
+                                      "birthYear": {
+                                        "type": [
+                                          "integer",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "bib",
+                                      "prefix",
+                                      "name",
+                                      "race",
+                                      "nationality",
+                                      "gender",
+                                      "age",
+                                      "birthYear"
+                                    ]
+                                  },
+                                  "raceOk": {
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ]
+                                  },
+                                  "registeredRace": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "listed",
+                                  "raceOk",
+                                  "registeredRace"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "code",
+                              "name",
+                              "bib",
+                              "race",
+                              "check"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/event-queue/runner-list/search": {
+      "get": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "Search the runner list by the start of a bib or the words of a name (for a runner with no QR): up to 30 rows, each with the registration that has that bib (null = not registered) and its badge",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "required": true,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "listed": {
+                                "type": "object",
+                                "properties": {
+                                  "bib": {
+                                    "type": "string"
+                                  },
+                                  "prefix": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "race": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "nationality": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "gender": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  },
+                                  "age": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ]
+                                  },
+                                  "birthYear": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "bib",
+                                  "prefix",
+                                  "name",
+                                  "race",
+                                  "nationality",
+                                  "gender",
+                                  "age",
+                                  "birthYear"
+                                ]
+                              },
+                              "registration": {
+                                "type": [
+                                  "object",
+                                  "null"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+                                  },
+                                  "code": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "race": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "code",
+                                  "name",
+                                  "race"
+                                ]
+                              },
+                              "check": {
+                                "type": "object",
+                                "properties": {
+                                  "status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "matched",
+                                      "name_mismatch",
+                                      "script_differs",
+                                      "not_found",
+                                      "no_bib",
+                                      "no_list"
+                                    ]
+                                  },
+                                  "listed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "bib": {
+                                        "type": "string"
+                                      },
+                                      "prefix": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "race": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "nationality": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "gender": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "age": {
+                                        "type": [
+                                          "integer",
+                                          "null"
+                                        ]
+                                      },
+                                      "birthYear": {
+                                        "type": [
+                                          "integer",
+                                          "null"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "bib",
+                                      "prefix",
+                                      "name",
+                                      "race",
+                                      "nationality",
+                                      "gender",
+                                      "age",
+                                      "birthYear"
+                                    ]
+                                  },
+                                  "raceOk": {
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ]
+                                  },
+                                  "registeredRace": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "status",
+                                  "listed",
+                                  "raceOk",
+                                  "registeredRace"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "listed",
+                              "registration",
+                              "check"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "items"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED / TENANT_REQUIRED / IDEMPOTENCY_KEY_REQUIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "SUBSCRIPTION_REQUIRED (trial / package ended; billing routes stay open)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN / MODULE_DISABLED / TENANT_ACCESS_DENIED / PLAN_LIMIT_REACHED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT / IDEMPOTENCY_IN_PROGRESS / VERSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/event-queue/runner-list/check/{id}": {
+      "get": {
+        "tags": [
+          "event-queue"
+        ],
+        "summary": "The runner-list badge of one registration (the check-in card). 404 when it is not a live registration of this shop",
+        "description": "Requires header `X-Tenant-Id`. Permission: `appointments:read`. Module: `core`.",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Badge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "matched",
+                            "name_mismatch",
+                            "script_differs",
+                            "not_found",
+                            "no_bib",
+                            "no_list"
+                          ]
+                        },
+                        "listed": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "bib": {
+                              "type": "string"
+                            },
+                            "prefix": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "race": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "nationality": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "gender": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "age": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            },
+                            "birthYear": {
+                              "type": [
+                                "integer",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "bib",
+                            "prefix",
+                            "name",
+                            "race",
+                            "nationality",
+                            "gender",
+                            "age",
+                            "birthYear"
+                          ]
+                        },
+                        "raceOk": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "registeredRace": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "listed",
+                        "raceOk",
+                        "registeredRace"
+                      ]
                     }
                   },
                   "required": [

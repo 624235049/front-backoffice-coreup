@@ -25,10 +25,17 @@ export type PageChannel = PageConversation['channel'];
 export type ChannelFilter = NonNullable<PageQuery['channel']>;
 export type LineInfo = NonNullable<PageDetail['line']>;
 export type LineQuota = NonNullable<NonNullable<PageList['line']>['quota']>;
+export type InboxStatus = PageConversation['status'];
+export type WorkStatus = NonNullable<ConversationPatch['workStatus']>;
+export type PageNote = PageDetail['notes'][number];
+export type PageShop = NonNullable<PageConversation['shop']>;
+export type ShopOption = ApiItem<'/v1/platform/page-inbox/shops'>[number];
 export type PreparedImage = ApiItem<'/v1/platform/page-inbox/line-images/{id}/prepare', 'post'>;
 
 export const PAGE_STAGES: PageStage[] = ['new', 'talking', 'sample_sent', 'trial', 'paid', 'lost'];
 export const SHOP_TYPES: PageShopType[] = ['dress', 'salon', 'massage', 'barber'];
+/** What the team picks by hand; `needs_staff` is the AI's hand-over and is only shown. */
+export const WORK_STATUSES: WorkStatus[] = ['new', 'in_progress', 'waiting_customer', 'done'];
 export const CHANNEL_FILTERS: ChannelFilter[] = ['all', 'line', 'messenger', 'instagram'];
 
 const part = 'page-inbox';
@@ -126,10 +133,10 @@ export function useSendMessage() {
 export const checkDraft = async (text: string, shopType: PageShopType | null): Promise<DraftIssue[]> =>
   (await unwrap(api.POST('/v1/platform/page-inbox/check-draft', { body: { text, shopType } }))).data;
 
-/** Red badge on the nav item: chats waiting for a reply that can still be answered. Polled; cheap (counts only). */
-export function usePageNeedsReplyCount(): number {
-  const q = usePageList({ filter: 'needs_reply', limit: 1 });
-  return q.data?.counts.needsReply ?? 0;
+/** Red badge on the nav item: chats the customer wrote to that nobody on the team has opened. Polled; cheap (counts only). */
+export function usePageUnreadCount(): number {
+  const q = usePageList({ filter: 'unread', limit: 1 });
+  return q.data?.counts.unread ?? 0;
 }
 
 /** Presign (purpose `chat_image`) → PUT the photo as it is → the server makes the LINE copies (JPEG original + preview). A failure shows in the composer; the person attaches it again. */
@@ -152,7 +159,7 @@ export async function uploadLineImage(file: File): Promise<PreparedImage> {
   ).data;
 }
 
-/** I have read this LINE chat: its unread badge goes (nothing happens on Facebook / Instagram). */
+/** The team has read this chat (one mark for everybody, any channel): its unread badge goes. */
 export function useMarkRead() {
   const invalidate = useInvalidate();
   return useApiMutation({
@@ -162,6 +169,42 @@ export function useMarkRead() {
     onSuccess: () => invalidate(part),
   });
 }
+
+/** "ทำเป็นยังไม่อ่าน": the chat is unread again for the whole team. */
+export const useMarkUnread = () =>
+  useMut((id: string) =>
+    unwrap(api.POST('/v1/platform/page-inbox/conversations/{id}/unread', { params: { path: { id } } })),
+  );
+
+/** The shop this chat is about: a customer shop, a typed name (a prospect), or neither to remove it. */
+export const useSetShop = () =>
+  useMut(({ id, tenantId, shopName }: { id: string; tenantId: string | null; shopName: string | null }) =>
+    unwrap(
+      api.PUT('/v1/platform/page-inbox/conversations/{id}/shop', {
+        params: { path: { id } },
+        body: { tenantId, shopName },
+      }),
+    ),
+  );
+
+export const useAddNote = () =>
+  useMut(({ id, text }: { id: string; text: string }) =>
+    unwrap(
+      api.POST('/v1/platform/page-inbox/conversations/{id}/notes', {
+        params: { path: { id } },
+        body: { text },
+      }),
+    ),
+  );
+
+/** Customer shops by name or slug for "ร้านที่เกี่ยวข้อง". */
+export const useShopSearch = (q: string) =>
+  useTenantQuery(
+    [part, 'shops', q],
+    async () =>
+      (await unwrap(api.GET('/v1/platform/page-inbox/shops', { params: { query: { q, limit: 8 } } }))).data,
+    { enabled: q.trim().length > 0 },
+  );
 
 /** A LINE reply: the composer shows a refusal (quota used up …) itself, so no automatic toast. */
 export function useSendLine() {

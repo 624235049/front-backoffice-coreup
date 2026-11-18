@@ -9,6 +9,10 @@ const h = vi.hoisted(() => ({
   retry: vi.fn(),
   read: vi.fn(),
   patch: vi.fn(),
+  unread: vi.fn(),
+  setShop: vi.fn(),
+  addNote: vi.fn(),
+  shops: [] as { id: string; slug: string; name: string }[],
   detail: null as unknown,
 }));
 
@@ -40,6 +44,7 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/lib/membership', () => ({ useTenant: () => ({ locale: 'th', timezone: 'Asia/Bangkok' }) }));
 vi.mock('@/lib/permissions', () => ({ useCan: () => true }));
 vi.mock('@/features/platform/api', () => ({ useShopPicker: () => ({ data: [] }) }));
+vi.mock('@/features/accounting/lib/use-debounced', () => ({ useDebounced: (v: unknown) => v }));
 vi.mock('@/features/platform/components/onboard-dialog', () => ({ OnboardDialog: () => null }));
 vi.mock('@/features/page-inbox/api', async (orig) => ({
   ...(await orig<typeof PageApi>()),
@@ -48,12 +53,17 @@ vi.mock('@/features/page-inbox/api', async (orig) => ({
   useMarkRead: () => ({ mutate: h.read }),
   usePageConversation: () => ({ isPending: false, isError: false, data: h.detail }),
   usePatchConversation: () => ({ mutate: h.patch, isPending: false }),
+  useMarkUnread: () => ({ mutate: h.unread, isPending: false }),
+  useSetShop: () => ({ mutate: h.setShop, isPending: false }),
+  useAddNote: () => ({ mutate: h.addNote, isPending: false }),
+  useShopSearch: () => ({ data: h.shops, isFetching: false }),
   uploadLineImage: vi.fn(),
 }));
 
 import type { PageConversation, PageDetail, PageList } from '@/features/page-inbox/api';
 import { Conversation } from '@/features/page-inbox/components/conversation';
 import { LineComposer } from '@/features/page-inbox/components/line-composer';
+import { SidePanel } from '@/features/page-inbox/components/side-panel';
 import { ThreadList } from '@/features/page-inbox/components/thread-list';
 
 const NOW = new Date().toISOString();
@@ -79,7 +89,13 @@ const conv = (over: Partial<PageConversation> = {}): PageConversation => ({
   windowHumanEndsAt: null,
   followUpStep: null,
   aiPaused: false,
-  unread: 0,
+  unread: false,
+  readAt: null,
+  readBy: null,
+  status: 'new',
+  statusAt: null,
+  assignee: null,
+  shop: null,
   pictureUrl: null,
   blocked: false,
   ...over,
@@ -101,6 +117,10 @@ const list = (items: PageConversation[], q = quota(120)): PageList => ({
     hot: 0,
     followUp: 0,
     unread: 2,
+    new: 3,
+    inProgress: 1,
+    waitingCustomer: 2,
+    done: 4,
   },
   line: { accountName: 'CoreUP.Pro', quota: q },
   ads: [],
@@ -124,18 +144,18 @@ describe('one list for LINE, Facebook and Instagram', () => {
     return onQuery;
   };
 
-  it('every row has its channel icon; a LINE chat has the unread badge, a blocked one says so', () => {
+  it('every row has its channel icon; an unread chat has the badge, a blocked one says so', () => {
     render_(
       list([
-        conv({ id: 'a', unread: 3 }),
-        conv({ id: 'b', channel: 'messenger', name: 'FB', unread: 0 }),
-        conv({ id: 'c', channel: 'instagram', name: 'IG', unread: 0 }),
+        conv({ id: 'a', unread: true }),
+        conv({ id: 'b', channel: 'messenger', name: 'FB', unread: false }),
+        conv({ id: 'c', channel: 'instagram', name: 'IG', unread: false }),
         conv({ id: 'd', blocked: true, name: 'ปิดกั้น' }),
       ]),
     );
     const rows = screen.getAllByTestId('page-row');
     expect(within(rows[0] as HTMLElement).getByTestId('channel-line')).toBeTruthy();
-    expect(within(rows[0] as HTMLElement).getByTestId('unread-badge').textContent).toBe('3');
+    expect(within(rows[0] as HTMLElement).getByTestId('unread-badge')).toBeTruthy();
     expect(within(rows[1] as HTMLElement).getByTestId('channel-messenger')).toBeTruthy();
     expect(within(rows[1] as HTMLElement).queryByTestId('unread-badge')).toBeNull();
     expect(within(rows[2] as HTMLElement).getByTestId('channel-instagram')).toBeTruthy();
@@ -143,9 +163,13 @@ describe('one list for LINE, Facebook and Instagram', () => {
   });
 
   it('a chat that asked for a person has the red chip; the "needs staff" tab carries its count and filters', () => {
-    const onQuery = render_(list([conv({ id: 'a', needsStaff: true }), conv({ id: 'b' })]));
+    const onQuery = render_(
+      list([conv({ id: 'a', needsStaff: true, status: 'needs_staff' }), conv({ id: 'b' })]),
+    );
     const rows = screen.getAllByTestId('page-row');
-    expect(within(rows[0] as HTMLElement).getByTestId('needs-staff-chip').textContent).toBe('row.needsStaff');
+    expect(within(rows[0] as HTMLElement).getByTestId('needs-staff-chip').textContent).toBe(
+      'status.needs_staff',
+    );
     expect(within(rows[1] as HTMLElement).queryByTestId('needs-staff-chip')).toBeNull();
     const tab = screen.getByRole('tab', { name: /tabs\.needs_staff/ });
     expect(tab.textContent).toContain('1');
@@ -153,9 +177,8 @@ describe('one list for LINE, Facebook and Instagram', () => {
     expect(onQuery).toHaveBeenLastCalledWith({ filter: 'needs_staff' });
   });
 
-  it('the channel filter picks one channel (all clears it); the LINE tab carries the unread count', () => {
+  it('the channel filter picks one channel (all clears it)', () => {
     const onQuery = render_(list([conv()]));
-    expect(screen.getByTestId('count-unread').textContent).toBe('2');
     fireEvent.click(screen.getByTestId('channel-filter-line'));
     expect(onQuery).toHaveBeenLastCalledWith({ filter: 'all', channel: 'line' });
     fireEvent.click(screen.getByTestId('channel-filter-instagram'));
@@ -230,6 +253,7 @@ const detail = (
   messages: [],
   suggestion: null,
   followUpDraft: null,
+  notes: [],
   line: { canReply: true, replyBlock: null, freeReplyUntil: null, quota: quota(100), lead: null, ...over },
 });
 
@@ -358,7 +382,7 @@ describe('the LINE conversation', () => {
     h.detail = {
       ...detail(
         { lead: { id: 'L1', ref: 'abc', name: 'Boat', stage: 'talking' } },
-        { unread: 2, tenantId: 't9', tenantName: 'ร้านบอท' },
+        { unread: true, shop: { tenantId: 't9', name: 'ร้านบอท', source: 'lead' } },
       ),
       messages: [
         msg({ id: 'f', sender: 'system', kind: 'follow', text: 'ลูกค้าเพิ่มร้านเป็นเพื่อน' }),
@@ -414,5 +438,223 @@ describe('the LINE conversation', () => {
     expect(h.retry).toHaveBeenCalledWith('bad');
     // nothing unread: nothing to mark
     expect(h.read).not.toHaveBeenCalled();
+  });
+});
+
+const READ = '2026-11-18T03:32:00Z'; // 10:32 in Bangkok
+
+describe('read state in the list (one mark for the whole team)', () => {
+  const render_ = (items: PageConversation[], onQuery = vi.fn()) => {
+    render(
+      <ThreadList
+        data={list(items)}
+        loading={false}
+        error={false}
+        query={q()}
+        onQuery={onQuery}
+        activeId={null}
+        onOpen={vi.fn()}
+      />,
+    );
+    return onQuery;
+  };
+
+  it('an unread row is bold with the badge; a read one is not; hovering says who read it and when', () => {
+    render_([
+      conv({ id: 'u', unread: true, name: 'ยังไม่อ่าน' }),
+      conv({ id: 'r', unread: false, readAt: READ, readBy: 'สมชาย', name: 'อ่านแล้ว' }),
+    ]);
+    const [unread, read] = screen.getAllByTestId('page-row') as HTMLElement[];
+    expect(unread?.dataset.unread).toBe('true');
+    expect(unread?.querySelector('.font-bold')?.textContent).toBe('ยังไม่อ่าน');
+    expect(unread?.title).toBe('row.unreadTitle');
+    expect(read?.dataset.unread).toBeUndefined();
+    expect(read?.querySelector('.font-bold')).toBeNull();
+    expect(within(read as HTMLElement).queryByTestId('unread-badge')).toBeNull();
+    expect(read?.title).toBe('row.readBy{"name":"สมชาย","time":"10:32"}');
+  });
+
+  it('the "unread" tab carries the team’s unread count and filters', () => {
+    const onQuery = render_([conv()]);
+    const tab = screen.getByRole('tab', { name: /tabs\.unread/ });
+    expect(screen.getByTestId('count-unread').textContent).toBe('2');
+    fireEvent.click(tab);
+    expect(onQuery).toHaveBeenLastCalledWith({ filter: 'unread' });
+  });
+
+  it('opening a chat reads it; "ทำเป็นยังไม่อ่าน" marks it back and leaves the chat', () => {
+    h.read.mockReset();
+    h.unread.mockReset();
+    h.detail = detail({}, { unread: true });
+    const onBack = vi.fn();
+    render(<Conversation id="c1" onBack={onBack} panelOpen={false} onPanel={vi.fn()} />);
+    expect(h.read).toHaveBeenCalledWith('c1');
+    fireEvent.click(screen.getByTestId('mark-unread'));
+    expect(h.unread).toHaveBeenCalledTimes(1);
+    expect(h.unread.mock.calls[0]?.[0]).toBe('c1');
+    // back to the list once it is saved (else the open chat would read itself again)
+    const opts = h.unread.mock.calls[0]?.[1] as { onSuccess: () => void } | undefined;
+    opts?.onSuccess();
+    expect(onBack).toHaveBeenCalled();
+  });
+
+  it('the header says who read it and when', () => {
+    h.detail = detail({}, { unread: false, readAt: READ, readBy: 'สมชาย' });
+    render(<Conversation id="c1" onBack={vi.fn()} panelOpen={false} onPanel={vi.fn()} />);
+    expect(screen.getByTestId('read-info').textContent).toContain(
+      'row.readBy{"name":"สมชาย","time":"10:32"}',
+    );
+  });
+});
+
+describe('work status', () => {
+  it('the list row has a coloured status chip (the assignee on "in progress"); the AI hand-over is the red one', () => {
+    render(
+      <ThreadList
+        data={list([
+          conv({ id: 'a', status: 'in_progress', assignee: 'สมชาย' }),
+          conv({ id: 'b', status: 'done' }),
+          conv({ id: 'c', status: 'needs_staff', needsStaff: true }),
+        ])}
+        loading={false}
+        error={false}
+        query={q()}
+        onQuery={vi.fn()}
+        activeId={null}
+        onOpen={vi.fn()}
+      />,
+    );
+    const rows = screen.getAllByTestId('page-row');
+    const a = within(rows[0] as HTMLElement).getByTestId('status-chip');
+    expect(a.textContent).toBe('status.in_progress · สมชาย');
+    expect(a.className).toContain('text-warning');
+    expect(within(rows[1] as HTMLElement).getByTestId('status-chip').className).toContain('text-success');
+    expect(within(rows[2] as HTMLElement).getByTestId('needs-staff-chip').className).toContain(
+      'text-destructive',
+    );
+  });
+
+  it('status chips filter and carry the counts of each status', () => {
+    const onQuery = vi.fn();
+    render(
+      <ThreadList
+        data={list([conv()])}
+        loading={false}
+        error={false}
+        query={q()}
+        onQuery={onQuery}
+        activeId={null}
+        onOpen={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId('count-status-new').textContent).toBe('3');
+    expect(screen.getByTestId('count-status-in_progress').textContent).toBe('1');
+    expect(screen.getByTestId('count-status-waiting_customer').textContent).toBe('2');
+    expect(screen.getByTestId('count-status-done').textContent).toBe('4');
+    fireEvent.click(screen.getByTestId('status-filter-waiting_customer'));
+    expect(onQuery).toHaveBeenLastCalledWith({ filter: 'all', status: 'waiting_customer' });
+    fireEvent.click(screen.getByTestId('status-filter-all'));
+    expect(onQuery).toHaveBeenLastCalledWith({ filter: 'all', status: undefined });
+  });
+
+  it('the header dropdown sets the status; the hand-over shows but cannot be picked', () => {
+    h.patch.mockReset();
+    h.detail = detail({}, { status: 'in_progress' });
+    const { unmount } = render(<Conversation id="c1" onBack={vi.fn()} panelOpen={false} onPanel={vi.fn()} />);
+    const select = screen.getByTestId('status-select') as HTMLSelectElement;
+    expect([...select.options].map((o) => o.value)).toEqual([
+      'new',
+      'in_progress',
+      'waiting_customer',
+      'done',
+    ]);
+    fireEvent.change(select, { target: { value: 'done' } });
+    expect(h.patch).toHaveBeenCalledWith({ id: 'c1', body: { workStatus: 'done' } });
+    unmount();
+    h.detail = detail({}, { status: 'needs_staff', needsStaff: true });
+    render(<Conversation id="c1" onBack={vi.fn()} panelOpen={false} onPanel={vi.fn()} />);
+    const staff = screen.getByTestId('status-select') as HTMLSelectElement;
+    expect(staff.value).toBe('needs_staff');
+    expect((staff.options[0] as HTMLOptionElement).disabled).toBe(true);
+  });
+});
+
+describe('shop link and notes in the side panel', () => {
+  const panel = (c: Partial<PageConversation> = {}, notes: PageDetail['notes'] = []) =>
+    render(<SidePanel conversation={conv(c)} lead={null} notes={notes} />);
+
+  it('the row shows the shop name; the panel says where it came from and links to the tenant page', () => {
+    const { unmount } = render(
+      <ThreadList
+        data={list([
+          conv({ shop: { tenantId: 't1', name: 'Dress me Up', source: 'verified' } }),
+          conv({ id: 'x' }),
+        ])}
+        loading={false}
+        error={false}
+        query={q()}
+        onQuery={vi.fn()}
+        activeId={null}
+        onOpen={vi.fn()}
+      />,
+    );
+    const rows = screen.getAllByTestId('page-row');
+    expect(within(rows[0] as HTMLElement).getByTestId('row-shop').textContent).toBe('Dress me Up');
+    expect(within(rows[1] as HTMLElement).queryByTestId('row-shop')).toBeNull();
+    unmount();
+    panel({ shop: { tenantId: 't1', name: 'Dress me Up', source: 'verified' } });
+    expect(screen.getByTestId('shop-link').getAttribute('href')).toBe('/platform/tenants/$id');
+    expect(screen.getByTestId('shop-current').textContent).toContain('shop.source.verified');
+  });
+
+  it('searches our shops and links the picked one', () => {
+    h.setShop.mockReset();
+    h.shops = [{ id: 't7', slug: 'dress-me-up', name: 'Dress me Up Rental' }];
+    panel();
+    expect(screen.getByTestId('shop-section').textContent).toContain('shop.none');
+    fireEvent.change(screen.getByTestId('shop-search'), { target: { value: 'dress' } });
+    fireEvent.click(screen.getByTestId('shop-result'));
+    expect(h.setShop.mock.calls[0]?.[0]).toEqual({ id: 'c1', tenantId: 't7', shopName: null });
+  });
+
+  it('a prospect that is not a customer yet is saved by the name typed in', () => {
+    h.setShop.mockReset();
+    h.shops = [];
+    panel();
+    fireEvent.change(screen.getByTestId('shop-search'), { target: { value: 'ร้านลองใจ' } });
+    expect(screen.getByTestId('shop-results').textContent).toContain('shop.noMatch');
+    fireEvent.click(screen.getByTestId('shop-typed'));
+    expect(h.setShop.mock.calls[0]?.[0]).toEqual({ id: 'c1', tenantId: null, shopName: 'ร้านลองใจ' });
+  });
+
+  it('a shop set by the team can be removed; one that came from the lead or the AI cannot be removed from here', () => {
+    h.setShop.mockReset();
+    const { unmount } = panel({ shop: { tenantId: null, name: 'ร้านลองใจ', source: 'typed' } });
+    fireEvent.click(screen.getByRole('button', { name: 'shop.remove' }));
+    expect(h.setShop.mock.calls[0]?.[0]).toEqual({ id: 'c1', tenantId: null, shopName: null });
+    unmount();
+    panel({ shop: { tenantId: 't1', name: 'ร้านบอท', source: 'lead' } });
+    expect(screen.queryByRole('button', { name: 'shop.remove' })).toBeNull();
+  });
+
+  it('notes: the newest on top with author and time; adding trims, and an empty note cannot be added', () => {
+    h.addNote.mockReset();
+    panel({}, [
+      { id: 'n2', text: 'โทรกลับพรุ่งนี้', authorName: 'สมชาย', createdAt: READ },
+      { id: 'n1', text: 'ขอใบเสนอราคา', authorName: 'สมหญิง', createdAt: '2026-11-17T03:00:00Z' },
+    ]);
+    const notes = screen.getAllByTestId('note');
+    expect(notes[0]?.textContent).toContain('โทรกลับพรุ่งนี้');
+    expect(notes[0]?.textContent).toContain('สมชาย');
+    expect(notes[1]?.textContent).toContain('สมหญิง');
+    expect((screen.getByTestId('note-add') as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(screen.getByTestId('note-text'), { target: { value: '  ลูกค้าขอส่วนลด  ' } });
+    fireEvent.click(screen.getByTestId('note-add'));
+    expect(h.addNote.mock.calls[0]?.[0]).toEqual({ id: 'c1', text: 'ลูกค้าขอส่วนลด' });
+  });
+
+  it('with no notes it says so', () => {
+    panel();
+    expect(screen.getByTestId('notes-section').textContent).toContain('notes.empty');
   });
 });

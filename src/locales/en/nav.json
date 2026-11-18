@@ -59,6 +59,6 @@
   "chatCases": "Chat cases",
   "chatCaseCount": "{{count}} chat cases waiting",
   "pageInbox": "Page chats",
-  "pageInboxCount": "{{count}} page chats waiting for a reply",
+  "pageInboxCount": "{{count}} unread page chats",
   "mail": "Sent emails"
 }

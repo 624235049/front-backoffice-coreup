@@ -6,7 +6,8 @@
     "needs_reply": "Needs reply",
     "needs_staff": "Needs staff",
     "hot": "Hot leads",
-    "follow_up": "Follow up today"
+    "follow_up": "Follow up today",
+    "unread": "Unread"
   },
   "stage": {
     "new": "New",
@@ -37,7 +38,9 @@
     "stage": "Stage",
     "adLabel": "From ad",
     "typeLabel": "Shop type",
-    "channel": "Channel"
+    "channel": "Channel",
+    "status": "Work status",
+    "allStatuses": "All statuses"
   },
   "window": {
     "free": "Free reply: {{time}} left",
@@ -57,14 +60,17 @@
   },
   "row": {
     "needsReply": "Needs reply",
-    "needsStaff": "Needs staff",
     "hot": "Hot",
     "followUp": "Follow up day {{day}}",
     "paused": "Team took over",
     "you": "Team: ",
     "noName": "{{channel}} customer",
-    "unread": "{{n}} unread",
-    "blocked": "Blocked"
+    "unread": "Unread",
+    "blocked": "Blocked",
+    "unreadTitle": "Nobody on the team has opened it",
+    "readBy": "Read by {{name}} · {{time}}",
+    "someone": "the team",
+    "stage": "Stage: {{name}}"
   },
   "list": {
     "empty": "No chats in this group",
@@ -97,7 +103,8 @@
     "openFile": "[Open file]",
     "open_video": "[Open video]",
     "open_audio": "[Open audio]",
-    "open_file": "[Open file]"
+    "open_file": "[Open file]",
+    "markUnread": "Mark as unread"
   },
   "composer": {
     "placeholder": "Write to the customer",
@@ -250,5 +257,34 @@
     "too_old": "The message is too old. Write it again",
     "not_failed": "This message did not fail",
     "channel_not_supported": "This channel cannot be answered from here"
+  },
+  "status": {
+    "label": "Work status",
+    "new": "New",
+    "needs_staff": "Needs staff",
+    "in_progress": "In progress",
+    "waiting_customer": "Waiting for customer",
+    "done": "Done"
+  },
+  "shop": {
+    "title": "Related shop",
+    "none": "No shop set",
+    "search": "Search shops by name or slug",
+    "noMatch": "No customer shop with that name",
+    "useName": "Use “{{name}}” (not a customer yet)",
+    "remove": "Remove the shop from this chat",
+    "source": {
+      "linked": "Our customer shop (linked by the team)",
+      "typed": "Name typed by the team (not a customer yet)",
+      "lead": "Shop of this sales lead (trial)",
+      "verified": "Proved by the customer to the AI with the code"
+    }
+  },
+  "notes": {
+    "title": "Notes",
+    "hint": "For the team only, never sent to the customer",
+    "placeholder": "Note for the team, e.g. which shop, what is stuck",
+    "add": "Add note",
+    "empty": "No notes yet"
   }
 }

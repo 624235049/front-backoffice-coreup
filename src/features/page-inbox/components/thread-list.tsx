@@ -1,4 +1,4 @@
-import { Flame, Inbox, Search } from 'lucide-react';
+import { Flame, Inbox, Search, Store } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import {
   CHANNEL_FILTERS,
+  type InboxStatus,
   PAGE_STAGES,
   type PageConversation,
   type PageFilter,
@@ -13,13 +14,15 @@ import {
   type PageQuery,
   type PageStage,
   SHOP_TYPES,
+  WORK_STATUSES,
 } from '../api';
 import { useChatTime, useNow } from '../lib/time';
 import { ChannelIcon } from './channel-icon';
 import { LineQuotaStrip } from './line-quota';
+import { StatusChip } from './status';
 import { WindowBadge } from './window-badge';
 
-const TABS: PageFilter[] = ['all', 'needs_reply', 'needs_staff', 'hot', 'follow_up'];
+const TABS: PageFilter[] = ['all', 'unread', 'needs_reply', 'needs_staff', 'hot', 'follow_up'];
 const FOLLOW_DAY = { 1: 1, 2: 3, 3: 6 } as const;
 
 export const stageTone: Record<PageStage, string> = {
@@ -31,11 +34,12 @@ export const stageTone: Record<PageStage, string> = {
   lost: 'bg-muted text-muted-foreground',
 };
 
-export function StageChip({ stage }: { stage: PageStage }) {
+/** `labelled`: "ขั้น: ใหม่", so a list row never shows two bare "ใหม่" chips (the sales stage and the work status). */
+export function StageChip({ stage, labelled }: { stage: PageStage; labelled?: boolean }) {
   const { t } = useTranslation('pageInbox');
   return (
     <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[0.7rem] font-medium', stageTone[stage])}>
-      {t(`stage.${stage}`)}
+      {labelled ? t('row.stage', { name: t(`stage.${stage}`) }) : t(`stage.${stage}`)}
     </span>
   );
 }
@@ -45,12 +49,20 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
   const clock = useChatTime(t);
   const now = useNow();
   const name = c.name ?? t('row.noName', { channel: t(`channel.${c.channel}`) });
+  // hover: who on the team opened it and when (one read mark for everybody)
+  const readTitle = c.unread
+    ? t('row.unreadTitle')
+    : c.readAt
+      ? t('row.readBy', { name: c.readBy ?? t('row.someone'), time: clock.time(c.readAt) })
+      : undefined;
   return (
     <li>
       <button
         type="button"
         onClick={onOpen}
+        title={readTitle}
         aria-current={active ? 'true' : undefined}
+        data-unread={c.unread ? 'true' : undefined}
         data-testid="page-row"
         className={cn(
           'flex w-full items-start gap-3 px-3 py-2.5 text-left text-foreground transition-colors hover:bg-[var(--chat-hover)]',
@@ -80,10 +92,7 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
         <span className="grid min-w-0 flex-1 gap-1">
           <span className="flex items-baseline gap-2">
             <span
-              className={cn(
-                'min-w-0 flex-1 truncate text-[0.95rem]',
-                c.needsReply ? 'font-bold' : 'font-semibold',
-              )}
+              className={cn('min-w-0 flex-1 truncate text-[0.95rem]', c.unread ? 'font-bold' : 'font-medium')}
             >
               {name}
             </span>
@@ -94,30 +103,32 @@ function Row({ c, active, onOpen }: { c: PageConversation; active: boolean; onOp
               <span className="text-xs text-muted-foreground tabular-nums">
                 {c.lastMessageAt ? clock.listTime(c.lastMessageAt, now) : ''}
               </span>
-              {c.unread > 0 ? (
+              {c.unread ? (
                 <span
-                  className="min-w-5 rounded-full bg-[#06C755] px-1.5 text-center text-[0.7rem] font-semibold tabular-nums leading-5 text-white"
+                  className="size-2.5 rounded-full bg-primary"
                   role="img"
-                  aria-label={t('row.unread', { n: c.unread })}
+                  aria-label={t('row.unread')}
                   data-testid="unread-badge"
-                >
-                  {c.unread}
-                </span>
+                />
               ) : null}
             </span>
           </span>
-          <span className="truncate text-sm text-muted-foreground">{c.preview ?? ''}</span>
+          <span className={cn('truncate text-sm', c.unread ? 'text-foreground' : 'text-muted-foreground')}>
+            {c.preview ?? ''}
+          </span>
+          {c.shop ? (
+            <span
+              className="flex items-center gap-1 truncate text-xs text-muted-foreground"
+              data-testid="row-shop"
+            >
+              <Store className="size-3 shrink-0" aria-hidden />
+              <span className="truncate">{c.shop.name}</span>
+            </span>
+          ) : null}
           <span className="flex flex-wrap items-center gap-1.5">
-            <StageChip stage={c.stage} />
+            <StatusChip status={c.status} assignee={c.assignee} />
+            <StageChip stage={c.stage} labelled />
             {c.channel !== 'line' ? <WindowBadge conversation={c} /> : null}
-            {c.needsStaff ? (
-              <span
-                className="rounded-full bg-destructive/10 px-2 py-0.5 text-[0.7rem] font-semibold text-destructive"
-                data-testid="needs-staff-chip"
-              >
-                {t('row.needsStaff')}
-              </span>
-            ) : null}
             {c.blocked ? (
               <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[0.7rem] font-medium text-destructive">
                 {t('row.blocked')}
@@ -148,7 +159,7 @@ const selectCls =
   'h-9 min-w-0 flex-1 rounded-md border bg-background px-2 text-xs text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 /**
- * Left column: the tabs (all · needs reply · hot · follow up today) with their counts, stage chips, the ad / shop type filters, the
+ * Left column: the tabs (all · unread · needs reply · needs staff · hot · follow up today) with their counts, the work-status chips, stage chips, the ad / shop type filters, the
  * search box and the chats. `actions` sits at the end of the search row (the settings button).
  */
 export function ThreadList({
@@ -173,10 +184,20 @@ export function ThreadList({
   const { t } = useTranslation('pageInbox');
   const filter = query.filter ?? 'all';
   const channel = query.channel ?? 'all';
+  const statusCount: Record<InboxStatus, number> | null = data
+    ? {
+        new: data.counts.new,
+        needs_staff: data.counts.needsStaff,
+        in_progress: data.counts.inProgress,
+        waiting_customer: data.counts.waitingCustomer,
+        done: data.counts.done,
+      }
+    : null;
   const count = (f: PageFilter) =>
     data
       ? {
           all: data.counts.all,
+          unread: data.counts.unread,
           needs_reply: data.counts.needsReply,
           needs_staff: data.counts.needsStaff,
           hot: data.counts.hot,
@@ -192,7 +213,7 @@ export function ThreadList({
         <div
           role="tablist"
           aria-label={t('title')}
-          className="grid grid-cols-5 gap-0.5 rounded-lg bg-muted p-0.5"
+          className="flex gap-0.5 overflow-x-auto rounded-lg bg-muted p-0.5"
         >
           {TABS.map((f) => (
             <button
@@ -202,7 +223,7 @@ export function ThreadList({
               aria-selected={filter === f}
               onClick={() => onQuery({ ...query, filter: f })}
               className={cn(
-                'flex min-h-10 min-w-0 flex-col items-center justify-center whitespace-nowrap rounded-md px-0.5 text-center text-[0.7rem] font-medium leading-tight',
+                'flex min-h-10 flex-1 shrink-0 flex-col items-center justify-center whitespace-nowrap rounded-md px-2.5 text-center text-[0.7rem] font-medium leading-tight',
                 filter === f
                   ? 'bg-[var(--card)] text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground',
@@ -239,12 +260,29 @@ export function ThreadList({
           >
             {ch !== 'all' ? <ChannelIcon channel={ch} className="size-3.5" /> : null}
             {t(`channelFilter.${ch}`)}
-            {ch === 'line' && (data?.counts.unread ?? 0) > 0 ? (
-              <span
-                className="rounded-full bg-[#06C755] px-1.5 text-[0.65rem] font-semibold tabular-nums text-white"
-                data-testid="count-unread"
-              >
-                {data?.counts.unread}
+          </button>
+        ))}
+      </fieldset>
+      <fieldset className="m-0 flex min-w-0 gap-1 overflow-x-auto border-0 px-2 pb-1">
+        <legend className="sr-only">{t('filters.status')}</legend>
+        {[undefined, ...WORK_STATUSES].map((st) => (
+          <button
+            key={st ?? 'all'}
+            type="button"
+            aria-pressed={query.status === st}
+            onClick={() => onQuery({ ...query, status: st })}
+            data-testid={`status-filter-${st ?? 'all'}`}
+            className={cn(
+              'inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-xs',
+              query.status === st
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {st ? t(`status.${st}`) : t('filters.allStatuses')}
+            {st && statusCount && statusCount[st] > 0 ? (
+              <span className="tabular-nums" data-testid={`count-status-${st}`}>
+                {statusCount[st]}
               </span>
             ) : null}
           </button>
